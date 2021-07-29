@@ -1,0 +1,62 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+% \usepackage{amstext}
+\usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{trees,matrix}
+% \usepackage{cases}
+% \usepackage{mathtools}
+% \usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage[UTF8]{ctex}
+% ctex与amsmath冲突，放最后可解决
+\title{收益率计算}
+\author{杨弘毅}
+\date{创建: 2021 年 4 月 2 日 \\修改: \today}
+\begin{document}
+\maketitle
+
+\section{连续复利收益率（continuously compounded return）}
+
+已知，根据定义自然常数为如下极限值：
+\begin{equation*}
+    e = \lim_{n \rightarrow \infty} \left(1+ \frac{1}{n}\right)^n
+\end{equation*}
+
+假设名义利率（nominal interest rate）为$R$，且一年计息$m$次，则有，一年的实际利率（effective interest rate）为：
+
+\begin{equation*}
+    \begin{aligned}
+        \text{当$m=1$时} &\quad 1+r \\
+        \text{当$m=2$时} &\quad (1+r/2)^2 \\
+        \text{当$m=3$时} &\quad (1+r/3)^3 \\
+        \dots &\quad \dots \\
+        \text{当$m=\infty$时} &\quad \lim_{m \rightarrow \infty} (1+r/m)^m \\
+    \end{aligned}
+\end{equation*}
+
+将其变形，则有连续复利收益率为：
+\begin{equation*}
+    \lim_{m \rightarrow \infty} (1+r/m)^m = 
+    \lim_{m \rightarrow \infty} (1+\frac{1}{m/r})^{m/r\times r} = e^r
+\end{equation*}
+
+例：当名义利率为$12\%$时，有:
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}rll@{}}
+\toprule
+m（周期）  & 实际利率              & 实际年化利率 \\ \midrule
+1（一年）   & $\frac{0.12}{1}=0.12$  & $(1.12)^1-1=0.12$ \\
+2（半年）   & $\frac{0.12}{2}=0.06$  & $(1.06)^2-1=0.1236$      \\
+4（季度）   & $\frac{0.12}{4}=0.03$  & $(1.03)^4-1=0.125509$       \\
+12（月度）  & $\frac{0.12}{12}=0.01$ & $(1.01)^{12}-1=0.126162$ \\
+52（周度）  & $\frac{0.12}{52}=0.0023$  & $(1.0023)^{52}-1=0.127341$\\
+365（日度） & $\frac{0.12}{365}=0.00033$ & $(1.00033)^365-1=0.127475$ \\
+$\infty$ （连续）  & \multicolumn{2}{l}{$ \lim_{m \rightarrow \infty} (1+\frac{0.12}{m})^{m} - 1 = e^{0.12} = 0.127497
+$}            \\ \bottomrule
+\end{tabular}
+\end{table}
+\end{document}

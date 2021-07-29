@@ -1,0 +1,508 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+% \usepackage{amstext}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
+\usepackage[UTF8]{ctex}
+
+\def\Var{{\textrm{Var}}\,}
+\def\Cov{{\textrm{Cov}}\,}
+\def\E{{\textrm{E}}\,}
+
+\title{BSM公式}
+\author{杨弘毅}
+\date{创建: 2020 年 4 月 19 日 \\修改: \today}
+
+\begin{document}
+\maketitle
+
+\section{布朗运动、维纳过程}
+
+标准布朗运动简易表达式有：
+\begin{equation*}
+    dZ_t = \varepsilon_t \sqrt{dt}
+\end{equation*}
+
+其离散形式的表达式有：
+\begin{equation*}
+    Z_T - Z_t = \sum^n_{i=1} \varepsilon_i \sqrt{\Delta t}
+\end{equation*}
+
+\subsection{特征}
+\textbf{标准布朗运动（Brownian motion）或维纳过程（Wiener process）}的特征有：
+\begin{itemize}
+    \item 初值为零
+    \item 连续
+    \item 独立增量：对于任意两个不同时间点$\Delta t_i$与$\Delta t_j$，其增量$\Delta Z_i$与$\Delta Z_j$相互独立
+    \item 独立同分布（方差可加）：增量$\Delta Z$服从均值为零、方差等于时间长度的正态分布，即$\Delta Z_i  \sim N(0,\Delta t_i)$
+\end{itemize}
+
+\subsection{为何使用标准布朗运动}
+
+\begin{itemize}
+    \item 股价不能为负，所以不能遵循正态分布，但股票连续复利收益率（$d\text{ln} S_t$）近似服从正态分布
+    \item 维纳过程是一个马尔可夫随机过程，增量$\Delta Z$独立，与弱式EMH相同，即技术分析无效，无法使用历史信息预测未来，过去信息跟未来信息相互独立
+    \item 维纳过程对时间处处不可导，且二次变分（Quadratic Variation）不为零，与股票价格变化存在转折尖点的性质相符
+\end{itemize}
+
+\subsection{部分证明}
+
+\textbf{增量均值为零，方差为时间长度}，当$X$与$Y$独立时，则有：
+\begin{equation*}
+    \Var(XY) = \Var(X)\Var(Y) + [\E(X)]^2 \Var(Y) + [E(Y)]^2 \Var(X)
+\end{equation*}
+
+此时，由于$\varepsilon_t$与$dt$独立，套用上式，同时由于$\varepsilon_t \sim N(0,1)$，则有：
+\begin{equation*}
+    \E(dZ_t) = \E(\varepsilon_t \sqrt{dt}) = 0
+\end{equation*}
+
+\begin{align*}
+    \Var(dZ_t) & = \Var( \varepsilon_t \sqrt{dt}) \\
+    & =  \Var(\varepsilon_t) \Var(\sqrt{dt}) + [\E(\varepsilon_t)]^2 \Var(\sqrt{dt}) + [E(\sqrt{dt})]^2 \Var(\varepsilon_t) \\
+    & = \Var(\varepsilon_t) \left[ \Var[(\sqrt{dt})^2] - [\E(\sqrt{dt})]^2 \right] \\
+    & = \Var(\varepsilon_t) \left[ \E[(\sqrt{dt})^2] - [\E(\sqrt{dt})]^2 + [\E(\sqrt{dt})]^2 \right] \\
+    & = 1 \cdot \E(dt) = dt
+\end{align*}
+
+\textbf{方差可加性}，由下式可见，由于独立增量，导致协方差项为零，使得方差可加。
+\begin{align*}
+     & \Var(X_1+X_2+X_3) \\
+     & = \Var(X_1) + \Var(X_2) + \Var(X_3) \\
+     & + \Cov(X_1,X_2) + \Cov(X_2,X_3) + \Cov(X_1,X_3)
+\end{align*}
+
+由上可知，增量在连续形式$dZ_t$以及离散形式$Z_T-Z_t$下，均服从均值为零，方差为时间长度的正态分布，即有：
+\begin{align*}
+    dZ_t & \sim N(0,dt) \\
+    Z_T - Z_t & \sim N(0,T-t)
+\end{align*}
+
+\subsection{几种随机过程}
+
+\textbf{广义维纳过程（generalized Wiener process）}，a与b为常数。此时，易知其均值为$\E(dX_t) = adt$，由于$b$为常数，且$\Var(dZ_t)=dt$，则有方差为$\Var(dX_t)=b^2 dt$。
+\begin{equation*}
+    dX_t =a dt + b dZ_t
+\end{equation*}
+
+\textbf{普通布朗运动}，a(t)与b(t)都是t的确定性函数。由于都为确定函数，所以如上可知，其均值方差为$\E(dX_t) = a(t)dt$，由于$b$为常数，且$\Var(dZ_t)=dt$，则有方差为$\Var(dX_t)=b(t)^2 dt$。
+\begin{equation*}
+    dX_t =a(t) dt + b(t) dZ_t
+\end{equation*}
+
+\textbf{扩散过程（Diffusion Process）}，此时$a(X(t),t)$与$b(X(t),t)$都为$X_t$和$t$的确定性函数。由于漂移项与方差项都包含$X(t)$，使得扩散之后过程的条件分布无法保证仍是正态分布。但更能刻画一般动态变化，未加入新的风险源，仍具有独立增量，马尔可夫性，和方差可加性等性质。
+\begin{equation*}
+    dX_t =a(X(t),t) dt + b(X(t),t) dZ_t
+\end{equation*}
+
+\textbf{伊藤过程（Itô Process）}，最一般化的随机过程，$a_t$和$b_t$为任意函数或随机过程。
+\begin{equation*}
+    dX_t =a_t dt + b_t dZ_t
+\end{equation*}
+
+\section{伊藤引理（Itô lemma）}
+
+若变量$X_t$遵循伊藤过程：
+\begin{equation*}
+    dX_t =a_t dt + b_t dZ_t
+\end{equation*}
+
+在导数$\partial G/\partial t$、$\partial G/\partial X$与$\partial^2 G/\partial X^2$存在的前提下，则有变量$X_t$和$t$的函数$G(X_t,t)$将遵循如下过程：
+\begin{equation*}
+    dG_t = \left(\frac{\partial G}{\partial X}a_t  + \frac{\partial G}{\partial t} + \frac{1}{2}\frac{\partial^2 G}{\partial X^2} b^2_t \right)dt + \frac{\partial G}{\partial X} b_t dZ_t
+\end{equation*}
+
+\subsection{证明}
+
+$G(X,t)$的泰勒展开式为：
+\begin{equation*}
+    \Delta G_t = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2}\Delta X^2  + \frac{\partial G}{\partial X \partial t}\Delta X \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial t^2} \Delta t^2 + \dots
+\end{equation*}
+
+当$\Delta t \rightarrow 0$时，$(\Delta t)^2$与$(\Delta t)^{3/2}$项，都可认为时高阶无穷小项。在随机微分中，由于$(\Delta X)^2$项中包含$\Delta t$项，因此需要保留。因此仅考虑前三项，略去比$\Delta t$高阶的项（\textbf{注意}：此与常微分不同，而在常微分中，此项是也是高阶无穷小项）。代入$\Delta X$定义，展开得到：
+\begin{align*}
+    \Delta G_t & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2}\Delta X^2 \\
+    & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} [a\Delta t + b\varepsilon\sqrt{\Delta t}]^2 \\
+    & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 \varepsilon^2 \Delta t
+\end{align*}
+
+此时还包含有$\varepsilon^2$项，但由于$\varepsilon \sim N(0,1)$，因此有$\E(\varepsilon)=0$，$\Var(\varepsilon)=\E(\varepsilon^2)-[\E(\varepsilon)]^2=1$，可得$\E(\varepsilon^2)=1$，即$\E(\varepsilon^2 \Delta t) = \Delta t$。$\varepsilon^2 \Delta t$的方差有：
+\begin{align*}
+    \Var(\varepsilon^2 \Delta t) & = \Var(\varepsilon^2) \Var(\Delta t) + [\E(\varepsilon^2)]^2 \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon^2) \\
+    & = \Var(\varepsilon^2) \Var(\Delta t) + 1 \cdot \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon_t^2) \\
+    & = \mathcal{O}(\Delta t^2)
+\end{align*}
+
+因此可以认为其方差为高阶无穷小，可认为$\varepsilon^2 \Delta t \approx \Delta t$，因此可将原式化简为：
+\begin{equation*}
+    \Delta G_t = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 \Delta t
+\end{equation*}
+
+而连续形式为：
+\begin{align*}
+    dG_t & = \frac{\partial G}{\partial X}  dX_t + \frac{\partial G}{\partial t} dt + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 dt \\
+    & = \frac{\partial G}{\partial X} (a_t dt + b_t dZ_t) + \frac{\partial G}{\partial t} dt + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 dt \\
+    & = \left(\frac{\partial G}{\partial X}a_t  + \frac{\partial G}{\partial t} + \frac{1}{2}\frac{\partial^2 G}{\partial X^2} b^2_t \right)dt + \frac{\partial G}{\partial X} b_t dZ_t
+\end{align*}
+
+
+\section{几何布朗运动}
+
+由于衍生品价格是标的资产价格与时间的函数，即只需要假定标的资产遵循过程，即可用伊藤引理求得其衍生品遵循过程。假设股票价格服从几何布朗运动（Geometric Brownian Motion，GBM）：
+\begin{equation*}
+    dS_t = \mu S_t d_t + \sigma S_t dZ_t
+\end{equation*}
+
+令$G_t = \ln S_t$，此时：
+\begin{equation*}
+    \frac{\partial G}{\partial S} = \frac{1}{S_t}, \quad
+    \frac{\partial^2 G}{\partial S^2} = -\frac{1}{S_t^2}, \quad
+    \frac{\partial G}{\partial t} = 0
+\end{equation*}
+
+代入伊藤引理之中,此时$a_t=\mu S_t$，$b_t=\sigma S_t$，则有：
+\begin{align*}
+    dG_t = d \ln S_t & = \left( \frac{1}{S_t}\mu S_t + 0 - \frac{1}{2} \frac{1}{S_t^2} \sigma^2 S_t^2 \right) dt + \frac{1}{S_t}\sigma S_t dZ_t \\
+    & = \left( \mu - \frac{1}{2}\sigma^2\right)dt + \sigma dZ_t
+\end{align*}
+
+即有：
+\begin{align*}
+    d\ln S_t= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
+\end{align*}
+
+同时又离散形式下：
+\begin{align*}
+    \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
+\end{align*}
+
+此时股票价格连续复利收益率（Continuously compounded return），或称为对数收益率（Logarithmic return），为\textbf{未年化}收益率：
+\begin{equation}
+    R = d\ln S_t= \ln S_t - \ln S_{t-1} = \ln \frac{S_t}{S_{t-1}} = \ln (1+r)
+\end{equation}
+
+服从期望值为$(\mu - \sigma^2/2)dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。\textbf{注意}：$d\ln S$（极短时间内）和$\ln S_T - \ln S_t$（较长时间内）都服从正态分布，而$dS$在极短时间内服从正态分布，而在较长时间内因$S_t$的大小改变，使得$S_T - S_t$的均值和方差的改变而不服从正态分布。
+\begin{align*}
+    \ln S_T - ln S_t \sim & N \left( (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right) \\
+    \ln S_T  \sim & N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
+\end{align*}
+
+\textbf{可以看到此时\underline{股票价格的对数}服从正态分布（Log-normal distribution），因此可知，股票价格服从对数正态分布}。即对一个服从正态分布的随机变量$X$取指数，则$e^X$服从数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布：
+\begin{align*}
+    \ln S_T \sim N(\mu_{N},\sigma_{N}^2) \quad \leftrightarrow \quad S_T \sim \text{Log-normal}(\mu_{LogN},\sigma_{LogN}^2)
+\end{align*}
+
+此时，已知对数正态分布有如下性质 $X \sim \text{Log-normal}(\mu,\sigma^2)$：
+\begin{align*}
+    \E(X) & = \exp(\mu+\sigma^2/2) \\
+    \Var(X) & = [\exp(\sigma^2)-1]\exp(2\mu+\sigma^2)
+\end{align*}
+
+因股票价格$S_T$服从对数正态分布，代入上式可知其均值标准差为：
+\begin{align*}
+    \E(S_T)   & = \exp(\ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)+\frac{\sigma^2}{2}(T-t)) \\
+    & = \exp(\ln S_t + \mu(T-t)) \\
+    & = S_t e^{\mu(T-t)} \\
+    \Var(S_T) & = \left[\exp(\sigma^2(T-t))-1\right] \exp \left\{2\left[\ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)\right] + \sigma^2(T-t)\right\} \\
+    & = \left[\exp(\sigma^2(T-t))-1\right] \exp\left[2 \ln S_t + 2\mu (T-t)\right] \\
+    & = S_t^2 e^{2\mu(T-t)} \left[ e^{\sigma^2 (T-t)} - 1 \right]
+\end{align*}
+
+
+\section{BSM 偏微分方程（PDE）}
+
+\subsection{假设}
+\begin{itemize}
+    \item 人性假设
+          \begin{itemize}
+              \item 不存在无风险套利机会（无套利）
+          \end{itemize}
+    \item 完美世界
+          \begin{itemize}
+              \item 允许卖空标的证券
+              \item 没有交易费用和税收
+              \item 证券交易时连续的，价格变动也是连续的
+              \item 所有证券都完全可分
+          \end{itemize}
+    \item 可交易资产
+          \begin{itemize}
+              \item 证券价格遵循几何布朗运动，即$\mu$和$\sigma$为常数
+              \item 衍生品有效期内，无风险利率r为常数
+              \item 衍生证券有效期内，标的证券没有现金收益支付
+          \end{itemize}
+\end{itemize}
+
+\subsection{推导}
+
+假设股票价格$S_t$遵循几何布朗运动，以及其离散形式有：
+\begin{align*}
+    d S_t & = \mu S_t dt + \sigma S_t d Z_t \\
+    \Delta S_t & = \mu S_t \Delta t + \sigma S_t \Delta Z_t
+\end{align*}
+
+假设衍生品价格$f(S_t, t)$为$S_t$以及$t$的函数，根据伊藤引理可得其连续和离散形式有：
+
+\begin{align*}
+    df(S_t,t) & = \left(\frac{\partial f}{\partial S} \mu S_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right)dt + \frac{\partial f}{\partial S} \sigma S_t dZ_t \\
+    \Delta f(S_t,t) & = \left(\frac{\partial f}{\partial S} \mu S_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t + \frac{\partial f}{\partial S} \sigma S_t \Delta Z_t
+\end{align*}
+
+由此可见，股票价格与衍生品价格的风险源均来自$\Delta Z_t$，因此可以构建投资组合，由一单位衍生品空头，以及$\partial f/\partial S$单位证券多头构成，进行对冲消除该风险源：
+\begin{equation*}
+    \Pi_t = -f_t + \frac{\partial f}{\partial S} S_t
+\end{equation*}
+
+在$\Delta t$时间内，该投资组合价值变化$\Delta \Pi_t$为，并代入$\Delta S_t$与$\Delta f_t$：
+\begin{align*}
+    \Delta \Pi_t & = -\Delta f_t + \frac{\partial f}{\partial S} \Delta S_t \\
+    & = -\left[ \left(\frac{\partial f}{\partial S} \mu S_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t + \frac{\partial f}{\partial S} \sigma S_t \Delta Z_t \right] + \frac{\partial f}{\partial S} \left( \mu S_t \Delta t + \sigma S_t \Delta Z_t \right) \\
+    & = -\left( \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t \\
+\end{align*}
+
+由于此时组合消除了风险，因此组合只应获得无风险收益率：
+\begin{align*}
+    \Delta \Pi_t & = r \Pi_t \Delta t \\
+    -\left( \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t & =  r \left( -f_t + \frac{\partial f}{\partial S} S_t \right) \Delta t \\
+\end{align*}
+
+整理等式，消去$\Delta t$，即可得到\textbf{BSM偏微分方差}：
+\begin{equation*}
+    \frac{\partial f}{\partial t} + r S_t \frac{\partial f}{\partial S} + \frac{1}{2} \sigma^2 S_t^2 \frac{\partial^2 f}{\partial S^2} = r f_t
+\end{equation*}
+
+\section{BSM公式（鞅方法）}
+
+在风险中性世界中，无收益资产看涨期权到期时价值的期望值为：
+\begin{equation*}
+    \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right]
+\end{equation*}
+
+欧式看涨期权的现值应为其期望值以无风险利率进行贴现：
+\begin{equation*}
+    c = e^{-r(T-t)} \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right]
+\end{equation*}
+
+同时在风险中性世界下，漂移率$\mu$应等于无风险收益率r，因此有：
+\begin{equation*}
+    \ln S_T - \ln S_t \sim N \left((r-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
+\end{equation*}
+
+已知：
+\begin{equation*}
+    S_T = S_t \exp\left[\left(r-\frac{\sigma^2}{2}\right)\left(T-t\right) + \sigma\left(Z_T - Z_t \right)\right]
+\end{equation*}
+
+已知$Y = \frac{Z_T - Z_t}{\sqrt{T-t}} \sim N(0,1)$，其密度函数为：
+\begin{equation*}
+    \varphi(y) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}y^2}
+\end{equation*}
+
+在风险中性下的期望，可以改写为如下积分的形式：
+\begin{align*}
+    \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right] & = \E^\mathbb{Q}_t \left[ S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \right]^+ \\
+    & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy
+\end{align*}
+
+当$S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \geq 0$时，有$y \geq \frac{ \ln (K/S_t) - (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}$，设其为$-d_2$，同时假设$d_1 = d_2 + \sigma \sqrt{T-t}$。
+\begin{align*}
+    \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right] & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy \\
+    & = S_t e^{(r-\frac{1}{2}\sigma^2)(T-t)} \int_{-d_2}^{\infty} e^{\sigma\sqrt{T-t} y} \varphi(y)dy - K\int_{-d_2}^{\infty} \varphi(y)dy \\
+    & = S_t e^{(r-\frac{1}{2} \sigma^2) (T-t)} \int_{-d_2}^{\infty}{e^{\sigma\sqrt{T-t}y} \frac{1}{\sqrt{2\pi\ }}e^{-\frac{y^2}{2}}dy} - KN\left(d_2\right) \\
+    & = S_t e^{r(T-t)} \int_{-d_2}^{\infty} \frac{1}{\sqrt{2\pi}} e^{\left( -\frac{\sigma^2 (T-t)}{2} + \sigma\sqrt{T-t}y - \frac{y^2}{2} \right)} dy - KN(d_2) \\
+    & = S_t e^{r(T-t)} \int_{y = -d_2}^{y = \infty} \frac{1}{\sqrt{2\pi}}e^{-\frac{\left(y-\sigma\sqrt{T-t}\right)^2}{2}}dy - KN(d_2) \quad \text{（换元法：$u =y -\sigma\sqrt{T-t}$）} \\
+    & =S_t e^{r(T-t)} \int_{u = -d_2-\sigma\sqrt{T-t}}^{u = \infty} \frac{1}{\sqrt{2\pi\ }}e^{-\frac{u^2}{2}}du - KN(d_2) \quad \text{（$dy = du$）} \\
+    & = S_t e^{r(T-t)} \int_{-d_1}^{\infty} \frac{1}{\sqrt{2\pi}}e^{-\frac{u^2}{2}} du - KN(d_2) \\
+    & = S_t e^{r(T-t)}N(d_1) - KN(d_2)
+\end{align*}
+
+得到\textbf{BSM公式}，即欧式看涨期权的解析解：
+\begin{align*}
+    c & = e^{-r(T-t)} \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right] \\
+    & = S_t N(d_1) - Ke^{-r(T-t)} N(d_2)
+\end{align*}
+
+已知期权平价公式：
+\begin{equation*}
+    c + K e^{r(T-t)} = p + S_t
+\end{equation*}
+
+代入BSM看涨期权解析解中，可得：
+\begin{align*}
+    p & = c + K e^{-r(T-t)} - S_t \\
+    & = S_t N(d_1) - Ke^{-r(T-t)} N(d_2) +  Ke^{-r(T-t)} - S_t \\
+    & = S_t (N(d_1) - 1) - K e^{-r(T-t)}(N(d_2)-1) \\
+    & = S_t (-N(-d_1)) - K e^{-r(T-t)}(-N(-d_2)) \\
+    & = K e^{-r(T-t)}N(-d_2) - S_t N(-d_1) \\
+\end{align*}
+
+此时$d_1$和$d_2$分别为：
+\begin{align*}
+    d_1 = \frac{\ln \frac{S_t}{K} + (r+\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} \\
+    d_2 = \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}
+\end{align*}
+
+\section{内在价值（考虑中国市场的新定义）}
+
+由于：
+\begin{equation*}
+    \text{期权价值（Option value）} = \text{内在价值（Intrinsic value）} + \text{时间价值（Time value）}
+\end{equation*}
+
+内在价值为即\textbf{不考虑资产价格波动}的情况下，期权条款赋予期权多头的最高价值。而时间价值为\textbf{标的资产价格波动}为期权多头（权利方）所带来的隐含价值，由于期权权利方只有权力而无义务，因此期权的时间价值应该大于0。内在价值不受时间价值的影响，因而可以使用二分法。
+
+
+若定义内在价值为，期权若在当下时点到期，期权所含的的价值（Hull，CME）。这样考虑的缺点为没有考虑货币的时间价值，且在中国市场由于现货的卖空限制，其价格高于其真实价格。
+\begin{align*}
+    \text{看涨期权内在价值} & = \max(S_t-K) \\
+    \text{看跌期权内在价值} & = \max(K-S_t)
+\end{align*}
+
+在考虑货币时间价值的情形内在价值如下，缺点为依然没有考虑中国市场的卖空限制。
+\begin{align*}
+    \text{看涨期权内在价值} & = \max(S_t-Ke^{-r(T-t)}) \\
+    \text{看跌期权内在价值} & = \max(Ke^{-r(T-t)}-S_t)
+\end{align*}
+
+因此考虑使用期货价格代替现货价格，以为期货市场多空双方均能自由表达其看法，因此有：
+\begin{align*}
+    \text{看涨期权内在价值} & = \max((F_{t,T}-K)e^{-r(T-t)}) \\
+    \text{看跌期权内在价值} & = \max((K-F_{t,T})e^{-r(T-t)})
+\end{align*}
+
+由于在中国市场ETF期权有红利保护机制，即会下调行权价格，放大每手期权数量，相当于变相抬高了股票价格，或复权（加挂A标记的期权）。且在ETF中的成分股分红，其分红留在ETF当中。而ETF没有期货，只有股指期货，而股指期货不对分红进行调整，即没有红利保护，即其成分股分红后股指自然下跌。因而在使用股指期货或期权以及ETF现货或期权时，需要做红利调整。即在ETF现货中将红利剔除，此时有：
+\begin{equation*}
+    F_{t,T} = (S_t-I)e^{r(T-t)}
+\end{equation*}
+
+此时则有，将上式代入，在中国市场中：
+\begin{align*}
+    \text{看涨期权内在价值} & = \max((F_{t,T}-K)e^{-r(T-t)}+I) \\
+    \text{看跌期权内在价值} & = \max((K-F_{t,T})e^{-r(T-t)}-I)
+\end{align*}
+
+因为平值点为使内在价值为零，则平值点定义为为$F_{t,T}=K$，这样定义使得实值虚值部分左右较为对称，有利于比较。此时有当$F<K$为OTM，此时值域为正，当$F>K$为ITM，则有值域为负。此时有对数在值状态（log-moneyness）：
+\begin{equation*}
+    \ln{\frac{K}{K_{atm}}} = \ln{\frac{K}{F}}
+\end{equation*}
+
+同时可以发现，在PCP下：
+\begin{equation*}
+    c = p + (F_{t,T}-K) e^{-r(T-t)}
+\end{equation*}
+
+对于平直期权ATM，则有$F_{t,T}=K$，易得此时$c=p$。而当看涨期权为ITM，其内在价值部分不为零。而对于此时得看跌期权为OTM，其内在价值为零，而仅有时间价值，因此可以得到，在新平值点定义下的，相同行权价，相同期限的看涨看跌期权：
+\begin{equation*}
+    c_{\text{时间价值}} = p_{\text{时间价值}}
+\end{equation*}
+
+
+\section{平价期权}
+
+当平值点为$S = K e^{-r(T-t)}$时，将其带入看涨BSM公式当中，则有：
+\begin{equation}
+    \frac{c}{S} = N(d_1) - N(d_2)
+\end{equation}
+
+对于看跌期权则有：
+\begin{align*}
+    \frac{p}{S} & = N(-d_2) - N(-d_1) \\
+    & = 1 - N(d_2) - [1-N(d_1)] \\
+    & = N(d_1) - N(d_2) = \frac{c}{S}
+\end{align*}
+
+对于$d_1$和$d_2$，此时有：
+\begin{equation}
+    d_1 = \frac{ln(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = \frac{\sigma}{2}\sqrt{T-t}
+\end{equation}
+
+\begin{equation}
+    d_2 = \frac{ln(S/K)+(r-\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}= -\frac{\sigma}{2}\sqrt{T-t}
+\end{equation}
+
+则对于欧式平价期权：
+\begin{align*}
+    \frac{c}{S} & = \frac{p}{S} = N \left( \frac{\sigma\sqrt{T-t}}{2} \right) - N\left( -\frac{\sigma\sqrt{T-t}}{2} \right) \\
+    & = 2N\left( \frac{\sigma\sqrt{T-t}}{2} \right) - 1 \\
+    & = 2\left[\frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left(\frac{\sigma\sqrt{T-t}}{2} - \frac{(\sigma\sqrt{T-t}/2)^3}{6} + \frac{(\sigma\sqrt{T-t}/2)^5}{40} - \dots + \dots\right) \right] - 1 \qquad (\text{使用泰勒展开}) \\
+    & \approx \frac{\sigma\sqrt{T-t}}{2\pi} \approx 0.4\sqrt{T-t}
+\end{align*}
+
+\section{波动率}
+
+为人们对未来给定期限的波动率的预期值
+\begin{itemize}
+    \item 历史波动率（Historical volatility）：使用过去代替未来
+          \begin{itemize}
+              \item 样本对数收益率标准差（日频数据）
+              \item 已实现波动率（Realized volatility，日内高频，5分钟，假设均值为零）
+              \item 极差波动率
+          \end{itemize}
+    \item 历史波动率（Historical volatility）：利用历史数据进行建模，并且预测
+          \begin{itemize}
+              \item 广义自回归条件异方差（GARCH，计量方法）
+              \item 随机波动率（Sochastic volatility，随机过程）
+          \end{itemize}
+    \item 隐含波动率（Implied volatility）：直接从期权价格中提取未来预期
+\end{itemize}
+
+\section{注意与备注}
+
+\begin{itemize}
+    \item 期限、无风险利率、波动率应匹配（以年为单位，一般使用交易日计算，美国交易日252天）
+    \item 无风险利率选择即期利率（Spot rate）而非到期收益率（YTM，真实收益率，票息5\%，但非平价发行）
+    \item 由于只有交易日才有历史数据与收益率数据，波动率使用交易天数进行年化，中国240天左右，美国252天
+    \item 波动率为一个时间窗口（一般为年，252天交易日，较以月每21天为窗口更为平滑）内连续复利收益率或对数收益率（$\ln S_t/S_{t-1}$）标准差进行年化。即日频波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$），月频波动率应乘以$\sqrt{252/21}$
+\end{itemize}
+
+\subsection{比例收益率与对数收益率}
+
+股票价格服从几何布朗运动：
+\begin{equation*}
+    dS_t = \mu S_t dt + \sigma S_t dZ_t
+\end{equation*}
+
+其离散形式可写作：
+\begin{equation*}
+    \frac{\Delta S_t}{S_t} = \mu \Delta t + \sigma \varepsilon \sqrt{\Delta t}
+\end{equation*}
+
+其期望有，可以看到$\Delta S_t/S_t$为$\Delta t$时间内百分比年化收益率或\textbf{比例收益率}（percentage returns）为$\mu$：
+\begin{equation*}
+    \E(\frac{\Delta S_t}{S_t}) = \mu \Delta t
+\end{equation*}
+
+而连续复利收益率或\textbf{对数收益率}（log returns）的期望则为：
+\begin{align*}
+    d\ln S       & = (\mu-\frac{\sigma^2}{2})dt+\sigma dZ_t \\
+    \E(d\ln S_t) & = (\mu - \frac{\sigma^2}{2})dt
+\end{align*}
+
+比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望与均值$\mu$均为0，但实际上相比期起初有-43.75\%的亏损。而使用几何平均（复利）计算，年化亏损$-13.40\%$即盈亏应使用几何平均的方式计算，简单的算术平均比例收益率没有意义。而使用对数收益率，其期望为$\mu-\sigma^2/2$，即算术平均$\mu$需要减去$\sigma^2/2$，才是几何平均期望。在此例子中均值为0，方差为0.25，此时对数收益率的期望为$-12.5\%$。即波动越大，降低实际收益率，符合现实情况，具有经济学意义。
+
+\subsection{做空限制}
+且在中国市场中现货存在较大的做空限制，即在现货市场的价格由看多者和少量看空者决定，并不能反应所有投资者的真实情绪，以至于难以复制期权，违法BSM公式假设条件。解决方法有：
+
+
+\begin{enumerate}
+    \item 使用期货进行贴现，得到其隐含现货价格，使用BSM进行计算，其中有：
+          \begin{itemize}
+              \item 期货隐含现货价格
+                    \begin{equation*}
+                        S^* = F e^{-q(T-t)}
+                    \end{equation*}
+              \item 期权隐含现货价格
+                    \begin{equation*}
+                        S^* = (c-p) + Ke^{-r(T-t)}
+                    \end{equation*}
+          \end{itemize}
+    \item 直接使用Black公式，使用期货价格进行计算，即：
+          \begin{equation*}
+              c = e^{-r(T-t)} \left[ F_t N(d_1)-K N(d_2) \right]
+          \end{equation*}
+\end{enumerate}
+
+
+
+\end{document}

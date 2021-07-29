@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+% \usepackage{amstext}
+\usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[UTF8]{ctex}
+\title{希腊字母}
+\author{杨弘毅}
+\date{创建: 2020 年 3 月 20 日 \\修改: \today}
+
+\begin{document}
+\maketitle
+
+\section{Pre}
+\subsection{Normal Distribution}
+$N(x)$为标准正态分布（Standard Normal）的累积分布函数（CDF，Cumulative Distribution Function），由正态分布可知$N(-x) = 1-N(x)$。
+\begin{equation*}
+    N(x) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{x}e^{-z^2/2}dz
+\end{equation*}
+
+$N'(x)$为标准正态分布的概率密度函数（PDF，Probability Density Function），由正态分布的对称性，可知$N'(x) = N'(-x)$。
+\begin{equation*}
+    N'(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}
+\end{equation*}
+
+\subsection{Greeks}
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}rl@{}}
+\toprule
+\multicolumn{2}{c}{Greeks} \\ 
+\midrule
+Delta  & $\delta = \partial V /\partial S$  \\
+Gamma  & $\gamma = \partial^2 V /\partial S^2$  \\
+Theta  & $\theta = \partial V /\partial t$   \\
+Rho    & $\rho = \partial V/\partial r$  \\
+Vega   & $\nu = \partial V/\partial\sigma$   \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Black formula}
+\begin{equation*}
+    c = e^{-r(T-t)}[FN(d_1) - KN(d_2)] \qquad
+    p = e^{-r(T-t)}[KN(-d_2) - FN(-d_1)]
+\end{equation*}
+
+\subsection{$d_1$,$d_2$}
+\begin{align*}
+    d_1 &= \frac{\text{log}(F/K) + \sigma^2/2(T-t)}{\sigma \sqrt{T-t}} \\
+    d_2 &= \frac{\text{log}(F/K) + \sigma^2/2(T-t)}{\sigma \sqrt{T-t}} \\
+    d_2 &= d_1 - \sigma \sqrt{T-t} \\
+    \frac{\partial d_1}{\partial F} &= \frac{\partial d_2}{\partial F} = \frac{\frac{\partial \text{log}(F/K)}{\partial F} \sigma \sqrt{T-t}}{(\sigma \sqrt{T-t})^2} = \frac{\partial (\text{log} F - \text{log} K)/\partial F}{\sigma\sqrt{T-t}} = \frac{1}{F\sigma\sqrt{T-t}}
+\end{align*}
+
+\subsection{Delta}
+\begin{align*}
+    FN'(d_1) &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
+    KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{T-t}-\sigma^2(T-t)/2} \\
+    &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\text{ln}(F/K)} 
+    \qquad \left(d_1\sigma\sqrt{T-t} = \text{ln}(F/K)+\sigma^2(T-t)\right) \\
+    &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
+    &= FN'(d_1) \\
+    \delta = \frac{\partial V_c}{\partial F} &= e^{-r(T-t)}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
+    &= e^{-r(T-t)}N(d_1) \\
+    \delta = \frac{\partial V_p}{\partial F} &= e^{-r(T-t)}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
+    &= e^{-r(T-t)}(-N(-d_1)) \qquad \left(KN'(-d_2) = KN'(d_2),\, FN'(-d_1)= FN'(d_1)\right) \\
+    &= e^{-r(T-t)}(N(d_1)-1)
+\end{align*}
+
+\section{BSM formula}
+\begin{equation*}
+    c = Se^{-q(T-t)}N(d_1) - Ke^{-r(T-t)}N(d_2) \qquad
+    p = Ke^{-r(T-t)}N(-d_2) - Se^{-q(T-t)}N(-d_1)
+\end{equation*}
+
+\subsection{$d_1$,$d_2$}
+\begin{align*}
+    d_1 &= \frac{\text{log}(S/K) + (r+\sigma^2/2)(T-t)}{\sigma \sqrt{T-t}} \\
+    d_2 &= \frac{\text{log}(S/K) + (r-\sigma^2/2)(T-t)}{\sigma \sqrt{T-t}} \\
+    d_2 &= d_1 - \sigma \sqrt{T-t} \\
+    \frac{\partial d_1}{\partial S} &= \frac{\partial d_2}{\partial S} = \frac{\frac{\partial \text{log}(S/K)}{\partial S} \sigma \sqrt{T-t}}{(\sigma \sqrt{T-t})^2} = \frac{\partial (\text{log} S - \text{log} K)/\partial S}{\sigma\sqrt{T-t}} = \frac{1}{S\sigma\sqrt{T-t}}
+\end{align*}
+
+
+\subsection{Delta}
+
+\begin{align*}
+    \delta = \frac{\partial V_c}{\partial S} &= N(d_1)+\frac{1}{S\sigma\sqrt{T-t}} 
+    \left[
+        SN'(d_1)-Ke^{-r(T-t)}N'(d_2)
+    \right]\\
+    &= N(d_1)+\frac{1}{S\sigma\sqrt{T-t}}
+    \left[
+        S\frac{1}{\sqrt{2\pi}}e^{-d_1^2/2}-Ke^{-r(T-t)}\frac{1}{\sqrt{2\pi}}e^{-d_2^2/2}
+    \right]\\
+    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
+    \left[
+        S e^{-d_1^2/2}-Ke^{-r(T-t)}e^{-d_2^2/2}
+    \right]\\
+    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
+    \left[
+        S e^{-d_1^2/2}-Ke^{-r(T-t)} e^{-(d_1-\sigma\sqrt{T-t})^2/2}
+    \right]\\
+    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
+    \left[
+        S e^{-d_1^2/2}-Ke^{-r(T-t)} e^{-d_1^2/2 + d_1\sigma(T-t) - \sigma^2 (T-t)/2}
+    \right]\\
+    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
+    \left[
+        S e^{-d_1^2/2}-Ke^{-r(T-t)} e^{-d_1^2/2 + ln(S/K) + (r+\sigma^2/2)(T-t) - \sigma^2 (T-t)/2}
+    \right]\\
+    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
+    \left[
+        S e^{-d_1^2/2}-K e^{-(d_1^2)/2+ ln(S/K)}
+    \right]\\
+    &= N(d_1) \\
+    \delta = \frac{\partial V_p}{\partial S} &= N(d_1) + 
+    \left[
+        SN'(d_1)-Ke^{-r(T-t)}N'(d_2)
+    \right]\\
+\end{align*}
+
+
+
+
+
+\end{document}

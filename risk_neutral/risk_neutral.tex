@@ -1,0 +1,340 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+% \usepackage{amstext}
+\usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{trees,matrix}
+% \usepackage{cases}
+% \usepackage{mathtools}
+% \usepackage{tabularx}
+
+
+\usepackage[UTF8]{ctex}
+% ctex与amsmath冲突，放最后可解决
+\title{三种定价衍生品定价方式}
+\author{杨弘毅}
+\date{创建: 2020 年 2 月 26 日 \\修改: \today}
+\begin{document}
+\maketitle
+
+\section{衍生品定价基本假设}
+衍生品定价一般使用相对定价法，即利用标的资产价格与衍生品价格之间的内赞关系，根据标的资产的价格求出衍生品价格。与绝对定价法不同，绝对定价法为使用适当的贴现率将未来现金流贴现加总，但贴现率和未来现金流都难以预测。相对定价法则有贴近市场，易于实现的优点，以下为衍生品定价基本假设：
+\begin{itemize}
+  \item 市场不存在摩擦
+  \item 市场是完全竞争
+  \item 市场不存在无风险套利机会
+  \item 市场不存在对手风险
+\end{itemize}
+
+\section{简单例子}
+市价为10元，三个月后，该股票价格存在两种状态，或上涨为11元，或下跌至9元。假设无风险年利率$r_f=10\%$，为三个月协议价格为10.5元的以该股票为标的资产的看涨期权定价。
+\begin{figure}[!ht]
+  \centering
+  \begin{tikzpicture}[>=stealth,sloped]
+    \matrix (tree) [%
+      matrix of nodes,
+      minimum size=1cm,
+      column sep=1.5cm,
+      row sep=0.6cm,
+    ]
+    {
+               & { $S_1=11$, $c_1=0.5$} \\
+      $S_0=10$ &                        \\
+               & { $S_1=9$, $c_1=0$}    \\
+    };
+    \draw[->] (tree-2-1) -- (tree-1-2) node [midway,above] {$p$};
+    \draw[->] (tree-2-1) -- (tree-3-2) node [midway,below] {$1-p$};
+  \end{tikzpicture}
+  \caption{两种资产，两种状态} \label{fig:M1}
+\end{figure}
+
+\subsection{复制定价}
+第一种方法，使用股票和期权构建无风险债券组合。即由$\Delta$单位股票多头和一单位看涨空头构建，无论上涨下跌状态下，在T时刻，其价值都应等于K单位无风险债券（零息债券，Zero-coupon Bond，$B_T=1$）。上涨状态下$K=11\Delta-0.5$，下跌状态下$K=9\Delta$，得到$11\Delta-0.5=9\Delta=K$，即$\Delta=0.25$。即有使用0.25单位的股票多头和一单位的看涨期权空头，即可构建K单位无风险资产$K=2.25$。在t时刻，有$0.25S_0 - c_0=2.25e^{-r_f(T-t)}$，有$c_0=0.30555$。
+
+第二种方法，使用无风险资产和股票复制期权。假设买进$\Delta$单位股票，K单位无风险资产，在T时刻有：
+\begin{equation*}
+  \left\{
+  \begin{aligned}
+    11\Delta + K  &= 0.5 \\
+    9\Delta + K  &= 0 
+  \end{aligned}
+  \right.
+  \qquad
+  \Rightarrow
+  \qquad
+  \left\{
+  \begin{aligned}
+  \Delta &= 0.25 \\
+  K &= -2.25 
+  \end{aligned}
+  \right.
+\end{equation*}
+
+即可以使用0.25单位股票多头，以及2.25单位无风险债券空头复制期权。在t时刻，$c_0=0.25S_0-2.25e^{r_f(T-t)}=0.30555$。
+
+\subsection{状态价格定价}
+使用状态价格证券（State-price Security）为衍生品定价。假设股票价格上涨状态回报为1（T时刻）的状态价格证券在t时刻的价格，称为状态价格$PC_u$。同样，股票价格下跌状态回报为1（T时刻）的状态价格（t时刻）为$PC_d$。
+\begin{equation*}
+PC_u = 
+\left\{
+\begin{aligned}
+1, \quad \text{上涨} \\
+0, \quad \text{下跌} 
+\end{aligned}\right.
+\hspace*{8em}
+PC_d = 
+\left\{
+\begin{aligned}
+0, \quad \text{上涨} \\
+1, \quad \text{下跌} 
+\end{aligned}\right.
+\end{equation*}
+
+使用状态价格证券复制出股票收益，以及无风险债券收益。
+\begin{equation*}
+\left\{
+\begin{aligned}
+11PC_u + 9PC_d = 10, \quad \text{股票} \\
+11PC_u + 9PC_d = 10, \quad \text{债券} 
+\end{aligned}\right.
+\qquad
+\Rightarrow
+\qquad
+\left\{
+\begin{aligned}
+PC_u = 0.611105 \\
+PC_d = 0.364205 
+\end{aligned}\right.
+\end{equation*}
+
+由期权收益可知$c_0=0.5PC_u \times 0PC_d=0.30555$。
+
+\subsection{风险中性定价}
+使用风险中性定价法，假设风险中性下股票上涨概率为$Q$，股票下跌的概率为$1-Q$。根据资产定价基本原理，$P_t = E_t[M_{t+1}X_{t+1}]$（贴现率$M_{t+1}=e^{-r_f(T-t)}$已知）。
+\begin{equation*}
+ S_0 = e^{-R_f(T-t)}[11Q+9(1-Q)] = 10
+ \qquad
+ \Rightarrow
+ \qquad
+ Q = 0.626576
+\end{equation*}
+
+此时可计算出期权价格：
+\begin{equation*}
+ c_0 = M^Q[Q_1X_1 + Q_2X_2] = e^{-R_f(T-t)}[0.5Q+0(1-Q)] = 0.30555
+\end{equation*}
+
+\section{复杂例子}
+在t时刻，市场上有两种互相不可复制的可交易资产$S_a=8$元和$S_b=9$元，且未来T时刻有三种状态，其回报分别问（10，8，0）和（8，12，0）。求行权价为7元，标的资产为$S_a$的看涨期权价格。（注意：没有无风险债券，只有资产$S_a$和$S_b$）
+\begin{figure}[!ht]
+  \centering
+  \begin{tikzpicture}[>=stealth,sloped]
+    \matrix (tree) [%
+      matrix of nodes,
+      minimum size=1cm,
+      column sep=1.5cm,
+      row sep=0.6cm,
+    ]
+    {
+               &  10 \\
+      $S_a=8$  &  8  \\
+               &  0  \\
+    };
+    \draw[->] (tree-2-1) -- (tree-1-2) node [midway,above] {};
+    \draw[->] (tree-2-1) -- (tree-2-2) node [midway,above] {};
+    \draw[->] (tree-2-1) -- (tree-3-2) node [midway,below] {};
+  \end{tikzpicture}
+  \qquad
+  \begin{tikzpicture}[>=stealth,sloped]
+    \matrix (tree) [%
+      matrix of nodes,
+      minimum size=1cm,
+      column sep=1.5cm,
+      row sep=0.6cm,
+    ]
+    {
+               &  8  \\
+      $S_b=9$  &  12  \\
+               &  0  \\
+    };
+    \draw[->] (tree-2-1) -- (tree-1-2) node [midway,above] {};
+    \draw[->] (tree-2-1) -- (tree-2-2) node [midway,above] {};
+    \draw[->] (tree-2-1) -- (tree-3-2) node [midway,below] {};
+  \end{tikzpicture}
+  \qquad
+  \begin{tikzpicture}[>=stealth,sloped]
+    \matrix (tree) [%
+      matrix of nodes,
+      minimum size=1cm,
+      column sep=1.5cm,
+      row sep=0.6cm,
+    ]
+    {
+               &  3  \\
+      $c_a=10$ &  1  \\
+               &  0  \\
+    };
+    \draw[->] (tree-2-1) -- (tree-1-2) node [midway,above] {};
+    \draw[->] (tree-2-1) -- (tree-2-2) node [midway,above] {};
+    \draw[->] (tree-2-1) -- (tree-3-2) node [midway,below] {};
+  \end{tikzpicture}
+  \caption{三种资产，三种状态} \label{fig:M2}
+\end{figure}
+
+\subsection{复制定价}
+使用$S_a$和$S_b$复制看涨期权回报，a和b分别代表复制期权所需$S_a$以及$S_b$的资产数量
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+    10a+8b&=3 \\
+    8a+12b&=1 \\
+    0a+0b&=0
+    \end{aligned}
+  \right.
+  \qquad
+  \Rightarrow
+  \qquad
+  \left\{
+    \begin{aligned}
+    a&=0.5 \\
+    b&=-0.25
+    \end{aligned}\right.
+\end{equation*}
+
+得到$a=0.5 b=-0.25$，即使用0.5份$S_a$资产多头和0.25份$S_b$资产空头，即可复制期权。从而得到在t时刻，期权价格为$c_a=0.5S_a-0.25S_b=1.75$元。
+
+\subsection{状态价格定价}
+
+其定价思路为先用可交易资产计算出状态价格证券价格$PC_1,PC_2,\ldots,PC_n$，而后再用状态价格证券为其他证券定价。假设三种状态价格证券，分别为$PC_1$，$PC_2$和$PC_3$，其回报为（1，0，0），（0，1，0）以及（0，0，1）。如下所示：
+\begin{equation*}
+PC_1 = 
+\left\{
+\begin{aligned}
+1, \quad \text{状态1} \\
+0, \quad \text{状态2} \\
+0, \quad \text{状态3} 
+\end{aligned}\right.
+\qquad
+PC_2 = 
+\left\{
+\begin{aligned}
+0, \quad \text{状态1} \\
+1, \quad \text{状态2} \\
+0, \quad \text{状态3} 
+\end{aligned}\right.
+\qquad
+PC_3 = 
+\left\{
+\begin{aligned}
+0, \quad \text{状态1} \\
+0, \quad \text{状态2} \\
+1, \quad \text{状态3} 
+\end{aligned}\right.
+\end{equation*}
+
+由此可复制$S_a$和$S_b$回报，并计算期权价格$c_a=3 PC_{1} + 1 PC_2 =1.75$元。
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+    10PC_1+8PC_2+0PC_3&=8 \\
+    8PC_1+12PC_2+0PC_3&=9
+    \end{aligned}
+  \right.
+  \qquad
+  \Rightarrow
+  \qquad
+  \left\{
+    \begin{aligned}
+    PC_1 = 0.42857\\
+    PC_2 = 0.46429
+    \end{aligned}
+  \right.
+\end{equation*}
+
+状态价格为未来特定状态下的1元的现值。所以状态价格应取决于三个因素：状态发生概率、对不同状态的风险偏好（不同状态之间现值的差异）以及无风险利率（贴现率）。
+
+\subsection{风险中性定价}
+假设状态1对应概率为$P_1$，状态2对应概率为$P_2$，对应状态3的概率为$1-P_1-P_2$。同样根据资产定价原理$P_t=E_t[M_{t+1}X_{t+1}]$，则有$S=P_1M_1X_1 + P_2M_2X_2+(1-P_1-P_2)M_3X_3$。在状态价格定价中，有$\Pi_i = P_iM_i$使得方程可以求解。但使用风险中性定价，$M_1$、$M_2$、$M_3$、$P_1$、$P_2$和$C_a$均为未知，无法求解。即使市场为完全市场（三种资产和三种状态），但三种资产即有三个方程，六个未知数，方程组存在无穷多解（现实世界中状态数远大于资产数）。\textbf{注意：1.$M_i$为随机贴现因子只取决于状态，即对状态的风险态度，而不随着资产不同而改变。2.$E_t[MX]$只有当其为无风险贴现因子时可写成$ME_t[X]$，因为无风险利率$r_f$为常数且不因状态改变而改变。}
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+      S_a &= P_1M_1 \times 10 + P_2M_2 \times 8 + (1-P_1-P_2)M_3 \times 0 = 8\\
+      S_b &= P_1M_1 \times 8 + P_2M_2 \times 12 + (1-P_1-P_2)M_3 \times 0 = 9\\
+      C_a &= P_1M_1 \times 3 + P_2M_2 \times 1 + (1-P_1-P_2)M_3 \times 0 \\
+    \end{aligned}
+  \right.
+\end{equation*}
+
+我们可以对多余变量自由设定，并不影响等式成立，最简单的设定就是令三种状态下贴现因子都相等，都为$M^Q$无风险贴现因子。此时投资者对风险持中性态度，即对未来不存在任何偏好。由于对不同的状态下贴现因子都相同，可把$M^Q$提出为$M^QE_t[X]$。由$Q_i M^Q = P_i M_i$（即$PC_i$），得到$Q_i = P_i \frac{M_i}{M_Q}$，则此时有$S = M^Q E^Q[X] = M^Q[Q_1X_1 + Q_2X_2 + Q_3X_3]$，简化方程组得：
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+      S_a &= P_1M_1 \times 10 + P_2M_2 \times 8  &= 8 \\
+      S_b &= P_1M_1 \times 8 + P_2M_2 \times 12  &= 9
+    \end{aligned}
+  \right.
+  \qquad
+  \Rightarrow
+  \qquad
+  \left\{
+    \begin{aligned}
+    P_1M_1 &= 3/7 \\
+    P_2M_2 &= 13/28
+    \end{aligned}
+  \right.
+\end{equation*}
+
+在风险中性下：
+\begin{equation*}
+  \left\{
+  \begin{aligned}
+    Q_1 &= P_1M_1 / M^Q = \frac{3}{7 M^Q} \\ 
+    Q_2 &= P_2M_2 / M^Q = \frac{13}{28 M^Q}\\
+    Q_3 &= 1 - \frac{25}{28 M^Q}
+  \end{aligned}
+  \right.
+\end{equation*}
+
+计算期权价格：
+\begin{equation*}
+ c_a = M^Q E^Q[X] = M^Q [3Q_1 + Q_2 + 0Q_3] = M^Q [3\frac{3}{7M^Q} + \frac{13}{28M^Q}] = 1.75
+\end{equation*}
+
+所以风险中性定价法基本思路为，为了方便定价过程，我们可以从现实测度转换至风险中性测度，而定价结果同样适用于现实测度。即将现实测度P转化为Q测度，进行测度转换，在Q测度下计算预期回报$E^Q[X]$，并且使用无风险贴现因子$M^Q$贴现为现值。
+
+\section{概念}
+
+\subsection*{可复制证券}
+在这个例子中只有两种可交易资产，有三种状态，为不完全市场（Imcomplete Market）。但由于需要定价的期权，在$S_0$，$S_1$生成的平面上，可以被复制，因此可以被准确定价。而对于\textbf{不可复制资产}，虽然无法准确定价，但可以确定$M^Q$的合理范围，从确定新资产的价格合理范围。\textbf{（注意：可复制不代表是完全市场）}
+
+\subsection*{不可复制证券}
+假设需要为t=1时刻回报为（3，2，1）的资产$S_3$进行定价，因为其不可被复制，只能确定其范围。当$Q_3=0$时，$Q_1+Q_2\leq1$，由$M^Q(Q_1 + Q_2) = 25/28$得到$M^Q\geq25/28$。因为随机贴现因子$M^Q\leq1$，确定其范围为$ 25/28\leq M^Q\leq1$。当$M^Q=25/28$时，$Q_1=12/25$，$Q_2=13/25$，此时资产价格$S_3=2.21$。当$M^Q=1$时，$Q_1=3/7$，$Q_2=13/28$，$Q_3=3/28$，此时资产价格$S_3 = 2.32$。得到该资产$S_3$价格的合理范围在$2.21 \sim 2.32$之间。
+
+\subsection*{完全市场}
+在完全市场中（Complete Market），三种资产（$S_a$、$S_b$和$S_c$）对应三种状态，在风险中性测度下：
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+      S_a &= M^Q[Q_1X_{a,1} + Q_2X_{a,2} + (1-Q_1-Q_2)X_{a,3}] \\
+      S_b &= M^Q[Q_1X_{b,1} + Q_2X_{b,2} + (1-Q_1-Q_2)X_{b,3}] \\
+      S_c &= M^Q[Q_1X_{c,1} + Q_2X_{c,2} + (1-Q_1-Q_2)X_{c,3}]
+    \end{aligned}
+  \right.
+\end{equation*}
+
+如果$(X_{a,1},X_{a,2},X_{a,3})$，$(X_{b,1},X_{b,2},X_{b,3})$和$(X_{c,1},X_{c,2},X_{c,3})$为线性独立（相互不可复制），即能生成整个三维线性空间，即\textbf{空间内任意资产都可复制}。此时有三个未知数$Q_1$，$Q_2$和$M^Q$，三个方程，能求解所有未知数。相反，在现实测度下则无法求解所有未知数，只能整体求解$PC_i = P_iM_i$，即求解状态价格证券。如上述例子中，资产$S_a$与$S_b$之间互相不可复制，即互相独立，但可由这两种证券复制出第三种证券$c_a$，市场为可复制，但非完美市场。即$c_a$在$S_a$与$S_b$生成的平面上，但$S_a$和$S_b$无法生成整个三维的状态空间，并非任何资产都可被复制。\textbf{（注意：在可复制基础上，需要无套利条件，资产才能被定价）}
+
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+      S_a &= P_1M_1X_{a,1} + P_2M_2X_{a,2} + P_3M_3X_{a,3} \\
+      S_b &= P_1M_1X_{b,1} + P_2M_2X_{b,2} + P_3M_3X_{b,3} \\
+      S_c &= P_1M_1X_{c,1} + P_2M_2X_{c,2} + P_3M_3X_{c,3}
+    \end{aligned}
+  \right.
+\end{equation*}
+
+\subsection*{完美市场}
+完美市场（Perfect Market），指没有交易摩擦的市场，能够自由做空做多。
+
+\end{document}

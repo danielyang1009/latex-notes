@@ -1,0 +1,143 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+% \usepackage{amstext}
+\usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
+% \usepackage{tikz}
+% \usetikzlibrary{trees,matrix}
+% \usepackage{cases}
+% \usepackage{mathtools}
+% \usepackage{tabularx}
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage{float}
+\usepackage{hyperref}
+\usepackage[UTF8]{ctex}
+% ctex与amsmath冲突，放最后可解决
+\title{Moment}
+\author{杨弘毅}
+\date{创建: 2021 年 4 月 8 日 \\修改: \today}
+\begin{document}
+\maketitle
+
+\section{矩的含义}
+
+数学中矩的概念来自物理学，在物理学中，矩表示距离和物理量的乘积。如力与力臂（参考点的距离）的乘积，得到的是力矩（或扭矩）。可以理解为一杆“秤”，“秤”的平衡的两边重量与距离的乘积相同，则能保持平衡。
+
+而在概率论上，可以理解秤为一杆秤的两端的概率为1，中心点概率为0。如一端秤砣重量，为中奖金额$500$元，但中奖概率为千分之一，即离中心点距离为$0.1\%$，那么期望为$0.5$元。可以理解为了使得秤保持平衡，则另一端，在概率为1，其秤砣重量，中奖金额应为$0.5$元。
+
+而这样既可以把期望看成是矩，即距离（概率）乘以力的大小（随机变量）：
+\begin{equation*}
+    E[x] = \sum_i p_i x_i
+\end{equation*}
+
+
+n阶矩可以表示为，其中$f(x)$为概率密度函数（probability density function）：
+\begin{equation*}
+    \mu_n = \int_{-\infty}^{\infty} (x-c)^n f(x) dx
+\end{equation*}
+
+
+\subsection*{Reference}
+\url{https://www.zhihu.com/question/19915565/answer/233262673}\\
+\indent\url{https://en.wikipedia.org/wiki/Moment_(mathematics)}
+
+
+\section{原点矩（Raw/crude moment）}
+
+当$c=0$时，称为原点矩。此时则有\textbf{平均数（mean）}或\textbf{期望（expected value）}的连续形式为：
+\begin{equation*}
+    \mu = E(x) = \int_{-\infty}^{\infty} (x-0)^1 f(x) dx =
+    \int_{-\infty}^{\infty} x f(x) dx
+\end{equation*}
+
+其离散形式为：
+\begin{equation*}
+    \mu = E(x) = \sum_i x_i p_i
+\end{equation*}
+
+\section{中心矩（Central moment）}
+
+期望值可以成为随机变量的中心，即当$c=E(x)$时
+\begin{equation*}
+    \mu_n = E[(x-E(x))^n] = \int_{-\infty}^{\infty} (x-E(x))^n f(x) dx
+\end{equation*}
+
+同时可知任何变量的一阶中心矩为0：
+\begin{align*}
+    \mu_1 &= \int_{-\infty}^{\infty} (x-E(x))^1 f(x) dx \\
+    &= \int_{-\infty}^{\infty} x f(x) dx - \int_{-\infty}^{\infty} E(x) f(x) dx \\
+    &= E(x) - E(x) \int_{-\infty}^{\infty} f(x) dx \\
+    &= E(x) - E(x) \times 1 = 0 
+\end{align*}
+
+而二阶中心矩（second central moment）为\textbf{方差（Variance）}
+\begin{align*}
+    \mu_2 &= \int_{-\infty}^{\infty} (x-E(x))^2 f(x) dx \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 E(x) \int_{-\infty}^{\infty} x f(x)dx + [E(x)]^2\int_{-\infty}^{\infty}f(x)dx \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 E(x) E(x) + [E(x)]^2\times 1 \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - [E(x)]^2 \\
+    &= E(x^2) - [E(x)]^2 = \sigma^2
+\end{align*}
+
+其离散形式则有：
+\begin{equation*}
+    \text{Var}(x) = \sigma^2 = \sum p_i (x_i - \mu)^2 
+\end{equation*}
+
+\subsection*{Reference}
+\url{https://en.wikipedia.org/wiki/Central_moment}
+
+\section{标准矩（Standardized moment）}
+
+标准矩为标准化（除以标准差）后的中心矩，第$n$阶中心矩（standardized moment of degree n）有：
+\begin{equation*}
+    \mu_n = E[(x-\mu)^n] = \int_{-\infty}^{\infty} (x-\mu)^n f(x)dx
+\end{equation*}
+
+已知标准差的$n$次方有：
+\begin{equation*}
+    \sigma^n = \left(\sqrt{E[(x-\mu)^2]}\right)^n = (E[(x-\mu^2)])^{n/2}
+\end{equation*}
+
+此时，第$n$阶标准矩有：
+\begin{equation*}
+    \tilde{\mu}_n = \frac{\mu_n}{\sigma^n} = E\left[ \left(\frac{x-\mu}{\sigma}\right)^n \right]
+\end{equation*}
+
+由一阶中心矩为$0$，可知一阶标准矩（first standardized moment）也为$0$。而二阶标准矩（second standardized moment）则有：
+\begin{equation*}
+    \tilde{\mu}_2 = \frac{\mu_2}{\sigma^2} = \frac{E[(x-\mu)^2]}{\left(E[(x-\mu)^2]\right)^{2/2}} = 1
+\end{equation*}
+
+\subsection*{偏度（skewness）}
+
+三阶标准矩（third standardized moment）为\textbf{偏度}：
+\begin{equation*}
+    \tilde{\mu}_3 = \frac{\mu_3}{\sigma^3} = \frac{E[(x-\mu)^3]}{\left(E[(x-\mu)^2]\right)^{3/2}}
+\end{equation*}
+
+偏度分为两种：
+\begin{itemize}
+    \item 负偏态或左偏态：左侧的尾部更长，分布的主体集中在右侧
+    \item 正偏态或右偏态：右侧的尾部更长，分布的主体集中在左侧
+\end{itemize}
+
+\subsection*{峰度（kurtosis）}
+四阶标准矩（third standardized moment）为\textbf{峰度}：
+\begin{equation*}
+    \tilde{\mu}_4 = \frac{\mu_4}{\sigma^4} = \frac{E[(x-\mu)^4]}{\left(E[(x-\mu)^2]\right)^{4/2}} 
+\end{equation*}
+
+定义\textbf{超值峰度（excess kurtosis）}为峰度$-3$，使得正态分布的峰度为0：
+\begin{equation*}
+    \text{excess kurtosis} = \tilde{\mu}_4-3
+\end{equation*}
+\begin{itemize}
+    \item 如果超值峰度为正，即峰度值大于3，称为高狭峰（leptokurtic）
+    \item 如果超值峰度为负，即峰度值小于3，称为低阔峰（platykurtic）
+\end{itemize}
+
+\subsection*{Reference}
+\url{https://en.wikipedia.org/wiki/Standardized_moment}
+
+\end{document}

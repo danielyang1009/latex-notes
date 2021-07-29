@@ -1,0 +1,69 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+% \usepackage{amstext}
+\usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
+% === graph packages ===
+% \usepackage{tikz}
+% \usetikzlibrary{trees,matrix}
+% \usepackage{cases}
+% \usepackage{mathtools}
+% == table packages ==
+% \usepackage{tabularx}
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage{float}
+% === url packages ===
+% \usepackage[hyphens]{url}
+\usepackage{hyperref}
+\usepackage[UTF8]{ctex}
+% ctex与amsmath冲突，放最后可解决
+\title{欧拉公式（Euler's formula）}
+\author{杨弘毅}
+\date{创建: 2021 年 4 月 15 日 \\修改: \today}
+\begin{document}
+\maketitle
+
+\section{证明}
+
+通过使用泰勒级数（Taylor series），将sine与cosine展开：
+
+\begin{align*}
+    \sin x = \sum_{k=0}^{\infty} (-1)^{k} \frac{x^{2k+1}}{(2k+1)!} &= x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \cdots \\
+    \cos x = \sum_{k=0}^{\infty} (-1)^{k} \frac{x^{2k}}{(2k)!} &= 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \cdots
+\end{align*}
+
+同时又自然常数或欧拉数（Euler's number），在$k=0$展开有：
+\begin{align*}
+    e^x = \sum_{k=0}^{\infty} \frac{x^k}{k!} &= 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \frac{x^4}{4!} + \frac{x^5}{5!} + \frac{x^6}{6!} + \frac{x^7}{7!} + \cdots \\
+    e^{ix} = \sum_{k=0}^{\infty} \frac{(ix)^k}{k!} &= 1 + ix - \frac{x^2}{2!} - i\frac{x^3}{3!} + \frac{x^4}{4!} + i\frac{x^5}{5!} - \frac{x^6}{6!} -i\frac{x^7}{7!} + \cdots \\
+    &= \left( 1 - \frac{x^2}{2!} + \frac{x^4}{4!} -\frac{x^6}{6!} +\cdots \right) + i\left(x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \cdots \right) \\
+    &= \cos x + i \sin x
+\end{align*}
+
+此时则有：
+\begin{align*}
+    \text{Re}\left[e^{ix}\right] &= \cos x \\
+    \text{Im}\left[e^{ix}\right] &= \sin x
+\end{align*}
+
+将$x=-x$代入：
+\begin{equation*}
+    e^{-ix} = \cos x - i \sin x
+\end{equation*}
+
+联立$e^{ix}$，可得：
+\begin{align*}
+    \sin x &= \frac{e^{ix}-e^{-ix}}{2i} \\
+    \cos x &= \frac{e^{ix}+e^{-ix}}{2} 
+\end{align*}
+
+将$x = \pi$代入，则可得欧拉恒等式（Euler's identity）：
+\begin{equation*}
+    e^{i\pi} + 1 = 0
+\end{equation*}
+
+
+\subsection*{Reference}
+\url{https://www.bilibili.com/video/BV1yJ411C7wG}
+
+\end{document}

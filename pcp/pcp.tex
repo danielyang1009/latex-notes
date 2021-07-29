@@ -1,0 +1,191 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
+\usepackage{amsmath}
+% \usepackage{amstext}
+\usepackage{multicol}
+\setlength{\columnsep}{3em}
+\setlength{\columnseprule}{0.4pt}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[UTF8]{ctex}
+
+\title{买卖权平价关系}
+\author{杨弘毅}
+\date{创建: 2020 年 3 月 20 日 \\修改: \today}
+\begin{document}
+\maketitle
+\section{欧式期权PCP}
+使用远期合约（适用于中国市场与美国市场），构建如下两个组合：
+
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：欧式看涨多头
+    \item 组合B：欧式看跌多头 + 远期合约多头（交割价格（Delivery Price）为K）
+\end{itemize}
+
+在T时刻，组合A与组合B价值为：
+\begin{multicols}{2}
+当$S_T \geq K$时:
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$S_T-K$
+    \item 组合B：$0 + (S_T-K)$
+\end{itemize}
+\vfill\columnbreak
+当$S_T < K$时：
+\begin{itemize}
+    \item 组合A：$0$
+    \item 组合B：$(K - S_T) + (S_T-K)$
+\end{itemize}
+\end{multicols}
+
+可以发现组合A与组合B，在T时刻，无论哪种情况下两者价值都相等。因此根据无套利原则，t时刻两个组合价格也必须相同，则有对于远期的PCP公式（$S_T=F_T$）：
+\begin{equation*}
+    c = p + (F_T-K)e^{-r(T-t)} \quad\text{或}\quad c = p + S_t - Ke^{-r(T-t)}
+\end{equation*}
+
+对于已知红利资产，支付红利现值为$I_t$，红利率为$q$：
+\begin{align*}
+    c &= p + S_t - I_t - Ke^{-r(T-t)} \quad \text{（已知红利）} \\
+    c &= p + S_t e^{-q(T-t)} - Ke^{-r(T-t)}  \quad \text{（已知红利率）} \\
+\end{align*}
+
+\section{期权隐含价格}
+隐藏期货价格：
+\begin{equation*}
+    F^*_t = (c-p)e^{r(T-t)} + K
+\end{equation*}
+
+隐藏现货价格：
+\begin{equation*}
+    S^*_t = (c-p) + K e^{r(T-t)}
+\end{equation*}
+
+对于中国市场，ETF期权有红利保护。而期货为指数期货无红利保护，自动回落，需要调整红利：
+\begin{equation*}
+    F^*_t = (c-p)e^{r(T-t)} + K + I_t e^{r(T-t)}
+\end{equation*}
+
+\section{美式期权提前行权的影响}
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+\multicolumn{1}{l}{}
+& \multicolumn{1}{c}{\textbf{美式看涨期权}} & \multicolumn{1}{c}{\textbf{美式看跌期权}} \\
+\midrule
+\multirow{2}{*}{\textbf{无红利}} 
+& 1.需提前支付行权价，损失行权价格利息 & 1.提前获得行权价格，可获得行前价格利息 \\
+& 2.损失期权时间价值 & 2.失去期权时间价值 \\
+\textbf{有红利} & 3.提前行权获得股票，因此获得红利 & 3.放弃红利 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{美式期权PCP}
+\subsection{无红利资产}
+构造如下两个组合：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：欧式看涨多头（c） + K单位现金（用无风险利率投资）
+    \item 组合B：美式看跌多头（P，用大写表示） + 一单位股票
+\end{itemize}
+
+在\textbf{不提前行权}的情况下，如下所示，组合A的价值都将大于组合B的价值：
+\begin{multicols}{2}
+当$S_T \geq K$时:
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$(S_T-K) + Ke^{r(T-t)}$
+    \item 组合B：$S_T$
+\end{itemize}
+\vfill\columnbreak
+当$S_T < K$时：
+\begin{itemize}
+    \item 组合A：$Ke^{r(T-t)}$
+    \item 组合B：$(K - S_T) + S_T$
+\end{itemize}
+\end{multicols}
+
+只有当$S_\tau<K$时，才会\textbf{提前行权}。此时欧式看涨期权内在价值为零，但仍有时间价值。此时仍有组合A价值大于组合B价值：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$ \text{时间价值} + Ke^{r(T-t)}$
+    \item 组合B：$(K-S_\tau) + S_\tau$
+\end{itemize}
+
+即无论美式期权是否提前行权，都有组合A价值大于等于组合B的价值，且由于美式期权价格大于等于欧式期权（可提前行权和获得股票，进而获得红利），则有：
+\begin{equation*}
+    c + K \geq P + S_t \quad \rightarrow \quad C + K \geq P + S_t
+\end{equation*}
+
+又由于$P \geq p$（可提前获得行权价格，进而获得行权价的利息），由3欧式期权PCP可得，$P\geq p = c + Ke^{-r(T-t)} - S_t$。当标的资产为无收益资产（无股息红利）时，$c=C$，则有：
+\begin{equation*}
+    C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+因此：
+\begin{equation*}
+   S_t - K \leq C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+\subsection{有红利资产}
+假设股票将派发红利，其现值$I_t$，构造如下两个组合，注意组合B由于持有股票，将在T时刻获得红利$I_t e^{r(T-t)}$：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：欧式看涨多头（c） + （K+I）单位现金（用无风险利率投资）
+    \item 组合B：美式看跌多头（P，用大写表示） + 一单位股票
+\end{itemize}
+
+在\textbf{不提前行权}的情况下，组合A的价值都将大于组合B的价值：
+\begin{multicols}{2}
+当$S_T \geq K$时:
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$(S_T-K) + (K+I_t)e^{r(T-t)}$
+    \item 组合B：$S_T + I_t e^{r(T-t)}$
+\end{itemize}
+\vfill\columnbreak
+当$S_T < K$时：
+\begin{itemize}
+    \item 组合A：$(K+I_t)e^{r(T-t)}$
+    \item 组合B：$K- S_T + S_T + I_t e^{r(T-t)}$
+\end{itemize}
+\end{multicols}
+
+同理，只有在$S_\tau<K$时，才会\textbf{提前行权}，假设此时时刻为$t<\tau<T$，虽然看涨期权内在价值为0，但仍有时间价值，则有：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$ 时间价值 + (K+I_t)e^{r(T-t)}$
+    \item 组合B：$(K-S_\tau) + S_\tau + I_t e^{r(T-t)}$
+\end{itemize}
+
+即无论是否提前行权，都有组合A价值大于组合B价值，同时因$C \geq c$，则有：
+\begin{equation*}
+    c + K + I \geq P + S_t \quad \rightarrow \quad C + K +I \geq P + S_t
+\end{equation*}
+
+即：
+\begin{equation*}
+    C-P \geq S_t - K - I
+\end{equation*}
+
+因有红利资产，再发放红利之后股价自然回落，因此看涨期权价格更低，看跌期权更高，$C-P$组合价值更低，并由无红利资产美式期权推导得：
+\begin{equation*}
+    C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+因此：
+\begin{equation*}
+   S_t - K - I \leq C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+
+\section{中国ETF期权PCP}
+ETF期权受红利保护，则有PCP为：
+\begin{equation*}
+    c + Ke^{-r(T-t)} = p + F_t e^{-r(T-t)} + I_t 
+\end{equation*}
+
+\end{document}

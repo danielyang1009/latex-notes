@@ -4,12 +4,17 @@
 \usepackage{amsfonts}
 \usepackage{booktabs}
 \usepackage{float}
+\usepackage{multirow}
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
 \usepackage[UTF8]{ctex}
 
-\def\Var{{\textrm{Var}}\,}
-\def\Cov{{\textrm{Cov}}\,}
-\def\E{{\textrm{E}}\,}
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+
+% \def\Var{{\textrm{Var}}\,}
+% \def\Cov{{\textrm{Cov}}\,}
+% \def\E{{\textrm{E}}\,}
 
 \title{BSM公式}
 \author{杨弘毅}
@@ -189,18 +194,19 @@ $G(X,t)$的泰勒展开式为：
     \ln S_T  \sim & N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{align*}
 
-\textbf{可以看到此时\underline{股票价格的对数}服从正态分布（Log-normal distribution），因此可知，股票价格服从对数正态分布}。即对一个服从正态分布的随机变量$X$取指数，则$e^X$服从数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布：
+\textbf{可以看到此时\underline{股票价格的对数}服从正态分布（Log-normal distribution），因此可知，股票价格服从对数正态分布}。即对一个服从正态分布的随机变量$X$取指数，则$e^X$服从数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布。
 \begin{align*}
-    \ln S_T \sim N(\mu_{N},\sigma_{N}^2) \quad \leftrightarrow \quad S_T \sim \text{Log-normal}(\mu_{LogN},\sigma_{LogN}^2)
+    \ln S_T \sim N(\mu,\sigma^2) \quad \leftrightarrow \quad S_T \sim \text{Log-normal}(\mu,\sigma^2)
 \end{align*}
 
-此时，已知对数正态分布有如下性质 $X \sim \text{Log-normal}(\mu,\sigma^2)$：
+对于服从正态分布的随机变量$Z\sim N(\mu,\sigma^2)$，
+此时，已知对数正态分布有如下性质 $X \sim \text{Log-normal}(\mu,\sigma^2)$，并且：
 \begin{align*}
     \E(X) & = \exp(\mu+\sigma^2/2) \\
     \Var(X) & = [\exp(\sigma^2)-1]\exp(2\mu+\sigma^2)
 \end{align*}
 
-因股票价格$S_T$服从对数正态分布，代入上式可知其均值标准差为：
+因股票价格$S_T$服从对数正态分布，代入上式可知其期望及方差为：
 \begin{align*}
     \E(S_T)   & = \exp(\ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)+\frac{\sigma^2}{2}(T-t)) \\
     & = \exp(\ln S_t + \mu(T-t)) \\
@@ -209,6 +215,98 @@ $G(X,t)$的泰勒展开式为：
     & = \left[\exp(\sigma^2(T-t))-1\right] \exp\left[2 \ln S_t + 2\mu (T-t)\right] \\
     & = S_t^2 e^{2\mu(T-t)} \left[ e^{\sigma^2 (T-t)} - 1 \right]
 \end{align*}
+
+\subsection{对数正态分布}
+
+如果一组数值做对数变换后服从正态分布，我们就称其服从对数正态分布。假设随机变量$X$服从正态分布，则有$ln x$服从对数正态分布，两者累积分布函数（Cumulative distribution fuction，CDF）相同：
+\begin{equation*}
+    F_L(x) = F_N (\ln x)
+\end{equation*}
+
+对公式两边取倒数，则可得到其概率密度函数（probability density function，PDF）：
+\begin{equation*}
+    F_L(x) = \frac{1}{x} F_N(\ln x)
+\end{equation*}
+
+此时，带入已知正态分布PDF，即可得到对数正态分布PDF：
+\begin{equation*}
+    f_L = \frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{(\ln x - \mu)^2}{2\sigma^2}}
+\end{equation*}
+
+\textbf{注意}：对于对数正态分布，$\mu$与$\sigma$并非其均值与标准差，仅为确定其对数正态分布的两个参数。只是使用其确定正态分布时，就正好为其期望和标准差。对于相同的$\mu$与$\sigma$参数确定的正态分布与对数正态分布，可以通过对服从对数正态分布的随机变量取对数转换为正态分布。相反，通过对服从正态分布的随机变量取指数转换为对数正态分布。两者之间的期望与标准差（方差）通过如下关系转化：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+\multicolumn{1}{l}{}
+& \multicolumn{1}{c}{\textbf{正态分布}} & \multicolumn{1}{c}{\textbf{对数正态分布}} \\
+\midrule
+\multirow{1}{*}{\textbf{期望}} 
+& $\E_N(X)=\mu = \ln[\E_L(X)] - \frac{1}{2} \ln \left[1+\frac{\Var_L(X)}{[\E_L(X)]^2}\right] $ & $\E_L(X) = e^{\mu+\frac{\sigma^2}{2}}$ \\
+\textbf{方差} & $\Var_N(X) = \sigma^2 = \ln \left[1+\frac{\Var_L(x)}{[\E_L(X)]^2}\right]$ & $\Var_L(X) = e^{2\mu+\sigma^2} 
+\left(e^{\sigma^2} - 1\right)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{期望推导}
+
+根据对数正态分布的PDF，可计算其期望：
+\begin{equation*}
+    \E(X) = \int^{+\infty}_0 x f(x) dx = \int^{+\infty}_0 \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(ln x - \mu)^2}{2\sigma^2}} dx
+\end{equation*}
+
+使用换元法，令$t = \frac{ln x - \mu}{\sqrt{2}\sigma}$，则有$x = e^{\sqrt{2}\sigma t + \mu}$，则原积分转化为：
+\begin{align*}
+    \E(X) &= \int^{+\infty}_{-\infty} \frac{1}{\sigma\sqrt{2\pi}}e^{-t^2}d e^{\sqrt{2}\sigma t + \mu}\\ 
+    &= \frac{e^{\mu + \frac{\sigma^2}{2}}}{\sqrt{\pi}} \int^{+\infty}_{-\infty} e^{-(t-\frac{\sqrt{2}\sigma}{2})^2} dt\\ 
+    &= \frac{e^{\mu + \frac{\sigma^2}{2}}}{\sqrt{\pi}} \int^{+\infty}_{-\infty} e^{-t^2}d e^{-(t-\frac{\sqrt{2}\sigma}{2})^2} d(t-\frac{\sqrt{2}\sigma}{2})
+\end{align*}
+
+由于$\int^{+\infty}_{-\infty} e^{x^2} = \sqrt{\pi}$，可得到：
+\begin{equation*}
+    \E(X) = e^{\mu+\frac{\sigma^2}{2}}
+\end{equation*}
+
+\subsubsection{方差推导}
+
+已知：
+\begin{equation*}
+    \Var(X) = \E[(X-\mu)^2] = \E(X^2 -2\mu X + \mu^2) = \E(X^2) -2\mu \E(X) + \mu^{2} = \E(X^2) - [\E(X)]^2
+\end{equation*}
+
+同上，已知对数正态分布PDF：
+\begin{equation*}
+    \E(X^2) = \int^{+\infty}_0 x^2 f(x) dx = \int^{+\infty}_0 \frac{x}{\sigma\sqrt{2\pi}} e^{-\frac{(\ln x - \mu)^2}{2\sigma^2}} dx
+\end{equation*}
+
+使用换元法，令$t = \frac{\ln x-\mu}{\sigma}$，则有$x = e^{\sigma t + \mu}$：
+\begin{align*}
+    \E(X^2) &= \frac{e^{2\mu}}{\sqrt{2\pi}} \int^{+\infty }_{-\infty } e^{-\frac{t^2}{2}+2\sigma t}dt \\
+    &= \frac{e^{2\mu}}{\sqrt{2\pi}} \int^{+\infty }_{-\infty } e^{-\frac{1}{2}(t-2\sigma)^2 + 2\sigma^2}dt \qquad 
+    \left(\text{对}-\frac{t^2}{2}+2 \sigma t \text{配方}\right) \\
+    &= \frac{e^{2\mu+2\sigma^2}}{\sqrt{2\pi}} \sqrt{2} \int^{+\infty}_{-\infty} e^{(-\frac{t-2\sigma}{\sqrt{2}})^2} d\left(\frac{t-2\sigma}{\sqrt{2}}\right)\\
+    &= e^{2\mu +2\sigma^2}
+\end{align*}
+
+此时则有：
+\begin{align*}
+    \Var(X) &= \E(X^2) - [\E(X)]^2  \\
+    &= e^{2\mu+2\sigma^2} - (e^{\mu+\frac{\sigma^2}{2}})^2 \\
+    &= e^{2\mu+2\sigma^2} - e^{2\mu+\sigma^2} \\
+    &= e^{2\mu+\sigma^2}\left(e^{\sigma^2} - 1\right)\\
+\end{align*}
+
+\subsubsection{求正态分布$\mu$与$\sigma$}
+
+已知$\ln X \sim N(\mu,\sigma^2)$、$\E(X)$与$\Var(x)$，即随机变量$X$服从对数正态分布，其对数服从正态分布，则有：
+\begin{equation*}
+    \mu = \ln[\E(X)] - \frac{1}{2} \ln \left[1+\frac{\Var(X)}{[\E(X)]^2}\right]
+\end{equation*}
+\begin{equation*}
+    \sigma = \sqrt{\ln \left[1+\frac{\Var(x)}{[\E(X)]^2}\right]}
+\end{equation*}
 
 
 \section{BSM 偏微分方程（PDE）}

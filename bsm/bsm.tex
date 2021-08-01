@@ -126,21 +126,28 @@ $G(X,t)$的泰勒展开式为：
     \Delta G_t = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2}\Delta X^2  + \frac{\partial G}{\partial X \partial t}\Delta X \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial t^2} \Delta t^2 + \dots
 \end{equation*}
 
-当$\Delta t \rightarrow 0$时，$(\Delta t)^2$与$(\Delta t)^{3/2}$项，都可认为时高阶无穷小项。在随机微分中，由于$(\Delta X)^2$项中包含$\Delta t$项，因此需要保留。因此仅考虑前三项，略去比$\Delta t$高阶的项（\textbf{注意}：此与常微分不同，而在常微分中，此项是也是高阶无穷小项）。代入$\Delta X$定义，展开得到：
+当$\Delta t \rightarrow 0$时，$(\Delta t)^2$，认为是高阶无穷小，可忽略。而对于$\Delta X \Delta t$项有：
+
+\begin{align*}
+    \Delta X &= a\Delta t + b \varepsilon\sqrt{\Delta t} \\
+    \Delta X \Delta t &= a(\Delta t)^2 + b \varepsilon(\Delta t)^{3/2}
+\end{align*}
+
+其中的$(\Delta t)^{3/2}$项，也被认为时高阶无穷小项，可忽略。同时由于$(\Delta X)^2$项中包含$\Delta t$项，因此需要保留。因此仅考虑前三项（\textbf{注意}：此与常微分不同，而在常微分中，$(\Delta X)^2$项是也是高阶无穷小项），展开得到：
 \begin{align*}
     \Delta G_t & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2}\Delta X^2 \\
     & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} [a\Delta t + b\varepsilon\sqrt{\Delta t}]^2 \\
     & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 \varepsilon^2 \Delta t
 \end{align*}
 
-此时还包含有$\varepsilon^2$项，但由于$\varepsilon \sim N(0,1)$，因此有$\E(\varepsilon)=0$，$\Var(\varepsilon)=\E(\varepsilon^2)-[\E(\varepsilon)]^2=1$，可得$\E(\varepsilon^2)=1$，即$\E(\varepsilon^2 \Delta t) = \Delta t$。$\varepsilon^2 \Delta t$的方差有：
+对于$\varepsilon^2 \Delta t$项，由于$\varepsilon \sim N(0,1)$，因此有$\E(\varepsilon)=0$。又因$\Var(\varepsilon)=\E(\varepsilon^2)-[\E(\varepsilon)]^2=1$，得到$\E(\varepsilon^2)=1$，同时有$\E(\varepsilon^2 \Delta t) = \Delta t$。计算$\varepsilon^2 \Delta t$的方差可得：
 \begin{align*}
     \Var(\varepsilon^2 \Delta t) & = \Var(\varepsilon^2) \Var(\Delta t) + [\E(\varepsilon^2)]^2 \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon^2) \\
     & = \Var(\varepsilon^2) \Var(\Delta t) + 1 \cdot \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon_t^2) \\
     & = \mathcal{O}(\Delta t^2)
 \end{align*}
 
-因此可以认为其方差为高阶无穷小，可认为$\varepsilon^2 \Delta t \approx \Delta t$，因此可将原式化简为：
+可以认为$\varepsilon^2 \Delta t$方差为高阶无穷小，其期望为$1$。因此，可认为$\varepsilon^2 \Delta t \approx \Delta t$，可将原式化简为：
 \begin{equation*}
     \Delta G_t = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 \Delta t
 \end{equation*}
@@ -194,16 +201,15 @@ $G(X,t)$的泰勒展开式为：
     \ln S_T  \sim & N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{align*}
 
-\textbf{可以看到此时\underline{股票价格的对数}服从正态分布（Log-normal distribution），因此可知，股票价格服从对数正态分布}。即对一个服从正态分布的随机变量$X$取指数，则$e^X$服从数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布。
+\textbf{可以看到此时\underline{股票价格的对数}服从正态分布（Log-normal distribution），因此可知，股票价格服从对数正态分布}。由正态分布与对数正态分布的性质可知，对一个服从正态分布的随机变量$X$取指数，则$e^X$服从数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布。因此有如下关系：
 \begin{align*}
     \ln S_T \sim N(\mu,\sigma^2) \quad \leftrightarrow \quad S_T \sim \text{Log-normal}(\mu,\sigma^2)
 \end{align*}
 
-对于服从正态分布的随机变量$Z\sim N(\mu,\sigma^2)$，
-此时，已知对数正态分布有如下性质 $X \sim \text{Log-normal}(\mu,\sigma^2)$，并且：
+并且已知对数正态分布$X \sim \text{Log-normal}(\mu,\sigma^2)$，其期望与标准差为：
 \begin{align*}
-    \E(X) & = \exp(\mu+\sigma^2/2) \\
-    \Var(X) & = [\exp(\sigma^2)-1]\exp(2\mu+\sigma^2)
+    \E(X) & = e^{\mu+\frac{\sigma^2}{2}} \\
+    \Var(X) & = e^{2\mu+\sigma^2} (e^{\sigma^2}-1)
 \end{align*}
 
 因股票价格$S_T$服从对数正态分布，代入上式可知其期望及方差为：

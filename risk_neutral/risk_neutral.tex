@@ -1,14 +1,10 @@
 \documentclass[11pt]{article}
 \usepackage{amsmath}
-% \usepackage{amstext}
+% for underline word wrap
+\usepackage{ulem}
 \usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
 \usepackage{tikz}
 \usetikzlibrary{trees,matrix}
-% \usepackage{cases}
-% \usepackage{mathtools}
-% \usepackage{tabularx}
-
-
 \usepackage[UTF8]{ctex}
 % ctex与amsmath冲突，放最后可解决
 \title{三种定价衍生品定价方式}
@@ -110,7 +106,7 @@ PC_d = 0.364205
 由期权收益可知$c_0=0.5PC_u \times 0PC_d=0.30555$。
 
 \subsection{风险中性定价}
-使用风险中性定价法，假设风险中性下股票上涨概率为$Q$，股票下跌的概率为$1-Q$。根据资产定价基本原理，$P_t = E_t[M_{t+1}X_{t+1}]$（贴现率$M_{t+1}=e^{-r_f(T-t)}$已知）。
+使用风险中性定价法，假设风险中性下股票上涨概率为$Q$，股票下跌的概率为$1-Q$。根据资产定价基本原理，$P_t = E_t[M_{t+1}X_{t+1}]$，其中$M_t$又被称为随机贴现因子（Stochastic discount factor，SDF）或称为定价核（Pricing kernel），（贴现率$M_{t+1}=e^{-r_f(T-t)}$已知）。
 \begin{equation*}
  S_0 = e^{-R_f(T-t)}[11Q+9(1-Q)] = 10
  \qquad
@@ -125,7 +121,7 @@ PC_d = 0.364205
 \end{equation*}
 
 \section{复杂例子}
-在t时刻，市场上有两种互相不可复制的可交易资产$S_a=8$元和$S_b=9$元，且未来T时刻有三种状态，其回报分别问（10，8，0）和（8，12，0）。求行权价为7元，标的资产为$S_a$的看涨期权价格。（注意：没有无风险债券，只有资产$S_a$和$S_b$）
+在t时刻，市场上有两种互相不可复制的可交易资产$S_a=8$元和$S_b=9$元，且未来T时刻有三种状态，其回报分别问（10，8，0）和（8，12，0）。求行权价为7元，标的资产为$S_a$的看涨期权价格$C_a$。（注意：没有无风险债券，只有资产$S_a$和$S_b$）
 \begin{figure}[!ht]
   \centering
   \begin{tikzpicture}[>=stealth,sloped]
@@ -265,7 +261,7 @@ PC_3 =
   \right.
 \end{equation*}
 
-我们可以对多余变量自由设定，并不影响等式成立，最简单的设定就是令三种状态下贴现因子都相等，都为$M^Q$无风险贴现因子。此时投资者对风险持中性态度，即对未来不存在任何偏好。由于对不同的状态下贴现因子都相同，可把$M^Q$提出为$M^QE_t[X]$。由$Q_i M^Q = P_i M_i$（即$PC_i$），得到$Q_i = P_i \frac{M_i}{M_Q}$，则此时有$S = M^Q E^Q[X] = M^Q[Q_1X_1 + Q_2X_2 + Q_3X_3]$，简化方程组得：
+我们可以对多余变量自由设定，并不影响等式成立，\uline{最简单的设定就是令三种状态下贴现因子都相等，都为$M^Q$无风险贴现因子}。此时投资者对风险持中性态度，即对未来不存在任何偏好。由于对不同的状态下贴现因子都相同，可把$M^Q$提出为$M^QE_t[X]$。由$Q_i M^Q = P_i M_i$（即$PC_i$），得到$Q_i = P_i \frac{M_i}{M_Q}$，则此时有$S = M^Q E^Q[X] = M^Q[Q_1X_1 + Q_2X_2 + Q_3X_3]$，简化方程组得：
 \begin{equation*}
   \left\{
     \begin{aligned}

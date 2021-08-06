@@ -10,6 +10,10 @@
 \usepackage{hyperref}
 \usepackage[UTF8]{ctex}
 
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+
 \title{统计知识复习}
 \author{杨弘毅}
 \date{创建: 2020 年 4 月 9 日 \\修改: \today}
@@ -21,57 +25,72 @@
 \subsection*{Expected Value}
 \noindent
 \begin{align*}
-    E[X] &= \sum_{i=i}^n x_i p_i =x_1 p_1 + x_2 p_2 + \dots + x_n p_n \\
+    \E[X] &= \sum_{i=i}^n x_i p_i =x_1 p_1 + x_2 p_2 + \dots + x_n p_n \\
     &= \int x f(x) dx
 \end{align*}
 
 \subsection*{Variance}
 \noindent
 \begin{align*}
-\text{Var}(X) &= \text{Cov}(X,X) = \sigma_X^2\\ 
-&= E[(X-E[X])^2] \\
-&= E[X^2 - 2XE[X] + E[X]^2] \\
-&= E[X^2] - 2E[X]^2 + E[X]^2 \\
-&= E[X^2] - E[X]^2
+\Var(X) &= \Cov(X,X) = \sigma_X^2\\ 
+&= \E[(X-\E[X])^2] \\
+&= \E[X^2 - 2X\E[X] + \E[X]^2] \\
+&= \E[X^2] - 2\E[X]^2 + \E[X]^2 \\
+&= \E[X^2] - \E[X]^2
 \end{align*}
 
 \subsection*{Covariance}
 \noindent
 \begin{align*}
-\text{Cov}(X,Y) &= E[(X-E(X))(Y-E(Y))] \\
-&= E[XY - XE[Y] -YE[X]+ E[X]E[Y]] \\
-&= E[XY] - E[X]E[Y] - E[X]E[Y] + E[X]E[Y] \\
-&= E[XY] - E[X]E[Y]
+\Cov(X,Y) &= \E[(X-E(X))(Y-E(Y))] \\
+&= \E[XY - X\E[Y] -Y\E[X]+ \E[X]\E[Y]] \\
+&= \E[XY] - \E[X]\E[Y] - \E[X]\E[Y] + \E[X]\E[Y] \\
+&= \E[XY] - \E[X]\E[Y]
 \end{align*}
 
 \subsection*{Correlation Coefficient}
 \noindent
 \begin{align*}
-\rho_{X,Y} &= \frac{\text{Cov}(X,Y)}{\sigma_X\sigma_Y} \\
-&= \frac{E[(X-E[X])(Y-E[Y])]}{\sigma_X\sigma_Y}
+\rho_{X,Y} &= \frac{\Cov(X,Y)}{\sigma_X\sigma_Y} \\
+&= \frac{\E[(X-\E[X])(Y-\E[Y])]}{\sigma_X\sigma_Y}
 \end{align*}
 
 \section{Expected Value Properties}
 \noindent
 \begin{align*}
-    E[X+Y] &= E[X] + E[Y] \\
-    E[aX] &= a E[X] \\
-    E[XY] &= E[X]E[Y] \quad \text{(X,Y are independent)}
+    \E[X+Y] &= \E[X] + \E[Y] \\
+    \E[aX] &= a \E[X] \\
+    \E[XY] &= \E[X]\E[Y] \quad \text{(X,Y are independent)}
 \end{align*}
 
 \section{Variance Properties}
 \noindent
 \begin{align*}
-    \text{Var}(X + a) &= \text{Var}(X) \\
-    \text{Var}(aX) &= a^2\text{Var}(X) \\
-    \text{Var}(aX \pm bY) &= a^2\text{Var}(X) + b^2\text{Var}(Y) \pm 2ab \text{Cov}(X,Y) \\
-    \text{Var}(\sum_{i=1}^{N} X_i) &= \sum_{i,j=1}^{N}\text{Cov}(X_i,X_j) = \sum_{i=1}^{N}\text{Var}(X_i) + \sum_{i \neq j}\text{Cov}(X_i,X_j) \\
-    \text{Var}(\sum_{i=1}^{N} a_i X_i) &= \sum_{i,j=1}^{N}a_i a_j\text{Cov}(X_i,X_j) \\
-    &= \sum_{i=1}^{N}a_i^2\text{Var}(X_i) + \sum_{i \neq j} a_i a_j \text{Cov}(X_i,X_j) \\
-    &= \sum_{i=1}^{N}a_i^2\text{Var}(X_i) + 2\sum_{1 \leq i \leq j \leq N} a_i a_j \text{Cov}(X_i,X_j)
+    \Var(X + a) &= \Var(X) \\
+    \Var(aX) &= a^2\Var(X) \\
+    \Var(aX \pm bY) &= a^2\Var(X) + b^2\Var(Y) \pm 2ab \Cov(X,Y) \\
+    \Var(\sum_{i=1}^{N} X_i) &= \sum_{i,j=1}^{N}\Cov(X_i,X_j) = \sum_{i=1}^{N}\Var(X_i) + \sum_{i \neq j}\Cov(X_i,X_j) \\
+    \Var(\sum_{i=1}^{N} a_i X_i) &= \sum_{i,j=1}^{N}a_i a_j\Cov(X_i,X_j) \\
+    &= \sum_{i=1}^{N}a_i^2\Var(X_i) + \sum_{i \neq j} a_i a_j \Cov(X_i,X_j) \\
+    &= \sum_{i=1}^{N}a_i^2\Var(X_i) + 2\sum_{1 \leq i \leq j \leq N} a_i a_j \Cov(X_i,X_j)
 \end{align*}
 
+\section{Covariance Properties}
+\noindent
+\begin{align*}
+    \Cov(X,a) &= 0 \\
+    \Cov(X,X) &= \Var(X) \\
+    \Cov(X,Y) &= \Cov(Y,X) \\
+    \Cov(aX,bY) &= ab\Cov(X,Y) \\
+    \Cov(X+a,Y+b) &= \Cov(X,Y) \\
+    \Cov(aX+bY,cW+dV) &= ac\Cov(X,W)+ad\Cov(X,V)+bc\Cov(Y,W)+bd\Cov(Y,V)
+\end{align*}
+
+
+
+
 \subsection*{Reference}
+
 \url{https://mathworld.wolfram.com/Covariance.html}\\
 \indent\url{https://en.wikipedia.org/wiki/Covariance}\\
 \indent\url{https://ocw.mit.edu/resources/res-6-012-introduction-to-probability-spring-2018/part-i-the-fundamentals/MITRES_6_012S18_L12AS.pdf}

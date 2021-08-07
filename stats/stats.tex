@@ -5,9 +5,6 @@
 % \usepackage{float}
 % \usepackage{booktabs}
 % \usepackage{multirow}
-% \PassOptionsToPackage{hyphens}{url}
-\usepackage[hyphens]{url}
-\usepackage{hyperref}
 \usepackage[UTF8]{ctex}
 
 \newcommand{\E}{\operatorname{E}}
@@ -86,15 +83,6 @@
     \Cov(aX+bY,cW+dV) &= ac\Cov(X,W)+ad\Cov(X,V)+bc\Cov(Y,W)+bd\Cov(Y,V)
 \end{align*}
 
-
-
-
-\subsection*{Reference}
-
-\url{https://mathworld.wolfram.com/Covariance.html}\\
-\indent\url{https://en.wikipedia.org/wiki/Covariance}\\
-\indent\url{https://ocw.mit.edu/resources/res-6-012-introduction-to-probability-spring-2018/part-i-the-fundamentals/MITRES_6_012S18_L12AS.pdf}
-
 \section{假设检验（Statistical hypothesis testing）}
 
 \textbf{原假设（$\text{H}_0$，null hypothesis）}，也称为零假设或虚无假设。而与原假设相反的假设称为\textbf{备择假设（$\text{H}_a$，althernative hypothesis）}。假设检验的核心为\textbf{反证法}。在数学中，由于不能穷举所有可能性，因此无法通过举例的方式证明一个命题的正确性。但是可以通过举一个反例，来证明命题的错误。在掷骰子的例子中，在每次掷的过程相当于一次举例，假设进行了上万次的实验，即便实验结果均值为3.5，也无法证明总体的均值为3.5，因为无法穷举。
@@ -121,10 +109,6 @@ Pearson's chi-squared test
     \item $O_i$ the number of observations of type i
     \item $E_i$ the expected(theoretical) number of type i
 \end{list}
-
-\subsection*{Reference}
-\url{https://en.wikipedia.org/wiki/Chi-square_distribution}\\
-\indent\url{https://www.khanacademy.org/math/statistics-probability/inference-categorical-data-chi-square-tests}
 
 \section{Probability vs Likelihood}
 

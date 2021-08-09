@@ -1,20 +1,15 @@
 \documentclass[11pt]{article}
-\usepackage{amsmath}
-% \usepackage{amstext}
-\usepackage{amsfonts}
-\usepackage{booktabs}
-\usepackage{float}
-\usepackage{multirow}
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
+% \usepackage{amsmath}
+\usepackage{amsmath,amsfonts}
+\usepackage{booktabs,float,multirow}
+% \usepackage{float}
+% \usepackage{multirow}
 \usepackage[UTF8]{ctex}
 
 \newcommand{\E}{\operatorname{E}}
 \newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\Var}{\operatorname{Var}}
-
-% \def\Var{{\textrm{Var}}\,}
-% \def\Cov{{\textrm{Cov}}\,}
-% \def\E{{\textrm{E}}\,}
 
 \title{BSM公式}
 \author{杨弘毅}
@@ -378,14 +373,14 @@ $G(X,t)$的泰勒展开式为：
 
 \section{BSM公式（鞅方法）}
 
-在风险中性世界中，无收益资产看涨期权到期时价值的期望值为：
+在风险中性世界中，无收益资产在$t$时刻，其看涨期权价值的期望为：
 \begin{equation*}
-    \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right]
+    \tilde{\E}_t \left[ \max(S_T-K,0) \right]
 \end{equation*}
 
 欧式看涨期权的现值应为其期望值以无风险利率进行贴现：
 \begin{equation*}
-    c = e^{-r(T-t)} \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right]
+    c = e^{-r(T-t)} \tilde{\E}_t \left[ \max(S_T-K,0) \right]
 \end{equation*}
 
 同时在风险中性世界下，漂移率$\mu$应等于无风险收益率r，因此有：
@@ -398,20 +393,20 @@ $G(X,t)$的泰勒展开式为：
     S_T = S_t \exp\left[\left(r-\frac{\sigma^2}{2}\right)\left(T-t\right) + \sigma\left(Z_T - Z_t \right)\right]
 \end{equation*}
 
-已知$Y = \frac{Z_T - Z_t}{\sqrt{T-t}} \sim N(0,1)$，其密度函数为：
+已知$Y = \frac{Z_T - Z_t}{\sqrt{T-t}} \sim N(0,1)$，其概率密度函数（PDF）为：
 \begin{equation*}
     \varphi(y) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}y^2}
 \end{equation*}
 
 在风险中性下的期望，可以改写为如下积分的形式：
 \begin{align*}
-    \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right] & = \E^\mathbb{Q}_t \left[ S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \right]^+ \\
+    \tilde{\E}_t \left[ \max(S_T-K,0) \right] & = \tilde{\E}_t \left[ S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \right]^+ \\
     & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy
 \end{align*}
 
 当$S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \geq 0$时，有$y \geq \frac{ \ln (K/S_t) - (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}$，设其为$-d_2$，同时假设$d_1 = d_2 + \sigma \sqrt{T-t}$。
 \begin{align*}
-    \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right] & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy \\
+    \tilde{\E}_t \left[ \max(S_T-K,0) \right] & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy \\
     & = S_t e^{(r-\frac{1}{2}\sigma^2)(T-t)} \int_{-d_2}^{\infty} e^{\sigma\sqrt{T-t} y} \varphi(y)dy - K\int_{-d_2}^{\infty} \varphi(y)dy \\
     & = S_t e^{(r-\frac{1}{2} \sigma^2) (T-t)} \int_{-d_2}^{\infty}{e^{\sigma\sqrt{T-t}y} \frac{1}{\sqrt{2\pi\ }}e^{-\frac{y^2}{2}}dy} - KN\left(d_2\right) \\
     & = S_t e^{r(T-t)} \int_{-d_2}^{\infty} \frac{1}{\sqrt{2\pi}} e^{\left( -\frac{\sigma^2 (T-t)}{2} + \sigma\sqrt{T-t}y - \frac{y^2}{2} \right)} dy - KN(d_2) \\
@@ -421,11 +416,12 @@ $G(X,t)$的泰勒展开式为：
     & = S_t e^{r(T-t)}N(d_1) - KN(d_2)
 \end{align*}
 
-得到\textbf{BSM公式}，即欧式看涨期权的解析解：
+得到\textbf{BSM公式}，即欧式看涨期权的解析解（注：$N(\cdot)$为标准正态分布的累积分布函数（CDF），而$N'(\cdot)$为标准正态分布的概率分布函数（PDF））：
 \begin{align*}
-    c & = e^{-r(T-t)} \E^\mathbb{Q}_t \left[ \max(S_T-K,0) \right] \\
+    c & = e^{-r(T-t)} \tilde{\E}_t \left[ \max(S_T-K,0) \right] \\
     & = S_t N(d_1) - Ke^{-r(T-t)} N(d_2)
 \end{align*}
+
 
 已知期权平价公式：
 \begin{equation*}

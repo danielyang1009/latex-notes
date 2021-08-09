@@ -1,10 +1,14 @@
 \documentclass[11pt]{article}
-\usepackage{amsmath}
+\usepackage{amsmath,amsthm}
 % \usepackage{amstext}
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage[UTF8]{ctex}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
 \title{希腊字母}
 \author{杨弘毅}
 \date{创建: 2020 年 3 月 20 日 \\修改: \today}
@@ -14,14 +18,24 @@
 
 \section{Pre}
 \subsection{Normal Distribution}
-$N(x)$为标准正态分布（Standard Normal）的累积分布函数（CDF，Cumulative Distribution Function），由正态分布可知$N(-x) = 1-N(x)$。
+$N(x)$为标准正态分布（Standard Normal）的累积分布函数（CDF，Cumulative Distribution Function）:
 \begin{equation*}
     N(x) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{x}e^{-z^2/2}dz
 \end{equation*}
 
-$N'(x)$为标准正态分布的概率密度函数（PDF，Probability Density Function），由正态分布的对称性，可知$N'(x) = N'(-x)$。
+同时由于正态分布的对称性，易知
+\begin{equation*}
+    N(-x) = 1-N(x)
+\end{equation*}
+
+$N'(x)$为标准正态分布的概率密度函数（PDF，Probability Density Function）：
 \begin{equation*}
     N'(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}
+\end{equation*}
+
+同样由于正态分布的对称性，易知：
+\begin{equation*}
+    N'(x) = N'(-x)
 \end{equation*}
 
 \subsection{Greeks}
@@ -31,100 +45,141 @@ $N'(x)$为标准正态分布的概率密度函数（PDF，Probability Density Fu
 \toprule
 \multicolumn{2}{c}{Greeks} \\ 
 \midrule
-Delta  & $\delta = \partial V /\partial S$  \\
-Gamma  & $\gamma = \partial^2 V /\partial S^2$  \\
-Theta  & $\theta = \partial V /\partial t$   \\
-Rho    & $\rho = \partial V/\partial r$  \\
-Vega   & $\nu = \partial V/\partial\sigma$   \\ 
+Delta  & $\delta = \tfrac{\partial V}{\partial S}$ \\
+Gamma  & $\gamma = \tfrac{\partial^2 V}{\partial S^2}$ \\
+Theta  & $\theta = \tfrac{\partial V}{\partial t}$ \\
+Rho    & $\rho = \tfrac{\partial V}{\partial r}$ \\
+Vega   & $\nu = \tfrac{\partial V}{\partial\sigma}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-
 \section{Black formula}
-\begin{equation*}
-    c = e^{-r(T-t)}[FN(d_1) - KN(d_2)] \qquad
-    p = e^{-r(T-t)}[KN(-d_2) - FN(-d_1)]
-\end{equation*}
 
-\subsection{$d_1$,$d_2$}
 \begin{align*}
-    d_1 &= \frac{\text{log}(F/K) + \sigma^2/2(T-t)}{\sigma \sqrt{T-t}} \\
-    d_2 &= \frac{\text{log}(F/K) + \sigma^2/2(T-t)}{\sigma \sqrt{T-t}} \\
-    d_2 &= d_1 - \sigma \sqrt{T-t} \\
-    \frac{\partial d_1}{\partial F} &= \frac{\partial d_2}{\partial F} = \frac{\frac{\partial \text{log}(F/K)}{\partial F} \sigma \sqrt{T-t}}{(\sigma \sqrt{T-t})^2} = \frac{\partial (\text{log} F - \text{log} K)/\partial F}{\sigma\sqrt{T-t}} = \frac{1}{F\sigma\sqrt{T-t}}
+    c &= e^{-r\tau}[FN(d_1) - KN(d_2)] \\
+    p &= e^{-r\tau}[KN(-d_2) - FN(-d_1)]
 \end{align*}
+
+其中有：
+\begin{align*}
+    d_1 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= d_1 - \sigma \sqrt{\tau}
+\end{align*}
+
+\begin{equation*}
+    \frac{\partial d_1}{\partial F} = \frac{\partial d_2}{\partial F} = \frac{\frac{\partial \ln(F/K)}{\partial F} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln F - \ln K)/\partial F}{\sigma\sqrt{\tau}} = \frac{1}{F\sigma\sqrt{\tau}}
+\end{equation*}
 
 \subsection{Delta}
 \begin{align*}
     FN'(d_1) &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
-    KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{T-t}-\sigma^2(T-t)/2} \\
-    &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\text{ln}(F/K)} 
-    \qquad \left(d_1\sigma\sqrt{T-t} = \text{ln}(F/K)+\sigma^2(T-t)\right) \\
+    KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{\tau}-\sigma^2\tau/2} \\
+    &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\ln(F/K)} 
+    \qquad \left(d_1\sigma\sqrt{\tau} = \ln(F/K)+\sigma^2\tau\right) \\
     &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
     &= FN'(d_1) \\
-    \delta = \frac{\partial V_c}{\partial F} &= e^{-r(T-t)}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
-    &= e^{-r(T-t)}N(d_1) \\
-    \delta = \frac{\partial V_p}{\partial F} &= e^{-r(T-t)}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
-    &= e^{-r(T-t)}(-N(-d_1)) \qquad \left(KN'(-d_2) = KN'(d_2),\, FN'(-d_1)= FN'(d_1)\right) \\
-    &= e^{-r(T-t)}(N(d_1)-1)
+    \text{Delta}_c &= e^{-r\tau}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
+    &= e^{-r\tau}N(d_1) \\
+    \text{Delta}_p &= e^{-r\tau}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
+    &= e^{-r\tau}(-N(-d_1)) \qquad \left(KN'(-d_2) = KN'(d_2),\, FN'(-d_1)= FN'(d_1)\right) \\
+    &= e^{-r\tau}(N(d_1)-1)
 \end{align*}
 
 \section{BSM formula}
-\begin{equation*}
-    c = Se^{-q(T-t)}N(d_1) - Ke^{-r(T-t)}N(d_2) \qquad
-    p = Ke^{-r(T-t)}N(-d_2) - Se^{-q(T-t)}N(-d_1)
-\end{equation*}
-
-\subsection{$d_1$,$d_2$}
 \begin{align*}
-    d_1 &= \frac{\text{log}(S/K) + (r+\sigma^2/2)(T-t)}{\sigma \sqrt{T-t}} \\
-    d_2 &= \frac{\text{log}(S/K) + (r-\sigma^2/2)(T-t)}{\sigma \sqrt{T-t}} \\
-    d_2 &= d_1 - \sigma \sqrt{T-t} \\
-    \frac{\partial d_1}{\partial S} &= \frac{\partial d_2}{\partial S} = \frac{\frac{\partial \text{log}(S/K)}{\partial S} \sigma \sqrt{T-t}}{(\sigma \sqrt{T-t})^2} = \frac{\partial (\text{log} S - \text{log} K)/\partial S}{\sigma\sqrt{T-t}} = \frac{1}{S\sigma\sqrt{T-t}}
+    C_t &= S_te^{-q\tau}N(d_1) - Ke^{-r\tau}N(d_2) \\
+    P_t &= -S_te^{-q\tau}N(-d_1) + Ke^{-r\tau}N(-d_2)
 \end{align*}
 
+其中有：
+\begin{align*}
+    d_1 &= \frac{\ln(S/K) + (r+\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= \frac{\ln(S/K) + (r-\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= d_1 - \sigma \sqrt{\tau}
+\end{align*}
+
+\begin{lemma}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial S} = \frac{\partial d_1}{\partial S} = \frac{\frac{\partial \ln(S/K)}{\partial S} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln S - \ln K)/\partial S}{\sigma\sqrt{\tau}} = \frac{1}{S\sigma\sqrt{\tau}}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial \tau} = \frac{\partial d_1}{\partial \tau} - \frac{1}{2}\frac{\sigma}{\tau}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial \sigma} = \frac{\partial d_1}{\partial \tau} - \sqrt{\tau}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial r} = \frac{\partial d_1}{\partial r}
+    \end{equation*}
+\end{lemma}
+
+\begin{lemma}
+    对于BSM公式，有：
+    \begin{equation*}
+        SN'(d_1) = Ke^{-r\tau} N'(d_2)
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    已知：
+    \begin{align*}
+        d_2^2-d_1^2 &= (d_2-d_1)(d_2+d_1) \\
+        &= (-\sigma\sqrt{\tau})(2d_1-\sigma\sqrt{\tau}) \\
+        &= (-\sigma\sqrt{\tau})\left( \frac{2\ln(S/K) + 2(r+\sigma^2/2)\tau}{\sigma\sqrt{\tau}} -\sigma\sqrt{\tau}\right) \\
+        &= -2\left[\ln\frac{S}{K}+r\tau\right]
+    \end{align*}
+
+    则有：
+    \begin{equation*}
+        \ln\left(\frac{N'(d_1)}{N'(d_2)}\right)
+        = -\frac{d_1^2}{2} + \frac{d_2^2}{2}
+        = \frac{1}{2} (d_2^2-d_1^2)
+        = -\left[\ln\frac{S}{K} +r\tau\right]
+    \end{equation*}
+
+    对等式两边取指数：
+    \begin{align*}
+        \frac{N'(d_1)}{N'(d_2)} 
+        &= \exp\left( -\left[\ln\frac{S}{K} +r\tau\right] \right) \\
+        &= \exp \left( \ln\frac{K}{S}-r\tau \right) \\
+        &= \frac{K}{S} e^{-r\tau} \\
+        SN'(d_1) &= Ke^{-r\tau} N'(d_2)
+    \end{align*}
+\end{proof}
 
 \subsection{Delta}
-
+\noindent
 \begin{align*}
-    \delta = \frac{\partial V_c}{\partial S} &= N(d_1)+\frac{1}{S\sigma\sqrt{T-t}} 
-    \left[
-        SN'(d_1)-Ke^{-r(T-t)}N'(d_2)
-    \right]\\
-    &= N(d_1)+\frac{1}{S\sigma\sqrt{T-t}}
-    \left[
-        S\frac{1}{\sqrt{2\pi}}e^{-d_1^2/2}-Ke^{-r(T-t)}\frac{1}{\sqrt{2\pi}}e^{-d_2^2/2}
-    \right]\\
-    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
-    \left[
-        S e^{-d_1^2/2}-Ke^{-r(T-t)}e^{-d_2^2/2}
-    \right]\\
-    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
-    \left[
-        S e^{-d_1^2/2}-Ke^{-r(T-t)} e^{-(d_1-\sigma\sqrt{T-t})^2/2}
-    \right]\\
-    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
-    \left[
-        S e^{-d_1^2/2}-Ke^{-r(T-t)} e^{-d_1^2/2 + d_1\sigma(T-t) - \sigma^2 (T-t)/2}
-    \right]\\
-    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
-    \left[
-        S e^{-d_1^2/2}-Ke^{-r(T-t)} e^{-d_1^2/2 + ln(S/K) + (r+\sigma^2/2)(T-t) - \sigma^2 (T-t)/2}
-    \right]\\
-    &= N(d_1)+\frac{1}{S\sigma\sqrt{2\pi(T-t)}}
-    \left[
-        S e^{-d_1^2/2}-K e^{-(d_1^2)/2+ ln(S/K)}
-    \right]\\
-    &= N(d_1) \\
-    \delta = \frac{\partial V_p}{\partial S} &= N(d_1) + 
-    \left[
-        SN'(d_1)-Ke^{-r(T-t)}N'(d_2)
-    \right]\\
+    \text{Delta}_c &= \frac{\partial C}{\partial S}
+    = N(d_1) + \frac{1}{S\sigma\sqrt{\tau}} \left[ SN'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
+    \text{Delta}_p &= \frac{\partial P}{\partial S}
+    = -N(-d_1) + \frac{1}{S\sigma\sqrt{\tau}} \left[ SN'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
 \end{align*}
 
+对于已知$\partial C/\partial S$，可对PCP求导：
+
+\subsection{Gamma}
+对于gamma而言，calls和puts相同
+\begin{equation*}
+    \text{Gamma} = \frac{\partial^2 V}{\partial S^2} = \frac{N'(d_1)}{S\sigma\sqrt{\tau}}
+\end{equation*}
 
 
+\subsection{Vega}
+对于vega而言，calls和puts相同
 
+\begin{equation*}
+    \text{Vega} = \frac{\partial V}{\partial \sigma}  = SN'(d_1)\sqrt{\tau}
+\end{equation*}
+
+\begin{align*}
+    \text{Vega} &= \frac{\partial C}{\partial \sigma} = \frac{\partial}{\partial \sigma} \left[S_t N(d_1) - K e^{-r\tau}N(d_2)\right] \\
+    &= S_t N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \frac{\partial d_2}{\partial \sigma} \\
+    &= S_t N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \left[ \frac{\partial d_1}{\partial \sigma} -\sqrt{\tau} \right] \qquad \text{（对$d_2 = d_1 - \sigma\sqrt{\tau}$求导）} \\
+    &= \left[ S_t N'(d_1) - Ke^{-r\tau}N'(d_2) \right] \frac{\partial d_1}{\partial \sigma} + Ke^{-r\tau}N'(d_2) \sqrt{\tau} \\
+    &= S_t N'(d_1)\sqrt{\tau} \qquad \text{（已知$S_t N'(d_1) = Ke^{-r\tau}N'(d_2)$）}
+\end{align*}
 
 \end{document}

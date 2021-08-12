@@ -39,26 +39,21 @@ $N'(x)$为标准正态分布的概率密度函数（PDF，Probability Density Fu
 \end{equation*}
 
 \subsection{Greeks}
-\begin{table}[H]
-\centering
-\begin{tabular}{@{}rl@{}}
-\toprule
-\multicolumn{2}{c}{Greeks} \\ 
-\midrule
-Delta  & $\delta = \tfrac{\partial V}{\partial S}$ \\
-Gamma  & $\gamma = \tfrac{\partial^2 V}{\partial S^2}$ \\
-Theta  & $\theta = \tfrac{\partial V}{\partial t}$ \\
-Rho    & $\rho = \tfrac{\partial V}{\partial r}$ \\
-Vega   & $\nu = \tfrac{\partial V}{\partial\sigma}$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+
+\begin{equation*}
+    \text{Delta} = \frac{\partial V}{\partial S} \qquad \text{Gamma}  = \frac{\partial^2 V}{\partial S^2}
+\end{equation*}
+\begin{equation*}
+    \text{Theta} = \frac{\partial V}{\partial t} \qquad
+    \text{Rho} = \frac{\partial V}{\partial r} \qquad
+    \text{Vega} = \frac{\partial V}{\partial\sigma} \qquad
+\end{equation*}
 
 \section{Black formula}
 
 \begin{align*}
-    c &= e^{-r\tau}[FN(d_1) - KN(d_2)] \\
-    p &= e^{-r\tau}[KN(-d_2) - FN(-d_1)]
+    C &= e^{-r\tau}[FN(d_1) - KN(d_2)] \\
+    P &= e^{-r\tau}[KN(-d_2) - FN(-d_1)]
 \end{align*}
 
 其中有：
@@ -163,9 +158,8 @@ Vega   & $\nu = \tfrac{\partial V}{\partial\sigma}$ \\
 \subsection{Gamma}
 对于gamma而言，calls和puts相同
 \begin{equation*}
-    \text{Gamma} = \frac{\partial^2 V}{\partial S^2} = \frac{N'(d_1)}{S\sigma\sqrt{\tau}}
+    \text{Gamma} = \frac{\partial^2 V}{\partial S^2} = \frac{\partial N(d_1)}{\partial S} = N'(d_1)\frac{\partial d_1}{\partial S} = \frac{N'(d_1)}{S\sigma\sqrt{\tau}}
 \end{equation*}
-
 
 \subsection{Vega}
 对于vega而言，calls和puts相同
@@ -175,11 +169,11 @@ Vega   & $\nu = \tfrac{\partial V}{\partial\sigma}$ \\
 \end{equation*}
 
 \begin{align*}
-    \text{Vega} &= \frac{\partial C}{\partial \sigma} = \frac{\partial}{\partial \sigma} \left[S_t N(d_1) - K e^{-r\tau}N(d_2)\right] \\
-    &= S_t N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \frac{\partial d_2}{\partial \sigma} \\
-    &= S_t N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \left[ \frac{\partial d_1}{\partial \sigma} -\sqrt{\tau} \right] \qquad \text{（对$d_2 = d_1 - \sigma\sqrt{\tau}$求导）} \\
-    &= \left[ S_t N'(d_1) - Ke^{-r\tau}N'(d_2) \right] \frac{\partial d_1}{\partial \sigma} + Ke^{-r\tau}N'(d_2) \sqrt{\tau} \\
-    &= S_t N'(d_1)\sqrt{\tau} \qquad \text{（已知$S_t N'(d_1) = Ke^{-r\tau}N'(d_2)$）}
+    \text{Vega} &= \frac{\partial C}{\partial \sigma} = \frac{\partial}{\partial \sigma} \left[S N(d_1) - K e^{-r\tau}N(d_2)\right] \\
+    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \frac{\partial d_2}{\partial \sigma} \\
+    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \left[ \frac{\partial d_1}{\partial \sigma} -\sqrt{\tau} \right] \qquad \text{（对$d_2 = d_1 - \sigma\sqrt{\tau}$求导）} \\
+    &= \left[ S N'(d_1) - Ke^{-r\tau}N'(d_2) \right] \frac{\partial d_1}{\partial \sigma} + Ke^{-r\tau}N'(d_2) \sqrt{\tau} \\
+    &= S N'(d_1)\sqrt{\tau} \qquad \text{（已知$S N'(d_1) = Ke^{-r\tau}N'(d_2)$）}
 \end{align*}
 
 \end{document}

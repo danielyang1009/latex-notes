@@ -1,6 +1,5 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
-% \usepackage{amsmath}
 \usepackage{amsmath,amsfonts}
 \usepackage{booktabs,float,multirow}
 % \usepackage{float}
@@ -94,31 +93,45 @@
 
 \textbf{扩散过程（Diffusion Process）}，此时$a(X(t),t)$与$b(X(t),t)$都为$X_t$和$t$的确定性函数。由于漂移项与方差项都包含$X(t)$，使得扩散之后过程的条件分布无法保证仍是正态分布。但更能刻画一般动态变化，未加入新的风险源，仍具有独立增量，马尔可夫性，和方差可加性等性质。
 \begin{equation*}
-    dX_t =a(X(t),t) dt + b(X(t),t) dZ_t
+    dX_t =a(X(t),t) dt + b(X(t),t) dW_t
 \end{equation*}
 
 \textbf{伊藤过程（Itô Process）}，最一般化的随机过程，$a_t$和$b_t$为任意函数或随机过程。
 \begin{equation*}
-    dX_t =a_t dt + b_t dZ_t
+    dX_t =a_t dt + b_t dW_t
 \end{equation*}
 
 \section{伊藤引理（Itô lemma）}
 
 若变量$X_t$遵循伊藤过程：
 \begin{equation*}
-    dX_t =a_t dt + b_t dZ_t
+    dX_t =a_t dt + b_t dW_t
 \end{equation*}
 
-在导数$\partial G/\partial t$、$\partial G/\partial X$与$\partial^2 G/\partial X^2$存在的前提下，则有变量$X_t$和$t$的函数$G(X_t,t)$将遵循如下过程：
+在导数$\dfrac{\partial f}{\partial t}$、$\dfrac{\partial f}{\partial X}$与$\dfrac{\partial^2 f}{\partial X^2}$存在的前提下，则有变量$X_t$和$t$的函数$f(X(t),t)$将遵循如下过程：
 \begin{equation*}
-    dG_t = \left(\frac{\partial G}{\partial X}a_t  + \frac{\partial G}{\partial t} + \frac{1}{2}\frac{\partial^2 G}{\partial X^2} b^2_t \right)dt + \frac{\partial G}{\partial X} b_t dZ_t
+    df_t = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dW_t
 \end{equation*}
+
+为方便记忆，可记为（金融随即分析第二卷 P118）：
+\begin{equation*}
+    \boxed{
+        df(X(t),t) = f_t(X(t),t)dt + f_x(X(t),t)dX(t) + \frac{1}{2}f_{xx}(X(t),t)dX(t)dX(t)
+    }
+\end{equation*}
+或
+\begin{equation*}
+    \boxed{
+        df = f_t dt + f_x dX + \frac{1}{2}f_{xx}dXdX
+    }
+\end{equation*}
+
 
 \subsection{证明}
 
-$G(X,t)$的泰勒展开式为：
+$f(X,t)$的泰勒展开式为：
 \begin{equation*}
-    \Delta G_t = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2}\Delta X^2  + \frac{\partial G}{\partial X \partial t}\Delta X \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial t^2} \Delta t^2 + \dots
+    \Delta f_t = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2}\Delta X^2  + \frac{\partial f}{\partial X \partial t}\Delta X \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial t^2} \Delta t^2 + \dots
 \end{equation*}
 
 当$\Delta t \rightarrow 0$时，$(\Delta t)^2$，认为是高阶无穷小，可忽略。而对于$\Delta X \Delta t$项有：
@@ -130,9 +143,9 @@ $G(X,t)$的泰勒展开式为：
 
 其中的$(\Delta t)^{3/2}$项，也被认为时高阶无穷小项，可忽略。同时由于$(\Delta X)^2$项中包含$\Delta t$项，因此需要保留。因此仅考虑前三项（\textbf{注意}：此与常微分不同，而在常微分中，$(\Delta X)^2$项是也是高阶无穷小项），展开得到：
 \begin{align*}
-    \Delta G_t & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2}\Delta X^2 \\
-    & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} [a\Delta t + b\varepsilon\sqrt{\Delta t}]^2 \\
-    & = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 \varepsilon^2 \Delta t
+    \Delta f_t & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2}\Delta X^2 \\
+    & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} [a\Delta t + b\varepsilon\sqrt{\Delta t}]^2 \\
+    & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 \varepsilon^2 \Delta t
 \end{align*}
 
 对于$\varepsilon^2 \Delta t$项，由于$\varepsilon \sim N(0,1)$，因此有$\E(\varepsilon)=0$。又因$\Var(\varepsilon)=\E(\varepsilon^2)-[\E(\varepsilon)]^2=1$，得到$\E(\varepsilon^2)=1$，同时有$\E(\varepsilon^2 \Delta t) = \Delta t$。计算$\varepsilon^2 \Delta t$的方差可得：
@@ -144,29 +157,28 @@ $G(X,t)$的泰勒展开式为：
 
 可以认为$\varepsilon^2 \Delta t$方差为高阶无穷小，其期望为$1$。因此，可认为$\varepsilon^2 \Delta t \approx \Delta t$，可将原式化简为：
 \begin{equation*}
-    \Delta G_t = \frac{\partial G}{\partial X} \Delta X + \frac{\partial G}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 \Delta t
+    \Delta f_t = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 \Delta t
 \end{equation*}
 
 而连续形式为：
 \begin{align*}
-    dG_t & = \frac{\partial G}{\partial X}  dX_t + \frac{\partial G}{\partial t} dt + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 dt \\
-    & = \frac{\partial G}{\partial X} (a_t dt + b_t dZ_t) + \frac{\partial G}{\partial t} dt + \frac{1}{2} \frac{\partial^2 G}{\partial X^2} b^2 dt \\
-    & = \left(\frac{\partial G}{\partial X}a_t  + \frac{\partial G}{\partial t} + \frac{1}{2}\frac{\partial^2 G}{\partial X^2} b^2_t \right)dt + \frac{\partial G}{\partial X} b_t dZ_t
+    df_t & = \frac{\partial f}{\partial X}  dX_t + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
+    & = \frac{\partial f}{\partial X} (a_t dt + b_t dZ_t) + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
+    & = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dZ_t
 \end{align*}
-
 
 \section{几何布朗运动}
 
 由于衍生品价格是标的资产价格与时间的函数，即只需要假定标的资产遵循过程，即可用伊藤引理求得其衍生品遵循过程。假设股票价格服从几何布朗运动（Geometric Brownian Motion，GBM）：
 \begin{equation*}
-    dS_t = \mu S_t d_t + \sigma S_t dZ_t
+    dS_t = \mu S_t d_t + \sigma S_t dW_t
 \end{equation*}
 
 令$G_t = \ln S_t$，此时：
 \begin{equation*}
-    \frac{\partial G}{\partial S} = \frac{1}{S_t}, \quad
-    \frac{\partial^2 G}{\partial S^2} = -\frac{1}{S_t^2}, \quad
-    \frac{\partial G}{\partial t} = 0
+    \frac{\partial f}{\partial S} = \frac{1}{S_t}, \quad
+    \frac{\partial^2 f}{\partial S^2} = -\frac{1}{S_t^2}, \quad
+    \frac{\partial f}{\partial t} = 0
 \end{equation*}
 
 代入伊藤引理之中,此时$a_t=\mu S_t$，$b_t=\sigma S_t$，则有：
@@ -353,7 +365,7 @@ $G(X,t)$的泰勒展开式为：
     \Pi_t = -f_t + \frac{\partial f}{\partial S} S_t
 \end{equation*}
 
-在$\Delta t$时间内，该投资组合价值变化$\Delta \Pi_t$为，并代入$\Delta S_t$与$\Delta f_t$：
+在$\Delta t$时间内，该投资组合价值的变化$\Delta \Pi_t$来源其标的资产以及衍生品的价格变动，代入$\Delta S_t$与$\Delta f_t$可得：
 \begin{align*}
     \Delta \Pi_t & = -\Delta f_t + \frac{\partial f}{\partial S} \Delta S_t \\
     & = -\left[ \left(\frac{\partial f}{\partial S} \mu S_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t + \frac{\partial f}{\partial S} \sigma S_t \Delta Z_t \right] + \frac{\partial f}{\partial S} \left( \mu S_t \Delta t + \sigma S_t \Delta Z_t \right) \\
@@ -546,6 +558,48 @@ $G(X,t)$的泰勒展开式为：
           \end{itemize}
     \item 隐含波动率（Implied volatility）：直接从期权价格中提取未来预期
 \end{itemize}
+
+\section{Delta对冲}
+
+Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
+\begin{equation*}
+    \Delta = \frac{\partial V}{\partial S}
+\end{equation*}
+
+而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果为0，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
+\begin{equation*}
+    \Delta V \times N_V = \Delta S \times N_S \quad \Rightarrow \quad
+    \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
+\end{equation*}
+
+如上所述，假定股票价格遵循几何布朗运动，则有在显示测度（Physical probability measure）下：
+\begin{equation*}
+    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
+\end{equation*}
+
+根据伊藤引理：
+\begin{equation*}
+    f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
+\end{equation*}
+
+
+
+在Bakshi and Kapadia 2003中，
+
+在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
+\begin{equation*}
+    \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+\begin{equation*}
+    \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+
+
+
+
+Long call, short delta stock/ short call, long delta stock
+
+Long put, long delta stock/ short put, short delta stock
 
 \section{注意与备注}
 

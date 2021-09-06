@@ -1,22 +1,23 @@
 \documentclass[11pt]{article}
-\usepackage{amsmath}
-% \usepackage{amstext}
 \usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
+\usepackage{amsmath,amsfonts}
 % === graph packages ===
 % \usepackage{tikz}
 % \usetikzlibrary{trees,matrix}
 % \usepackage{cases}
 % \usepackage{mathtools}
 % == table packages ==
-% \usepackage{tabularx}
-% \usepackage{booktabs}
-% \usepackage{multirow}
-% \usepackage{float}
+% \usepackage{booktabs,float,multirow}
 % === url packages ===
 % \usepackage[hyphens]{url}
 % \usepackage{hyperref}
-\usepackage[UTF8]{ctex}
 % ctex与amsmath冲突，放最后可解决
+\usepackage[UTF8]{ctex}
+
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+
 \title{XXXX}
 \author{杨弘毅}
 \date{创建: 20XX 年 X 月 X 日 \\修改: \today}
@@ -30,5 +31,10 @@
 \begin{align*}
 \end{align*}
 
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 1
+	\item 2
+\end{itemize}
 
 \end{document}

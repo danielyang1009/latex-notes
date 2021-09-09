@@ -91,12 +91,12 @@
 
 \textbf{扩散过程（Diffusion Process）}，此时$a(X(t),t)$与$b(X(t),t)$都为$X_t$和$t$的确定性函数。由于漂移项与方差项都包含$X(t)$，使得扩散之后过程的条件分布无法保证仍是正态分布。但更能刻画一般动态变化，未加入新的风险源，仍具有独立增量，马尔可夫性，和方差可加性等性质。
 \begin{equation*}
-    dX_t =a(X(t),t) dt + b(X(t),t) dW_t
+    dX_t =a(X(t),t) dt + b(X(t),t) dZ_t
 \end{equation*}
 
 \textbf{伊藤过程（Itô Process）}，最一般化的随机过程，$a_t$和$b_t$为任意函数或随机过程。
 \begin{equation*}
-    dX_t =a_t dt + b_t dW_t
+    dX_t =a_t dt + b_t dZ_t
 \end{equation*}
 
 \section{伊藤引理（Itô lemma）}
@@ -111,19 +111,19 @@
     df_t = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dW_t
 \end{equation*}
 
-为方便记忆，可记为（金融随即分析第二卷 P118）：
+为方便记忆，可记为（金融随机分析第二卷 P118）：
 \begin{equation*}
     \boxed{
         df(X(t),t) = f_t(X(t),t)dt + f_x(X(t),t)dX(t) + \frac{1}{2}f_{xx}(X(t),t)dX(t)dX(t)
     }
 \end{equation*}
-或
+
+或可写为更简洁的形式：
 \begin{equation*}
     \boxed{
         df = f_t dt + f_x dX + \frac{1}{2}f_{xx}dXdX
     }
 \end{equation*}
-
 
 \subsection{证明}
 
@@ -133,7 +133,6 @@ $f(X,t)$的泰勒展开式为：
 \end{equation*}
 
 当$\Delta t \rightarrow 0$时，$(\Delta t)^2$，认为是高阶无穷小，可忽略。而对于$\Delta X \Delta t$项有：
-
 \begin{align*}
     \Delta X &= a\Delta t + b \varepsilon\sqrt{\Delta t} \\
     \Delta X \Delta t &= a(\Delta t)^2 + b \varepsilon(\Delta t)^{3/2}
@@ -169,10 +168,10 @@ $f(X,t)$的泰勒展开式为：
 
 由于衍生品价格是标的资产价格与时间的函数，即只需要假定标的资产遵循过程，即可用伊藤引理求得其衍生品遵循过程。假设股票价格服从几何布朗运动（Geometric Brownian Motion，GBM）：
 \begin{equation*}
-    dS_t = \mu S_t d_t + \sigma S_t dW_t
+    dS_t = \mu S_t dt + \sigma S_t dZ_t
 \end{equation*}
 
-令$G_t = \ln S_t$，此时：
+令$f_t = \ln S_t$，此时：
 \begin{equation*}
     \frac{\partial f}{\partial S} = \frac{1}{S_t}, \quad
     \frac{\partial^2 f}{\partial S^2} = -\frac{1}{S_t^2}, \quad
@@ -181,7 +180,7 @@ $f(X,t)$的泰勒展开式为：
 
 代入伊藤引理之中,此时$a_t=\mu S_t$，$b_t=\sigma S_t$，则有：
 \begin{align*}
-    dG_t = d \ln S_t & = \left( \frac{1}{S_t}\mu S_t + 0 - \frac{1}{2} \frac{1}{S_t^2} \sigma^2 S_t^2 \right) dt + \frac{1}{S_t}\sigma S_t dZ_t \\
+    df_t = d \ln S_t & = \left( \frac{1}{S_t}\mu S_t + 0 - \frac{1}{2} \frac{1}{S_t^2} \sigma^2 S_t^2 \right) dt + \frac{1}{S_t}\sigma S_t dZ_t \\
     & = \left( \mu - \frac{1}{2}\sigma^2\right)dt + \sigma dZ_t
 \end{align*}
 
@@ -190,7 +189,7 @@ $f(X,t)$的泰勒展开式为：
     d\ln S_t= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
 \end{align*}
 
-同时又离散形式下：
+或有离散形式下为：
 \begin{align*}
     \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
 \end{align*}

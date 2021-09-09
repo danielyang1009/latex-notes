@@ -13,9 +13,13 @@
 % set vertical bar between 2cols
 \setlength{\columnsep}{3em}
 \setlength{\columnseprule}{0.4pt}
-\usepackage{multirow}
-\usepackage{booktabs}
+\usepackage{multirow,booktabs}
 \usepackage[UTF8]{ctex}
+
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+
 \title{远期（期货）}
 \author{杨弘毅}
 \date{创建: 2020 年 3 月 4 日 \\修改: \today}
@@ -24,8 +28,9 @@
 \maketitle
 
 \section{定价}
-定价思路为远期合约价值$f_t$，在签订时的有双方公平的原则（zero net market value at entry），应有$f_0=0$，即远期合约签订之时为价值0，进而得到远期（期货）价格$F_{t,T}$。
+定价思路为远期（期货）合约价值$f_t$（合约本身价值），在签订时的有双方公平的原则（zero net market value at entry），应有$f_0=0$，即远期合约签订之时为价值0，进而得到远期（期货）价格$F_{t,T}$（远期价值为零的合理交割价格）。
 \begin{itemize}
+    \setlength{\itemsep}{0em}
     \item $S_t$：远期（期货）标的资产在t时刻的价格
     \item $K$：远期合约中的交割价格
     \item $f_t$：远期合约多头在t时刻的价值（合约价格）
@@ -33,10 +38,10 @@
 \end{itemize}
 
 \subsection{风险中性定价}
-在风险中性条件下，一份多头远期合约的价值$f_t$为:
+在风险中性条件下，一份多头远期（期货）合约的价值$f_t$为:
 \begin{align*}
-    f_t &= M^Q E^Q[S_T - K] \\
-     &= e^{-r(T-t)} (E^Q[S_T] - K) \\
+    f_t &= M^Q \E^Q[S_T - K] \\
+     &= e^{-r(T-t)} (\E^Q[S_T] - K) \\
      &= e^{-r(T-t)} ( S_t e^{r(T-t)}- K) \\
      &= S_t - Ke^{-r(T-t)}
 \end{align*}
@@ -89,38 +94,46 @@
 当无风险利率恒定，且到期日交割价格等都相同时，远期价格与期货价格相同。当利率不断变化时，两者关系略有不同。其差异源于期货市场的保证金盯市制度（MTM：Mark-to-Market）。标的资产价格与利率有正相关关系时候，期货价格高于远期价格。即当期货价格上涨时，由于保证金盯市制度，可将多余的保证金取出，用同样上涨的无风险利率投资，此时期货价格应该高于远期价格。相反，当标的资产与利率呈现负相关关系时候，远期价格高于期货价格。
 
 \section{$F_t$与$S_t$的关系}
-在t时刻，期货价格$F_t$与现货价格$S_t$有如下关系：
+在t时刻，期货价格$F_t$与现货价格$S_t$有如下关系，易知持仓成本即将现货持有到期货到期日的成本。由于期货为合约，并且只在规定到期日交割标的资产。在合约到期之前并不持有实际现货，因此无法获得持有现货的收益，并且持有现货到合约到期日的成本需计算在期货价格内，两者关系应有：
 \begin{align*}
-    F_{t,T} &= S_t + \textbf{净持有成本（Net Cost of Carry）} \\
+    F_{t,T} &= S_t + \textbf{净持仓成本（Net Cost of Carry）} \\
     &= S_t + \text{合约期限内成本（Carry Cost）} - \text{合约期限内收益（Carry Return）} \\
     &= S_t + \text{利息成本} + \text{储藏成本} - \text{红利收益} - \text{便利收益（商品期货）}
 \end{align*}
 
-在中国往往有现货价格$S_t$大于期货价格$F_t$，由于现货做空机制不完善，很难融券，即使能融券成本也较高。即无法在现货被高估的情况下，卖出现货买进期货，因为只有持有现货才能卖出，造成两个市场的分割，无法达到一体化的预期。现货买卖需要交纳印花税，而期货不需要，且期货佣金往往低于现货。
+由于在$t$时刻，如现货价格和持仓成本都为已知，则可确定期货价格。或已知期货的价格与持仓成本，则可确定现货价格（期货的价格发现功能）。两者关系为相对价格，而由无套利条件得到。在中国往往有现货价格$S_t$大于期货价格$F_t$（期货贴水，此时有正基差），由于现货做空机制不完善，很难融券，即使能融券成本也较高。使得套利投资者无法在现货被高估的情况下，卖出现货（卖出开仓）买进期货（因为只有持有现货才能卖出），造成两个市场的分割，无法达到一体化的预期。另外现货买卖需要交纳印花税，而期货不需要，且期货佣金往往低于现货。
 
-\section{$F_{t,T}$与$E_t[S_T]$的关系}
-
-在现实测度下，从现货角度出发，有$E_t[S_T]=S_t e^{\mu(T-t)}$，其中$\mu$为到期收益率，为无风险收益率与风险溢酬之和。如果标的资产$S$\textbf{系统性风险为正，则要求有正的风险溢酬}，增加其收益，使其到期收益率大于无风险收益率$\mu>r$。相反，如果标的资产$S$\textbf{系统性风险为负}（如VIX，系统性风险为负）。即标的资产能对冲风险，减少风险敞口，风险溢酬为负，减少收益，到期收益率小于无风险收益率$\mu<r$。
-
-同样在现实测度下，从期货角度出发，因为购买期货无需占用资金（假设保证金可获得无风险收益），所以不要求无风险收益。仅要求对其承担的未来不确定性风险，有对应的风险补偿（仅赚取风险溢酬），即超额收益$\mu-r$，可以得到$E_t[F_{T,T}] = F_{t,T} e^{(\mu-r)(T-t)}$。又因在期货到期日T时刻，有期货价格等于现货价格$F_{T,T} = S_T$，即在t时刻下也应有两者期望$E_t[F_{T,T}] = E_t[S_T]$。同样可得出$F_{t,T} = S_t e^{r(T-t)}$的结论，即：
+\section{期货升水与贴水}
+\textbf{基差}（Basis）指现货与期货价格之差（现货价格Spot price有时又被称为Cash price），即：
 \begin{equation*}
-    S_t e^{\mu(T-t)} = E_t[S_T] = E_t[F_{T,T}] = F_{t,T} e^{(\mu-r)(T-t)}
+    \text{基差} = \text{现货价格} - \text{期货价格}
 \end{equation*}
 
-\begin{figure}[htp]  
-\centering 
+对于期货（或远期）而言，\textbf{升水}（contango）或“Negative basis”，指当期货（或远期）的价格高于现货在到期日价格的期望。相反而言，如期货（或远期）价格低于现货在到期日价格的期望则成为\textbf{贴水}（backwardation）或称为“Postive basis”。
+
+\section{$F_{t,T}$与$\E_t[S_T]$的关系}
+两者相差风险溢价，即应有$F_{t,T}=\E[S_t]-\text{风险溢价}$。但由于风险溢价不确定，与期货与现货价格确定的关系相比不同，两者关系并不确定。在现实测度下，从现货角度出发，有$\E_t[S_T]=S_t e^{\mu(T-t)}$，其中$\mu$为到期收益率，为无风险收益率与风险溢酬之和。虽然现货价格可以从市场交易中得到，但期货市场交易成本较低，反应较为灵敏迅速，价格变化一般都由期货市场传递至现货市场。如果标的资产$S$\textbf{系统性风险为正，则要求有正的风险溢酬}（如未来期货价格$\E[S_T]=\E[F_T]$为2000，风险对持有者不利,要求500元的正的风险溢价，则买进价为1500元）使其到期收益率大于无风险收益率$\mu>r$。相反，如果标的资产$S$\textbf{系统性风险为负}（如VIX，系统性风险为负）。即标的资产能对冲风险，减少风险敞口，风险溢酬为负，减少收益，到期收益率小于无风险收益率$\mu<r$。
+
+同样在现实测度下，从期货角度出发，因为购买期货无需占用资金（假设保证金可获得无风险收益），所以不要求无风险收益。仅要求对其承担的未来不确定性风险，有对应的风险补偿（仅赚取风险溢酬），即超额收益$\mu-r$，可以得到$\E_t[F_{T,T}] = F_{t,T} e^{(\mu-r)(T-t)}$。又因在期货到期日T时刻，有期货价格等于现货价格$F_{T,T} = S_T$，即在t时刻下也应有两者期望$\E_t[F_{T,T}] = \E_t[S_T]$。同样可得出$F_{t,T} = S_t e^{r(T-t)}$的结论，即：
+\begin{equation*}
+    S_t e^{\mu(T-t)} = \E_t[S_T] = \E_t[F_{T,T}] = F_{t,T} e^{(\mu-r)(T-t)}
+\end{equation*}
+
+\begin{figure}[ht!]  
+% \centering 
   \begin{subfigure}[b]{0.4\textwidth}
     \begin{tikzpicture}   
       \draw[->,thick] (0,0) node[below] {$t$} -- (6,0) node[right] {时间};  
       \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
       \draw (4.5,0) node[below] {$T$} -- (4.5,4);
-      \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$E_t[S_T]$}; 
+      \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$\E_t[S_T]$}; 
       \draw [draw opacity=0.6](0,1.5) node[left] {$F_{t,T}$} -- (4.5,2.5);
       \draw [dashed, draw opacity=0.6] (0,2.5) -- (4.5,2.5);  
       \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=0.4em}] (0,0.5) -- (0,1.5) node[midway,right,xshift=1em]{\small 无风险利息};
       \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=0.4em}] (0,1.5) -- (0,2.5) node[midway,right,xshift=1em]{\small 正风险溢酬};
     \end{tikzpicture}
-    \subcaption{正系统性风险} \label{fig:M1}  
+    \subcaption{正系统性风险} 
+    \label{fig:M1}  
     \end{subfigure}
     \hspace*{2em}
     \begin{subfigure}[b]{0.4\textwidth}
@@ -128,16 +141,18 @@
       \draw[->,thick] (0,0) node[below] {$t$} -- (6,0) node[right] {时间};  
       \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
       \draw (4.5,0) node[below] {$T$} -- (4.5,4);
-      \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$E_t[S_T]$}; 
+      \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$\E_t[S_T]$}; 
       \draw [draw opacity=0.6](0,3.5) node[left] {$F_{t,T}$} -- (4.5,2.5);
       \draw [dashed, draw opacity=0.6] (0,2.5) -- (4.5,2.5);
       \draw [decorate,decoration={brace,amplitude=5pt,raise=1.5em}] (0,0.5) -- (0,3.5) node[midway,left,xshift=-2em]{\rotatebox{90}{\small 无风险利息}};
       \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=0.4em}] (0,2.5) -- (0,3.5) node[midway,right,xshift=1em]{\small 负风险溢酬};
     \end{tikzpicture}
-    \subcaption{负系统性风险} \label{fig:M2}  
+    \subcaption{负系统性风险}
+    \label{fig:M2}  
     \end{subfigure}
     % \caption{Interaction figures}
 \end{figure}  
+
 
 \section{套期保值}
 \subsection{多头空头套期保值}

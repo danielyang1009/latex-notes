@@ -33,13 +33,16 @@
 \subsection{利率期限结构模型分类}
 利率的期限结构（term structure of interest rates）,又通俗的称为收益率曲线（yield curve），收益率和期限关系的曲线。
 \begin{itemize}
+	\setlength{\itemsep}{0em}
 	\item 动态模型
 	\begin{itemize}
+		\setlength{\itemsep}{0em}
 		\item 均衡模型（Equilibrium Model）:输入为经济变量，输出为利率水平，例如：Vasicek，CIR模型
 		\item 无套利模型（No arbitrage Model）:输入为利率水平，输出为相关金融工具的价格，例如：Hull\&White，HJM模型
 	\end{itemize}
 	\item 静态模型
 	\begin{itemize}
+		\setlength{\itemsep}{0em}
 		\item Nelson-Siegel模型
 	\end{itemize}
 \end{itemize}
@@ -67,7 +70,7 @@
 \subsection{实用注意标准}
 模型需要反映现实市场中观察到的利率动态特征：
 \begin{itemize}
-	\setlength\itemsep{0em}
+	\setlength{\itemsep}{0em}
 	\item 利率的均值回归特征
 	\item 利率的基本分布特征：肥尾和非对称分布
 	\item 利率期限结构长短端变动不一致，如利率上升短端上升幅度较大，长端上升幅度较小，利率期限结构趋于水平 。反之，当利率下降，利率期限结构变得更加陡峭
@@ -76,7 +79,7 @@
 
 \subsection{动态利率模型分类}
 \begin{itemize}
-	\setlength\itemsep{0em}
+	\setlength{\itemsep}{0em}
 	\item \textbf{单因子模型与多因子模型}：单一或者多个风险源（$dW_t$），单因子利率期限结构的静态形状不够丰富；主成分分析表明，几乎所有市场的无风险利率曲线都至少收到2-3个不相关重要因素的影响
 	\item \textbf{时间齐次和时间非齐次}：均衡模型为时间齐次，波动率不为时间的函数（波动率因时间而发生改变经济含义较弱）。一般无套利模型为时间非齐次，波动率为时间的函数。（单因子时间齐次仿射模型中，时间齐次与当前时间点无关，而与剩余期限有关 ）
 	\item \textbf{连续模型与带跳模型}：是否存在跳跃
@@ -135,7 +138,7 @@ $dZ_t$为正态分布，乘上瞬时利率的平方根为卡方分布，加上�
 
 \subsubsection{其他模型}
 \begin{itemize}
-	\setlength\itemsep{-0.5em}
+	\setlength{\itemsep}{0em}
 	\item Beagleholde and Tenney（1991）（两因子Vasicek模型）
 	\item Hull and White（1994）（两因子Vasicek模型）
 	\item Longstaff-Schwartz（1992）
@@ -171,7 +174,6 @@ $dZ_t$为正态分布，乘上瞬时利率的平方根为卡方分布，加上�
 与Merton模型相比，波动率为常数，但漂移率为时变（$f_0$为远期利率），变为时间非齐次，通过远期利率曲线进行校准。使用时变的飘移率为无套利接口，在每个时刻使用市场利率曲线作为模型的输入数据，使得该模型与市场无风险利率曲线仍然是天然拟合的。模型较为简单，但缺点为并未改进Merton模型的缺陷。
 
 \subsubsection{Hull-White（1990，1994a）}
-
 单因子模型由Vasick模型演变而来，使用长期均值$\tilde{\phi}(t)$为无套利接口，模型简单，但缺点也并未改善Vasicek模型的缺陷：
 \begin{align*}
 	dr_t &= \tilde{\kappa}(\tilde{\varphi}(t)-r_t)dt+\sigma d\tilde{Z_t} \\
@@ -198,7 +200,6 @@ $\tilde{\varphi}(t)$为无套利接口，长期均值由$\tilde{\varphi}(t)$与$
 与Hull-White单因子模型相比，BDT模型不仅可以拟合当前市场利率期限结构，还可以拟合当前利率波动率的期限结构。并使用瞬时利率的对数进行建模，避免了负利率的可能，且实现过程相对简单。由于均值回复速度完全由波动率觉得，不一定合理。为了追求拟合利率期限结构与波动率期限结构，所有参数都为时间非齐次，可能存在为了拟合数据而过度拉扯模型。且假设波动率为时间非齐次，即认为波动率因时间变化而变化并不合理，可能因为其他因素变化，而非时间流逝。
 
 \subsubsection{BK（1991）}
-
 Black and Karasinski（1991），对BDT模型一般化：
 \begin{equation*}
 	d\ln r_t = \tilde{\kappa}\left(\tilde{\mu}(t) - \ln r_t \right) dt + \sigma(t)d\tilde{Z}_t
@@ -230,15 +231,12 @@ HJM模型使用瞬时远期利率作为建模对象，瞬时远期利率与瞬�
 \end{equation*}
 只跟波动率有关，不需要估计漂移率，规避了需要估计漂移率的问题（涉及风险溢酬、风险价格等信息）。因此说明在使用瞬时远期利率时，可以使用风险中性测度为利率产品定价。因此在无套利的HJM模型下，只要给定波动率，同时运用当前0时刻的利率期限结构作为输入，就足以刻画瞬时即期利率与瞬时远期利率在风险中性测度下的随机过程，进而可以在风险中性测度下为利率衍生品定价。与BSM模型相似，BSM在风险中性测度下无需估计股票价格的漂移率，只需要估计波动率，再运用当前时刻的股票价格，就可以为股票衍生品进行定价。HJM模型并未具体对$\mu_(f,t)^T$与$\sigma_(fi,t)^T$进行具体设定，因此为分析框架。
 
-
 \subsection{市场模型（Market model）}
 上述模型较为复杂.使用瞬时即期利率和瞬时远期利率作为建模对象，瞬时利率不可观测，且模型不易理解，难以用市场价格校准模型参数，连续复利利率不适合设定为对数正态分布，普通复利利率可以假设服从对数正态分布（Sandmann and Sondermann（1997））。而在实际操作过程中希望有简单的模型，希望像BSM那样能将期权市场价格（如caps、floors、swaption）较为快速的转换为隐含波动率，不需要模型准确，对特定期限的Libor即期利率（可观测）进行建模（三个月、六个月），且应用简单。
 
 市场模型的可以理解为是Black模型，为对数正态下的欧式期权定价，且为无套利模型，转换至风险中性测度，市场模型下利率的漂移率同样不受风险价格影响，波动率决定了整个随机过程。市场模型的适用性较差，仅适用于利率衍生品如利率顶、利率底和利率互换。且由于负利率的产生，对数正态分布不一定使用。在对期权定价是，模型内部存在多个测度，以及对多个瞬时波动率的设定都存在不一致性。
 
-
 \section{静态模型（Static Term Structure Models）}
-
 从现有债券价格中提取利率期限结构。利率变动非完全相关，即受到共同因素的影响但影响程度有差异，特定期限利率有特定影响因素，意味着数据信息高度重合，使我们希望找到较少的独立因子来描述利率变动。
 
 \subsection{主成分分析}
@@ -257,7 +255,7 @@ Principal component analysis（PCA）使将一组高度相关的变量（如不�
 
 \subsection*{对角化原理}
 \begin{itemize}
-	\setlength\itemsep{0em}
+	\setlength{\itemsep}{0em}
 	\item n阶实对称矩阵$\bm{\Sigma}$一定能找到一个正交矩阵$\mathbf{A}$，使得$\mathbf{A'\bm{\Sigma}A}$为对角阵
 	\item $\mathbf{A}$就是一次以$\bm{\Sigma}$的n割单位正交特征向量为列向量组的矩阵，而转化得到的对角阵$\bm{\Omega}$的主对角线元素就是$\mathbf{A}$对应的特征值
 	\item 而在$\bm{Omega}$种最大值对应的$\mathbf{A}$种列向量即为第一主成分$\mathbf{F_1}$方程种的系数，依次类推可获得$F_2,\dots,F_n$
@@ -269,16 +267,13 @@ Principal component analysis（PCA）使将一组高度相关的变量（如不�
 \end{equation*}
 
 将期限作为横坐标，因子载荷$\mathbf{L}$作为纵坐标作图，发现在发达国家，可以发现$\mathbf{F_1}$对所有期限的影响较为一致，曲线呈水平状态，将$\mathbf{F_1}$称之为水平因子。同理对$\mathbf{F_2}$称之为斜率因子（对长短期利率影响不同，斜率为负，对短期利率影响较大，长期利率影响较小），$\mathbf{F_3}$影响曲线呈现山峰或山谷的形态（长短期影响相同，中部影响不同），称之为曲度（中期）因子。
-
 \begin{figure}[ht!]
 	\centering
 	\includegraphics{fig/factor_loading.png}
 	\caption{主成分因子载荷}
 \end{figure}
 
-
 \subsection{传统利率期限结构理论}
-
 是什么原因决定了利率曲线（期限结构）的形状
 
 \subsubsection{纯预期理论（Pure Expectation Theory）}
@@ -363,7 +358,6 @@ Bernanke（2013），引用了Kim和Wright（2005）年的研究（提出了三�
 \textbf{分段三次多项式插值}：假设利率为期限的三次方函数，并将利率曲线分为多段，由于是三次，每段方程都有四个未知数，即每段曲线上都需要找到四个散点（如0-2年利率曲线，选取0.5、1、1.5、2年四个散点）进而可以求解方程。与线性插值相比，高次多项式插值可以获得更为光滑的曲线，但并非次数越高越好（Runge现象，高次多项式曲线波动较大，收敛性可能存在问题），一般三次可以保证函数连续和二阶可导（远期利率为即期利率的一阶导）。
 
 \textbf{龙格现象（Runge's Phenomenon）}：高次多项式曲线波动较大，且插值的收敛性可能存在问题
-
 \begin{figure}[ht!]
 	\centering
 	\includegraphics{fig/runges_phenomenon.png}
@@ -372,7 +366,6 @@ Bernanke（2013），引用了Kim和Wright（2005）年的研究（提出了三�
 
 \subsection*{样条插值（spline interpolation）}
 样条插值为特殊的多项式插值，即使用名为样条（spline）的特殊分段多项式（piecewise polynomial）进行插值的形式。样条插值比多项式插值更加使用，用低阶的样条插值能产生高阶多项式插值类似的效果，且能避免龙格现象等数值不稳定的出现。
-
 \begin{figure}[ht!]
 	\centering
 	\includegraphics{fig/spline.png}
@@ -403,7 +396,7 @@ n段区间，n+1个节点，对应2n+2个条件（方程），可以解得2n+2�
 
 \textbf{三次样条插值（Cuibc spline）}：在三次Hermite的基础上，要求在节点处二阶导数值也需相等。具体而言，将插值区间$[a,b]$分为n个区间$[(x_0,x_1),(x_1,x_2),\dots,(x_{n-1},x_n)]$。其中共有$n+1$个点，且两个端点有$x_0=a$与$x_n=b$。并在n个细分区间内，每个区间内应有三次样条函数其形式为$f_i(x) = a_i+b_i x+c_i x^2+d_i x^3\;(i=0,1,\dots,n-1)$。应满足：
 \begin{enumerate}
-	\setlength\itemsep{0em}
+	\setlength{\itemsep}{0em}
 	\item 每个细分区间$(x_i,x_{i+1})$中，$f(x)=f_i(x)$都为三次方程
 	\item 满足插值条件$f(x_i) = y_i \quad (i=0,1,\dots,n)$
 	\item 曲线光滑，$f(x)$、$f'(x)$与$f''(x)$连续
@@ -413,7 +406,7 @@ n段区间，n+1个节点，对应2n+2个条件（方程），可以解得2n+2�
 
 其次$n-1$个中间节点的一阶导数应该是连续的，因此有$f'_i(x_{i+1}) = f'_{i+1}(x_{i+1})$,因此共有$n-1$个方程。同理其二阶导数也应该是连续的，$f''_i(x_{i+1}) = f''_{i+1}(x_{i+1})$,因此又有$n-1$个方程。此时中间点、一阶导、二阶导等条件共有$4n-2$个方程，还需要额外的两个方程便可求解，可以通过边界条件得到，一共有3种边界条件：
 \begin{enumerate}
-	\setlength\itemsep{0em}
+	\setlength{\itemsep}{0em}
 	\item 自然边界（Natural spline）：将两个端点的二阶导数设定为0，即$f''_0(x_0)=f''_{n-1}(x_n)=0$
 	\item 固定边界（Clamped spline）：指定端点一阶函数，设为P、Q，则有：$S'_0(x_0)=P$与$S'_{n-1}(x_n)=Q$
 	\item 非扭结边界（Not-A-Knot spline）：指定第一个中间节点的三阶导数与起始端点的三阶导数相同，即$f'''_1(x_1)=f'''_0(x_0)$。同时指定最后一个中间节点与终止端点的三阶导数相同，即$f'''_{n-2}(x_{n-1})=f'''_{n-1}(x_n)$。
@@ -468,7 +461,7 @@ n段区间，n+1个节点，对应2n+2个条件（方程），可以解得2n+2�
 
 \textbf{NS参数的经济含义}
 \begin{itemize}
-	\setlength\itemsep{0em}
+	\setlength{\itemsep}{0em}
 	\item $\beta_0$：长期因子：期限无穷大时利率收敛于$\beta_0$。水平因子：载荷为1，1是不衰减的常数，对所有期限利率影响一致
 	\item $\beta_1$：短期因子：其载荷是一个开始于1，并很快衰减至0的函数，对短期利率影响大。斜率因子：当期限趋于0时，$\beta_1＝R(0,0)-\beta_0$，因此也可以看作是长短期利率之差（spread)
 	\item $\beta_2$：其载荷开始于0先增加后衰减为0，对中期利率影响大，主要影响收益率曲线的弯曲度，通常被称为“中期因子”或“曲度因子
@@ -487,7 +480,7 @@ n段区间，n+1个节点，对应2n+2个条件（方程），可以解得2n+2�
 
 \subsubsection*{即期利率函数法：参数校准}
 \begin{itemize}
-	\setlength\itemsep{0em}
+	\setlength{\itemsep}{0em}
 	\item 无法使用最小二乘法，而只能使用非线性最优化技术
 	\item 同样需要考虑异方差和约束问题
 	\item 异方差调整通过赋予短期债券较大的权重来体现

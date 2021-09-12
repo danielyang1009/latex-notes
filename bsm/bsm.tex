@@ -2,6 +2,16 @@
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
 \usepackage{amsmath,amsfonts}
 \usepackage{booktabs,float,multirow}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linkcolor=blue,
+    linktoc=all, %set to all if you want both sections and subsections linked
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black
+}
 \usepackage[UTF8]{ctex}
 
 \newcommand{\E}{\operatorname{E}}
@@ -14,6 +24,8 @@
 
 \begin{document}
 \maketitle
+
+\tableofcontents
 
 \section{布朗运动、维纳过程}
 
@@ -30,6 +42,7 @@
 \subsection{特征}
 \textbf{标准布朗运动（Brownian motion）或维纳过程（Wiener process）}的特征有：
 \begin{itemize}
+    \setlength{\itemsep}{0em}
     \item 初值为零
     \item 连续
     \item 独立增量：对于任意两个不同时间点$\Delta t_i$与$\Delta t_j$，其增量$\Delta Z_i$与$\Delta Z_j$相互独立
@@ -39,6 +52,7 @@
 \subsection{为何使用标准布朗运动}
 
 \begin{itemize}
+    \setlength{\itemsep}{0em}
     \item 股价不能为负，所以不能遵循正态分布，但股票连续复利收益率（$d\text{ln} S_t$）近似服从正态分布
     \item 维纳过程是一个马尔可夫随机过程，增量$\Delta Z$独立，与弱式EMH相同，即技术分析无效，无法使用历史信息预测未来，过去信息跟未来信息相互独立
     \item 维纳过程对时间处处不可导，且二次变分（Quadratic Variation）不为零，与股票价格变化存在转折尖点的性质相符
@@ -125,7 +139,7 @@
     }
 \end{equation*}
 
-\subsection{证明}
+\subsection*{证明}
 
 $f(X,t)$的泰勒展开式为：
 \begin{equation*}
@@ -186,31 +200,96 @@ $f(X,t)$的泰勒展开式为：
 
 即有：
 \begin{align*}
-    d\ln S_t= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
+    d\ln S = \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
 \end{align*}
 
 或有离散形式下为：
 \begin{align*}
-    \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
+    \Delta \ln S = \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
 \end{align*}
 
-此时股票价格连续复利收益率（Continuously compounded return），或称为对数收益率（Logarithmic return），为\textbf{未年化}收益率：
+% todo
+\section{百分比收益率与对数收益率}
+
+https://en.wikipedia.org/wiki/Rate\_of\_return
+
+百分比收益率或（Arithmetic return）或称为简单收益率（simple return）
+连续复利收益率（Continuously compounded return），或称为对数收益率（Logarithmic return，或Log return）。
+
+其对应则有算术平均收益率（Arithmetic mean return），和几何平均收益率（Geometric mean return）。
+
+
+
+收益率可分为百分比收益率（Simple return）以及对数收益率（连续复利收益率，Log return）两种
+
+连续复利收益率
+
+百分比收益率
+
+，为\textbf{未年化}收益率：
+
+
 \begin{equation}
     R = d\ln S_t= \ln S_t - \ln S_{t-1} = \ln \frac{S_t}{S_{t-1}} = \ln (1+r)
 \end{equation}
 
-服从期望值为$(\mu - \sigma^2/2)dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。\textbf{注意}：$d\ln S$（极短时间内）和$\ln S_T - \ln S_t$（较长时间内）都服从正态分布，而$dS$在极短时间内服从正态分布，而在较长时间内因$S_t$的大小改变，使得$S_T - S_t$的均值和方差的改变而不服从正态分布。
+服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。
+
+
+
+
+
+\textbf{注意}：$d\ln S$（极短时间内）和$\ln S_T - \ln S_t$为\textbf{连续复利收益率}，其在较长时间间距内都服从正态分布。
+\begin{equation*}
+    d\ln S = \ln S_T - ln S_t \sim  N \left( (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
+\end{equation*}
+
+从而可以发现\textbf{股票价格的对数}服从正态分布：
+\begin{equation*}
+    \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
+\end{equation*}
+
+而\textbf{比例收益率}为：
+\begin{equation*}
+    \frac{dS_t}{S_t} = \mu d_t + \sigma dZ_t
+\end{equation*}
+
+可以看到，在极短时间间距内$dS_t/S_t$服从正态分布。而在较长时间间距内,因$S_t$的大小改变，使得其均值和方差发生改变，而再不服从正态分布。
+
+
+\subsection{比例收益率与对数收益率}
+
+股票价格服从几何布朗运动：
+\begin{equation*}
+    dS_t = \mu S_t dt + \sigma S_t dZ_t
+\end{equation*}
+
+其离散形式可写作：
+\begin{equation*}
+    \frac{\Delta S_t}{S_t} = \mu \Delta t + \sigma \varepsilon \sqrt{\Delta t}
+\end{equation*}
+
+其期望有，可以看到$\Delta S_t/S_t$为$\Delta t$时间内百分比年化收益率或\textbf{比例收益率}（percentage returns）为$\mu$：
+\begin{equation*}
+    \E(\frac{\Delta S_t}{S_t}) = \mu \Delta t
+\end{equation*}
+
+而连续复利收益率或\textbf{对数收益率}（log returns）的期望则为：
 \begin{align*}
-    \ln S_T - ln S_t \sim & N \left( (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right) \\
-    \ln S_T  \sim & N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
+    d\ln S       & = (\mu-\frac{\sigma^2}{2})dt+\sigma dZ_t \\
+    \E(d\ln S_t) & = (\mu - \frac{\sigma^2}{2})dt
 \end{align*}
 
-\textbf{可以看到此时\underline{股票价格的对数}服从正态分布（Log-normal distribution），因此可知，股票价格服从对数正态分布}。由正态分布与对数正态分布的性质可知，对一个服从正态分布的随机变量$X$取指数，则$e^X$服从数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布。因此有如下关系：
+比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望与均值$\mu$均为0，但实际上相比期起初有-43.75\%的亏损。而使用几何平均（复利）计算，年化亏损$-13.40\%$即盈亏应使用几何平均的方式计算，简单的算术平均比例收益率没有意义。而使用对数收益率，其期望为$\mu-\sigma^2/2$，即算术平均$\mu$需要减去$\sigma^2/2$，才是几何平均期望。在此例子中均值为0，方差为0.25，此时对数收益率的期望为$-12.5\%$。即波动越大，降低实际收益率，符合现实情况，具有经济学意义。
+
+\section{对数正态分布}
+
+由\textbf{股票价格的对数}服从\textbf{正态分布}可知，股票价格服从\textbf{对数正态分布}（Log-normal distribution）。由正态分布与对数正态分布的性质可知，对一个服从正态分布的随机变量$X$取指数，则$e^X$服从对数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布（因而得名，取对数得到正态分布的分布）。因此有如下关系：
 \begin{align*}
     \ln S_T \sim N(\mu,\sigma^2) \quad \leftrightarrow \quad S_T \sim \text{Log-normal}(\mu,\sigma^2)
 \end{align*}
 
-并且已知对数正态分布$X \sim \text{Log-normal}(\mu,\sigma^2)$，其期望与标准差为：
+已知对数正态分布$X \sim \text{Log-normal}(\mu,\sigma^2)$，其期望与标准差为：
 \begin{align*}
     \E(X) & = e^{\mu+\frac{\sigma^2}{2}} \\
     \Var(X) & = e^{2\mu+\sigma^2} (e^{\sigma^2}-1)
@@ -218,33 +297,16 @@ $f(X,t)$的泰勒展开式为：
 
 因股票价格$S_T$服从对数正态分布，代入上式可知其期望及方差为：
 \begin{align*}
-    \E(S_T)   & = \exp(\ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)+\frac{\sigma^2}{2}(T-t)) \\
-    & = \exp(\ln S_t + \mu(T-t)) \\
+    \E(S_T)   & = \exp\left( \ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)+\frac{\sigma^2}{2}(T-t)\right) \\
+    & = \exp \left( \ln S_t + \mu(T-t) \right) \\
     & = S_t e^{\mu(T-t)} \\
     \Var(S_T) & = \left[\exp(\sigma^2(T-t))-1\right] \exp \left\{2\left[\ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)\right] + \sigma^2(T-t)\right\} \\
     & = \left[\exp(\sigma^2(T-t))-1\right] \exp\left[2 \ln S_t + 2\mu (T-t)\right] \\
     & = S_t^2 e^{2\mu(T-t)} \left[ e^{\sigma^2 (T-t)} - 1 \right]
 \end{align*}
 
-\subsection{对数正态分布}
-
-如果一组数值做对数变换后服从正态分布，我们就称其服从对数正态分布。假设随机变量$X$服从正态分布，则有$ln x$服从对数正态分布，两者累积分布函数（Cumulative distribution fuction，CDF）相同：
-\begin{equation*}
-    F_L(x) = F_N (\ln x)
-\end{equation*}
-
-对公式两边取倒数，则可得到其概率密度函数（probability density function，PDF）：
-\begin{equation*}
-    F_L(x) = \frac{1}{x} F_N(\ln x)
-\end{equation*}
-
-此时，带入已知正态分布PDF，即可得到对数正态分布PDF：
-\begin{equation*}
-    f_L = \frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{(\ln x - \mu)^2}{2\sigma^2}}
-\end{equation*}
-
-\textbf{注意}：对于对数正态分布，$\mu$与$\sigma$并非其均值与标准差，仅为确定其对数正态分布的两个参数。只是使用其确定正态分布时，就正好为其期望和标准差。对于相同的$\mu$与$\sigma$参数确定的正态分布与对数正态分布，可以通过对服从对数正态分布的随机变量取对数转换为正态分布。相反，通过对服从正态分布的随机变量取指数转换为对数正态分布。两者之间的期望与标准差（方差）通过如下关系转化：
-
+\subsection*{注意}
+对于正态分布$\mu$与$\sigma^2$，为其均值与标准差。而对于对数正态分布，仅为确定其分布的两个参数。对于相同的$\mu$与$\sigma$参数确定的正态分布与对数正态分布，两者之间的期望与方差通过如下表格关系转化：
 \begin{table}[H]
 \centering
 \begin{tabular}{@{}cll@{}}
@@ -253,12 +315,55 @@ $f(X,t)$的泰勒展开式为：
 & \multicolumn{1}{c}{\textbf{正态分布}} & \multicolumn{1}{c}{\textbf{对数正态分布}} \\
 \midrule
 \multirow{1}{*}{\textbf{期望}} 
-& $\E_N(X)=\mu = \ln[\E_L(X)] - \frac{1}{2} \ln \left[1+\frac{\Var_L(X)}{[\E_L(X)]^2}\right] $ & $\E_L(X) = e^{\mu+\frac{\sigma^2}{2}}$ \\
-\textbf{方差} & $\Var_N(X) = \sigma^2 = \ln \left[1+\frac{\Var_L(x)}{[\E_L(X)]^2}\right]$ & $\Var_L(X) = e^{2\mu+\sigma^2} 
+& $\E_N(X) \equiv \mu = \ln[\E_{L}(X)] - \frac{1}{2} \ln \left[1+\frac{\Var_{L}(X)}{[\E_{L}(X)]^2}\right] $ & $\E_{L}(X) = e^{\mu+\frac{1}{2}\sigma^2}$ \\
+\textbf{方差} & $\Var_N(X) \equiv \sigma^2 = \ln \left[1+\frac{\Var_{L}(X)}{[\E_{L}(X)]^2}\right]$ & $\Var_{L}(X) = e^{2\mu+\sigma^2} 
 \left(e^{\sigma^2} - 1\right)$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\subsection{PDF与CDF}
+
+如下图所示，通过对服从\textbf{正态分布}的随机变量\textbf{取指数}，可以将其转换为对数正态分布。同理，通过对服从\textbf{对数正态分布}的随机变量\textbf{取对数}，使其转换为正态分布。假设随机变量$Y \sim N(\mu,\sigma^2)$ 服从正态分布，随机变量$X \sim \text{Log}N(\mu,\sigma^2)$，对正态分布随机变量$Y$取指数$x=e^y$，此时有$y = \ln x$，带入CDF中，可得到对数正态函数CDF。对两者求导，可得PDF函数。
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+\multicolumn{1}{l}{}
+& \multicolumn{1}{c}{\textbf{正态分布}} & \multicolumn{1}{c}{\textbf{对数正态分布}} \\
+\midrule
+\multirow{1}{*}{\textbf{PDF}} 
+& $\frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2} \frac{(x-\mu)^2}{\sigma}} $
+& $\frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{1}{2} \frac{(\ln x-\mu)^2}{\sigma}} $ \\
+\textbf{CDF} 
+& $\frac{1}{2} \left[1 + \text{erf}\left( \frac{x-\mu}{\sigma\sqrt{2}}\right) \right]$
+& $\frac{1}{2} \left[1 + \text{erf}\left( \frac{\ln x-\mu}{\sigma\sqrt{2}}\right) \right]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig/lognormal_distribution.png}
+    \caption{两者相互转换}
+\end{figure}
+
+\subsection{对数正态分布:具体推导}
+
+如上文所述，对于相同参数$\mu$与$\sigma^2$的正态分布与对数正态分布可以相互转化。两者互相经过转化后，其累积分布函数（Cumulative distribution fuction，CDF）相同。如上图所示，假设随机变量$Y \sim N(\mu,\sigma^2)$ 服从正态分布，随机变量$X \sim \text{Log}N(\mu,\sigma^2)$，则应有如下关系，对服从对数正态分布的随机变量$X$取对数，使其转化为正态分布：
+\begin{equation*}
+    \text{CDF}_{logN}(x) = \text{CDF}_N (\ln x) = \text{CDF}_N (y)
+\end{equation*}
+
+对公式两边取导数，则可得到其概率密度函数（Probability density function，PDF）：
+\begin{equation*}
+    \text{PDF}_{logN}(x) = \frac{1}{y} \text{PDF}_N(\ln x)
+\end{equation*}
+
+此时，带入已知正态分布PDF，即可得到对数正态分布PDF：
+\begin{equation*}
+    \text{PDF}_{logN} = \frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{(\ln x - \mu)^2}{2\sigma^2}}
+\end{equation*}
 
 \subsubsection{期望推导}
 
@@ -267,7 +372,7 @@ $f(X,t)$的泰勒展开式为：
     \E(X) = \int^{+\infty}_0 x f(x) dx = \int^{+\infty}_0 \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(ln x - \mu)^2}{2\sigma^2}} dx
 \end{equation*}
 
-使用换元法，令$t = \frac{ln x - \mu}{\sqrt{2}\sigma}$，则有$x = e^{\sqrt{2}\sigma t + \mu}$，则原积分转化为：
+使用换元法，令$t = \frac{\ln x - \mu}{\sqrt{2}\sigma}$，则有$x = e^{\sqrt{2}\sigma t + \mu}$，则原积分转化为：
 \begin{align*}
     \E(X) &= \int^{+\infty}_{-\infty} \frac{1}{\sigma\sqrt{2\pi}}e^{-t^2}d e^{\sqrt{2}\sigma t + \mu}\\ 
     &= \frac{e^{\mu + \frac{\sigma^2}{2}}}{\sqrt{\pi}} \int^{+\infty}_{-\infty} e^{-(t-\frac{\sqrt{2}\sigma}{2})^2} dt\\ 
@@ -307,16 +412,6 @@ $f(X,t)$的泰勒展开式为：
     &= e^{2\mu+2\sigma^2} - e^{2\mu+\sigma^2} \\
     &= e^{2\mu+\sigma^2}\left(e^{\sigma^2} - 1\right)\\
 \end{align*}
-
-\subsubsection{求正态分布$\mu$与$\sigma$}
-
-已知$\ln X \sim N(\mu,\sigma^2)$、$\E(X)$与$\Var(x)$，即随机变量$X$服从对数正态分布，其对数服从正态分布，则有：
-\begin{equation*}
-    \mu = \ln[\E(X)] - \frac{1}{2} \ln \left[1+\frac{\Var(X)}{[\E(X)]^2}\right]
-\end{equation*}
-\begin{equation*}
-    \sigma = \sqrt{\ln \left[1+\frac{\Var(x)}{[\E(X)]^2}\right]}
-\end{equation*}
 
 
 \section{BSM 偏微分方程（PDE）}
@@ -431,7 +526,6 @@ $f(X,t)$的泰勒展开式为：
     & = S_t N(d_1) - Ke^{-r(T-t)} N(d_2)
 \end{align*}
 
-
 已知期权平价公式：
 \begin{equation*}
     c + K e^{r(T-t)} = p + S_t
@@ -451,6 +545,100 @@ $f(X,t)$的泰勒展开式为：
     d_1 = \frac{\ln \frac{S_t}{K} + (r+\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} \\
     d_2 = \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}
 \end{align*}
+
+\section{波动率}
+
+$r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
+\begin{equation*}
+    \sigma^2(r_t) = \frac{1}{T-1} \sum^T_{t=1} (r_t - \bar{r})^2 
+\end{equation*}
+
+其中样本均值应有：
+\begin{equation*}
+    \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
+\end{equation*}
+
+\subsection{波动率分类与计算}
+波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而后者为根据BSM模型等，根据期权市场现有的价格信息，倒求出其中所包含的波动率信息（隐含），为人们对未来给定期限的波动率的预期值，如：隐含波动率（包含无模型波动率）。
+
+\subsubsection{历史波动率（Historical volatility）}
+样本对数收益率标准差（日频数据）
+
+\subsubsection{已实现波动率（Readlized volatility）}
+已实现波动率（Realized volatility，日内高频，5分钟，假设均值为零）
+
+\subsubsection{随机波动率（Sochastic volatility）}
+
+\subsubsection{GARCH波动率}
+广义自回归条件异方差（GARCH，计量方法）
+
+\subsubsection{隐含波动率（Implied volatility）}
+隐含波动率（Implied volatility）：直接从期权价格中提取未来预期，提取的为至到期日之间的波动率，BSIV：期权直到到期的波动率，option-implied volatility expectations until expiration
+
+\subsubsection{无模型波动率（Model-free volatility）}
+
+\subsection{典型实证现象}
+有些现象能够在几乎所有收益率的时间序列中观察到。一个好的条件异方差模型要能够捕捉大部分实证现象。在这个部分，我们列出在波动性分析中最知名典型实证现象。
+
+https://vinsight.shnyu.edu.cn/about\_volatility.php
+
+\subsubsection{波动率聚类}
+如果 t−1时的波动率很高，t 时的波动率也很可能会很高。即，在 t−1 时的冲击不仅会增加 t−1 时的波动率，也会影响到 t 时的波动率。换句话说，市场在某些时期较为波动，在其他时间更为平静。波动率特征按照时间集中分类。GARCH 类模型能够很好地捕捉这一现象。事实上，这些模型更准确地来说，是衡量 t 时的波动率是如何依赖历史波动率 (和其他可能的条件变量）。
+
+\subsubsection{肥尾现象}
+收益率的时间序列通常呈现肥尾分布，又叫做超额峰度，或者尖峰。也就是说，它们的峰度（用方差的平方根标准化的第四中心矩）通常都大于3（高斯随机变量的峰度为3）。事实上，一种流行的检验高斯分布假设的方法，Jarque-Bera测试，能够同时测试此分布是否是对称的以及其峰度是否等于3。
+
+如果收益率是肥尾分布的，则极端事件（非常高或非常低的回报率）的发生概率会高于收益率分布满足正态（高斯）分布时其发生的概率。
+
+大部分波动率模型，例如GARCH 模型会造成收益率呈现肥尾分布，不管真正的潜在冲击是高斯分布还是肥尾分布。在估计时，我们通常假设潜在冲击服从高斯分布。在样本量很大时，即使真实分布不是高斯，模型通常也能给出合适的估计值。这些估计值为最大似然估计值，并且能够在相对宽松的限制条件下给出一致的估计。
+
+\subsubsection{不对称性}
+有一个普通 GARCH 模型不能捕捉的实证现象是 t−1 时刻的负面冲击比正面冲击对 t 时刻的方差有更强烈的影响。尽管如此， GARCH 模型能够很容易地调整扩充从而捕捉到这种不对称性。类似的例子有门限 GARCH （TGARCH）模型，, 不对称 GARCH （AGARCH）模型和指数 GARCH （EGARCH)）模型。
+
+这一不对称性过去被成为杠杆效应，因为增加的风险被认为是来自于负面冲击所引起杠杆的增加，但是限制人们认识到这个效应不能解释所有现象，并且风险规避是一个重要的机制。
+
+
+
+
+
+\section{Delta对冲}
+
+Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
+\begin{equation*}
+    \Delta = \frac{\partial V}{\partial S}
+\end{equation*}
+
+而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果为0，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
+\begin{equation*}
+    \Delta V \times N_V = \Delta S \times N_S \quad \Rightarrow \quad
+    \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
+\end{equation*}
+
+如上所述，假定股票价格遵循几何布朗运动，则有在显示测度（Physical probability measure）下：
+\begin{equation*}
+    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
+\end{equation*}
+
+根据伊藤引理：
+\begin{equation*}
+    f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
+\end{equation*}
+
+
+
+在Bakshi and Kapadia 2003中，
+
+在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
+\begin{equation*}
+    \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+\begin{equation*}
+    \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+
+Long call, short delta stock/ short call, long delta stock
+
+Long put, long delta stock/ short put, short delta stock
 
 \section{内在价值（考虑中国市场的新定义）}
 
@@ -506,7 +694,6 @@ $f(X,t)$的泰勒展开式为：
     c_{\text{时间价值}} = p_{\text{时间价值}}
 \end{equation*}
 
-
 \section{平价期权}
 
 当平值点为$S = K e^{-r(T-t)}$时，将其带入看涨BSM公式当中，则有：
@@ -538,66 +725,6 @@ $f(X,t)$的泰勒展开式为：
     & \approx \frac{\sigma\sqrt{T-t}}{2\pi} \approx 0.4\sqrt{T-t}
 \end{align*}
 
-\section{波动率}
-
-为人们对未来给定期限的波动率的预期值
-\begin{itemize}
-    \item 历史波动率（Historical volatility）：使用过去代替未来
-          \begin{itemize}
-              \item 样本对数收益率标准差（日频数据）
-              \item 已实现波动率（Realized volatility，日内高频，5分钟，假设均值为零）
-              \item 极差波动率
-          \end{itemize}
-    \item 历史波动率（Historical volatility）：利用历史数据进行建模，并且预测
-          \begin{itemize}
-              \item 广义自回归条件异方差（GARCH，计量方法）
-              \item 随机波动率（Sochastic volatility，随机过程）
-          \end{itemize}
-    \item 隐含波动率（Implied volatility）：直接从期权价格中提取未来预期
-\end{itemize}
-
-\section{Delta对冲}
-
-Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
-\begin{equation*}
-    \Delta = \frac{\partial V}{\partial S}
-\end{equation*}
-
-而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果为0，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
-\begin{equation*}
-    \Delta V \times N_V = \Delta S \times N_S \quad \Rightarrow \quad
-    \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
-\end{equation*}
-
-如上所述，假定股票价格遵循几何布朗运动，则有在显示测度（Physical probability measure）下：
-\begin{equation*}
-    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
-\end{equation*}
-
-根据伊藤引理：
-\begin{equation*}
-    f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
-\end{equation*}
-
-
-
-在Bakshi and Kapadia 2003中，
-
-在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
-\begin{equation*}
-    \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
-\end{equation*}
-\begin{equation*}
-    \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
-\end{equation*}
-
-
-
-
-Long call, short delta stock/ short call, long delta stock
-
-Long put, long delta stock/ short put, short delta stock
-
 \section{注意与备注}
 
 \begin{itemize}
@@ -607,30 +734,6 @@ Long put, long delta stock/ short put, short delta stock
     \item 波动率为一个时间窗口（一般为年，252天交易日，较以月每21天为窗口更为平滑）内连续复利收益率或对数收益率（$\ln S_t/S_{t-1}$）标准差进行年化。即日波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$），月波动率应乘以$\sqrt{252/21}$进行年化。
 \end{itemize}
 
-\subsection{比例收益率与对数收益率}
-
-股票价格服从几何布朗运动：
-\begin{equation*}
-    dS_t = \mu S_t dt + \sigma S_t dZ_t
-\end{equation*}
-
-其离散形式可写作：
-\begin{equation*}
-    \frac{\Delta S_t}{S_t} = \mu \Delta t + \sigma \varepsilon \sqrt{\Delta t}
-\end{equation*}
-
-其期望有，可以看到$\Delta S_t/S_t$为$\Delta t$时间内百分比年化收益率或\textbf{比例收益率}（percentage returns）为$\mu$：
-\begin{equation*}
-    \E(\frac{\Delta S_t}{S_t}) = \mu \Delta t
-\end{equation*}
-
-而连续复利收益率或\textbf{对数收益率}（log returns）的期望则为：
-\begin{align*}
-    d\ln S       & = (\mu-\frac{\sigma^2}{2})dt+\sigma dZ_t \\
-    \E(d\ln S_t) & = (\mu - \frac{\sigma^2}{2})dt
-\end{align*}
-
-比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望与均值$\mu$均为0，但实际上相比期起初有-43.75\%的亏损。而使用几何平均（复利）计算，年化亏损$-13.40\%$即盈亏应使用几何平均的方式计算，简单的算术平均比例收益率没有意义。而使用对数收益率，其期望为$\mu-\sigma^2/2$，即算术平均$\mu$需要减去$\sigma^2/2$，才是几何平均期望。在此例子中均值为0，方差为0.25，此时对数收益率的期望为$-12.5\%$。即波动越大，降低实际收益率，符合现实情况，具有经济学意义。
 
 \subsection{做空限制}
 且在中国市场中现货存在较大的做空限制，即在现货市场的价格由看多者和少量看空者决定，并不能反应所有投资者的真实情绪，以至于难以复制期权，违法BSM公式假设条件。解决方法有：

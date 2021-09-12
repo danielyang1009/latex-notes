@@ -1,22 +1,35 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
 \usepackage{amsmath,amsfonts}
+% \usepackage{cases}
 % === graph packages ===
 % \usepackage{tikz}
 % \usetikzlibrary{trees,matrix}
-% \usepackage{cases}
 % \usepackage{mathtools}
 % == table packages ==
 % \usepackage{booktabs,float,multirow}
+% == figure packages ==
+% \usepackage{graphicx}
 % === url packages ===
 % \usepackage[hyphens]{url}
-% \usepackage{hyperref}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linkcolor=blue,
+    linktoc=all, %set to all if you want both sections and subsections linked
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black
+}
 % ctex与amsmath冲突，放最后可解决
 \usepackage[UTF8]{ctex}
 
 \newcommand{\E}{\operatorname{E}}
 \newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\Var}{\operatorname{Var}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 
 \title{XXXX}
 \author{杨弘毅}

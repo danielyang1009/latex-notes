@@ -2,6 +2,7 @@
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
 \usepackage{amsmath,amsfonts}
 \usepackage{booktabs,float,multirow}
+\usepackage{cancel}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \hypersetup{
@@ -198,93 +199,117 @@ $f(X,t)$的泰勒展开式为：
     & = \left( \mu - \frac{1}{2}\sigma^2\right)dt + \sigma dZ_t
 \end{align*}
 
-即有：
-\begin{align*}
+连续形式下有：
+\begin{equation*}
     d\ln S = \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
-\end{align*}
+\end{equation*}
 
 或有离散形式下为：
 \begin{align*}
-    \Delta \ln S = \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
+    \Delta \ln S &= \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \\
+    \Delta \ln S &\sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
 \end{align*}
 
-% todo
-\section{百分比收益率与对数收益率}
-
-https://en.wikipedia.org/wiki/Rate\_of\_return
-
-百分比收益率或（Arithmetic return）或称为简单收益率（simple return）
-连续复利收益率（Continuously compounded return），或称为对数收益率（Logarithmic return，或Log return）。
-
-其对应则有算术平均收益率（Arithmetic mean return），和几何平均收益率（Geometric mean return）。
-
-
-
-收益率可分为百分比收益率（Simple return）以及对数收益率（连续复利收益率，Log return）两种
-
-连续复利收益率
-
-百分比收益率
-
-，为\textbf{未年化}收益率：
-
-
-\begin{equation}
-    R = d\ln S_t= \ln S_t - \ln S_{t-1} = \ln \frac{S_t}{S_{t-1}} = \ln (1+r)
-\end{equation}
-
-服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。
-
-
-
-
-
-\textbf{注意}：$d\ln S$（极短时间内）和$\ln S_T - \ln S_t$为\textbf{连续复利收益率}，其在较长时间间距内都服从正态分布。
-\begin{equation*}
-    d\ln S = \ln S_T - ln S_t \sim  N \left( (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
-\end{equation*}
-
-从而可以发现\textbf{股票价格的对数}服从正态分布：
+可以看到\textbf{连续复利收益率}或\textbf{对数收益率}服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。并且在$T$时刻，\textbf{股票价格的对数}，也服从正态分布：
 \begin{equation*}
     \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{equation*}
 
-而\textbf{比例收益率}为：
+\section{比例收益率与对数收益率}
+
+\subsection{分类}
+
+对于计算\textbf{单期}的收益率，可分为\textbf{百分比收益}或（Arithmetic return）或称为简单收益（Simple return），与
+\textbf{连续复利收益}（Continuously compounded return），或称为对数收益（Logarithmic return，或Log return）。记符号$r$为收益率（rate of return）为将一段时间的收益（return）$R$，转化为在标准化期限内的收益。对于标准化期限为一年的收益率，称为年化收益率（annulized return）。
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+\multicolumn{1}{l}{}
+& \multicolumn{1}{c}{\textbf{百分比}} & \multicolumn{1}{c}{\textbf{对数}} \\
+\midrule
+\multirow{1}{*}{\textbf{单期收益}} 
+& $R_{pct} = \frac{V_T-V_t}{V_t}$
+& $R_{log} = \ln \frac{V_T}{V_t}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+而计算\textbf{多期}的平均收益率，有\textbf{算术平均收益率}（Arithmetic mean rate of return），和\textbf{几何平均收益率}（Geometric mean rate of return）两种方式。其中算术平均收益率为：
 \begin{equation*}
-    \frac{dS_t}{S_t} = \mu d_t + \sigma dZ_t
+    \bar{r}_{arithmetic} = \frac{1}{n} \sum^{n}_{i=1} = \frac{1}{n} (r_1 + r_2 + \dots + r_n)
 \end{equation*}
 
-可以看到，在极短时间间距内$dS_t/S_t$服从正态分布。而在较长时间间距内,因$S_t$的大小改变，使得其均值和方差发生改变，而再不服从正态分布。
-
-
-\subsection{比例收益率与对数收益率}
-
-股票价格服从几何布朗运动：
+几何平均收益率为：
 \begin{equation*}
-    dS_t = \mu S_t dt + \sigma S_t dZ_t
+    \bar{r}_{geometric} = \left( \prod^{n}_{i=1}(1+r_i) \right)^{\frac{1}{n}} - 1
 \end{equation*}
 
-其离散形式可写作：
+\subsubsection*{百分比收益率}
+对于没有再投资（reinvestment）的百分比年化收益率为（t单位为年）：
 \begin{equation*}
-    \frac{\Delta S_t}{S_t} = \mu \Delta t + \sigma \varepsilon \sqrt{\Delta t}
+    r_{pct} = \frac{R_{pct}}{t}
 \end{equation*}
 
-其期望有，可以看到$\Delta S_t/S_t$为$\Delta t$时间内百分比年化收益率或\textbf{比例收益率}（percentage returns）为$\mu$：
+对进行了再投资的百分比收益率为：
+\begin{align*}
+    1+R_{pct} &= (1+r_{pct})^t \\
+    r_{pct} &= (1+R_{pct})^{\frac{1}{t}} - 1
+\end{align*}
+
+对于单期或多期的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率。
+
+\subsubsection*{对数收益率}
+对数年化收益率为（t单位为年）：
+\begin{equation*}
+    r_{log} = \frac{R_{log}}{t}
+\end{equation*}
+
+假设一支股票在一个交易日内对数收益率$R_{log}=0.14\%$，平均一年有252个交易日（每个月21个交易日），则应有年化收益率为$r_{log} = \frac{R_{log}}{1/252} = 252R_{log} = 35.28\%$。因为根据对数收益率的性质，只需要将分段内收益率相加，即可得到整体收益率：
+\begin{align*}
+    R_{log} = \sum^{n}_{i=1} R_{log,i} & = R_{log,1} + R_{log,2} + \dots + R_{log,n} \\ 
+    &= \ln\frac{V_2}{V_1} + \ln\frac{V_1}{V_0} + \dots + \ln\frac{V_n}{V_{n-1}} \\
+    &= \cancel{\ln V_1} - \ln V_0 + \dots + \ln V_n - \cancel{\ln V_{n-1}} \\
+    &= \ln\frac{V_n}{V_0} 
+\end{align*}
+
+同理，对于多期的对数收益，如多年的对数收益，只需要计算其\textbf{算术平均}，即为其平均年化收益率。
+
+\subsection{性质}
+
+由几何布朗运动的推导可知，在\textbf{对数收益率}或\textbf{连续复利收益率}中，$d\ln S$（极短时间内）和$\Delta \ln S$（较长时间内）都服从正态分布：
+\begin{align*}
+    d\ln S &= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right) \\
+    \Delta \ln S &= \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right) 
+\end{align*}
+
+对比\textbf{比例收益率}在极短时间内（连续形式）与较长时间内（离散形式）:
+\begin{align*}
+    \frac{dS_t}{S_t} &= \mu dt + \sigma dZ_t \\
+    \frac{\Delta S_t}{S_t} &= \mu \Delta t + \sigma \varepsilon \sqrt{\Delta t}
+\end{align*}
+
+??????可以发现，在极短时间间距内$dS_t/S_t$服从正态分布。而在较长时间间距内,因$S_t$的大小改变???，使得其均值和方差发生改变，而再不服从正态分布。
+
+\subsection{期望}
+
+如上式所述，$\mu$为$\Delta t$时间内\textbf{百分比年化预期收益率}：
 \begin{equation*}
     \E(\frac{\Delta S_t}{S_t}) = \mu \Delta t
 \end{equation*}
 
-而连续复利收益率或\textbf{对数收益率}（log returns）的期望则为：
-\begin{align*}
-    d\ln S       & = (\mu-\frac{\sigma^2}{2})dt+\sigma dZ_t \\
-    \E(d\ln S_t) & = (\mu - \frac{\sigma^2}{2})dt
-\end{align*}
+而年化连续复利收益率或年化对数收益率的期望则为：
+\begin{equation*}
+    \E(d\ln S_t) = (\mu - \frac{\sigma^2}{2})dt
+\end{equation*}
 
-比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望与均值$\mu$均为0，但实际上相比期起初有-43.75\%的亏损。而使用几何平均（复利）计算，年化亏损$-13.40\%$即盈亏应使用几何平均的方式计算，简单的算术平均比例收益率没有意义。而使用对数收益率，其期望为$\mu-\sigma^2/2$，即算术平均$\mu$需要减去$\sigma^2/2$，才是几何平均期望。在此例子中均值为0，方差为0.25，此时对数收益率的期望为$-12.5\%$。即波动越大，降低实际收益率，符合现实情况，具有经济学意义。
+比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望值$\mu$为0，但实际上相比期起初有-43.75\%的亏损。使用几何平均计算，年化亏损$\sqrt[4]{1.5*0.5*1.5*0.5} - 1 = -13.40\%$。可以发现，在盈亏的计算上，应使用几何平均的方式计算，使用算术平均比例收益率没有意义。
+
+若使用对数收益率（模型），其期望为$\mu-\frac{\sigma^2}{2}$，即算术平均$\mu$需要减去$\frac{\sigma^2}{2}$。在此例子中百分比收益率均值为0，样本方差为$\frac{1}{3}$，此时对数收益率的期望为$-\frac{1}{6}\approx -16.67\%$。即波动越大，降低实际收益率，更符合现实情况，贴近几何平均收益率，具有经济学意义。计算实际对数收益率的算术平均为$2(\ln 1.5 + \ln 0.5)/4 = -14.38\%$。
 
 \section{对数正态分布}
 
-由\textbf{股票价格的对数}服从\textbf{正态分布}可知，股票价格服从\textbf{对数正态分布}（Log-normal distribution）。由正态分布与对数正态分布的性质可知，对一个服从正态分布的随机变量$X$取指数，则$e^X$服从对数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布（因而得名，取对数得到正态分布的分布）。因此有如下关系：
+由\textbf{股票价格的对数}服从\textbf{正态分布}可知，股票价格应服从\textbf{对数正态分布}（Log-normal distribution）。由正态分布与对数正态分布的性质可知，对一个服从正态分布的随机变量$X$取指数，则$e^X$服从对数正态分布。相反，对一个服从对数正态分布的随机变量$X$取对数，则$\ln X$服从正态分布（因而得名，取对数得到正态分布的分布）。因此有如下关系：
 \begin{align*}
     \ln S_T \sim N(\mu,\sigma^2) \quad \leftrightarrow \quad S_T \sim \text{Log-normal}(\mu,\sigma^2)
 \end{align*}
@@ -295,9 +320,14 @@ https://en.wikipedia.org/wiki/Rate\_of\_return
     \Var(X) & = e^{2\mu+\sigma^2} (e^{\sigma^2}-1)
 \end{align*}
 
-因股票价格$S_T$服从对数正态分布，代入上式可知其期望及方差为：
+已知股票价格的对数$\ln S_T$服从如下正态分布：
+\begin{equation*}
+    \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
+\end{equation*}
+
+可知股票价格$S_T$服从对数正态分布，代入上式可知其期望及方差为：
 \begin{align*}
-    \E(S_T)   & = \exp\left( \ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)+\frac{\sigma^2}{2}(T-t)\right) \\
+    \E(S_T)   & = \exp\left( \ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)+\frac{\sigma^2(T-t)}{2}\right) \\
     & = \exp \left( \ln S_t + \mu(T-t) \right) \\
     & = S_t e^{\mu(T-t)} \\
     \Var(S_T) & = \left[\exp(\sigma^2(T-t))-1\right] \exp \left\{2\left[\ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)\right] + \sigma^2(T-t)\right\} \\
@@ -348,7 +378,7 @@ https://en.wikipedia.org/wiki/Rate\_of\_return
     \caption{两者相互转换}
 \end{figure}
 
-\subsection{对数正态分布:具体推导}
+\subsection{具体推导}
 
 如上文所述，对于相同参数$\mu$与$\sigma^2$的正态分布与对数正态分布可以相互转化。两者互相经过转化后，其累积分布函数（Cumulative distribution fuction，CDF）相同。如上图所示，假设随机变量$Y \sim N(\mu,\sigma^2)$ 服从正态分布，随机变量$X \sim \text{Log}N(\mu,\sigma^2)$，则应有如下关系，对服从对数正态分布的随机变量$X$取对数，使其转化为正态分布：
 \begin{equation*}
@@ -412,7 +442,6 @@ https://en.wikipedia.org/wiki/Rate\_of\_return
     &= e^{2\mu+2\sigma^2} - e^{2\mu+\sigma^2} \\
     &= e^{2\mu+\sigma^2}\left(e^{\sigma^2} - 1\right)\\
 \end{align*}
-
 
 \section{BSM 偏微分方程（PDE）}
 
@@ -728,17 +757,16 @@ Long put, long delta stock/ short put, short delta stock
 \section{注意与备注}
 
 \begin{itemize}
+    \setlength{\itemsep}{0em}
     \item 期限、无风险利率、波动率应匹配（以年为单位，一般使用交易日计算，美国交易日252天）
     \item 无风险利率选择即期利率（Spot rate）而非到期收益率（YTM，真实收益率，票息5\%，但非平价发行）
     \item 由于只有交易日才有历史数据与收益率数据，波动率使用交易天数进行年化，中国240天左右，美国252天
     \item 波动率为一个时间窗口（一般为年，252天交易日，较以月每21天为窗口更为平滑）内连续复利收益率或对数收益率（$\ln S_t/S_{t-1}$）标准差进行年化。即日波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$），月波动率应乘以$\sqrt{252/21}$进行年化。
 \end{itemize}
 
-
 \subsection{做空限制}
+
 且在中国市场中现货存在较大的做空限制，即在现货市场的价格由看多者和少量看空者决定，并不能反应所有投资者的真实情绪，以至于难以复制期权，违法BSM公式假设条件。解决方法有：
-
-
 \begin{enumerate}
     \item 使用期货进行贴现，得到其隐含现货价格，使用BSM进行计算，其中有：
           \begin{itemize}

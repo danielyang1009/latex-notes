@@ -30,12 +30,12 @@
 
 \section{布朗运动、维纳过程}
 
-标准布朗运动简易表达式有：
+标准布朗运动简易表达式（连续形式）有，其中$\varepsilon \sim N(0,1)$：
 \begin{equation*}
     dZ_t = \varepsilon_t \sqrt{dt}
 \end{equation*}
 
-其离散形式的表达式有：
+离散形式有：
 \begin{equation*}
     Z_T - Z_t = \sum^n_{i=1} \varepsilon_i \sqrt{\Delta t}
 \end{equation*}
@@ -54,7 +54,7 @@
 
 \begin{itemize}
     \setlength{\itemsep}{0em}
-    \item 股价不能为负，所以不能遵循正态分布，但股票连续复利收益率（$d\text{ln} S_t$）近似服从正态分布
+    \item 股价不能为负，所以不能遵循正态分布，但股票连续复利收益率（$d\ln S$）近似服从正态分布
     \item 维纳过程是一个马尔可夫随机过程，增量$\Delta Z$独立，与弱式EMH相同，即技术分析无效，无法使用历史信息预测未来，过去信息跟未来信息相互独立
     \item 维纳过程对时间处处不可导，且二次变分（Quadratic Variation）不为零，与股票价格变化存在转折尖点的性质相符
 \end{itemize}
@@ -181,6 +181,8 @@ $f(X,t)$的泰勒展开式为：
 
 \section{几何布朗运动}
 
+\subsection{推导}
+
 由于衍生品价格是标的资产价格与时间的函数，即只需要假定标的资产遵循过程，即可用伊藤引理求得其衍生品遵循过程。假设股票价格服从几何布朗运动（Geometric Brownian Motion，GBM）：
 \begin{equation*}
     dS_t = \mu S_t dt + \sigma S_t dZ_t
@@ -204,16 +206,26 @@ $f(X,t)$的泰勒展开式为：
     d\ln S = \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
 \end{equation*}
 
-或有离散形式下为：
+离散形式下为：
 \begin{align*}
     \Delta \ln S &= \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \\
     \Delta \ln S &\sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
 \end{align*}
 
-可以看到\textbf{连续复利收益率}或\textbf{对数收益率}服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。并且在$T$时刻，\textbf{股票价格的对数}，也服从正态分布：
+可以看到\textbf{连续复利收益率}或\textbf{对数收益率}服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。对于日频收益率的计算，此时得到的正态分布均值以及方差均为日频（$T-t=\frac{1}{252}$），需乘以252进行年化，得到年化的收益率均值与波动率。在$T$时刻，\textbf{股票价格的对数}（$\ln S$），也服从\textbf{正态分布}（\textbf{股票价格}（$S$）服从\textbf{对数正态分布}）。
 \begin{equation*}
     \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{equation*}
+
+\subsection{注意}
+
+\begin{itemize}
+    \setlength{\itemsep}{0em}
+    \item 在计算时，期限、漂移率（无风险利率）、波动率的时间单位应匹配（一般以年为单位，使用交易日计算）
+    \item 由于只有交易日才有历史数据与收益率数据，波动率使用交易天数进行年化，中国240天左右，美国252天
+    \item 无风险利率选择即期利率（Spot rate）而非到期收益率（YTM，真实收益率，票息5\%，但非平价发行）
+    \item 波动率为一个时间窗口内（一般为年，252天交易日），日频连续复利收益率（对数收益率）（$\ln S_t/S_{t-1}$）标准差进行年化得到。即日波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$）。同理，月频收益率得到的波动率应乘以$\sqrt{252/21}$进行年化。
+\end{itemize}
 
 \section{比例收益率与对数收益率}
 
@@ -226,10 +238,10 @@ $f(X,t)$的泰勒展开式为：
 \begin{tabular}{@{}cll@{}}
 \toprule
 \multicolumn{1}{l}{}
-& \multicolumn{1}{c}{\textbf{百分比}} & \multicolumn{1}{c}{\textbf{对数}} \\
+& \multicolumn{1}{c}{\textbf{百分比收益}} & \multicolumn{1}{c}{\textbf{对数收益}} \\
 \midrule
-\multirow{1}{*}{\textbf{单期收益}} 
-& $R_{pct} = \frac{V_T-V_t}{V_t}$
+\multirow{1}{*}{\textbf{单期}} 
+& $R_{pct} = \frac{V_T}{V_t}-1$
 & $R_{log} = \ln \frac{V_T}{V_t}$ \\
 \bottomrule
 \end{tabular}
@@ -286,10 +298,10 @@ $f(X,t)$的泰勒展开式为：
 对比\textbf{比例收益率}在极短时间内（连续形式）与较长时间内（离散形式）:
 \begin{align*}
     \frac{dS_t}{S_t} &= \mu dt + \sigma dZ_t \\
-    \frac{\Delta S_t}{S_t} &= \mu \Delta t + \sigma \varepsilon \sqrt{\Delta t}
+    \frac{\Delta S_t}{S_t} &= \mu \Delta t + \sigma(Z_T - Z_t)
 \end{align*}
 
-??????可以发现，在极短时间间距内$dS_t/S_t$服从正态分布。而在较长时间间距内,因$S_t$的大小改变???，使得其均值和方差发生改变，而再不服从正态分布。
+\textbf{存疑}：比例收益率应该也服从正态分布，只是对数收益率相比漂移率不同，与现实中比例收益率取值范围为$[-100\%,+\inf)$不符。
 
 \subsection{期望}
 
@@ -305,7 +317,7 @@ $f(X,t)$的泰勒展开式为：
 
 比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望值$\mu$为0，但实际上相比期起初有-43.75\%的亏损。使用几何平均计算，年化亏损$\sqrt[4]{1.5*0.5*1.5*0.5} - 1 = -13.40\%$。可以发现，在盈亏的计算上，应使用几何平均的方式计算，使用算术平均比例收益率没有意义。
 
-若使用对数收益率（模型），其期望为$\mu-\frac{\sigma^2}{2}$，即算术平均$\mu$需要减去$\frac{\sigma^2}{2}$。在此例子中百分比收益率均值为0，样本方差为$\frac{1}{3}$，此时对数收益率的期望为$-\frac{1}{6}\approx -16.67\%$。即波动越大，降低实际收益率，更符合现实情况，贴近几何平均收益率，具有经济学意义。计算实际对数收益率的算术平均为$2(\ln 1.5 + \ln 0.5)/4 = -14.38\%$。
+若使用对数收益率（模型），其期望为$\mu-\frac{\sigma^2}{2}$，即算术平均$\mu$需要减去$\frac{\sigma^2}{2}$。因此如果收益率越稳定，两者将越为接近。在此例子中百分比收益率均值为0，样本方差为$\frac{1}{3}$，此时对数收益率的期望为$-\frac{1}{6}\approx -16.67\%$。即波动越大，降低实际收益率，更符合现实情况，贴近几何平均收益率，具有经济学意义。计算实际对数收益率的算术平均为$2(\ln 1.5 + \ln 0.5)/4 = -14.38\%$。
 
 \section{对数正态分布}
 
@@ -447,23 +459,24 @@ $f(X,t)$的泰勒展开式为：
 
 \subsection{假设}
 \begin{itemize}
+    \setlength{\itemsep}{0em}
     \item 人性假设
-          \begin{itemize}
-              \item 不存在无风险套利机会（无套利）
-          \end{itemize}
+    \begin{itemize}
+        \item 不存在无风险套利机会（无套利）
+    \end{itemize}
     \item 完美世界
-          \begin{itemize}
-              \item 允许卖空标的证券
-              \item 没有交易费用和税收
-              \item 证券交易时连续的，价格变动也是连续的
-              \item 所有证券都完全可分
-          \end{itemize}
+    \begin{itemize}
+        \item 允许卖空标的证券
+        \item 没有交易费用和税收
+        \item 证券交易时连续的，价格变动也是连续的
+        \item 所有证券都完全可分
+    \end{itemize}
     \item 可交易资产
-          \begin{itemize}
-              \item 证券价格遵循几何布朗运动，即$\mu$和$\sigma$为常数
-              \item 衍生品有效期内，无风险利率r为常数
-              \item 衍生证券有效期内，标的证券没有现金收益支付
-          \end{itemize}
+        \begin{itemize}
+            \item 证券价格遵循几何布朗运动，即$\mu$和$\sigma$为常数
+            \item 衍生品有效期内，无风险利率r为常数
+            \item 衍生证券有效期内，标的证券没有现金收益支付
+        \end{itemize}
 \end{itemize}
 
 \subsection{推导}
@@ -669,7 +682,40 @@ Long call, short delta stock/ short call, long delta stock
 
 Long put, long delta stock/ short put, short delta stock
 
-\section{内在价值（考虑中国市场的新定义）}
+\section{平价期权}
+
+当平值点为$S = K e^{-r(T-t)}$时，将其带入看涨BSM公式当中，则有：
+\begin{equation}
+    \frac{c}{S} = N(d_1) - N(d_2)
+\end{equation}
+
+对于看跌期权则有：
+\begin{align*}
+    \frac{p}{S} & = N(-d_2) - N(-d_1) \\
+    & = 1 - N(d_2) - [1-N(d_1)] \\
+    & = N(d_1) - N(d_2) = \frac{c}{S}
+\end{align*}
+
+对于$d_1$和$d_2$，此时有：
+\begin{equation}
+    d_1 = \frac{ln(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = \frac{\sigma}{2}\sqrt{T-t}
+\end{equation}
+
+\begin{equation}
+    d_2 = \frac{ln(S/K)+(r-\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}= -\frac{\sigma}{2}\sqrt{T-t}
+\end{equation}
+
+则对于欧式平价期权：
+\begin{align*}
+    \frac{c}{S} & = \frac{p}{S} = N \left( \frac{\sigma\sqrt{T-t}}{2} \right) - N\left( -\frac{\sigma\sqrt{T-t}}{2} \right) \\
+    & = 2N\left( \frac{\sigma\sqrt{T-t}}{2} \right) - 1 \\
+    & = 2\left[\frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left(\frac{\sigma\sqrt{T-t}}{2} - \frac{(\sigma\sqrt{T-t}/2)^3}{6} + \frac{(\sigma\sqrt{T-t}/2)^5}{40} - \dots + \dots\right) \right] - 1 \qquad (\text{使用泰勒展开}) \\
+    & \approx \frac{\sigma\sqrt{T-t}}{2\pi} \approx 0.4\sqrt{T-t}
+\end{align*}
+
+\section{中国市场}
+
+\subsection{内在价值}
 
 由于：
 \begin{equation*}
@@ -723,68 +769,26 @@ Long put, long delta stock/ short put, short delta stock
     c_{\text{时间价值}} = p_{\text{时间价值}}
 \end{equation*}
 
-\section{平价期权}
-
-当平值点为$S = K e^{-r(T-t)}$时，将其带入看涨BSM公式当中，则有：
-\begin{equation}
-    \frac{c}{S} = N(d_1) - N(d_2)
-\end{equation}
-
-对于看跌期权则有：
-\begin{align*}
-    \frac{p}{S} & = N(-d_2) - N(-d_1) \\
-    & = 1 - N(d_2) - [1-N(d_1)] \\
-    & = N(d_1) - N(d_2) = \frac{c}{S}
-\end{align*}
-
-对于$d_1$和$d_2$，此时有：
-\begin{equation}
-    d_1 = \frac{ln(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = \frac{\sigma}{2}\sqrt{T-t}
-\end{equation}
-
-\begin{equation}
-    d_2 = \frac{ln(S/K)+(r-\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}= -\frac{\sigma}{2}\sqrt{T-t}
-\end{equation}
-
-则对于欧式平价期权：
-\begin{align*}
-    \frac{c}{S} & = \frac{p}{S} = N \left( \frac{\sigma\sqrt{T-t}}{2} \right) - N\left( -\frac{\sigma\sqrt{T-t}}{2} \right) \\
-    & = 2N\left( \frac{\sigma\sqrt{T-t}}{2} \right) - 1 \\
-    & = 2\left[\frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left(\frac{\sigma\sqrt{T-t}}{2} - \frac{(\sigma\sqrt{T-t}/2)^3}{6} + \frac{(\sigma\sqrt{T-t}/2)^5}{40} - \dots + \dots\right) \right] - 1 \qquad (\text{使用泰勒展开}) \\
-    & \approx \frac{\sigma\sqrt{T-t}}{2\pi} \approx 0.4\sqrt{T-t}
-\end{align*}
-
-\section{注意与备注}
-
-\begin{itemize}
-    \setlength{\itemsep}{0em}
-    \item 期限、无风险利率、波动率应匹配（以年为单位，一般使用交易日计算，美国交易日252天）
-    \item 无风险利率选择即期利率（Spot rate）而非到期收益率（YTM，真实收益率，票息5\%，但非平价发行）
-    \item 由于只有交易日才有历史数据与收益率数据，波动率使用交易天数进行年化，中国240天左右，美国252天
-    \item 波动率为一个时间窗口（一般为年，252天交易日，较以月每21天为窗口更为平滑）内连续复利收益率或对数收益率（$\ln S_t/S_{t-1}$）标准差进行年化。即日波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$），月波动率应乘以$\sqrt{252/21}$进行年化。
-\end{itemize}
-
 \subsection{做空限制}
 
 且在中国市场中现货存在较大的做空限制，即在现货市场的价格由看多者和少量看空者决定，并不能反应所有投资者的真实情绪，以至于难以复制期权，违法BSM公式假设条件。解决方法有：
 \begin{enumerate}
+    \setlength{\itemsep}{0em}
     \item 使用期货进行贴现，得到其隐含现货价格，使用BSM进行计算，其中有：
-          \begin{itemize}
-              \item 期货隐含现货价格
-                    \begin{equation*}
-                        S^* = F e^{-q(T-t)}
-                    \end{equation*}
-              \item 期权隐含现货价格
-                    \begin{equation*}
-                        S^* = (c-p) + Ke^{-r(T-t)}
-                    \end{equation*}
-          \end{itemize}
+    \begin{itemize}
+        \item 期货隐含现货价格
+        \begin{equation*}
+            S^* = F e^{-q(T-t)}
+        \end{equation*}
+        \item 期权隐含现货价格
+        \begin{equation*}
+            S^* = (c-p) + Ke^{-r(T-t)}
+        \end{equation*}
+    \end{itemize}
     \item 直接使用Black公式，使用期货价格进行计算，即：
-          \begin{equation*}
-              c = e^{-r(T-t)} \left[ F_t N(d_1)-K N(d_2) \right]
-          \end{equation*}
+    \begin{equation*}
+        c = e^{-r(T-t)} \left[ F_t N(d_1)-K N(d_2) \right]
+    \end{equation*}
 \end{enumerate}
-
-
 
 \end{document}

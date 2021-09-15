@@ -258,6 +258,7 @@ $f(X,t)$的泰勒展开式为：
 \end{equation*}
 
 \subsubsection*{百分比收益率}
+
 对于没有再投资（reinvestment）的百分比年化收益率为（t单位为年）：
 \begin{equation*}
     r_{pct} = \frac{R_{pct}}{t}
@@ -272,6 +273,7 @@ $f(X,t)$的泰勒展开式为：
 对于单期或多期的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率。
 
 \subsubsection*{对数收益率}
+
 对数年化收益率为（t单位为年）：
 \begin{equation*}
     r_{log} = \frac{R_{log}}{t}
@@ -286,22 +288,6 @@ $f(X,t)$的泰勒展开式为：
 \end{align*}
 
 同理，对于多期的对数收益，如多年的对数收益，只需要计算其\textbf{算术平均}，即为其平均年化收益率。
-
-\subsection{性质}
-
-由几何布朗运动的推导可知，在\textbf{对数收益率}或\textbf{连续复利收益率}中，$d\ln S$（极短时间内）和$\Delta \ln S$（较长时间内）都服从正态分布：
-\begin{align*}
-    d\ln S &= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right) \\
-    \Delta \ln S &= \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right) 
-\end{align*}
-
-对比\textbf{比例收益率}在极短时间内（连续形式）与较长时间内（离散形式）:
-\begin{align*}
-    \frac{dS_t}{S_t} &= \mu dt + \sigma dZ_t \\
-    \frac{\Delta S_t}{S_t} &= \mu \Delta t + \sigma(Z_T - Z_t)
-\end{align*}
-
-\textbf{存疑}：比例收益率应该也服从正态分布，只是对数收益率相比漂移率不同，与现实中比例收益率取值范围为$[-100\%,+\inf)$不符。
 
 \subsection{期望}
 
@@ -318,6 +304,38 @@ $f(X,t)$的泰勒展开式为：
 比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望值$\mu$为0，但实际上相比期起初有-43.75\%的亏损。使用几何平均计算，年化亏损$\sqrt[4]{1.5*0.5*1.5*0.5} - 1 = -13.40\%$。可以发现，在盈亏的计算上，应使用几何平均的方式计算，使用算术平均比例收益率没有意义。
 
 若使用对数收益率（模型），其期望为$\mu-\frac{\sigma^2}{2}$，即算术平均$\mu$需要减去$\frac{\sigma^2}{2}$。因此如果收益率越稳定，两者将越为接近。在此例子中百分比收益率均值为0，样本方差为$\frac{1}{3}$，此时对数收益率的期望为$-\frac{1}{6}\approx -16.67\%$。即波动越大，降低实际收益率，更符合现实情况，贴近几何平均收益率，具有经济学意义。计算实际对数收益率的算术平均为$2(\ln 1.5 + \ln 0.5)/4 = -14.38\%$。
+
+\subsection{性质}
+
+由上文可知，\textbf{对数收益率}或\textbf{连续复利收益率}的连续以及离散形式如下：
+\begin{align*}
+    d\ln S &= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right) \\
+    \Delta \ln S &= \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right) 
+\end{align*}
+
+已知正态分布有如下性质：$X_1$与$X_2$为两个独立的正态分布的随机变量（均值为$\mu_1$与$\mu_2$，标准差为$\sigma_1$与$\sigma_2$），则有随机变量$Y=X_1+X_2$服从均值为$\mu_1+\mu_2$，方差为$\sigma_1^2+\sigma_2^2$的正态分布。\textbf{注意}:为随机变量相加（Sum of normally distributed random variables），而非正态分布相叠加（Sum of normal distribution）。如图
+\ref{fig:mix-dist}所示，正态分布相叠加将产生混合分布（Mixture distribution）。
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/gaussian-mixture-distribution.png}
+    \caption{混合分布}
+    \label{fig:mix-dist}
+\end{figure}
+
+由于对数收益率的的可叠加性（较长时间内的对数收益率可分解为较短时间间隔对数收益率相叠加）,并且利用上述正态分布性质，可知正态分布随机变量$d\ln S$（极短时间内）与叠加之后的$\Delta \ln S$（较长时间内）都应服从\textbf{正态分布}。
+
+对比\textbf{比例收益率}在极短时间内（连续形式）与较长时间内（离散形式）:
+\begin{align*}
+    \frac{dS_t}{S_t} &= \mu dt + \sigma dZ_t \\
+    \frac{\Delta S_t}{S_t} &= \mu \Delta t + \sigma(Z_T - Z_t)
+\end{align*}
+
+百分比收益率虽然在极短时间（连续形式）服从正态分布。由于分母$S_t$不断改变，并不能通过叠加的形式得到较长时间的分布，即：
+\begin{equation*}
+    \frac{S_n - S_0}{S_0} \neq \frac{S_1- S_0}{S_0} + \frac{S_2-S_1}{S_1} + \dots + \frac{S_{n}-S_{n-1}}{S_{n-1}}
+\end{equation*}
+
+\textbf{存疑}：比例收益率在较短时间与较长时间应该也服从正态分布，通过累加两者服从的分布相同，变量不同，仅都服从同一正态分布。与对数收益率相比漂移项不同。且现实中比例收益率取值范围为$[-100\%,+\inf)$，并不符合正态分布，这点与模型不符。$\Delta S$则不服从正态分布，随着$S_t$的变化，其均值与方差也在不断改变。
 
 \section{对数正态分布}
 
@@ -348,6 +366,7 @@ $f(X,t)$的泰勒展开式为：
 \end{align*}
 
 \subsection*{注意}
+
 对于正态分布$\mu$与$\sigma^2$，为其均值与标准差。而对于对数正态分布，仅为确定其分布的两个参数。对于相同的$\mu$与$\sigma$参数确定的正态分布与对数正态分布，两者之间的期望与方差通过如下表格关系转化：
 \begin{table}[H]
 \centering
@@ -386,13 +405,14 @@ $f(X,t)$的泰勒展开式为：
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.9\textwidth]{fig/lognormal_distribution.png}
+    \includegraphics[width=0.9\textwidth]{fig/lognormal-distribution.png}
     \caption{两者相互转换}
+    \label{fig:lognormal}
 \end{figure}
 
 \subsection{具体推导}
 
-如上文所述，对于相同参数$\mu$与$\sigma^2$的正态分布与对数正态分布可以相互转化。两者互相经过转化后，其累积分布函数（Cumulative distribution fuction，CDF）相同。如上图所示，假设随机变量$Y \sim N(\mu,\sigma^2)$ 服从正态分布，随机变量$X \sim \text{Log}N(\mu,\sigma^2)$，则应有如下关系，对服从对数正态分布的随机变量$X$取对数，使其转化为正态分布：
+如上文所述，对于相同参数$\mu$与$\sigma^2$的正态分布与对数正态分布可以相互转化。两者互相经过转化后，其累积分布函数（Cumulative distribution fuction，CDF）相同。如图\ref{fig:lognormal}所示，假设随机变量$Y \sim N(\mu,\sigma^2)$ 服从正态分布，随机变量$X \sim \text{Log}N(\mu,\sigma^2)$，则应有如下关系，对服从对数正态分布的随机变量$X$取对数，使其转化为正态分布：
 \begin{equation*}
     \text{CDF}_{logN}(x) = \text{CDF}_N (\ln x) = \text{CDF}_N (y)
 \end{equation*}
@@ -590,7 +610,11 @@ $f(X,t)$的泰勒展开式为：
 
 \section{波动率}
 
-$r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
+\subsection{分类与计算}
+
+波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而后者为根据BSM模型等，根据期权市场现有的价格信息，倒求出其中所包含的波动率信息（隐含），为人们对未来给定期限的波动率的预期值，如：隐含波动率（包含无模型波动率）。
+
+波动率的数学定义为：假设$r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
 \begin{equation*}
     \sigma^2(r_t) = \frac{1}{T-1} \sum^T_{t=1} (r_t - \bar{r})^2 
 \end{equation*}
@@ -600,11 +624,11 @@ $r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样�
     \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
 \end{equation*}
 
-\subsection{波动率分类与计算}
-波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而后者为根据BSM模型等，根据期权市场现有的价格信息，倒求出其中所包含的波动率信息（隐含），为人们对未来给定期限的波动率的预期值，如：隐含波动率（包含无模型波动率）。
-
 \subsubsection{历史波动率（Historical volatility）}
+
 样本对数收益率标准差（日频数据）
+
+历史波动率，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。
 
 \subsubsection{已实现波动率（Readlized volatility）}
 已实现波动率（Realized volatility，日内高频，5分钟，假设均值为零）
@@ -612,17 +636,22 @@ $r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样�
 \subsubsection{随机波动率（Sochastic volatility）}
 
 \subsubsection{GARCH波动率}
-广义自回归条件异方差（GARCH，计量方法）
+GARCH为广义自回归条件异方差模型（Generalized autoregressive conditional heteroskedasticity）。Robert Engle于1982年在《计量经济学》上提出了ARCH模型用于估计和预测波动率。在此基础上，Bollerslev(1986)建立了广义自回归条件异方差(GARCH)模型。
 
 \subsubsection{隐含波动率（Implied volatility）}
-隐含波动率（Implied volatility）：直接从期权价格中提取未来预期，提取的为至到期日之间的波动率，BSIV：期权直到到期的波动率，option-implied volatility expectations until expiration
+假定市场上的期权或者权证的交易价格满足Black-Scholes-Merton（BSM）期权定价公式，将市场上可以观测到的标的资产价格（$S$）、执行价格（$K$）、利率（$r$）、期限（$\tau$）作为已知变量代入定价公式中，则可以得到期权当前的市场价格所隐含的波动率，此时提取的为期限内的波动率（Option-implied volatility expectations until expiration）。
+\begin{align*}
+    c &= S_t N(d_1) - Ke^{-r(T-t)} N(d_2) \\
+    p & = K e^{-r(T-t)}N(-d_2) - S_t N(-d_1) \\
+    d_1 &= \frac{\ln \frac{S_t}{K} + (r+\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} \\
+    d_2 &= \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}
+\end{align*}
 
 \subsubsection{无模型波动率（Model-free volatility）}
 
 \subsection{典型实证现象}
 有些现象能够在几乎所有收益率的时间序列中观察到。一个好的条件异方差模型要能够捕捉大部分实证现象。在这个部分，我们列出在波动性分析中最知名典型实证现象。
-
-https://vinsight.shnyu.edu.cn/about\_volatility.php
+% https://vinsight.shnyu.edu.cn/about_volatility.php
 
 \subsubsection{波动率聚类}
 如果 t−1时的波动率很高，t 时的波动率也很可能会很高。即，在 t−1 时的冲击不仅会增加 t−1 时的波动率，也会影响到 t 时的波动率。换句话说，市场在某些时期较为波动，在其他时间更为平静。波动率特征按照时间集中分类。GARCH 类模型能够很好地捕捉这一现象。事实上，这些模型更准确地来说，是衡量 t 时的波动率是如何依赖历史波动率 (和其他可能的条件变量）。

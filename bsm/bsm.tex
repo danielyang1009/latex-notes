@@ -742,7 +742,7 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
 \begin{equation*}
     \text{Delta} = \frac{\partial V}{\partial S} \qquad 
     \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \qquad
-    \text{Theta} = \frac{\partial V}{\partial t} \qquad
+    \text{Theta} = -\frac{\partial V}{\partial \tau} \qquad
     \text{Rho} = \frac{\partial V}{\partial r} \qquad
     \text{Vega} = \frac{\partial V}{\partial\sigma} \qquad
 \end{equation*}
@@ -800,7 +800,7 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
         \frac{\partial d_2}{\partial S} = \frac{\partial d_1}{\partial S} = \frac{\frac{\partial \ln(S/K)}{\partial S} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln S - \ln K)/\partial S}{\sigma\sqrt{\tau}} = \frac{1}{S\sigma\sqrt{\tau}}
     \end{equation*}
     \begin{equation*}
-        \frac{\partial d_2}{\partial \tau} = \frac{\partial d_1}{\partial \tau} - \frac{1}{2}\frac{\sigma}{\tau}
+        \frac{\partial d_2}{\partial \tau} = \frac{\partial d_1}{\partial \tau} - \frac{1}{2}\frac{\sigma}{\sqrt{\tau}}
     \end{equation*}
     \begin{equation*}
         \frac{\partial d_2}{\partial \sigma} = \frac{\partial d_1}{\partial \tau} - \sqrt{\tau}
@@ -813,7 +813,7 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
 \begin{lemma}
     对于BSM公式，有：
     \begin{equation*}
-        SN'(d_1) = Ke^{-r\tau} N'(d_2)
+        S_t N'(d_1) = Ke^{-r\tau} N'(d_2)
     \end{equation*}
 \end{lemma}
 
@@ -822,8 +822,8 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
     \begin{align*}
         d_2^2-d_1^2 &= (d_2-d_1)(d_2+d_1) \\
         &= (-\sigma\sqrt{\tau})(2d_1-\sigma\sqrt{\tau}) \\
-        &= (-\sigma\sqrt{\tau})\left( \frac{2\ln(S/K) + 2(r+\sigma^2/2)\tau}{\sigma\sqrt{\tau}} -\sigma\sqrt{\tau}\right) \\
-        &= -2\left[\ln\frac{S}{K}+r\tau\right]
+        &= (-\sigma\sqrt{\tau})\left(\frac{2\ln(S_t/K) + 2(r+\sigma^2/2)\tau}{\sigma\sqrt{\tau}} -\sigma\sqrt{\tau}\right) \\
+        &= -2\left[\ln\frac{S_t}{K}+r\tau\right]
     \end{align*}
 
     同时已知$N'(x)=\frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}$，则有：
@@ -831,16 +831,16 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
         \ln\left(\frac{N'(d_1)}{N'(d_2)}\right)
         = -\frac{d_1^2}{2} + \frac{d_2^2}{2}
         = \frac{1}{2} (d_2^2-d_1^2)
-        = -\left[\ln\frac{S}{K} +r\tau\right]
+        = -\left[\ln\frac{S_t}{K} +r\tau\right]
     \end{equation*}
 
     对等式两边取指数：
     \begin{align*}
         \frac{N'(d_1)}{N'(d_2)} 
-        &= \exp\left( -\left[\ln\frac{S}{K} +r\tau\right] \right) \\
-        &= \exp \left( \ln\frac{K}{S}-r\tau \right) \\
-        &= \frac{K}{S} e^{-r\tau} \\
-        SN'(d_1) &= Ke^{-r\tau} N'(d_2)
+        &= \exp\left( -\left[\ln\frac{S_t}{K} +r\tau\right] \right) \\
+        &= \exp \left( \ln\frac{K}{S_t}-r\tau \right) \\
+        &= \frac{K}{S_t} e^{-r\tau} \\
+        S_t N'(d_1) &= Ke^{-r\tau} N'(d_2)
     \end{align*}
 \end{proof}
 
@@ -849,9 +849,9 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
 \noindent
 \begin{align*}
     \text{Delta}_c &= \frac{\partial C}{\partial S}
-    = N(d_1) + \frac{1}{S\sigma\sqrt{\tau}} \left[ SN'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
+    = N(d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
     \text{Delta}_p &= \frac{\partial P}{\partial S}
-    = -N(-d_1) + \frac{1}{S\sigma\sqrt{\tau}} \left[ SN'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
+    = -N(-d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
 \end{align*}
 
 对于已知$\partial C/\partial S$，可对PCP求导：
@@ -862,6 +862,50 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
 \begin{equation*}
     \text{Gamma} = \frac{\partial^2 V}{\partial S^2} = \frac{\partial N(d_1)}{\partial S} = N'(d_1)\frac{\partial d_1}{\partial S} = \frac{N'(d_1)}{S\sigma\sqrt{\tau}}
 \end{equation*}
+
+\subsubsection{Theta}
+
+对于欧式看涨期权有：
+\begin{equation*}
+    \text{Theta}_c = \frac{\partial C}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} - r K e^{-r\tau}N(d_2)
+\end{equation*}
+
+证明：
+\begin{align*}
+    \text{Theta}_c &= -\frac{\partial C}{\partial \tau} = - \frac{\partial [S_t N(d_1) - Ke^{-r\tau} N(d_2)]}{\partial \tau} \\ 
+    &= -\frac{\partial S_t N(d_1)}{\tau} + \frac{\partial Ke^{-r\tau} N(d_2)}{\partial \tau} \\ 
+    &= -S_t N'(d_1)\frac{\partial d_1}{\partial \tau} - rKe^{-r\tau}N(d_2) + Ke^{-r\tau} N'(d_2)\frac{\partial d_2}{\partial \tau} \\
+    &= -S_t N'(d_1)\frac{\partial d_1}{\partial \tau} - rKe^{-r\tau} N(d_2) + Ke^{-r\tau}N'(d_2)\left(\frac{\partial d_1}{\partial \tau} -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} \right) \\
+    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{-S_t N'(d_1) + Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ -rN(d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
+    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) - rKe^{-r\tau} N(d_2)
+\end{align*}
+
+对于欧式看跌期权有：
+\begin{equation*}
+    \text{Theta}_p = \frac{\partial P}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} + r K e^{-r\tau}N(-d_2)
+\end{equation*}
+
+证明：
+\begin{align*}
+    \text{Theta}_p &= -\frac{\partial P}{\partial \tau} = - \frac{\partial [-S_t N(-d_1) + Ke^{-r\tau} N(-d_2)]}{\partial \tau} \\ 
+    &= \frac{\partial S_t N(-d_1)}{\tau} - \frac{\partial Ke^{-r\tau} N(-d_2)}{\partial \tau} \\ 
+    &= S_t N'(-d_1)\frac{\partial d_1}{\partial \tau} + rKe^{-r\tau}N(-d_2) - Ke^{-r\tau} N'(-d_2)\frac{\partial d_2}{\partial \tau} \\
+    &= S_t N'(d_1)\frac{\partial d_1}{\partial \tau} + r Ke^{-r\tau} N(-d_2) - Ke^{-r\tau}N'(d_2)\left(\frac{\partial d_1}{\partial \tau} -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} \right) \\
+    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{S_t N'(d_1) - Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ rN(-d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
+    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau} N(-d_2) \\
+    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau}[1- N(d_2) ] = \text{Theta}_c + rKe^{-r\tau}
+\end{align*}
+
+另有，利用Put-Call Parity可知：
+\begin{equation*}
+    C + Ke^{-r\tau} = P + S_t \qquad \Rightarrow \qquad \frac{\partial C}{\partial \tau} - rKe^{-r\tau} = \frac{\partial P}{\partial \tau} 
+\end{equation*}
+
+等式两边对$\tau$求偏导：
+\begin{align*}
+    -\frac{\partial P}{\partial \tau} & = -\frac{\partial C}{\partial \tau} + rKe^{-r\tau} \\
+    \text{Theta}_p &= \text{Theta}_c + rKe^{-r\tau} \\
+\end{align*}
 
 \subsubsection{Vega}
 
@@ -887,9 +931,9 @@ Delta为衍生品价格变动与其标的资产价格变动的比率。如果假
     \Delta = \frac{\partial V}{\partial S}
 \end{equation*}
 
-而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果为0，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
+而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
 \begin{equation*}
-    \Delta V \times N_V = \Delta S \times N_S \quad \Rightarrow \quad
+    \Delta V \times N_V = \Delta S \times N_S \qquad \Rightarrow \qquad
     \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
 \end{equation*}
 

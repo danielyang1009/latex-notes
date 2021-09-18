@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
-\usepackage{amsmath,amsfonts}
+\usepackage{amsmath,amsfonts,amsthm}
 \usepackage{booktabs,float,multirow}
 \usepackage{cancel}
 \usepackage{graphicx}
@@ -18,6 +18,9 @@
 \newcommand{\E}{\operatorname{E}}
 \newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\Var}{\operatorname{Var}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
 
 \title{BSM公式}
 \author{杨弘毅}
@@ -394,8 +397,8 @@ $f(X,t)$的泰勒展开式为：
 & \multicolumn{1}{c}{\textbf{正态分布}} & \multicolumn{1}{c}{\textbf{对数正态分布}} \\
 \midrule
 \multirow{1}{*}{\textbf{PDF}} 
-& $\frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2} \frac{(x-\mu)^2}{\sigma}} $
-& $\frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{1}{2} \frac{(\ln x-\mu)^2}{\sigma}} $ \\
+& $\frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2} \left( \frac{x-\mu}{\sigma} \right)^2 } $
+& $\frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{1}{2} \left( \frac{\ln x-\mu}{\sigma} \right)^2 } $ \\
 \textbf{CDF} 
 & $\frac{1}{2} \left[1 + \text{erf}\left( \frac{x-\mu}{\sigma\sqrt{2}}\right) \right]$
 & $\frac{1}{2} \left[1 + \text{erf}\left( \frac{\ln x-\mu}{\sigma\sqrt{2}}\right) \right]$ \\
@@ -532,7 +535,7 @@ $f(X,t)$的泰勒展开式为：
     -\left( \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t & =  r \left( -f_t + \frac{\partial f}{\partial S} S_t \right) \Delta t \\
 \end{align*}
 
-整理等式，消去$\Delta t$，即可得到\textbf{BSM偏微分方程}：
+整理等式，消去$\Delta t$，即可得到\textbf{BSM偏微分方程}（Black-Scholes equation）：
 \begin{equation*}
     \frac{\partial f}{\partial t} + r S_t \frac{\partial f}{\partial S} + \frac{1}{2} \sigma^2 S_t^2 \frac{\partial^2 f}{\partial S^2} = r f_t
 \end{equation*}
@@ -582,7 +585,7 @@ $f(X,t)$的泰勒展开式为：
     & = S_t e^{r(T-t)}N(d_1) - KN(d_2)
 \end{align*}
 
-得到\textbf{BSM公式}，即欧式看涨期权的解析解（注：$N(\cdot)$为标准正态分布的累积分布函数（CDF），而$N'(\cdot)$为标准正态分布的概率分布函数（PDF））：
+得到\textbf{BSM公式}（Black-Scholes formula），即欧式看涨期权的解析解（注：$N(\cdot)$为标准正态分布的累积分布函数（CDF），而$N'(\cdot)$为标准正态分布的概率分布函数（PDF））：
 \begin{align*}
     c & = e^{-r(T-t)} \tilde{\E}_t \left[ \max(S_T-K,0) \right] \\
     & = S_t N(d_1) - Ke^{-r(T-t)} N(d_2)
@@ -610,8 +613,6 @@ $f(X,t)$的泰勒展开式为：
 
 \section{波动率}
 
-\subsection{分类与计算}
-
 波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而后者为根据BSM模型等，根据期权市场现有的价格信息，倒求出其中所包含的波动率信息（隐含），为人们对未来给定期限的波动率的预期值，如：隐含波动率（包含无模型波动率）。
 
 波动率的数学定义为：假设$r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
@@ -624,21 +625,58 @@ $f(X,t)$的泰勒展开式为：
     \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
 \end{equation*}
 
-\subsubsection{历史波动率（Historical volatility）}
+\subsection{历史波动率（Historical volatility）}
 
 样本对数收益率标准差（日频数据）
 
 历史波动率，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。
 
-\subsubsection{已实现波动率（Readlized volatility）}
+TODO:关于 historical volatility。在 Black Scholes 的框架下，也就是假设股票价格服从 GBM 的时候，volatility 可以用 quadratic variation 计算。如下式：
+\begin{equation*}
+    \lim_{n\rightarrow \infty} \sum^{n}_{i=1}(X_{t_i} - X_{t_{i-1}})^2 = [X,X]_T = \sigma^2 T
+\end{equation*}
+
+其中$X_t$为股票价格的对数，$t_0,t_1,\dots,t_n$为$[0,T]$区间的一个划分。注意，这个和标准差不一样，这个其实是对数收益率的二阶距。可以证明，用 quadratic variation 得到的估计量是一致估计。
+
+\subsection{已实现波动率（Readlized volatility）}
+
 已实现波动率（Realized volatility，日内高频，5分钟，假设均值为零）
 
-\subsubsection{随机波动率（Sochastic volatility）}
+RV是瞬时或者高频的波动离散率，均值足够低，可用于预测或择时。打破了随机游走的假设。模拟了波动率的高聚集性。
+
+参考Hansen和Lunde(2005),调整后的“已实现”波动率定义如下
+
+
+\subsection{随机波动率（Sochastic volatility）}
+
+随机波动率模型指随机过程的波动率为随机变量。
+% https://en.wikipedia.org/wiki/Stochastic_volatility
+\begin{itemize}
+    \setlength{\itemsep}{0em}
+    \item Heston model
+    \item Constant elasticity of variance model  （CEV）
+    \item SABR
+    \item GARCH
+\end{itemize}
 
 \subsubsection{GARCH波动率}
+
 GARCH为广义自回归条件异方差模型（Generalized autoregressive conditional heteroskedasticity）。Robert Engle于1982年在《计量经济学》上提出了ARCH模型用于估计和预测波动率。在此基础上，Bollerslev(1986)建立了广义自回归条件异方差(GARCH)模型。
 
-\subsubsection{隐含波动率（Implied volatility）}
+\subsection{局部波动率（Local volatility）}
+
+TODO: Local volatility，这个其实是一个作为 stochastic volatility 的一种替代做法，就是认为 volatility 是一个关于时间和资产价格的确定性函数$\sigma(t,S_t)$ ,因此也叫 Deterministic Volatility Function (DVF)。这样做也就是为了避免 Heston Model 等 stochastic volatility 带来的计算复杂度。Dupire 给出了一种计算 local volatility 的方法：
+\begin{equation*}
+    \sigma^2(K,T) = \frac{\frac{\partial C}{\partial T}}{\frac{1}{2} K^2 \frac{\partial^2 C}{\partial K^2}}
+\end{equation*}
+
+
+% https://en.wikipedia.org/wiki/Local_volatility
+
+\subsection{隐含波动率（Implied volatility）}
+
+\subsubsection{BS隐含波动率（BS implied volatility）}
+
 假定市场上的期权或者权证的交易价格满足Black-Scholes-Merton（BSM）期权定价公式，将市场上可以观测到的标的资产价格（$S$）、执行价格（$K$）、利率（$r$）、期限（$\tau$）作为已知变量代入定价公式中，则可以得到期权当前的市场价格所隐含的波动率，此时提取的为期限内的波动率（Option-implied volatility expectations until expiration）。
 \begin{align*}
     c &= S_t N(d_1) - Ke^{-r(T-t)} N(d_2) \\
@@ -647,16 +685,19 @@ GARCH为广义自回归条件异方差模型（Generalized autoregressive condit
     d_2 &= \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}
 \end{align*}
 
-\subsubsection{无模型波动率（Model-free volatility）}
+\subsubsection{无模型波动率（Model-free implied volatility）}
 
 \subsection{典型实证现象}
+
 有些现象能够在几乎所有收益率的时间序列中观察到。一个好的条件异方差模型要能够捕捉大部分实证现象。在这个部分，我们列出在波动性分析中最知名典型实证现象。
 % https://vinsight.shnyu.edu.cn/about_volatility.php
 
 \subsubsection{波动率聚类}
+
 如果 t−1时的波动率很高，t 时的波动率也很可能会很高。即，在 t−1 时的冲击不仅会增加 t−1 时的波动率，也会影响到 t 时的波动率。换句话说，市场在某些时期较为波动，在其他时间更为平静。波动率特征按照时间集中分类。GARCH 类模型能够很好地捕捉这一现象。事实上，这些模型更准确地来说，是衡量 t 时的波动率是如何依赖历史波动率 (和其他可能的条件变量）。
 
 \subsubsection{肥尾现象}
+
 收益率的时间序列通常呈现肥尾分布，又叫做超额峰度，或者尖峰。也就是说，它们的峰度（用方差的平方根标准化的第四中心矩）通常都大于3（高斯随机变量的峰度为3）。事实上，一种流行的检验高斯分布假设的方法，Jarque-Bera测试，能够同时测试此分布是否是对称的以及其峰度是否等于3。
 
 如果收益率是肥尾分布的，则极端事件（非常高或非常低的回报率）的发生概率会高于收益率分布满足正态（高斯）分布时其发生的概率。
@@ -664,12 +705,179 @@ GARCH为广义自回归条件异方差模型（Generalized autoregressive condit
 大部分波动率模型，例如GARCH 模型会造成收益率呈现肥尾分布，不管真正的潜在冲击是高斯分布还是肥尾分布。在估计时，我们通常假设潜在冲击服从高斯分布。在样本量很大时，即使真实分布不是高斯，模型通常也能给出合适的估计值。这些估计值为最大似然估计值，并且能够在相对宽松的限制条件下给出一致的估计。
 
 \subsubsection{不对称性}
+
 有一个普通 GARCH 模型不能捕捉的实证现象是 t−1 时刻的负面冲击比正面冲击对 t 时刻的方差有更强烈的影响。尽管如此， GARCH 模型能够很容易地调整扩充从而捕捉到这种不对称性。类似的例子有门限 GARCH （TGARCH）模型，, 不对称 GARCH （AGARCH）模型和指数 GARCH （EGARCH)）模型。
 
 这一不对称性过去被成为杠杆效应，因为增加的风险被认为是来自于负面冲击所引起杠杆的增加，但是限制人们认识到这个效应不能解释所有现象，并且风险规避是一个重要的机制。
 
 
+\section{希腊值}
 
+\subsection{正态分布与性质}
+
+对于正态分布或高斯分布（Gaussian distribution），其\textbf{概率密度函数}（Probability Density Function，PDF）：
+\begin{equation*}
+    f(x;\mu,\sigma) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma} \right)^2}
+\end{equation*}
+
+则有$N(x)$为标准正态分布（Standard normal distribution）的\textbf{累积分布函数}（CDF，Cumulative Distribution Function）为:
+\begin{equation*}
+    N(x) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{x}e^{-\frac{z^2}{2}}dz
+\end{equation*}
+
+则有$N'(x)$为标准正态分布的概率密度函数：
+\begin{equation*}
+    N'(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
+\end{equation*}
+
+由于正态分布的对称性，易知：
+\begin{equation*}
+    N(-x) = 1-N(x) \qquad
+    N'(x) = N'(-x)
+\end{equation*}
+
+\subsection{希腊值定义}
+
+定义衍生品价格，对标的价格的一阶导为Delta，对标的价格的二阶导为Gamma，对于期限的一阶导为Theta，对于无风险利率的一阶导为Rho，对于波动率的一阶导为Sigma。
+\begin{equation*}
+    \text{Delta} = \frac{\partial V}{\partial S} \qquad 
+    \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \qquad
+    \text{Theta} = \frac{\partial V}{\partial t} \qquad
+    \text{Rho} = \frac{\partial V}{\partial r} \qquad
+    \text{Vega} = \frac{\partial V}{\partial\sigma} \qquad
+\end{equation*}
+
+\subsection{Black模型}
+
+\begin{align*}
+    C &= e^{-r\tau}[FN(d_1) - KN(d_2)] \\
+    P &= e^{-r\tau}[KN(-d_2) - FN(-d_1)]
+\end{align*}
+
+其中有：
+\begin{align*}
+    d_1 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= d_1 - \sigma \sqrt{\tau}
+\end{align*}
+
+\begin{equation*}
+    \frac{\partial d_1}{\partial F} = \frac{\partial d_2}{\partial F} = \frac{\frac{\partial \ln(F/K)}{\partial F} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln F - \ln K)/\partial F}{\sigma\sqrt{\tau}} = \frac{1}{F\sigma\sqrt{\tau}}
+\end{equation*}
+
+\subsubsection{Delta}
+
+\begin{align*}
+    FN'(d_1) &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
+    KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{\tau}-\sigma^2\tau/2} \\
+    &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\ln(F/K)} 
+    \qquad \left(d_1\sigma\sqrt{\tau} = \ln(F/K)+\sigma^2\tau\right) \\
+    &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
+    &= FN'(d_1) \\
+    \text{Delta}_c &= e^{-r\tau}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
+    &= e^{-r\tau}N(d_1) \\
+    \text{Delta}_p &= e^{-r\tau}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
+    &= e^{-r\tau}(-N(-d_1)) \qquad \left(KN'(-d_2) = KN'(d_2),\, FN'(-d_1)= FN'(d_1)\right) \\
+    &= e^{-r\tau}(N(d_1)-1)
+\end{align*}
+
+\subsection{BSM模型}
+
+\begin{align*}
+    C_t &= S_te^{-q\tau}N(d_1) - Ke^{-r\tau}N(d_2) \\
+    P_t &= -S_te^{-q\tau}N(-d_1) + Ke^{-r\tau}N(-d_2)
+\end{align*}
+
+其中有：
+\begin{align*}
+    d_1 &= \frac{\ln(S/K) + (r+\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= \frac{\ln(S/K) + (r-\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= d_1 - \sigma \sqrt{\tau}
+\end{align*}
+
+\begin{lemma}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial S} = \frac{\partial d_1}{\partial S} = \frac{\frac{\partial \ln(S/K)}{\partial S} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln S - \ln K)/\partial S}{\sigma\sqrt{\tau}} = \frac{1}{S\sigma\sqrt{\tau}}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial \tau} = \frac{\partial d_1}{\partial \tau} - \frac{1}{2}\frac{\sigma}{\tau}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial \sigma} = \frac{\partial d_1}{\partial \tau} - \sqrt{\tau}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial r} = \frac{\partial d_1}{\partial r}
+    \end{equation*}
+\end{lemma}
+
+\begin{lemma}
+    对于BSM公式，有：
+    \begin{equation*}
+        SN'(d_1) = Ke^{-r\tau} N'(d_2)
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    已知：
+    \begin{align*}
+        d_2^2-d_1^2 &= (d_2-d_1)(d_2+d_1) \\
+        &= (-\sigma\sqrt{\tau})(2d_1-\sigma\sqrt{\tau}) \\
+        &= (-\sigma\sqrt{\tau})\left( \frac{2\ln(S/K) + 2(r+\sigma^2/2)\tau}{\sigma\sqrt{\tau}} -\sigma\sqrt{\tau}\right) \\
+        &= -2\left[\ln\frac{S}{K}+r\tau\right]
+    \end{align*}
+
+    同时已知$N'(x)=\frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}$，则有：
+    \begin{equation*}
+        \ln\left(\frac{N'(d_1)}{N'(d_2)}\right)
+        = -\frac{d_1^2}{2} + \frac{d_2^2}{2}
+        = \frac{1}{2} (d_2^2-d_1^2)
+        = -\left[\ln\frac{S}{K} +r\tau\right]
+    \end{equation*}
+
+    对等式两边取指数：
+    \begin{align*}
+        \frac{N'(d_1)}{N'(d_2)} 
+        &= \exp\left( -\left[\ln\frac{S}{K} +r\tau\right] \right) \\
+        &= \exp \left( \ln\frac{K}{S}-r\tau \right) \\
+        &= \frac{K}{S} e^{-r\tau} \\
+        SN'(d_1) &= Ke^{-r\tau} N'(d_2)
+    \end{align*}
+\end{proof}
+
+\subsubsection{Delta}
+
+\noindent
+\begin{align*}
+    \text{Delta}_c &= \frac{\partial C}{\partial S}
+    = N(d_1) + \frac{1}{S\sigma\sqrt{\tau}} \left[ SN'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
+    \text{Delta}_p &= \frac{\partial P}{\partial S}
+    = -N(-d_1) + \frac{1}{S\sigma\sqrt{\tau}} \left[ SN'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
+\end{align*}
+
+对于已知$\partial C/\partial S$，可对PCP求导：
+
+\subsubsection{Gamma}
+
+对于gamma而言，calls和puts相同
+\begin{equation*}
+    \text{Gamma} = \frac{\partial^2 V}{\partial S^2} = \frac{\partial N(d_1)}{\partial S} = N'(d_1)\frac{\partial d_1}{\partial S} = \frac{N'(d_1)}{S\sigma\sqrt{\tau}}
+\end{equation*}
+
+\subsubsection{Vega}
+
+对于Vega而言，calls和puts相同
+\begin{equation*}
+    \text{Vega} = \frac{\partial V}{\partial \sigma}  = SN'(d_1)\sqrt{\tau}
+\end{equation*}
+
+推导：
+\begin{align*}
+    \text{Vega} &= \frac{\partial C}{\partial \sigma} = \frac{\partial}{\partial \sigma} \left[S N(d_1) - K e^{-r\tau}N(d_2)\right] \\
+    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \frac{\partial d_2}{\partial \sigma} \\
+    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \left[ \frac{\partial d_1}{\partial \sigma} -\sqrt{\tau} \right] \qquad \text{（对$d_2 = d_1 - \sigma\sqrt{\tau}$求导）} \\
+    &= \left[ S N'(d_1) - Ke^{-r\tau}N'(d_2) \right] \frac{\partial d_1}{\partial \sigma} + Ke^{-r\tau}N'(d_2) \sqrt{\tau} \\
+    &= S N'(d_1)\sqrt{\tau} \qquad \text{（已知$S N'(d_1) = Ke^{-r\tau}N'(d_2)$）}
+\end{align*}
 
 
 \section{Delta对冲}

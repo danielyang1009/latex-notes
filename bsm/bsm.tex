@@ -4,6 +4,7 @@
 \usepackage{booktabs,float,multirow}
 \usepackage{cancel}
 \usepackage{graphicx}
+\usepackage{footmisc}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true, %set true if you want colored links
@@ -923,9 +924,7 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
     &= S N'(d_1)\sqrt{\tau} \qquad \text{（已知$S N'(d_1) = Ke^{-r\tau}N'(d_2)$）}
 \end{align*}
 
-
-\section{Delta对冲}
-
+\subsection{Delta对冲}
 Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
 \begin{equation*}
     \Delta = \frac{\partial V}{\partial S}
@@ -947,9 +946,7 @@ Delta为衍生品价格变动与其标的资产价格变动的比率。如果假
     f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
 \end{equation*}
 
-
-
-在Bakshi and Kapadia 2003中，
+TODO 在Bakshi and Kapadia 2003中，
 
 在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
 \begin{equation*}
@@ -962,6 +959,55 @@ Delta为衍生品价格变动与其标的资产价格变动的比率。如果假
 Long call, short delta stock/ short call, long delta stock
 
 Long put, long delta stock/ short put, short delta stock
+
+\subsection{泰勒级数}
+
+级数为无穷的序列（sequences）（或无穷多项）的和。泰勒级数（Taylor series）使用无限项序列来表示一个函数，每项由该函数在某一点的导数求得。一个函数的有限项的泰勒级数叫做泰勒多项式（Taylor polynomial）。对于一元函数在$x=a$处展开的泰勒级数有：
+\begin{align*}
+    f(x) &= \sum^{+\infty}_{n=0} \frac{f^{(n)}(a)}{n!}(x-a)^n \\
+    &= \frac{f(a)}{1}(1)+ \frac{f'(a)}{1}(x-a) + \frac{f''(a)}{2}(x-a)^2 + \frac{f^{3}(a)}{6}(x-a)^3 + \dots \\
+    &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a) + \frac{f^{3}(a)}{6}(x-a)^3 + \dots
+\end{align*}
+
+对于多元函数在$(a,b)$处展开的泰勒级数为：
+\begin{align*}
+    f(x,y) &= f(a,b) + f'_x(a,b)(x-a) + f'_y(a,b)(y-b) \\
+    &\quad + \frac{1}{2}f''_{xx}(a,b)(x-a)^2 + \frac{1}{2}f''_{yy}(a,b)(y-b)^2 +\cancel{2*\frac{1}{2}}f''_{xy}(a,b)(x-a)(y-b)
+\end{align*}
+
+\subsubsection*{原理}
+假设使用多项式$P(x) = c_0 + c_1 (x-a) + c_2 (x-a)^2 + \dots$近似原函数。则应有多项式与原函数，从零阶导开始至$n$阶导，在$x=a$点的取值都与原函数相同（即从单个点，提取原函数所有导数信息）：
+\begin{itemize}
+    \setlength{\itemsep}{0em}
+    \item $x-a$使得带入a进行计算时，除了当前导数对应次数的项之外都等于零。如原函数在$a$点的二阶导$f''(a)$，对应泰勒级数$x$二次项的系数$c_2$：一阶导为$P'(x) = c_1 + 2c_2(x-a)+\dots$，二阶导为$P''(x) = 2c_2 + 3c_3(x-a)^2 + \dots$，则有$P''(a) = 2c_2 = f''(a)$，此时$c_2 = \tfrac{f''(a)}{2}$
+    \item 小于当前求导次数的泰勒级数项，由于求导都为零（如上所示求二阶导后，常数项与一次项都为0），使得多项式每一项的系数$c_n$都独立对应原函数n阶导数值
+    \item 系数为$\frac{1}{n!}$是为了取消多次求导的影响，如$P'''(x)=3 \cdot 2 \cdot 1 \cdot c_3(x-a) + \cdots$
+\end{itemize}
+
+\subsection{对冲参数}
+
+假设投资组合$\Pi$为标的资产价格$S$与时间$t$的函数,则有在$(S_0,t_0)$展开为：
+\begin{align*}
+    \Pi(S,T) &= \Pi(S_0,t_0) + \frac{\partial \Pi}{\partial S}(S-S_0) + \frac{\partial \Pi}{\partial t}(t-t_0) \\
+    &\quad + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}(S-S_0)^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}(t-t_0)^2 + \frac{\partial^2 \Pi}{\partial S \partial t}(S-S_0)(t-t_0) + \dots
+\end{align*}
+
+整理可得：
+\begin{equation*}
+    \Delta \Pi = \frac{\partial \Pi}{\partial S}\Delta S + \frac{\partial \Pi}{\partial t}\Delta t + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}\Delta S^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}\Delta t^2 + \frac{\partial^2 \Pi}{\partial S \partial t}\Delta S \Delta t + \dots
+\end{equation*}
+
+将阶数高于$\Delta t$的项忽略（前三项之后），可以发现对于一个Delta中立的投资组合，应有\footnote{见OFOD第十版附录19A\label{ofod_19a}}：
+\begin{equation*}
+    \Delta \Pi = \Theta \Delta t + \frac{1}{2} \Gamma \Delta S^2
+\end{equation*}
+
+在实践中,波动率并非为常数。在短时间内忽略无风险利率的变化，仅仅关注标的资产价格$S$以及隐含波动率$\sigma_{imp}$作为期权价格$V$的近似，则有\footref{ofod_19a}：
+\begin{equation*}
+    \Delta V = \frac{\partial V}{\partial S}\Delta S + \frac{\partial V}{\partial \sigma_{imp}}\Delta \sigma_{imp} + \frac{1}{2} \frac{\partial^2 V}{\partial S^2}\Delta S^2 + \frac{1}{2} \frac{\partial^2 V}{\partial \sigma^2_{imp}} \Delta \sigma^2_{imp} + \frac{\partial^2 V}{\partial S \partial \sigma_{imp}}\Delta S \Delta \sigma_{imp} + \dots
+\end{equation*}
+
+可见delta、vega、gamma对应了上式中的前三项。而交易员也将$\tfrac{\partial^2 V}{\partial \sigma^2_{imp}}$称为Vomma，即Vega对于$\sigma_{imp}$的敏感程度，或Vega的Vega。将$\tfrac{\partial^2 V}{\partial S\partial \sigma_{imp}}$称为Vanna，或理解为Delta的Vega，即对于$\sigma_{imp}$的变动，Delta的敏感程度。
 
 \section{平价期权}
 

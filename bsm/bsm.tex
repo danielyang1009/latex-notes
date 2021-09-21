@@ -113,21 +113,21 @@
     dX_t =a(X(t),t) dt + b(X(t),t) dZ_t
 \end{equation*}
 
-\textbf{伊藤过程（Itô Process）}，最一般化的随机过程，$a_t$和$b_t$为任意函数或随机过程。
+\textbf{伊藤过程（Itô's Process）}，最一般化的随机过程，$a_t$和$b_t$为任意函数或随机过程。
 \begin{equation*}
     dX_t =a_t dt + b_t dZ_t
 \end{equation*}
 
 \section{伊藤引理（Itô lemma）}
 
-若变量$X_t$遵循伊藤过程：
+若变量$X_t$遵循如下随机过程：
 \begin{equation*}
-    dX_t =a_t dt + b_t dW_t
+    dX_t =\mu_t dt + \sigma_t dW_t
 \end{equation*}
 
 在导数$\dfrac{\partial f}{\partial t}$、$\dfrac{\partial f}{\partial X}$与$\dfrac{\partial^2 f}{\partial X^2}$存在的前提下，则有变量$X_t$和$t$的函数$f(X(t),t)$将遵循如下过程：
 \begin{equation*}
-    df_t = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dW_t
+    df(X_t,t) = \left(\frac{\partial f}{\partial t} + \mu_t \frac{\partial f}{\partial x} + \frac{1}{2} \sigma_t^2 \frac{\partial^2 f}{\partial x^2} \right)dt + \sigma_t \frac{\partial f}{\partial X} dW_t
 \end{equation*}
 
 为方便记忆，可记为（金融随机分析第二卷 P118）：
@@ -614,7 +614,7 @@ $f(X,t)$的泰勒展开式为：
 
 \section{波动率}
 
-波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
+波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
 
 波动率的数学定义为：假设$r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
 \begin{equation*}
@@ -698,7 +698,6 @@ GARCH（1，1）模型方差如下：
 
 \subsection{隐含波动率（Implied volatility）}
 
-
 \subsubsection{BS隐含波动率（BS implied volatility）}
 
 假定市场上的期权或者权证的交易价格满足Black-Scholes-Merton（BSM）期权定价公式，将市场上可以观测到的标的资产价格（$S$）、执行价格（$K$）、利率（$r$）、期限（$\tau$）作为已知变量代入定价公式中，则可以得到期权当前的市场价格所隐含的波动率，此时提取的为期限内的波动率（Option-implied volatility expectations until expiration）。
@@ -711,11 +710,16 @@ GARCH（1，1）模型方差如下：
 
 \subsubsection{无模型波动率（Model-free implied volatility）}
 
+虽然一般将无模型波动率认为是“BS隐含波动率的一种加权平均”更方便理解，但实际无模型波动率与BS模型完全没有关系。准确的说无模型并不是完全没有模型，只是这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。VIX并非某一合约的隐含波动率，而是未来一段时间内波动率（Total variance）平方的期望：
+\begin{equation*}
+    \text{VIX}^2 = \frac{1}{T} \int^T_0 \sigma^2 dt
+\end{equation*}
+
 \subsubsection*{方差互换}
 
-假设标的资产价格满足几何布朗运动：
+假设标的资产价格满足如下随机过程：
 \begin{equation*}
-    \frac{dS_t}{S_t} = \mu dt + \sigma dZ_t
+    \frac{dS_t}{S_t} = \mu_t dt + \sigma_t dZ_t
 \end{equation*}
 
 使用Ito公式可得，对数收益率为：
@@ -730,8 +734,25 @@ GARCH（1，1）模型方差如下：
 
 则有方差为：
 \begin{equation*}
-    \text{Variance} = \frac{1}{T} \int^T_0 \sigma^2 dt = \frac{2}{T} \int^T_t \left( \frac{d S_t}{S_t} - \ln\frac{S_T}{S_0} \right)
+    \text{Variance} = \frac{1}{T} \int^T_0 \sigma^2 dt 
+    = \frac{2}{T} \int^T_0 \left( \frac{d S_t}{S_t} - d \ln S_t \right) 
+    = \frac{2}{T} \int^T_0 \left( \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right) 
 \end{equation*}
+
+在Carr和Wu（2006）中使用了带积分余项（Integral form of the remainder）的泰勒公式（三种余项分别为：积分余项、Lagrange余项和Peano余项）：
+\begin{equation*}
+    f(x) = \sum^n_{k=0}\frac{f^{(k)}(a)}{k!}(x-a)^k + 
+    \frac{1}{n!} \int^x_a f^{(n+1)}(t)(x-t)^n dt
+\end{equation*}
+
+带入$f(x) = \ln x$，$x=S_T$，$a=S_0$和$n=1$，则有：
+\begin{align*}
+    f(S_T) &= \frac{f(S_0)}{0!}(S_T-S_0)^0 + \frac{f'(S_0)}{1!}(S_T-S_0)^1 + \frac{1}{1!} \int^{S_T}_{S_0} f''(K) (S_T - K)^1 dK  \\
+    \ln S_T &= \ln S_0 + \frac{S_T-S_0}{S_0} - \int^{S_T}_{S_0} \frac{S_T-K}{K^t} dK
+\end{align*}
+
+或使用狄拉克函数
+
 
 \subsubsection*{狄拉克函数}
 
@@ -1040,9 +1061,9 @@ Long put, long delta stock/ short put, short delta stock
 
 级数为无穷的序列（sequences）（或无穷多项）的和。泰勒级数（Taylor series）使用无限项序列来表示一个函数，每项由该函数在某一点的导数求得。一个函数的有限项的泰勒级数叫做泰勒多项式（Taylor polynomial）。对于一元函数在$x=a$处展开的泰勒级数有：
 \begin{align*}
-    f(x) &= \sum^{+\infty}_{n=0} \frac{f^{(n)}(a)}{n!}(x-a)^n \\
-    &= \frac{f(a)}{1}(1)+ \frac{f'(a)}{1}(x-a) + \frac{f''(a)}{2}(x-a)^2 + \frac{f^{3}(a)}{6}(x-a)^3 + \dots \\
-    &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a) + \frac{f^{3}(a)}{6}(x-a)^3 + \dots
+    f(x) &= \sum^{\infty}_{n=0} \frac{f^{(n)}(a)}{n!}(x-a)^n \\
+    &= \frac{f(a)}{1}(1)+ \frac{f'(a)}{1}(x-a) + \frac{f''(a)}{2}(x-a)^2 + \frac{f'''(a)}{6}(x-a)^3 + \dots \\
+    &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a) + \frac{f'''(a)}{6}(x-a)^3 + \dots
 \end{align*}
 
 对于多元函数在$(a,b)$处展开的泰勒级数为：

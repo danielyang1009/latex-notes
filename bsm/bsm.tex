@@ -263,27 +263,27 @@ $f(X,t)$的泰勒展开式为：
 
 \subsubsection*{百分比收益率}
 
-对于没有再投资（reinvestment）的百分比年化收益率为（t单位为年）：
+对于没有再投资（reinvestment）的百分比年化收益率为（$\tau$单位为年）：
 \begin{equation*}
-    r_{pct} = \frac{R_{pct}}{t}
+    r_{pct} = \frac{R_{pct}}{\tau}
 \end{equation*}
 
 对进行了再投资的百分比收益率为：
 \begin{align*}
-    1+R_{pct} &= (1+r_{pct})^t \\
-    r_{pct} &= (1+R_{pct})^{\frac{1}{t}} - 1
+    1+R_{pct} &= (1+r_{pct})^\tau \\
+    r_{pct} &= (1+R_{pct})^{\frac{1}{\tau}} - 1
 \end{align*}
 
-对于单期或多期的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率。
+对于单期或\textbf{多期}的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率，计算算术平均没有经济学意义。
 
 \subsubsection*{对数收益率}
 
 对数年化收益率为（t单位为年）：
 \begin{equation*}
-    r_{log} = \frac{R_{log}}{t}
+    r_{log} = \frac{R_{log}}{\tau}
 \end{equation*}
 
-假设一支股票在一个交易日内对数收益率$R_{log}=0.14\%$，平均一年有252个交易日（每个月21个交易日），则应有年化收益率为$r_{log} = \frac{R_{log}}{1/252} = 252R_{log} = 35.28\%$。因为根据对数收益率的性质，只需要将分段内收益率相加，即可得到整体收益率：
+假设一支股票在一个交易日内对数收益率$R_{log}=0.14\%$，平均一年有252个交易日（每个月21个交易日），则应有年化收益率为$r_{log} = \frac{R_{log}}{1/252} = 252R_{log} = 35.28\%$。即$V_t e^{r\tau} = V_T$，那么有$r = \frac{1}{\tau} \ln \frac{V_T}{V_t}$。同时因为根据对数收益率的性质，只需要将分段内收益率相加，即可得到整体收益率：
 \begin{align*}
     R_{log} = \sum^{n}_{i=1} R_{log,i} & = R_{log,1} + R_{log,2} + \dots + R_{log,n} \\ 
     &= \ln\frac{V_2}{V_1} + \ln\frac{V_1}{V_0} + \dots + \ln\frac{V_n}{V_{n-1}} \\
@@ -291,7 +291,7 @@ $f(X,t)$的泰勒展开式为：
     &= \ln\frac{V_n}{V_0} 
 \end{align*}
 
-同理，对于多期的对数收益，如多年的对数收益，只需要计算其\textbf{算术平均}，即为其平均年化收益率。
+对于\textbf{多期}（多年）的对数收益，由于对数收益率可相机的性质，只需要计算其\textbf{算术平均}，即为其平均年化收益率。
 
 \subsection{期望}
 
@@ -614,7 +614,7 @@ $f(X,t)$的泰勒展开式为：
 
 \section{波动率}
 
-波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而后者为根据BSM模型等，根据期权市场现有的价格信息，倒求出其中所包含的波动率信息（隐含），为人们对未来给定期限的波动率的预期值，如：隐含波动率（包含无模型波动率）。
+波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
 
 波动率的数学定义为：假设$r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
 \begin{equation*}
@@ -628,11 +628,9 @@ $f(X,t)$的泰勒展开式为：
 
 \subsection{历史波动率（Historical volatility）}
 
-样本对数收益率标准差（日频数据）
+历史波动率是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算：过去30个交易日的标准差。
 
-历史波动率，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。
-
-TODO:关于 historical volatility。在 Black Scholes 的框架下，也就是假设股票价格服从 GBM 的时候，volatility 可以用 quadratic variation 计算。如下式：
+【核实】在 Black Scholes 的框架下，也就是假设股票价格服从 GBM 的时候，historical volatility 可以用 quadratic variation 计算。如下式：
 \begin{equation*}
     \lim_{n\rightarrow \infty} \sum^{n}_{i=1}(X_{t_i} - X_{t_{i-1}})^2 = [X,X]_T = \sigma^2 T
 \end{equation*}
@@ -641,12 +639,19 @@ TODO:关于 historical volatility。在 Black Scholes 的框架下，也就是�
 
 \subsection{已实现波动率（Readlized volatility）}
 
-已实现波动率（Realized volatility，日内高频，5分钟，假设均值为零）
+已实现波动率是针对频率较高的数据计算的一种波动率，又称为日内波动率或高频波动率。高频数据是指以小时、分钟或秒为采集频率的数据。一般使用日内高频频率为5分钟。为：
+\begin{equation*}
+    \text{RV}_t = \sum^{N}_{j=1} r^2_{t,j}
+\end{equation*}
 
-RV是瞬时或者高频的波动离散率，均值足够低，可用于预测或择时。打破了随机游走的假设。模拟了波动率的高聚集性。
-
-参考Hansen和Lunde(2005),调整后的“已实现”波动率定义如下
-
+以上只是最基础的计算日内高频波动率的方法，还有其他的计算日内波动率的方式如：
+\begin{itemize}
+    \setlength{\itemsep}{0em}
+    \item Garman和Klass（1980）
+    \item Andersen和Bollerslev（1998）
+    \item Hansen和Lunde（2005）
+    \item ...
+\end{itemize}
 
 \subsection{随机波动率（Sochastic volatility）}
 
@@ -655,8 +660,8 @@ RV是瞬时或者高频的波动离散率，均值足够低，可用于预测或
 \begin{itemize}
     \setlength{\itemsep}{0em}
     \item Heston model
-    \item Constant elasticity of variance model  （CEV）
     \item SABR
+    \item CEV（Constant elasticity of variance model）
     \item GARCH
 \end{itemize}
 
@@ -664,17 +669,35 @@ RV是瞬时或者高频的波动离散率，均值足够低，可用于预测或
 
 GARCH为广义自回归条件异方差模型（Generalized autoregressive conditional heteroskedasticity）。Robert Engle于1982年在《计量经济学》上提出了ARCH模型用于估计和预测波动率。在此基础上，Bollerslev(1986)建立了广义自回归条件异方差(GARCH)模型。
 
+【核实】
+EWMA方法即指数移动平均方法。EWMA根据历史数据距当前时刻的远近，分别赋予不同的权重，距离现在越近，赋予的权重越大，我们认为越远的历史信息所起的作用越小，因此计算波动率时所赋予的权重越小。GARCH与EWMA都使用到了指数移动平均，他们都赋予最近的信息以更大的权重，EWMA事实上是一种特殊形式的GARCH。
+
+GARCH（1，1）模型方差如下：
+\begin{equation*}
+    \sigma^{2}_{t} = a + b r^{2}_{t-1,t} + c \sigma^{2}_{t-1}
+\end{equation*}
+
+当取$a=0$，$b+c=1$时，上式子有：
+\begin{equation*}
+    \text{GARCH}(1,1) = a + b r^{2}_{t-1,t} + (1-b) \sigma^{2}_{t-1}
+\end{equation*}
+
+同时又EWAM为
+\begin{equation*}
+    \text{EWMA} = a + \lambda r^{2}_{t-1,t} + (1-\lambda) \sigma^{2}_{t-1}
+\end{equation*}
+
 \subsection{局部波动率（Local volatility）}
 
-TODO: Local volatility，这个其实是一个作为 stochastic volatility 的一种替代做法，就是认为 volatility 是一个关于时间和资产价格的确定性函数$\sigma(t,S_t)$ ,因此也叫 Deterministic Volatility Function (DVF)。这样做也就是为了避免 Heston Model 等 stochastic volatility 带来的计算复杂度。Dupire 给出了一种计算 local volatility 的方法：
+【核实】Local volatility，这个其实是一个作为 stochastic volatility 的一种替代做法，就是认为 volatility 是一个关于时间和资产价格的确定性函数$\sigma(t,S_t)$ ,因此也叫 Deterministic Volatility Function (DVF)。这样做也就是为了避免 Heston Model 等 stochastic volatility 带来的计算复杂度。Dupire 给出了一种计算 local volatility 的方法：
 \begin{equation*}
     \sigma^2(K,T) = \frac{\frac{\partial C}{\partial T}}{\frac{1}{2} K^2 \frac{\partial^2 C}{\partial K^2}}
 \end{equation*}
 
-
 % https://en.wikipedia.org/wiki/Local_volatility
 
 \subsection{隐含波动率（Implied volatility）}
+
 
 \subsubsection{BS隐含波动率（BS implied volatility）}
 
@@ -687,6 +710,54 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
 \end{align*}
 
 \subsubsection{无模型波动率（Model-free implied volatility）}
+
+\subsubsection*{方差互换}
+
+假设标的资产价格满足几何布朗运动：
+\begin{equation*}
+    \frac{dS_t}{S_t} = \mu dt + \sigma dZ_t
+\end{equation*}
+
+使用Ito公式可得，对数收益率为：
+\begin{equation*}
+    d \ln S_t = \left(\mu - \frac{\sigma^2}{2} \right) dt + \sigma dZ_t
+\end{equation*}
+
+两式想减可得：
+\begin{equation*}
+    \frac{dS_t}{S_t} - d\ln S_t = \frac{\sigma^2}{2} dt
+\end{equation*}
+
+则有方差为：
+\begin{equation*}
+    \text{Variance} = \frac{1}{T} \int^T_0 \sigma^2 dt = \frac{2}{T} \int^T_t \left( \frac{d S_t}{S_t} - \ln\frac{S_T}{S_0} \right)
+\end{equation*}
+
+\subsubsection*{狄拉克函数}
+
+对于狄拉克函数（Dirac delta function）有，对其平移$\delta(x-3)$，即在$x=3$为无穷：
+\begin{equation*}
+    \delta(x) =
+    \begin{cases}
+        +\infty \qquad  &x=0 \\
+        0 \qquad &x\neq 0
+    \end{cases}
+\end{equation*}
+
+假设有函数：
+\begin{equation*}
+    d_\tau(t) = 
+    \begin{cases}
+        \frac{1}{2\tau} \qquad -\tau<x<\tau \\
+        0 \qquad \text{其他}
+    \end{cases}
+\end{equation*}
+
+此时可以发现$d_\tau$的积分，$\int^{+\infty}_{-\infty} d_\tau(x) dx = 1$。当$\tau$不断变小的时候$\lim_{\tau \rightarrow + \infty} d_{\tau}(t) = \delta(x)$，那么此时对于狄拉克函数，其积分应有：
+\begin{equation*}
+    \int^{+\infty}_{-\infty} \delta(x) dx =1
+\end{equation*}
+
 
 \subsection{典型实证现象}
 
@@ -710,6 +781,11 @@ TODO: Local volatility，这个其实是一个作为 stochastic volatility 的�
 有一个普通 GARCH 模型不能捕捉的实证现象是 t−1 时刻的负面冲击比正面冲击对 t 时刻的方差有更强烈的影响。尽管如此， GARCH 模型能够很容易地调整扩充从而捕捉到这种不对称性。类似的例子有门限 GARCH （TGARCH）模型，, 不对称 GARCH （AGARCH）模型和指数 GARCH （EGARCH)）模型。
 
 这一不对称性过去被成为杠杆效应，因为增加的风险被认为是来自于负面冲击所引起杠杆的增加，但是限制人们认识到这个效应不能解释所有现象，并且风险规避是一个重要的机制。
+
+\section{波动率曲面}
+
+
+
 
 
 \section{希腊值}

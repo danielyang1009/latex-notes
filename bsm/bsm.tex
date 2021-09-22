@@ -20,8 +20,11 @@
 \newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\Var}{\operatorname{Var}}
 
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
+% 根据chapter,section或subsection编号
+\newtheorem{thm}{定理}[subsection] 
+\newtheorem{definition}[thm]{定义}
+\newtheorem{lemma}[thm]{引理}
+\newtheorem{property}[thm]{性质}
 
 \title{BSM公式}
 \author{杨弘毅}
@@ -712,7 +715,7 @@ GARCH（1，1）模型方差如下：
 
 虽然一般将无模型波动率认为是“BS隐含波动率的一种加权平均”更方便理解，但实际无模型波动率与BS模型完全没有关系。准确的说无模型并不是完全没有模型，只是这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。VIX并非某一合约的隐含波动率，而是未来一段时间内波动率（Total variance）平方的期望：
 \begin{equation*}
-    \text{VIX}^2 = \frac{1}{T} \int^T_0 \sigma^2 dt
+    \Var^2 = \frac{1}{T} \int^T_0 \sigma^2 dt
 \end{equation*}
 
 \subsubsection*{方差互换}
@@ -733,52 +736,141 @@ GARCH（1，1）模型方差如下：
 \end{equation*}
 
 则有方差为：
-\begin{equation*}
-    \text{Variance} = \frac{1}{T} \int^T_0 \sigma^2 dt 
-    = \frac{2}{T} \int^T_0 \left( \frac{d S_t}{S_t} - d \ln S_t \right) 
-    = \frac{2}{T} \int^T_0 \left( \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right) 
-\end{equation*}
-
-在Carr和Wu（2006）中使用了带积分余项（Integral form of the remainder）的泰勒公式（三种余项分别为：积分余项、Lagrange余项和Peano余项）：
-\begin{equation*}
-    f(x) = \sum^n_{k=0}\frac{f^{(k)}(a)}{k!}(x-a)^k + 
-    \frac{1}{n!} \int^x_a f^{(n+1)}(t)(x-t)^n dt
-\end{equation*}
-
-带入$f(x) = \ln x$，$x=S_T$，$a=S_0$和$n=1$，则有：
 \begin{align*}
-    f(S_T) &= \frac{f(S_0)}{0!}(S_T-S_0)^0 + \frac{f'(S_0)}{1!}(S_T-S_0)^1 + \frac{1}{1!} \int^{S_T}_{S_0} f''(K) (S_T - K)^1 dK  \\
-    \ln S_T &= \ln S_0 + \frac{S_T-S_0}{S_0} - \int^{S_T}_{S_0} \frac{S_T-K}{K^t} dK
+    \Var &= \frac{1}{T} \int^T_0 \sigma^2 dt \\
+    &= \frac{2}{T} \int^T_0 \left( \frac{d S_t}{S_t} - d \ln S_t \right) \\
+    &= \frac{2}{T} \left( \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right) \\
+    &= \frac{2}{T} \left( \int^T_0 \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right)
 \end{align*}
 
-或使用狄拉克函数
+\subsubsection*{积分型余项的泰勒公式}
+在Carr和Wu（2006）中使用了带积分余项（Integral form of the remainder）的泰勒公式进行求解（三种余项分别为：积分余项、Lagrange余项和Peano余项）。令$f(x) = \ln x$，$x=S_T$，$a=S_0$和$n=1$，则有：
+\begin{equation*}
+    f(S_T) = \frac{f(S_0)}{0!}(S_T-S_0)^0 + \frac{f'(S_0)}{1!}(S_T-S_0)^1 + \frac{1}{1!} \int^{S_T}_{S_0} f''(K) (S_T - K)^1 dK
+\end{equation*}
 
+整理后得到：
+\begin{equation*}
+    \ln S_T = \ln S_0 + \frac{S_T-S_0}{S_0} - \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK
+\end{equation*}
+
+由于不能确定$S_T$与$S_0$之间的大小，因此将最后一项积分分解。第一项为$S_T \geq S_0$的情形，而第二项为$S_T \leq S_0$的情形：
+\begin{equation*}
+    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{S_T}_{S_0} \frac{(S_T-K)^+}{K^2} dK + \int^{S_0}_{S_T} \frac{(K-S_T)^+}{K^2} dK
+\end{equation*}
+
+由于$S_T$为随机变量在积分的上下限不方便处理，因此将其改写，加入积分为零的部分：
+\begin{equation*}
+    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK + \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK
+\end{equation*}
+
+整理可得：
+\begin{equation*}
+    \Var = \frac{2}{T} \left[ \int^T_0 \frac{dS_t}{S_t} + \frac{S_T-S_0}{S_0} - \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK - \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK \right]
+\end{equation*}
+
+最后求风险中性下的期望期望得到最后的结果
 
 \subsubsection*{狄拉克函数}
 
-对于狄拉克函数（Dirac delta function）有，对其平移$\delta(x-3)$，即在$x=3$为无穷：
+对于狄拉克函数（Dirac delta function）定义如下。根据定义易知$\delta(x)=\delta(-x)$。并且对其平移$\delta(x-a)$，即在$x=a$为无穷。
 \begin{equation*}
     \delta(x) =
     \begin{cases}
-        +\infty \qquad  &x=0 \\
-        0 \qquad &x\neq 0
+        \infty \;  &x=0 \\
+        0 \; &x\neq 0
     \end{cases}
-\end{equation*}
-
-假设有函数：
-\begin{equation*}
-    d_\tau(t) = 
+    \qquad\qquad
+    \delta(-x) =
     \begin{cases}
-        \frac{1}{2\tau} \qquad -\tau<x<\tau \\
-        0 \qquad \text{其他}
+        \infty \;  &x=0 \\
+        0 \; &x\neq 0
     \end{cases}
 \end{equation*}
 
-此时可以发现$d_\tau$的积分，$\int^{+\infty}_{-\infty} d_\tau(x) dx = 1$。当$\tau$不断变小的时候$\lim_{\tau \rightarrow + \infty} d_{\tau}(t) = \delta(x)$，那么此时对于狄拉克函数，其积分应有：
-\begin{equation*}
-    \int^{+\infty}_{-\infty} \delta(x) dx =1
-\end{equation*}
 
+\begin{property}
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} \delta(x) dx =
+        \int\limits^{\infty}_{-\infty} \delta(-x) dx = 1
+    \end{equation*}
+\end{property}
+
+\begin{proof}
+    假设有函数：
+    \begin{equation*}
+        d_\tau(t) = 
+        \begin{cases}
+            \frac{1}{2\tau} \qquad -\tau<x<\tau \\
+            0 \qquad \text{其他}
+        \end{cases}
+    \end{equation*}
+    此时可以发现$d_\tau$的积分，$\int^{+\infty}_{-\infty} d_\tau(x) dx = 1$。当$\tau$不断变小的时候$\lim\limits_{\tau \rightarrow \infty} d_{\tau}(t) = \delta(x)$，那么此时对于狄拉克函数，其积分应有：
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} \delta(x) dx =1
+    \end{equation*}
+
+    进行换元，令$x'=-x$，上下积分符号调换两次保持不变，则有：
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} \delta(-x) dx =
+        \int\limits^{x'= -\infty}_{x'= \infty} \delta(x') d(-x') =
+        \int\limits^{\infty}_{-\infty} \delta(x') dx' = 1
+    \end{equation*}
+\end{proof}
+
+\begin{property}
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} f(x) \delta(x-x_0) dx = f(x_0)
+    \end{equation*}
+\end{property}
+
+\begin{proof}
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} f(x) \delta(x-x_0) dx
+        = \int\limits^{x_0+\epsilon}_{x_0-\epsilon} f(x) \delta(x-x_0) dx
+    \end{equation*}
+    在一个极小的区间内，利用积分中值定理，$f(x)=f(x_0)$可以提出积分外：
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} f(x) \delta(x-x_0) dx
+        = f(x_0)\int\limits^{x_0+\epsilon}_{x_0-\epsilon} \delta(x-x_0) dx
+        = f(x-0)
+    \end{equation*}
+\end{proof}
+
+\begin{property}
+    \begin{equation*}
+        f(x)\delta(x-x_0) = f(x_0)\delta(x-x_0)        
+    \end{equation*}
+\end{property}
+
+\begin{proof}
+    易知$\delta$函数只在$x=x_0$有定义，因此等式两边函数性质相同，并且由如上可知两者积分性质也相同，因此等式两边相等。
+    \begin{equation*}
+        \int^{\infty}_{-\infty} f(x)\delta(x-x_0) dx 
+        = f(x_0) \int^{\infty}_{-\infty} \delta(x-x_0) dx
+        = \int^{\infty}_{-\infty} f(x_0)\delta(x-x_0) dx
+    \end{equation*}
+\end{proof}
+利用如上性质，令$f(x)=x$，$x_0=0$易知$x\delta(x)=0$
+
+\begin{property}
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} \delta(x-x_1) \delta(x-x_2) dx = \delta(x_1-x_2)
+    \end{equation*}
+\end{property}
+
+\begin{proof}
+    已知：
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} f(x) \delta(x-x_1) dx = f(x_1)
+    \end{equation*}
+    并使用$x'=x-x_2$换元，可得：
+    \begin{equation*}
+        \int\limits^{\infty}_{-\infty} \delta(x-x_2) \delta(x-x_1) dx
+        = \int\limits^{\infty}_{-\infty} \delta(x') \delta(x'-x_1+x_2) dx'
+        = \delta(x_1-x_2)
+    \end{equation*}
+\end{proof}
 
 \subsection{典型实证现象}
 

@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
-\usepackage{amsmath,amsfonts}
+\usepackage{amsmath,amsfonts,amsthm,cancel}
 % \usepackage{cases}
 % === graph packages ===
 % \usepackage{tikz}
@@ -10,8 +10,9 @@
 % \usepackage{booktabs,float,multirow}
 % == figure packages ==
 % \usepackage{graphicx}
+% == footnote ==
+% \usepackage{footmisc}
 % === url packages ===
-% \usepackage[hyphens]{url}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true, %set true if you want colored links
@@ -30,6 +31,12 @@
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
+
+% 根据chapter,section或subsection编号
+\newtheorem{thm}{定理}[subsection] 
+\newtheorem{definition}[thm]{定义}
+\newtheorem{lemma}[thm]{引理}
+\newtheorem{property}[thm]{性质}
 
 \title{XXXX}
 \author{杨弘毅}
@@ -76,5 +83,9 @@
 	\caption{}
 \end{figure}
 
+
+
+\appendix
+\section{some appendix}
 
 \end{document}

@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
-\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{amsmath,amsfonts,amsthm,bbm}
 \usepackage{booktabs,float,multirow}
 \usepackage{cancel}
 \usepackage{graphicx}
@@ -718,8 +718,6 @@ GARCH（1，1）模型方差如下：
     \Var^2 = \frac{1}{T} \int^T_0 \sigma^2 dt
 \end{equation*}
 
-\subsubsection*{方差互换}
-
 假设标的资产价格满足如下随机过程：
 \begin{equation*}
     \frac{dS_t}{S_t} = \mu_t dt + \sigma_t dZ_t
@@ -743,7 +741,9 @@ GARCH（1，1）模型方差如下：
     &= \frac{2}{T} \left( \int^T_0 \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right)
 \end{align*}
 
-\subsubsection*{积分型余项的泰勒公式}
+此时第一项积分较容易离散并计算，第二项对数项$\ln\frac{S_T}{S_0}$包含随机变量$S_T$，有以下两种方式进行计算。
+
+\subsubsection*{方法1：积分型余项的泰勒公式}
 在Carr和Wu（2006）中使用了带积分余项（Integral form of the remainder）的泰勒公式进行求解（三种余项分别为：积分余项、Lagrange余项和Peano余项）。令$f(x) = \ln x$，$x=S_T$，$a=S_0$和$n=1$，则有：
 \begin{equation*}
     f(S_T) = \frac{f(S_0)}{0!}(S_T-S_0)^0 + \frac{f'(S_0)}{1!}(S_T-S_0)^1 + \frac{1}{1!} \int^{S_T}_{S_0} f''(K) (S_T - K)^1 dK
@@ -756,22 +756,20 @@ GARCH（1，1）模型方差如下：
 
 由于不能确定$S_T$与$S_0$之间的大小，因此将最后一项积分分解。第一项为$S_T \geq S_0$的情形，而第二项为$S_T \leq S_0$的情形：
 \begin{equation*}
-    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{S_T}_{S_0} \frac{(S_T-K)^+}{K^2} dK + \int^{S_0}_{S_T} \frac{(K-S_T)^+}{K^2} dK
+    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{S_0}_{S_T} \frac{(K-S_T)^+}{K^2} dK + \int^{S_T}_{S_0} \frac{(S_T-K)^+}{K^2} dK
 \end{equation*}
 
 由于$S_T$为随机变量在积分的上下限不方便处理，因此将其改写，加入积分为零的部分：
 \begin{equation*}
-    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK + \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK
+    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK 
 \end{equation*}
 
 整理可得：
 \begin{equation*}
-    \Var = \frac{2}{T} \left[ \int^T_0 \frac{dS_t}{S_t} + \frac{S_T-S_0}{S_0} - \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK - \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK \right]
+    \ln S_T = \ln S_0 + \frac{S_T-S_0}{S_0} - \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK - \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK 
 \end{equation*}
 
-最后求风险中性下的期望期望得到最后的结果
-
-\subsubsection*{狄拉克函数}
+\subsubsection*{狄拉克$\delta$函数性质}
 
 对于狄拉克函数（Dirac delta function）定义如下。根据定义易知$\delta(x)=\delta(-x)$。并且对其平移$\delta(x-a)$，即在$x=a$为无穷。
 \begin{equation*}
@@ -787,7 +785,6 @@ GARCH（1，1）模型方差如下：
         0 \; &x\neq 0
     \end{cases}
 \end{equation*}
-
 
 \begin{property}
     \begin{equation*}
@@ -872,6 +869,104 @@ GARCH（1，1）模型方差如下：
     \end{equation*}
 \end{proof}
 
+\begin{property}
+    已知赫维赛德阶跃函数（Heaviside step function）或单位阶跃函数定义如下：
+    \begin{equation*}
+        H(x) =
+        \begin{cases}
+            1 \; & x \geq 0 \\
+            0 \; & x<0
+        \end{cases}
+        \equiv \mathbbm{1}(x \geq 0)
+    \end{equation*}
+    其中$\mathbbm{1}(\cdot)$为指示函数（Indicator function）。并有狄拉克$\delta$函数为赫维赛德阶跃函数的导数，两者有如下关系：
+    \begin{equation*}
+        H'(x) = \delta(x) \qquad \text{且} \qquad H(x) = \int^{x}_{-\infty}\delta(s)ds
+    \end{equation*}
+    同时可知赫维赛德阶跃函数的积分为$\max(x,0)$函数:
+    \begin{equation*}
+        (x)^+ = \max(x,0) = \int H(x) dx
+    \end{equation*}
+\end{property}
+
+\subsubsection*{方法2：狄拉克$\delta$函数}
+参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting property改写函数为积分形式，并将积分分解为两部分（$\kappa$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
+\begin{align*}
+    f(F) &= \int^{\infty}_{0}f(K)\delta(F-K)dK \\
+    &= \int^{\kappa}_{0}f(K)\delta(F-K)dK + \int^{\infty}_{\kappa}f(K)\delta(F-K)dK \\
+    &= \int^{\kappa}_{0}f(K)\delta(K-F)dK + \int^{\infty}_{\kappa}f(K)\delta(F-K)dK
+\end{align*}
+
+使用分部积分法（Integration by parts）将积分项进行分解，即$\int u dv = uv - \int v du$，或具体而言：
+\begin{align*}
+    \int^b_a u(x) v'(x) dx &= \bigg[ u(x) v(x) \bigg]^b_a - \int^b_a u'(x)v(x) dx \\
+    &= u(b)v(b) - u(a)b(a) - \int^b_a u'(x)v(x) dx
+\end{align*}
+
+已知对于狄拉克$\delta$函数可使用赫维赛德阶跃函数或指示函数表示其积分。令$u=f(K)$，$u'=f'(K)$，$v'=\delta(K-F)$，$1$，因此对于第一项积分有：
+\begin{align*}
+    \int^{\kappa}_{0}f(K)\delta(K-F)dK 
+    &= \bigg[ f(K) \mathbbm{1}(F<K) \bigg]^{\kappa}_{0} - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK \\ 
+    &= f(\kappa) \mathbbm{1}(F<\kappa) - \cancel{f(0)\mathbbm{1}(F<0)} - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK \\
+    &= f(\kappa)\mathbbm{1}(F<\kappa) - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK
+\end{align*}
+
+同理对于第二项积分，令$u=f(K)$，$du = f'(K)dK$，$dv=\delta(F-K)dK$，此时需注意链式法则，如对$H(F-K)$求导应有：
+\begin{equation*}
+    H'(F-K) = \frac{\partial H(F-K)}{\partial F-K} \frac{\partial F-K}{\partial K} = \delta(F-K)\cdot(-1)
+\end{equation*}
+
+因此有$v=-H(F-K)=-\mathbbm{1}(F -K \geq 0)=-\mathbbm{1}(F \geq K)$ ，得到：
+\begin{align*}
+    \int^{\infty}_{\kappa} f(K)\delta(F-K)dK 
+    &= \bigg[ - f(K) \mathbbm{1}(F \geq K) \bigg]^{\infty}_{\kappa} + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK \\
+    &= - \cancel{f(\infty) \mathbbm{1}(F\geq \infty)} + f(\kappa) \mathbbm{1}(F\geq \kappa ) + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK \\
+    &= f(\kappa) \mathbbm{1}(F\geq \kappa ) + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK
+\end{align*}
+
+将两部分积分代入原式整理可得：
+\begin{align*}
+    f(F) &=  f(\kappa)\mathbbm{1}(F<\kappa) + f(\kappa)\mathbbm{1}(F \geq \kappa)
+    - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK 
+    + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK
+\end{align*}
+
+再次使用分部积分法继续分解上式中的两项积分。对于指示函数的积分$\int^{\kappa}_{0}\mathbbm{1}(F<K) dK$，即计算高度为1的矩形面积。其宽度为$F$至积分上限$\kappa$，如果$F<\kappa$则有其积分（面积）为$\kappa-F$；如过$F>\kappa$，则有积分值为0：
+\begin{equation*}
+    \int^{\kappa}_{0}\mathbbm{1}(F<K) dK =
+    \begin{cases}
+        \kappa - F \; & F<\kappa \\
+        0 \; & F>\kappa
+    \end{cases}
+    \quad \Leftrightarrow \quad
+    (\kappa - F)^+
+\end{equation*}
+
+或令$u=f'(K)$，$du=f''(K)dK$，$dv=\mathbbm{1}(F<K)dK$，$v=(K-F)^+$，因此第一项积分有：
+\begin{align*}
+    \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK 
+    &= \bigg[ f'(K)(K-F)^+ \bigg]^{\kappa}_{0} - \int^{\kappa}_{0} f''(K) (K-F)^+ dK \\
+    &= f'(\kappa)(\kappa-F)^+ - \cancel{f'(0)(0-F)^+} - \int^{\kappa}_{0} f''(K) (K-F)^+ dK \\
+    &= f'(\kappa)(\kappa - F)^+ - \int^{\kappa}_{0} f''(K) (K-F)^+ dK
+\end{align*}
+
+对于第二项积分，令$u=f'(K)$，$du=f''(K)dK$，同时需注意链式法则带来的符号改变$dv=\mathbbm{1}(F \geq K)dK$，$v=-(F-K)^+$：
+\begin{align*}
+    \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F\geq K) dK 
+    &= \bigg[ -f'(K)(F-K)^+ \bigg]^{\infty}_{\kappa} + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK \\
+    &= - \cancel{f'(\infty)(F - \infty)^+} + f'(\kappa)(F - \kappa)^+ + \int^{\kappa}_{0} f''(K) (F-K)^+ dK \\
+    &= f'(\kappa)(F - \kappa)^+ + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK
+\end{align*}
+
+整理，最终结果为：
+\begin{align*}
+    f(F) &= f(\kappa)\mathbbm{1}(F<\kappa) + f(\kappa)\mathbbm{1}(F \geq \kappa) \\
+    &\quad - \left[ f'(\kappa)(\kappa - F)^+ - \int^{\kappa}_{0} f''(K) (K-F)^+ dK \right]
+    + \left[ f'(\kappa)(F - \kappa)^+ + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK \right] \\
+    & = f(\kappa) + f'(\kappa) \left[ (F-\kappa)^+ - (\kappa - F)^+ \right] + \int^{\kappa}_{0} f''(K) (K-F)^+ dK + \int^{\kappa}_{0} f''(K) (F-K)^+ dK \\
+    & = f(\kappa) + f'(\kappa) (F-\kappa) + \int^{\kappa}_{0} f''(K) (K-F)^+ dK + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK
+\end{align*}
+
 \subsection{典型实证现象}
 
 有些现象能够在几乎所有收益率的时间序列中观察到。一个好的条件异方差模型要能够捕捉大部分实证现象。在这个部分，我们列出在波动性分析中最知名典型实证现象。
@@ -920,9 +1015,9 @@ GARCH（1，1）模型方差如下：
     N'(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
 \end{equation*}
 
-由于正态分布的对称性，易知：
+由于正态分布的对称性，易知有如下性质：
 \begin{equation*}
-    N(-x) = 1-N(x) \qquad
+    N(-x) = 1-N(x) \qquad \qquad
     N'(x) = N'(-x)
 \end{equation*}
 

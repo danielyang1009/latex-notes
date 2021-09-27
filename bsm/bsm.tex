@@ -775,7 +775,7 @@ GARCH（1，1）模型方差如下：
     \tilde{\E} \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} \right]
     &= -\frac{\tilde{\E}(S_T)-K_0}{K_0} + \ln \frac{F}{K_0} \\
     &= -\frac{F-K_0}{K_0} + \left[ f(1) + f'(1)\left(\frac{F}{K_0}-1\right) + \frac{1}{2}f''(1)\left(\frac{F}{K_0}-1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
-    &= -\frac{F-K_0}{K_0} + \left[ 0 + \left(\frac{F}{K_0} - 1\right) - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
+    &= - \left( \frac{F}{K_0} -1 \right) + \left[ 0 + \left(\frac{F}{K_0} - 1\right) - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
     &= - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3
 \end{align*}
 
@@ -788,10 +788,16 @@ GARCH（1，1）模型方差如下：
     &= \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i)
 \end{align*}
 
+将上述部分合并，可得：
+\begin{align*}
+    \sigma^2 &\approx \frac{2}{T} \left[ - \frac{1}{2} \left( \frac{F}{K_0} -1 \right)^2 + \int^{K_0}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{K_0} \frac{e^{rT}C(K)}{K^2} dK \right] \\
+    &= \frac{2}{T} \left[ \int^{K_0}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{K_0} \frac{e^{rT}C(K)}{K^2} dK \right] - \frac{1}{T} \left( \frac{F}{K_0} -1 \right)^2
+\end{align*}
+
 最终得到方差计算如下：
 \begin{equation*}
     \boxed{
-        \sigma^2 = \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i) - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 
+        \sigma^2 = \frac{2}{T} \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i) - \frac{1}{T} \left[\frac{F}{K_0} - 1\right]^2 
     }
 \end{equation*}
 
@@ -802,22 +808,16 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 \subsubsection*{简化推导}
 
-将$\frac{dS_t}{S_t}$与$d\ln S_t$两式相减，进消去随机波动项$\sigma_t dZ_t$则有方差为：
+将$\frac{dS_t}{S_t}$与$d\ln S_t$两式相减，进消去随机波动项$\sigma_t dZ_t$，并在风险中性下求期望：
 \begin{align*}
-    \text{Variance} &= \frac{1}{T} \int^T_0 \sigma^2 dt \\
-    &= \frac{2}{T} \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
-    &= \frac{2}{T} \left[ \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right] \\
-    &= \frac{2}{T} \left[ \int^T_0 \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right]
-\end{align*}
-
-在风险中性测度下对其求期望：
-\begin{align*}
-    \Var &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right] \\
+    \sigma^2 &= \tilde{\E} \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right] \\
+    &= \frac{2}{T} \tilde{\E} \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
+    &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right] \\
     &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 rdt + \int^T_0\sigma dZ_t  - \ln \frac{S_T}{S_0} \right] \\
     &= \frac{2}{T} \tilde{\E} \left[ rT  - \ln \frac{S_T}{S_0} \right] \\
     &= \frac{2}{T} \tilde{\E} \left[ \ln S_0 e^{rT} -\ln K_0 + \ln K_0 - \ln S_T \right] \\
     &= \frac{2}{T} \tilde{\E} \left[ \ln \frac{S_0 e^{rT}}{K_0} - \ln \frac{S_T}{K_0} \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \ln \frac{F}{K_0} - \ln \frac{S_T}{K_0} \right]
+    &= \frac{2}{T} \tilde{\E} \left[ \ln \frac{F}{K_0} - \ln \frac{S_T}{K_0} \right] \qquad \text{（可按上述方法进行推导）} 
 \end{align*}
 
 \subsubsection*{方法1：积分型余项的泰勒公式}

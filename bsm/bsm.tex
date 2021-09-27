@@ -713,6 +713,8 @@ GARCH（1，1）模型方差如下：
 
 虽然一般将无模型波动率认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内波动率平方（Total variance）的期望。
 
+对期权进行定价往往采用风险中性定价法，在风险中性的世界里，所有资产的预期收益率都等于无风险利率。同样对于未来一段时间内的波动率平均值的估计也可以认为是一种广义的“定价”，因此广义波动率被定义为风险中性的世界里从0时刻到T时刻期间的方差序列的平均值的平方根。
+
 \subsubsection*{方差互换与VIX}
 
 一个方差互换合约的Payoff定义如下：其中第一项为已实现波动率，而第二项$X_{var}$为使得合约在签订之时，合约价值为0的用于交换的固定方差：
@@ -745,8 +747,8 @@ GARCH（1，1）模型方差如下：
 
 如上所述，只有使得在签订时，互换合约价值为0的固定方差$X_{var}$才是公平的，那么根据风险中性定价：
 \begin{equation*}
-    e^{-rT} \tilde{E} \left[ \frac{1}{T} \int^T_0 \sigma^2 dt - X_{var} \right] = 0 \quad \Rightarrow \quad
-    X_{var} = \tilde{E} \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right]
+    e^{-rT} \tilde{\E} \left[ \frac{1}{T} \int^T_0 \sigma^2 dt - X_{var} \right] = 0 \quad \Rightarrow \quad
+    X_{var} = \tilde{\E} \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right]
 \end{equation*}
 
 在风险中性测度下，此时$\mu=r$为常数，并且根据上述对数收益率$d\ln S_t$，积分形式有：
@@ -759,47 +761,48 @@ GARCH（1，1）模型方差如下：
     &= - \left[ \ln \frac{S_T}{S_0 e^{rT}} \right] + \int^T_0 \sigma_t d\tilde{Z}_t
 \end{align*}
 
-由于$\int^T_0 \sigma_t d\tilde{Z}_t$为随机波动项，因此取期望后为0。并且有$F=S_0 e^{rT}$，令$f(x)=\ln x$，利用下述两种方法展开$\ln\frac{S_T}{\kappa}$项则有：
+由于$\int^T_0 \sigma_t d\tilde{Z}_t$为随机波动项，因此取期望后为0。需要注意$S_T$为随机变量，并且有$\tilde{\E}_0(S_T)=S_0 e^{rT}=F_{0,T}$，令$f(x)=\ln x$。利用下述两种方法（带积分余项的泰勒展开式以及使用狄拉克$\delta$函数）在$K=K_0$处展开带有随机变量的$S_T$的$\ln\frac{S_T}{K_0}$项则有：
 \begin{align*}
-    X_{var} &= \frac{2}{T} \tilde{E} \left[ - \ln\frac{S_T}{S_0 e^{rT}} \right] \\
-    &= \frac{2}{T} \tilde{E} \left[ - \ln\frac{S_T}{F} \right] \\
-    &= \frac{2}{T} \tilde{E} \left[ - \ln\frac{S_T}{\kappa} + \ln\frac{F}{\kappa} \right] \\
-    &= \frac{2}{T} \tilde{E} \left[ - f'(\kappa) (S_T-\kappa) - \int^{\kappa}_{0} f''(K) (K-S_T)^+ dK - \int^{\infty}_{\kappa} f''(K) (S_T-K)^+ dK + \ln\frac{F}{\kappa} \right] \\
-    &= \frac{2}{T} \tilde{E} \left[ - \frac{S_T-\kappa}{\kappa} + \ln\frac{F}{\kappa} + \int^{\kappa}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{\kappa} \frac{(S_T-K)^+}{K^2} dK \right]
+    X_{var} &= \frac{2}{T} \tilde{\E} \left[ - \ln\frac{S_T}{S_0 e^{rT}} \right] \\
+    &= \frac{2}{T} \tilde{\E} \left[ - \ln\frac{S_T}{F} \right] \\
+    &= \frac{2}{T} \tilde{\E} \left[\ln\frac{F}{K_0} - \ln\frac{S_T}{K_0}  \right] \\
+    &= \frac{2}{T} \tilde{\E}  \left[ \ln\frac{F}{K_0}- f'(K_0) (S_T-K_0) - \int^{K_0}_{0} f''(K) (K-S_T)^+ dK - \int^{\infty}_{K_0} f''(K) (S_T-K)^+ dK  \right] \\
+    &= \frac{2}{T} \tilde{\E} \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} + \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
 \end{align*}
 
-对于前两项，并使用泰勒级数分解$\ln \frac{F}{\kappa}$应有：
+对于前两项，并使用泰勒级数分解$\ln \frac{F}{K_0}$，即令$f(x) = \ln(x)$，并在$\frac{F}{K_0}$处展开，应有：
 \begin{align*}
-    \tilde{E} \left[ - \frac{S_T-\kappa}{\kappa} + \ln\frac{F}{\kappa} \right]
-    &= -\frac{F-\kappa}{\kappa} + \ln \frac{F}{\kappa} \\
-    &= -\frac{F-\kappa}{\kappa} + \left[ f(1) + f'(1)\left(\frac{F}{\kappa}-1\right) + \frac{1}{2}f''(1)\left(\frac{F}{\kappa}-1\right)^2 + \mathcal{O}\left( \frac{F}{\kappa} - 1 \right)^3 \right] \\
-    &= -\frac{F-\kappa}{\kappa} + \left[ 0 + \left(\frac{F}{\kappa} - 1\right) - \frac{1}{2} \left(\frac{F}{\kappa} - 1\right)^2 + \mathcal{O}\left( \frac{F}{\kappa} - 1 \right)^3 \right] \\
-    &= - \frac{1}{2} \left(\frac{F}{\kappa} - 1\right)^2 + \mathcal{O}\left( \frac{F}{\kappa} - 1 \right)^3
+    \tilde{\E} \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} \right]
+    &= -\frac{\tilde{\E}(S_T)-K_0}{K_0} + \ln \frac{F}{K_0} \\
+    &= -\frac{F-K_0}{K_0} + \left[ f(1) + f'(1)\left(\frac{F}{K_0}-1\right) + \frac{1}{2}f''(1)\left(\frac{F}{K_0}-1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
+    &= -\frac{F-K_0}{K_0} + \left[ 0 + \left(\frac{F}{K_0} - 1\right) - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
+    &= - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3
 \end{align*}
 
-对于后两项积分项，将其离散化则有：
+对于后两项积分项，将其离散化，其中$Q(K_i)$为行权价为$K_i$，\textbf{虚值}看涨和看跌期权的价格：
 \begin{align*}
-    \tilde{E} \left[ \int^{\kappa}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{\kappa} \frac{(S_T-K)^+}{K^2} dK \right]
-    &= \int^{\kappa}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{\kappa} \frac{e^{rT}C(K)}{K^2} dK \\
-    &\approx \sum_{K_i < \kappa} \frac{\Delta K_i}{K_i^2} e^{rT} P(K_i) + \sum_{K_i \geq \kappa} \frac{\Delta K_i}{K_i^2} e^{rT} C(K_i) \\
+    \tilde{\E} \left[ \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
+    &= \int^{K_0}_{0} \frac{\tilde{\E}(K-S_T)^+ }{K^2} dK + \int^{\infty}_{K_0} \frac{\tilde{\E}(S_T-K)^+}{K^2} dK \\
+    &= \int^{K_0}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{K_0} \frac{e^{rT}C(K)}{K^2} dK \\
+    &\approx \sum_{K_i < K_0} \frac{\Delta K_i}{K_i^2} e^{rT} P(K_i) + \sum_{K_i \geq K_0} \frac{\Delta K_i}{K_i^2} e^{rT} C(K_i) \\
     &= \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i)
 \end{align*}
 
-将上式中$\kappa$改写为$K_0$，最终得到方差计算如下：
+最终得到方差计算如下：
 \begin{equation*}
     \boxed{
         \sigma^2 = \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i) - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 
     }
 \end{equation*}
 
-VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。因此需要将两个期限的方差分别计算并加权平均：
+VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。因此需要将两个不同期限的方差进行线性插值即可得到：
 \begin{equation*}
     \text{VIX} = 100 \times \sqrt{ \left\{ T_1 \sigma^2_1 \left[ \frac{N_{T_2} - N_{30}}{N_{T_2}-N_{T_1}}\right] + T_2 \sigma^2_2 \left[ \frac{N_{30} - N_{T_1}}{N_{T_2}-N_{T_1}}\right] \right\}\times \frac{N_{365}}{N_{30}} }
 \end{equation*}
 
 \subsubsection*{简化推导}
 
-也可以将$\frac{dS_t}{S_t}$与$d\ln S_t$两式相减，进消去随机波动项$\sigma_t dZ_t$则有方差为：
+将$\frac{dS_t}{S_t}$与$d\ln S_t$两式相减，进消去随机波动项$\sigma_t dZ_t$则有方差为：
 \begin{align*}
     \text{Variance} &= \frac{1}{T} \int^T_0 \sigma^2 dt \\
     &= \frac{2}{T} \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
@@ -812,37 +815,35 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \Var &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right] \\
     &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 rdt + \int^T_0\sigma dZ_t  - \ln \frac{S_T}{S_0} \right] \\
     &= \frac{2}{T} \tilde{\E} \left[ rT  - \ln \frac{S_T}{S_0} \right] \\
-    &= ???
+    &= \frac{2}{T} \tilde{\E} \left[ \ln S_0 e^{rT} -\ln K_0 + \ln K_0 - \ln S_T \right] \\
+    &= \frac{2}{T} \tilde{\E} \left[ \ln \frac{S_0 e^{rT}}{K_0} - \ln \frac{S_T}{K_0} \right] \\
+    &= \frac{2}{T} \tilde{\E} \left[ \ln \frac{F}{K_0} - \ln \frac{S_T}{K_0} \right]
 \end{align*}
 
-
-
-其中对数项$\ln\frac{S_T}{S_0}$包含随机变量$S_T$，可用以下两种方式进行计算。
-
 \subsubsection*{方法1：积分型余项的泰勒公式}
-在Carr和Wu（2006）《A Tale of Two Indices》中使用了带积分余项（Integral form of the remainder）的泰勒公式进行求解（三种余项分别为：积分余项、Lagrange余项和Peano余项）。令$f(x) = \ln x$，$x=S_T$，$a=S_0$和$n=1$，则有：
+在Carr和Wu（2006）《A Tale of Two Indices》中使用了带积分余项（Integral form of the remainder）的泰勒公式进行求解（三种余项分别为：积分余项、Lagrange余项和Peano余项）。令$f(x) = \ln x$，$x=F$，$a=K_0$和$n=1$，则有：
 \begin{equation*}
-    f(S_T) = \frac{f(S_0)}{0!}(S_T-S_0)^0 + \frac{f'(S_0)}{1!}(S_T-S_0)^1 + \frac{1}{1!} \int^{S_T}_{S_0} f''(K) (S_T - K)^1 dK
+    f(F) = \frac{f(K_0)}{0!}(F-K_0)^0 + \frac{f'(K_0)}{1!}(F-K_0)^1 + \frac{1}{1!} \int^{F}_{K_0} f''(K) (F - K)^1 dK
 \end{equation*}
 
 整理后得到：
 \begin{equation*}
-    \ln S_T = \ln S_0 + \frac{S_T-S_0}{S_0} - \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK
+    \ln F = \ln K_0 + \frac{F - K_0}{K_0} - \int^{F}_{K_0} \frac{F-K}{K^2} dK
 \end{equation*}
 
 由于不能确定$S_T$与$S_0$之间的大小，因此将最后一项积分分解。第一项为$S_T \geq S_0$的情形，而第二项为$S_T \leq S_0$的情形：
 \begin{equation*}
-    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{S_0}_{S_T} \frac{(K-S_T)^+}{K^2} dK + \int^{S_T}_{S_0} \frac{(S_T-K)^+}{K^2} dK
+    \int^{F}_{K_0} \frac{F-K}{K^2} dK = \int^{K_0}_{F} \frac{(K-F)^+}{K^2} dK + \int^{F}_{K_0} \frac{(F-K)^+}{K^2} dK
 \end{equation*}
 
-由于$S_T$为随机变量在积分的上下限不方便处理，因此将其改写，加入积分为零的部分：
+由于$F$为随机变量在积分的上下限不方便处理，因此将其改写，加入积分为零的部分：
 \begin{equation*}
-    \int^{S_T}_{S_0} \frac{S_T-K}{K^2} dK = \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK 
+    \int^{F}_{K_0} \frac{F-K}{K^2} dK = \int^{K_0}_{0} \frac{(K-F)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(F-K)^+}{K^2} dK 
 \end{equation*}
 
 整理可得：
 \begin{equation*}
-    \ln S_T = \ln S_0 + \frac{S_T-S_0}{S_0} - \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK - \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK 
+    \ln F = \ln K_0 + \frac{F-K_0}{K_0} - \int^{K_0}_{0} \frac{(K-F)^+}{K^2} dK - \int^{\infty}_{K_0} \frac{(F-K)^+}{K^2} dK 
 \end{equation*}
 
 \subsubsection*{狄拉克$\delta$函数性质}
@@ -966,11 +967,11 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 \end{property}
 
 \subsubsection*{方法2：狄拉克$\delta$函数}
-参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting property改写函数为积分形式，并将积分分解为两部分（$\kappa$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
+参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting property改写函数为积分形式，并将积分分解为两部分（$K_0$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
 \begin{align*}
     f(F) &= \int^{\infty}_{0}f(K)\delta(F-K)dK \\
-    &= \int^{\kappa}_{0}f(K)\delta(F-K)dK + \int^{\infty}_{\kappa}f(K)\delta(F-K)dK \\
-    &= \int^{\kappa}_{0}f(K)\delta(K-F)dK + \int^{\infty}_{\kappa}f(K)\delta(F-K)dK
+    &= \int^{K_0}_{0}f(K)\delta(F-K)dK + \int^{\infty}_{K_0}f(K)\delta(F-K)dK \\
+    &= \int^{K_0}_{0}f(K)\delta(K-F)dK + \int^{\infty}_{K_0}f(K)\delta(F-K)dK
 \end{align*}
 
 使用分部积分法（Integration by parts）将积分项进行分解，即$\int u dv = uv - \int v du$，或具体而言：
@@ -981,10 +982,10 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 已知对于狄拉克$\delta$函数可使用赫维赛德阶跃函数或指示函数表示其积分。令$u=f(K)$，$u'=f'(K)$，$v'=\delta(K-F)$，$1$，因此对于第一项积分有：
 \begin{align*}
-    \int^{\kappa}_{0}f(K)\delta(K-F)dK 
-    &= \bigg[ f(K) \mathbbm{1}(F<K) \bigg]^{\kappa}_{0} - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK \\ 
-    &= f(\kappa) \mathbbm{1}(F<\kappa) - \cancel{f(0)\mathbbm{1}(F<0)} - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK \\
-    &= f(\kappa)\mathbbm{1}(F<\kappa) - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK
+    \int^{K_0}_{0}f(K)\delta(K-F)dK 
+    &= \bigg[ f(K) \mathbbm{1}(F<K) \bigg]^{K_0}_{0} - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK \\ 
+    &= f(K_0) \mathbbm{1}(F<K_0) - \cancel{f(0)\mathbbm{1}(F<0)} - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK \\
+    &= f(K_0)\mathbbm{1}(F<K_0) - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK
 \end{align*}
 
 同理对于第二项积分，令$u=f(K)$，$du = f'(K)dK$，$dv=\delta(F-K)dK$，此时需注意链式法则，如对$H(F-K)$求导应有：
@@ -994,53 +995,53 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 因此有$v=-H(F-K)=-\mathbbm{1}(F -K \geq 0)=-\mathbbm{1}(F \geq K)$ ，得到：
 \begin{align*}
-    \int^{\infty}_{\kappa} f(K)\delta(F-K)dK 
-    &= \bigg[ - f(K) \mathbbm{1}(F \geq K) \bigg]^{\infty}_{\kappa} + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK \\
-    &= - \cancel{f(\infty) \mathbbm{1}(F\geq \infty)} + f(\kappa) \mathbbm{1}(F\geq \kappa ) + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK \\
-    &= f(\kappa) \mathbbm{1}(F\geq \kappa ) + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK
+    \int^{\infty}_{K_0} f(K)\delta(F-K)dK 
+    &= \bigg[ - f(K) \mathbbm{1}(F \geq K) \bigg]^{\infty}_{K_0} + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK \\
+    &= - \cancel{f(\infty) \mathbbm{1}(F\geq \infty)} + f(K_0) \mathbbm{1}(F\geq K_0 ) + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK \\
+    &= f(K_0) \mathbbm{1}(F\geq K_0 ) + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK
 \end{align*}
 
 将两部分积分代入原式整理可得：
 \begin{align*}
-    f(F) &=  f(\kappa)\mathbbm{1}(F<\kappa) + f(\kappa)\mathbbm{1}(F \geq \kappa)
-    - \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK 
-    + \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F \geq K) dK
+    f(F) &=  f(K_0)\mathbbm{1}(F<K_0) + f(K_0)\mathbbm{1}(F \geq K_0)
+    - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK 
+    + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK
 \end{align*}
 
-再次使用分部积分法继续分解上式中的两项积分。对于指示函数的积分$\int^{\kappa}_{0}\mathbbm{1}(F<K) dK$，即计算高度为1的矩形面积。其宽度为$F$至积分上限$\kappa$，如果$F<\kappa$则有其积分（面积）为$\kappa-F$；如过$F>\kappa$，则有积分值为0：
+再次使用分部积分法继续分解上式中的两项积分。对于指示函数的积分$\int^{K_0}_{0}\mathbbm{1}(F<K) dK$，即计算高度为1的矩形面积。其宽度为$F$至积分上限$K_0$，如果$F<K_0$则有其积分（面积）为$K_0-F$；如过$F>K_0$，则有积分值为0：
 \begin{equation*}
-    \int^{\kappa}_{0}\mathbbm{1}(F<K) dK =
+    \int^{K_0}_{0}\mathbbm{1}(F<K) dK =
     \begin{cases}
-        \kappa - F \; & F<\kappa \\
-        0 \; & F>\kappa
+        K_0 - F \; & F<K_0 \\
+        0 \; & F>K_0
     \end{cases}
     \quad \Leftrightarrow \quad
-    (\kappa - F)^+
+    (K_0 - F)^+
 \end{equation*}
 
 或令$u=f'(K)$，$du=f''(K)dK$，$dv=\mathbbm{1}(F<K)dK$，$v=(K-F)^+$，因此第一项积分有：
 \begin{align*}
-    \int^{\kappa}_{0} f'(K) \mathbbm{1}(F<K) dK 
-    &= \bigg[ f'(K)(K-F)^+ \bigg]^{\kappa}_{0} - \int^{\kappa}_{0} f''(K) (K-F)^+ dK \\
-    &= f'(\kappa)(\kappa-F)^+ - \cancel{f'(0)(0-F)^+} - \int^{\kappa}_{0} f''(K) (K-F)^+ dK \\
-    &= f'(\kappa)(\kappa - F)^+ - \int^{\kappa}_{0} f''(K) (K-F)^+ dK
+    \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK 
+    &= \bigg[ f'(K)(K-F)^+ \bigg]^{K_0}_{0} - \int^{K_0}_{0} f''(K) (K-F)^+ dK \\
+    &= f'(K_0)(K_0-F)^+ - \cancel{f'(0)(0-F)^+} - \int^{K_0}_{0} f''(K) (K-F)^+ dK \\
+    &= f'(K_0)(K_0 - F)^+ - \int^{K_0}_{0} f''(K) (K-F)^+ dK
 \end{align*}
 
 对于第二项积分，令$u=f'(K)$，$du=f''(K)dK$，同时需注意链式法则带来的符号改变$dv=\mathbbm{1}(F \geq K)dK$，$v=-(F-K)^+$：
 \begin{align*}
-    \int^{\infty}_{\kappa} f'(K) \mathbbm{1}(F\geq K) dK 
-    &= \bigg[ -f'(K)(F-K)^+ \bigg]^{\infty}_{\kappa} + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK \\
-    &= - \cancel{f'(\infty)(F - \infty)^+} + f'(\kappa)(F - \kappa)^+ + \int^{\kappa}_{0} f''(K) (F-K)^+ dK \\
-    &= f'(\kappa)(F - \kappa)^+ + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK
+    \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F\geq K) dK 
+    &= \bigg[ -f'(K)(F-K)^+ \bigg]^{\infty}_{K_0} + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK \\
+    &= - \cancel{f'(\infty)(F - \infty)^+} + f'(K_0)(F - K_0)^+ + \int^{K_0}_{0} f''(K) (F-K)^+ dK \\
+    &= f'(K_0)(F - K_0)^+ + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK
 \end{align*}
 
 整理，最终结果为：
 \begin{align*}
-    f(F) &= f(\kappa)\mathbbm{1}(F<\kappa) + f(\kappa)\mathbbm{1}(F \geq \kappa) \\
-    &\quad - \left[ f'(\kappa)(\kappa - F)^+ - \int^{\kappa}_{0} f''(K) (K-F)^+ dK \right]
-    + \left[ f'(\kappa)(F - \kappa)^+ + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK \right] \\
-    & = f(\kappa) + f'(\kappa) \left[ (F-\kappa)^+ - (\kappa - F)^+ \right] + \int^{\kappa}_{0} f''(K) (K-F)^+ dK + \int^{\kappa}_{0} f''(K) (F-K)^+ dK \\
-    & = f(\kappa) + f'(\kappa) (F-\kappa) + \int^{\kappa}_{0} f''(K) (K-F)^+ dK + \int^{\infty}_{\kappa} f''(K) (F-K)^+ dK
+    f(F) &= f(K_0)\mathbbm{1}(F<K_0) + f(K_0)\mathbbm{1}(F \geq K_0) \\
+    &\quad - \left[ f'(K_0)(K_0 - F)^+ - \int^{K_0}_{0} f''(K) (K-F)^+ dK \right]
+    + \left[ f'(K_0)(F - K_0)^+ + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK \right] \\
+    & = f(K_0) + f'(K_0) \left[ (F-K_0)^+ - (K_0 - F)^+ \right] + \int^{K_0}_{0} f''(K) (K-F)^+ dK + \int^{K_0}_{0} f''(K) (F-K)^+ dK \\
+    & = f(K_0) + f'(K_0) (F-K_0) + \int^{K_0}_{0} f''(K) (K-F)^+ dK + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK
 \end{align*}
 
 \subsubsection*{含义}
@@ -1048,17 +1049,10 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 观察分解式，可以理解为对数期货的盈亏分解式，或人造对数合约（synthetic log-future）的合成。其中包含了四个部分：等式左边为对数期货多头；等式右边第一项为持有了$\frac{1}{S_0}$份的期货多头；第二项为持有$\frac{1}{K^2}$份，期限为$T$，行权价在$0$与$S_0$之间的认沽期权空头的组合；同样，第三项为$\frac{1}{K^2}$份，期限为$T$，行权价在$S_0$与$\infty$之间的认购期权空头的组合。
 \begin{equation*}
     \boxed{
-        \ln S_T - \ln S_0 = \frac{S_T-S_0}{S_0} - \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK - \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK 
+        \ln F - \ln K_0 = \frac{F-K_0}{K_0} - \int^{K_0}_{0} \frac{(K-F)^+}{K^2} dK - \int^{\infty}_{K_0} \frac{(F-K)^+}{K^2} dK 
     }
 \end{equation*}
 
-对期权进行定价往往采用风险中性定价法，在风险中性的世界里，所有资产的预期收益率都等于无风险利率。同样对于未来一段时间内的波动率平均值的估计也可以认为是一种广义的“定价”，因此从t时刻到到期日T这段时间内的广义波动率被定义为风险中性的世界里从0时刻到T时刻期间的方差序列的平均值的平方根，其方差可以表示为：
-\begin{align*}
-    \sigma^2_{T} &= \frac{1}{T} \tilde{\E}\left[ \int^T_0 \sigma^2_s ds \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 \frac{d S_t}{S_t} - \ln \frac{S_T}{S_0} \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 \frac{d S_t}{S_t} - \frac{S_T-S_0}{S_0} + \int^{S_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{S_0} \frac{(S_T-K)^+}{K^2} dK \right] \\
-    &= \frac{2}{T} \\
-\end{align*}
 
 \subsection{典型实证现象}
 

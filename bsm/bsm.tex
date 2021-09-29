@@ -1,7 +1,9 @@
 \documentclass[11pt]{article}
-\usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
+\usepackage[a4paper,left=4em,right=4em,top=4em,bottom=4em]{geometry}
 \usepackage{amsmath,amsfonts,amsthm,bbm}
 \usepackage{booktabs,float,multirow}
+\usepackage{enumitem}
+\setitemize{leftmargin=2em,itemsep=0em}
 \usepackage{cancel}
 \usepackage{graphicx}
 \usepackage{footmisc}
@@ -35,40 +37,30 @@
 
 \tableofcontents
 
-\section{布朗运动、维纳过程}
+\section{布朗运动与维纳过程}
 
-布朗运动（Brownian motion）指是微小粒子或者颗粒在流体中做无规则运动。在数学中将这种运动定义为维纳过程（Wiener process）是一种连续时间随机过程，为描述证券价格随机性的基本模型，而对于期权以及其他的金融衍生品则可认为是证券价格的函数，此时衍生品价格为证券价格这一随机过程的函数。使得我们可以利用随机分析（Stochastic calculus）这一工具，对期权以及其他金融衍生品的价格进行量化建模。早在1900年法国人路易斯 • 巴舍利耶（Louis Bachelier）在他的博士论文《投机理论》（Théorie de la spéculation）中首次使用随机过程（现称布朗运动）分析股票和期权的价格。比爱因斯坦于1905年提出的描述花粉粒子在水中运动的论文提早了5年。
+\textbf{布朗运动}（Brownian motion）指是微小粒子或者颗粒在流体中做无规则运动。在数学中将这种运动定义为\textbf{维纳过程}（Wiener process）是一种连续时间随机过程，为描述证券价格随机性的基本模型，而对于期权以及其他的金融衍生品则可认为是证券价格的函数，此时衍生品价格为证券价格这一随机过程的函数。即只需要假定标的资产遵循的随机过程，利用伊藤引理可得到衍生品遵循随机过程，使得我们可以利用随机分析（Stochastic calculus）这一工具，对期权以及其他金融衍生品的价格进行量化建模。早在1900年法国人路易斯 • 巴舍利耶（Louis Bachelier）在他的博士论文《投机理论》（Théorie de la spéculation）中首次使用随机过程（现称布朗运动）分析股票和期权的价格。比爱因斯坦于1905年提出的描述花粉粒子在水中运动的论文提早了5年。
 
 标准布朗运动（Standard Brownian motion）简易表达式（连续形式）有，其中$\varepsilon \sim N(0,1)$：
 \begin{equation*}
-    dZ_t = \varepsilon_t \sqrt{dt}
+    dW_t = \varepsilon_t \sqrt{dt}
 \end{equation*}
 
 离散形式有：
 \begin{equation*}
-    Z_T - Z_t = \sum^n_{i=1} \varepsilon_i \sqrt{\Delta t}
+    W_T - W_t = \sum^n_{i=1} \varepsilon_i \sqrt{\Delta t}
 \end{equation*}
 
 \subsection{特征}
 
 布朗运动或维纳过程，为定义在非负时域t上连续随机过程。虽然连续但其\textbf{处处不可微分}，其特征有：
 \begin{itemize}
-    \setlength{\itemsep}{0em}
     \item 初值为零
-    \item 独立增量：对于任意两个不同时间点$\Delta t_i$与$\Delta t_j$，其增量$\Delta Z_i$与$\Delta Z_j$相互独立
-    \item 平稳性：增量$\Delta Z$服从均值为零、方差等于时间长度的正态分布，即$\Delta Z_i  \sim N(0,\Delta t_i)$
+    \item 独立增量：对于任意两个不同时间点$\Delta t_i$与$\Delta t_j$，其增量$\Delta W_i$与$\Delta W_j$相互独立
+    \item 平稳性：增量$\Delta W$服从均值为零、方差等于时间长度的正态分布，即$\Delta W_i \sim N(0,\Delta t_i)$
 \end{itemize}
 
 并且由如上性质可知，布朗运动是一个马尔科夫过程（Markov process），即该过程在任意t时刻之后的位置，仅和t时刻的位置有关，与之前的历史轨迹无关。即该过程的当前值就包含了对其未来做预测所需的全部信息。并且由于其虽然连续，但处处不可微分的性质，使得几个点微积分无法使用，只能使用伊藤微积分（Itô calculus）进行运算。
-
-\subsection{为何使用标准布朗运动}
-
-\begin{itemize}
-    \setlength{\itemsep}{0em}
-    \item 股价不能为负，所以不能遵循正态分布，但股票连续复利收益率（$d\ln S$）近似服从正态分布
-    \item 维纳过程是一个马尔可夫随机过程，增量$\Delta Z$独立，与弱式EMH相同，即技术分析无效，无法使用历史信息预测未来，过去信息跟未来信息相互独立
-    \item 维纳过程对时间处处不可导，且二次变分（Quadratic Variation）不为零，与股票价格变化存在转折尖点的性质相符
-\end{itemize}
 
 \subsection{部分证明}
 
@@ -82,6 +74,7 @@
     \E(dZ_t) = \E(\varepsilon_t \sqrt{dt}) = 0
 \end{equation*}
 
+应为方差有：
 \begin{align*}
     \Var(dZ_t) & = \Var( \varepsilon_t \sqrt{dt}) \\
     & =  \Var(\varepsilon_t) \Var(\sqrt{dt}) + [\E(\varepsilon_t)]^2 \Var(\sqrt{dt}) + [E(\sqrt{dt})]^2 \Var(\varepsilon_t) \\
@@ -97,10 +90,10 @@
      & + \Cov(X_1,X_2) + \Cov(X_2,X_3) + \Cov(X_1,X_3)
 \end{align*}
 
-由上可知，增量在连续形式$dZ_t$以及离散形式$Z_T-Z_t$下，均服从均值为零，方差为时间长度的正态分布，即有：
+由上可知，增量在连续形式$dW_t$以及离散形式$W_T-W_t$下，均服从均值为零，方差为时间长度的正态分布，即有：
 \begin{align*}
-    dZ_t & \sim N(0,dt) \\
-    Z_T - Z_t & \sim N(0,T-t)
+    dW_t & \sim N(0,dt) \\
+    W_T - W_t & \sim N(0,T-t)
 \end{align*}
 
 \subsection{二次变差（Quadratic variation）}
@@ -110,45 +103,48 @@
     \sum^{N-1}_{i=0} \left[ f(t_{i+1} - f(t_i)) \right]^2
 \end{equation*}
 
-对于一个连续且在$[0,T]$中处处可微的函数$f(t)$。利用微分中值定理，可以看到随着时间的越来越细的划分，$\left\Vert\Pi \right\Vert$趋近于零，则应有处处可微的连续函数，在区间$[0,T]$的二次变分为0。
+对于一个连续且在$[0,T]$中处处可微的函数$f(t)$，$t_{i^*} \in [t_{i},t_{i+1}]$，利用微分中值定理，可以看到随着时间的越来越细的划分，$\left\Vert\Pi \right\Vert$趋近于零。则可得到处处可微的连续函数，在区间$[0,T]$的二次变分为0。
 \begin{align*}
-    \sum_i \left[ f(t_{i+1}) -f(t_{i}) \right]^2 
-    &= \sum_i f'(s_i)^2 (t_{i+1} - t_{i})^2 \\
-    &\leq \max_{s\in [0,T]}f'(s)^2 \cdot \sum_i (t_{i+1} -t_{i})^2 \\
-    &\leq \max_{s\in [0,T]}f'(s)^2 \cdot \max\limits_{i}(t_{i+1} -t_{i})\cdot T
+    \sum_{i=0}^{N-1} \left[ f(t_{i+1}) -f(t_{i}) \right]^2 
+    &= \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i})^2 \\
+    &= \left\Vert \Pi \right\Vert \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i})
 \end{align*}
 
-而对于布朗运动$B(t)$，虽然连续，但处处不可微分：
-对于Brown运动，其非零的二次变分说明随机性使得它的波动太频繁，以至于不管我们如何细分区间、得到多么微小的划分区间T，这些微小区间上的位移差的平方逐段累加起来的总和(二次变分的几何意义)都不会消失（即二次变分不为0），而是等于这个区间的长度T
+于是有：
+\begin{align*}
+    [f,f](T) &= \lim\limits_{||\Pi|| \rightarrow 0} \left\Vert \Pi \right\Vert \left[ \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i}) \right] \\
+    &= \lim\limits_{||\Pi|| \rightarrow 0} \left\Vert \Pi \right\Vert \cdot \lim\limits_{||\Pi|| \rightarrow 0} \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i}) \\
+    &= \lim\limits_{||\Pi|| \rightarrow 0} \left\Vert \Pi \right\Vert \cdot \int^T_0 f'(t_{i^*})^2 dt = 0
+\end{align*}
 
-布朗运动的二次变差可写为$(dB)^2=dt$
+证明需要假设$\int^T_0 f'(t_{i^*})^2 dt$为有限，如果为无限则会出现$0\cdot \infty$的情形。
 
 \begin{thm}
-    设$\Pi=\{0=t_0<t_1<t_2<\dots<t_N=T\}$为$[0,T]$的分划。则对应的样本二次变差有：
+    设$\Pi=\{0=t_0<t_1<t_2<\dots<t_N=T\}$为$[0,T]$的分划。布朗运动对应的样本二次变差有：
     \begin{align*}
-        Q_{\Pi} = \sum_{i=0}^{N-1} \left[ B(t_{i+1}) - B(t_{i}) \right]^2 = T \qquad \text{almost surely.}
+        Q_{\Pi} = \sum_{i=0}^{N-1} \left[ W(t_{i+1}) - W(t_{i}) \right]^2 = T \qquad \text{almost surely.}
     \end{align*}
 \end{thm}
 
 \begin{proof}
     样本二次变差为独立随机变量所组成，因此其均值为这些随机变量的均值，方差为这些随机变量方差之和。并且有$\Var X = \E X^2 - \E^2 X $：
     \begin{equation*}
-        \E [(B(t_{i+1}) - B(t_{i}))^2] = \Var [B(t_{i+1}) - B(t_{i})] + \E^2 [B(t_{i+1}) - B(t_{i})]= t_{i+1} - t_{i}
+        \E [(W(t_{i+1}) - W(t_{i}))^2] = \Var [W(t_{i+1}) - W(t_{i})] + \E^2 [W(t_{i+1}) - W(t_{i})]= t_{i+1} - t_{i}
     \end{equation*}
 
     由此可以得到：
     \begin{equation*}
         \lim\limits_{\left\Vert\Pi\right\Vert \rightarrow 0} \E(Q_{\Pi})
-        = \sum_{i=0}^{N-1} \E \left[(B(t_{i+1}) - B(t_{i}))^2 \right]
+        = \sum_{i=0}^{N-1} \E \left[(W(t_{i+1}) - W(t_{i}))^2 \right]
         =  \sum_{i=0}^{N-1} (t_{i+1} - t_{i}) = T
     \end{equation*}
 
     对于方差，应有：
     \begin{equation*}
-        \Var [(B(t_{i+1}) - B(t_{i}))^2] = \E [(B(t_{i+1}) - B(t_{i}))^4] - \E^2 [(B(t_{i+1}) - B(t_{i}))^2]
+        \Var [(W(t_{i+1}) - W(t_{i}))^2] = \E [(W(t_{i+1}) - W(t_{i}))^4] - \E^2 [(W(t_{i+1}) - W(t_{i}))^2]
     \end{equation*}
 
-    对于四次方项$\E [(B(t_{i+1}) - B(t_{i}))^4]$，可通过对正态分布矩母函数$M_X(t)$对$t$不断求导得到其期望，需求四阶导数$M_X^{(4)}(t)$：
+    对于四次方项$\E [(W(t_{i+1}) - W(t_{i}))^4]$，可通过对正态分布矩母函数$M_X(t)$对$t$不断求导得到其期望，需求四阶导数$M_X^{(4)}(t)$：
     \begin{align*}
         M_X(t) &= \E(e^{xt}) = e^{\mu t + \frac{1}{2} \sigma^2 t^2} \\
         M'_X(t) &= (\mu + \sigma^2 t)e^{\mu t + \frac{1}{2} \sigma^2 t^2} \\
@@ -157,21 +153,21 @@
         M^{(4)}_X(t) &= (\mu^4 + 4 \mu^3 \sigma^2 t + 6 \mu^2 \sigma^4 t^2 + 6\mu^2 \sigma^2 + 4\mu\sigma^6 t^3 + 12\mu\sigma^4 t + \sigma^8 t^4 + 6\sigma^6 t^2 + 3\sigma^4)e^{\mu t +\frac{1}{2} \sigma^2 t^2}
     \end{align*}
 
-    因为$B(t_{i+1}) - B(t_{i}) \sim N(0,t_{i+1}-t_{i})$，其均值$\mu=0$计算四阶中心矩$M_X^{(4)}(0) = 3\sigma^2$，令$t=0$：
+    因为$W(t_{i+1}) - W(t_{i}) \sim N(0,t_{i+1}-t_{i})$，其均值$\mu=0$计算四阶中心矩$M_X^{(4)}(0) = 3\sigma^2$，令$t=0$：
     \begin{equation*}
-        \E [(B(t_{i+1}) - B(t_{i}))^4] = 3(t_{i+1}-t_{i})^2 
+        \E [(W(t_{i+1}) - W(t_{i}))^4] = 3(t_{i+1}-t_{i})^2 
     \end{equation*}
 
     因此可继续计算单个时间间隔的方差：
     \begin{align*}
-        \Var [(B(t_{i+1}) - B(t_{i}))^2] &= \E [(B(t_{i+1}) - B(t_{i}))^4] - \E^2 [(B(t_{i+1}) - B(t_{i}))^2] \\
+        \Var [(W(t_{i+1}) - W(t_{i}))^2] &= \E [(W(t_{i+1}) - W(t_{i}))^4] - \E^2 [(W(t_{i+1}) - W(t_{i}))^2] \\
         &= 3(t_{i+1}-t_{i})^2 - (t_{i+1}-t_{i})^2 \\
         &= 2(t_{i+1}-t_{i})^2
     \end{align*}
 
     因此在$[0,T]$的方差为：
     \begin{align*}
-        \Var(Q_{\Pi}) &= \sum_{i=0}^{N-1} \Var \left[(B(t_{i+1}) - B(t_{i}))^2 \right] \\
+        \Var(Q_{\Pi}) &= \sum_{i=0}^{N-1} \Var \left[(W(t_{i+1}) - W(t_{i}))^2 \right] \\
         &=  \sum_{i=0}^{N-1} 2(t_{i+1}-t_{i})^2
         \leq \sum_{i=0}^{N-1} 2\left\Vert \Pi \right\Vert (t_{i+1}-t_{i}) \\
         &= 2\left\Vert \Pi \right\Vert \sum_{i=0}^{N-1} (t_{i+1}-t_{i}) \\
@@ -194,43 +190,107 @@
     \begin{equation*}
         \lim_{\left\Vert\Pi\right\Vert \rightarrow 0} Q_{\Pi} = \E Q_\Pi = T
     \end{equation*}
-    
 \end{proof}
 
-
-
+可以看到而对于布朗运动$B(t)$，虽然连续但处处不可微分，使得其无法像其他连续可微分函数一样计算二次变差。其非零的二次变分说明随机性使得它的波动太频繁，以至于不管我们如何细分区间、得到多么微小的划分区间T，累加这些微小区间上的变化总和，二次变分都不会消失（即二次变分不为0），而是等于这个区间的长度T。布朗运动的二次变差可简写为无穷小量，为$(dB)^2=dt$。其中无穷小量在英文中应为differential或infinitesimal difference，其中infinitesimal即infinitely small。
 
 \subsection{几种随机过程}
 
-\textbf{随机微分方程}（Stochastic differential equation，SDE）指的是包含随机过程的微分方程。
-
-
-\textbf{广义维纳过程}（generalized Wiener process），a与b为常数。此时，易知其均值为$\E(dX_t) = adt$，由于$b$为常数，且$\Var(dZ_t)=dt$，则有方差为$\Var(dX_t)=b^2 dt$。
+\textbf{广义维纳过程}（generalized Wiener process），a与b为常数。此时，易知其均值为$\E(dX_t) = adt$，由于$b$为常数，且$\Var(dW_t)=dt$，则有方差为$\Var(dX_t)=b^2 dt$。
 \begin{equation*}
-    dX_t =a dt + b dZ_t
+    dX_t = a dt + b dW_t
 \end{equation*}
 
-\textbf{普通布朗运动}，a(t)与b(t)都是t的确定性函数。由于都为确定函数，所以如上可知，其均值方差为$\E(dX_t) = a(t)dt$，由于$b$为常数，且$\Var(dZ_t)=dt$，则有方差为$\Var(dX_t)=b(t)^2 dt$。
+\textbf{普通布朗运动}，a(t)与b(t)都是t的确定性函数。由于都为确定函数，所以如上可知，其均值方差为$\E(dX_t) = a(t)dt$，由于$b$为常数，且$\Var(dW_t)=dt$，则有方差为$\Var(dX_t)=b(t)^2 dt$。
 \begin{equation*}
-    dX_t =a(t) dt + b(t) dZ_t
+    dX_t = a(t) dt + b(t) dW_t
 \end{equation*}
 
 \textbf{伊藤扩散过程}（Itô diffusion），此时$a(X(t),t)$与$b(X(t),t)$都为$X_t$和$t$的确定性函数。由于漂移项与方差项都包含$X(t)$，使得扩散之后过程的条件分布无法保证仍是正态分布。但更能刻画一般动态变化，未加入新的风险源，仍具有独立增量，马尔可夫性，和方差可加性等性质。
 \begin{equation*}
-    dX_t =a(X(t),t) dt + b(X(t),t) dZ_t
+    dX_t =a(X(t),t) dt + b(X(t),t) dW_t
 \end{equation*}
+
+以上都为\textbf{随机微分方程}（Stochastic differential equation，SDE），与普通微分方程的延伸，特指的是包含随机过程的微分方程。\textbf{注意}：虽然$B(t)$处处不可微，单$dB(t)$指布朗运动在一个无限小的时间间隔内的变化。
 
 \section{伊藤引理（Itô lemma）}
 
-若变量$X_t$遵循如下随机过程：
+\subsection{古典微积分为何失效}
+
+有了随机过程$X_t$或维纳过程$W_t$，由于衍生品价格是标的资产价格$S_t$与时间$t$的函数。我们就需要进一步研究随机过程的函数，研究$f$在无穷小的时间间隔内的变化，即$df(\cdot)$。由上在分析二次变差可以发现，由于布朗运动处处不可微的性质，使得古典微积分无法适用于随机过程。日本数学家伊藤清（Itō Kiyoshi）提出伊藤微积分解决了这一问题。
+
+对于古典的微积分中的链式法则，由于布朗运动处处不可微分，即$dW_t/dt$不存在，使得等式无意义。
 \begin{equation*}
-    dX_t =\mu_t dt + \sigma_t dW_t
+    \frac{df(W_t)}{dt} = f'(W_t)\frac{dW_t}{dt}
 \end{equation*}
 
-在导数$\dfrac{\partial f}{\partial t}$、$\dfrac{\partial f}{\partial X}$与$\dfrac{\partial^2 f}{\partial X^2}$存在的前提下，则有变量$X_t$和$t$的函数$f(X(t),t)$将遵循如下过程：
+对于函数$f(x)$使用泰勒展开，应有：
 \begin{equation*}
-    df(X_t,t) = \left(\frac{\partial f}{\partial t} + \mu_t \frac{\partial f}{\partial x} + \frac{1}{2} \sigma_t^2 \frac{\partial^2 f}{\partial x^2} \right)dt + \sigma_t \frac{\partial f}{\partial X} dW_t
+    f(x + \Delta x) - f(x)= f'(x)(\Delta x) + \frac{1}{2} f''(x)(\Delta x)^2 + \frac{1}{6} f'''(x)(\Delta x)^3 + \dots
 \end{equation*}
+
+对于普通变量$X$，可以发现当$\Delta x$趋近于$0$时，除了第一项，其他项都为高阶小量，因此均可被忽略，因此其无穷小量形式应为$df=f'(x)dx$。而对于随机变量$W_t$，进行泰勒展开：
+\begin{equation*}
+    df = f(W_t + \Delta W_t) - f(W_t)= f'(W_t)(\Delta W_t) + \frac{1}{2} f''(W_t)(\Delta W_t)^2 + \frac{1}{6} f'''(W_t)(\Delta W_t)^3 + \dots
+\end{equation*}
+
+与普通随机变量相同的是第一项需要保留，但第二项对于普通随机变量来说已经是高阶小量了，但对于随机过程变量$W_t$，已知其二次变差为$(dW_t)^2 = dt$，与第一项为同阶，不能忽略。而从第三项开始之后的所有项才可以被忽略，因此得到伊藤引理的最基本形式：
+\begin{equation*}
+    df(W_t) =f'(W_t)dW_t + \frac{1}{2}f''(W_t)dt
+\end{equation*}
+
+\subsection{伊藤引理与证明}
+
+\begin{lemma}
+    假设变量$X_t$遵循如下随机过程：
+    \begin{equation*}
+        dX_t =\mu_t dt + \sigma_t dW_t
+    \end{equation*}
+
+    在导数$\dfrac{\partial f}{\partial t}$、$\dfrac{\partial f}{\partial X}$与$\dfrac{\partial^2 f}{\partial X^2}$存在的前提下，则有变量$X_t$和$t$的函数$f(X(t),t)$将遵循如下过程：
+    \begin{equation*}
+        df(X_t,t) = \left(\frac{\partial f}{\partial t} + \mu_t \frac{\partial f}{\partial x} + \frac{1}{2} \sigma_t^2 \frac{\partial^2 f}{\partial x^2} \right)dt + \sigma_t \frac{\partial f}{\partial X} dW_t
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    $f(X,t)$的泰勒展开式为：
+    \begin{equation*}
+        \Delta f_t = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2}\Delta X^2  + \frac{\partial f}{\partial X \partial t}\Delta X \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial t^2} \Delta t^2 + \dots
+    \end{equation*}
+
+    当$\Delta t \rightarrow 0$时，$(\Delta t)^2$，认为是高阶无穷小，可忽略。而对于$\Delta X \Delta t$项有：
+    \begin{align*}
+        \Delta X &= a\Delta t + b \varepsilon\sqrt{\Delta t} \\
+        \Delta X \Delta t &= a(\Delta t)^2 + b \varepsilon(\Delta t)^{3/2}
+    \end{align*}
+
+    其中的$(\Delta t)^{3/2}$项，也被认为时高阶无穷小项，可忽略。同时由于$(\Delta X)^2$项中包含$\Delta t$项，因此需要保留。仅考虑前三项，展开得到：
+    \begin{align*}
+        \Delta f_t & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2}\Delta X^2 \\
+        & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} [a\Delta t + b\varepsilon\sqrt{\Delta t}]^2 \\
+        & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 \varepsilon^2 \Delta t
+    \end{align*}
+
+    对于$\varepsilon^2 \Delta t$项，由于$\varepsilon \sim N(0,1)$，因此有$\E(\varepsilon)=0$。又因$\Var(\varepsilon)=\E(\varepsilon^2)-[\E(\varepsilon)]^2=1$，得到$\E(\varepsilon^2)=1$，同时有$\E(\varepsilon^2 \Delta t) = \Delta t$。计算$\varepsilon^2 \Delta t$的方差可得：
+    \begin{align*}
+        \Var(\varepsilon^2 \Delta t) & = \Var(\varepsilon^2) \Var(\Delta t) + [\E(\varepsilon^2)]^2 \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon^2) \\
+        & = \Var(\varepsilon^2) \Var(\Delta t) + 1 \cdot \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon_t^2) \\
+        & = \mathcal{O}(\Delta t^2)
+    \end{align*}
+
+    可以认为$\varepsilon^2 \Delta t$方差为高阶无穷小，其期望为$1$。因此，可认为$\varepsilon^2 \Delta t \approx \Delta t$，可将原式化简为：
+    \begin{equation*}
+        \Delta f_t = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 \Delta t
+    \end{equation*}
+
+    而连续形式为：
+    \begin{align*}
+        df_t & = \frac{\partial f}{\partial X}  dX_t + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
+        & = \frac{\partial f}{\partial X} (a_t dt + b_t dZ_t) + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
+        & = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dZ_t
+    \end{align*}
+\end{proof}
 
 为方便记忆，可记为（金融随机分析第二卷 P118）：
 \begin{equation*}
@@ -246,55 +306,19 @@
     }
 \end{equation*}
 
-\subsection*{证明}
-
-$f(X,t)$的泰勒展开式为：
-\begin{equation*}
-    \Delta f_t = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2}\Delta X^2  + \frac{\partial f}{\partial X \partial t}\Delta X \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial t^2} \Delta t^2 + \dots
-\end{equation*}
-
-当$\Delta t \rightarrow 0$时，$(\Delta t)^2$，认为是高阶无穷小，可忽略。而对于$\Delta X \Delta t$项有：
-\begin{align*}
-    \Delta X &= a\Delta t + b \varepsilon\sqrt{\Delta t} \\
-    \Delta X \Delta t &= a(\Delta t)^2 + b \varepsilon(\Delta t)^{3/2}
-\end{align*}
-
-其中的$(\Delta t)^{3/2}$项，也被认为时高阶无穷小项，可忽略。同时由于$(\Delta X)^2$项中包含$\Delta t$项，因此需要保留。因此仅考虑前三项（\textbf{注意}：此与常微分不同，而在常微分中，$(\Delta X)^2$项是也是高阶无穷小项），展开得到：
-\begin{align*}
-    \Delta f_t & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2}\Delta X^2 \\
-    & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} [a\Delta t + b\varepsilon\sqrt{\Delta t}]^2 \\
-    & = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 \varepsilon^2 \Delta t
-\end{align*}
-
-对于$\varepsilon^2 \Delta t$项，由于$\varepsilon \sim N(0,1)$，因此有$\E(\varepsilon)=0$。又因$\Var(\varepsilon)=\E(\varepsilon^2)-[\E(\varepsilon)]^2=1$，得到$\E(\varepsilon^2)=1$，同时有$\E(\varepsilon^2 \Delta t) = \Delta t$。计算$\varepsilon^2 \Delta t$的方差可得：
-\begin{align*}
-    \Var(\varepsilon^2 \Delta t) & = \Var(\varepsilon^2) \Var(\Delta t) + [\E(\varepsilon^2)]^2 \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon^2) \\
-    & = \Var(\varepsilon^2) \Var(\Delta t) + 1 \cdot \Var(\Delta t) + [E(\Delta t)]^2 \Var(\varepsilon_t^2) \\
-    & = \mathcal{O}(\Delta t^2)
-\end{align*}
-
-可以认为$\varepsilon^2 \Delta t$方差为高阶无穷小，其期望为$1$。因此，可认为$\varepsilon^2 \Delta t \approx \Delta t$，可将原式化简为：
-\begin{equation*}
-    \Delta f_t = \frac{\partial f}{\partial X} \Delta X + \frac{\partial f}{\partial t} \Delta t + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 \Delta t
-\end{equation*}
-
-而连续形式为：
-\begin{align*}
-    df_t & = \frac{\partial f}{\partial X}  dX_t + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
-    & = \frac{\partial f}{\partial X} (a_t dt + b_t dZ_t) + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
-    & = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dZ_t
-\end{align*}
-
 \section{几何布朗运动}
 
-\subsection{推导}
+由上可知随机过程$X(t)$随着时间$t$的变化，可能为负数，但股票价格显然不可能为负。收益率却有正有负，因此可以使用$X(t)$来描绘收益率。假设$S_t$为股票价格，可以假设其百分比收益率遵循如下随机过程：
+\begin{equation*}
+    \frac{dS_t}{S_t} = \mu dt + \sigma dZ_t
+\end{equation*}
 
-由于衍生品价格是标的资产价格与时间的函数，即只需要假定标的资产遵循过程，即可用伊藤引理求得其衍生品遵循过程。假设股票价格服从几何布朗运动（Geometric Brownian Motion，GBM）：
+因此$S_t$的随机微分形式如下，此时股票价格$S_t$服从\textbf{几何布朗运动}（Geometric Brownian Motion，GBM）：
 \begin{equation*}
     dS_t = \mu S_t dt + \sigma S_t dZ_t
 \end{equation*}
 
-令$f_t = \ln S_t$，此时：
+令$f(S_t) = \ln S_t$，此时：
 \begin{equation*}
     \frac{\partial f}{\partial S} = \frac{1}{S_t}, \quad
     \frac{\partial^2 f}{\partial S^2} = -\frac{1}{S_t^2}, \quad
@@ -323,10 +347,15 @@ $f(X,t)$的泰勒展开式为：
     \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{equation*}
 
-\subsection{注意}
+可以看到选择几何布朗运动描绘股票价格$S_t$有如下几大优点：
+\begin{itemize}[leftmargin=4em]
+    \item 正态分布：经验事实证明，股票价格的连续复利收益率，近似地服从正态分布
+    \item 马尔科夫过程：由布朗运动的性质可知，利用几何布朗运动描绘的股票价格是一个马尔科夫过程，即当前价格就包含了对其未来做预测所需的全部信息，这与弱有效市场假说相符
+    \item 布朗运动在时间上处处不可微以及二次变分不为零的性质符合股票收益率在时间上存在转折尖点的特征。
+\end{itemize}
 
-\begin{itemize}
-    \setlength{\itemsep}{0em}
+在实际使用过程，与进行计算的过程中有如下\text{注意点}
+\begin{itemize}[leftmargin=4em]
     \item 在计算时，期限、漂移率（无风险利率）、波动率的时间单位应匹配（一般以年为单位，使用交易日计算）
     \item 由于只有交易日才有历史数据与收益率数据，波动率使用交易天数进行年化，中国240天左右，美国252天
     \item 无风险利率选择即期利率（Spot rate）而非到期收益率（YTM，真实收益率，票息5\%，但非平价发行）
@@ -585,7 +614,6 @@ $f(X,t)$的泰勒展开式为：
 
 \subsection{假设}
 \begin{itemize}
-    \setlength{\itemsep}{0em}
     \item 人性假设
     \begin{itemize}
         \item 不存在无风险套利机会（无套利）
@@ -748,7 +776,6 @@ $f(X,t)$的泰勒展开式为：
 
 以上只是最基础的计算日内高频波动率的方法，还有其他的计算日内波动率的方式如：
 \begin{itemize}
-    \setlength{\itemsep}{0em}
     \item Garman和Klass（1980）
     \item Andersen和Bollerslev（1998）
     \item Hansen和Lunde（2005）
@@ -760,7 +787,6 @@ $f(X,t)$的泰勒展开式为：
 随机波动率模型指随机过程的波动率为随机变量。
 % https://en.wikipedia.org/wiki/Stochastic_volatility
 \begin{itemize}
-    \setlength{\itemsep}{0em}
     \item Heston model
     \item SABR
     \item CEV（Constant elasticity of variance model）
@@ -1448,7 +1474,6 @@ Long put, long delta stock/ short put, short delta stock
 \subsubsection*{原理}
 假设使用多项式$P(x) = c_0 + c_1 (x-a) + c_2 (x-a)^2 + \dots$近似原函数。则应有多项式与原函数，从零阶导开始至$n$阶导，在$x=a$点的取值都与原函数相同（即从单个点，提取原函数所有导数信息）：
 \begin{itemize}
-    \setlength{\itemsep}{0em}
     \item $x-a$使得带入a进行计算时，除了当前导数对应次数的项之外都等于零。如原函数在$a$点的二阶导$f''(a)$，对应泰勒级数$x$二次项的系数$c_2$：一阶导为$P'(x) = c_1 + 2c_2(x-a)+\dots$，二阶导为$P''(x) = 2c_2 + 3c_3(x-a)^2 + \dots$，则有$P''(a) = 2c_2 = f''(a)$，此时$c_2 = \tfrac{f''(a)}{2}$
     \item 小于当前求导次数的泰勒级数项，由于求导都为零（如上所示求二阶导后，常数项与一次项都为0），使得多项式每一项的系数$c_n$都独立对应原函数n阶导数值
     \item 系数为$\frac{1}{n!}$是为了取消多次求导的影响，如$P'''(x)=3 \cdot 2 \cdot 1 \cdot c_3(x-a) + \cdots$
@@ -1570,7 +1595,6 @@ Long put, long delta stock/ short put, short delta stock
 
 且在中国市场中现货存在较大的做空限制，即在现货市场的价格由看多者和少量看空者决定，并不能反应所有投资者的真实情绪，以至于难以复制期权，违法BSM公式假设条件。解决方法有：
 \begin{enumerate}
-    \setlength{\itemsep}{0em}
     \item 使用期货进行贴现，得到其隐含现货价格，使用BSM进行计算，其中有：
     \begin{itemize}
         \item 期货隐含现货价格

@@ -1,7 +1,11 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
 \usepackage{amsmath,amsfonts,amsthm,cancel}
-% \usepackage{cases}
+% === math cases ===
+\usepackage{cases}
+% === itemize ===
+\usepackage{enumitem}
+\setitemize{leftmargin=2em,itemsep=0em}
 % === graph packages ===
 % \usepackage{tikz}
 % \usetikzlibrary{trees,matrix}
@@ -62,8 +66,7 @@
 \end{align*}
 
 % shortcut bit
-\begin{itemize}
-	\setlength{\itemsep}{0em}
+\begin{itemize}[leftmargin=0em]
 	\item 1
 	\item 2
 	\item 3
@@ -71,7 +74,6 @@
 
 % shortcut ben
 \begin{enumerate}
-	\setlength{\itemsep}{0em}
 	\item 1
 	\item 2
 	\item 3

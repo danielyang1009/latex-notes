@@ -17,8 +17,8 @@
 \usepackage[UTF8]{ctex}
 
 \newcommand{\E}{\operatorname{E}}
-\newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
 
 % 根据chapter,section或subsection编号
 \newtheorem{thm}{定理}[subsection] 
@@ -37,7 +37,9 @@
 
 \section{布朗运动、维纳过程}
 
-标准布朗运动简易表达式（连续形式）有，其中$\varepsilon \sim N(0,1)$：
+布朗运动（Brownian motion）指是微小粒子或者颗粒在流体中做无规则运动。在数学中将这种运动定义为维纳过程（Wiener process）是一种连续时间随机过程，为描述证券价格随机性的基本模型，而对于期权以及其他的金融衍生品则可认为是证券价格的函数，此时衍生品价格为证券价格这一随机过程的函数。使得我们可以利用随机分析（Stochastic calculus）这一工具，对期权以及其他金融衍生品的价格进行量化建模。早在1900年法国人路易斯 • 巴舍利耶（Louis Bachelier）在他的博士论文《投机理论》（Théorie de la spéculation）中首次使用随机过程（现称布朗运动）分析股票和期权的价格。比爱因斯坦于1905年提出的描述花粉粒子在水中运动的论文提早了5年。
+
+标准布朗运动（Standard Brownian motion）简易表达式（连续形式）有，其中$\varepsilon \sim N(0,1)$：
 \begin{equation*}
     dZ_t = \varepsilon_t \sqrt{dt}
 \end{equation*}
@@ -48,14 +50,16 @@
 \end{equation*}
 
 \subsection{特征}
-\textbf{标准布朗运动（Brownian motion）或维纳过程（Wiener process）}的特征有：
+
+布朗运动或维纳过程，为定义在非负时域t上连续随机过程。虽然连续但其\textbf{处处不可微分}，其特征有：
 \begin{itemize}
     \setlength{\itemsep}{0em}
     \item 初值为零
-    \item 连续
     \item 独立增量：对于任意两个不同时间点$\Delta t_i$与$\Delta t_j$，其增量$\Delta Z_i$与$\Delta Z_j$相互独立
-    \item 独立同分布（方差可加）：增量$\Delta Z$服从均值为零、方差等于时间长度的正态分布，即$\Delta Z_i  \sim N(0,\Delta t_i)$
+    \item 平稳性：增量$\Delta Z$服从均值为零、方差等于时间长度的正态分布，即$\Delta Z_i  \sim N(0,\Delta t_i)$
 \end{itemize}
+
+并且由如上性质可知，布朗运动是一个马尔科夫过程（Markov process），即该过程在任意t时刻之后的位置，仅和t时刻的位置有关，与之前的历史轨迹无关。即该过程的当前值就包含了对其未来做预测所需的全部信息。并且由于其虽然连续，但处处不可微分的性质，使得几个点微积分无法使用，只能使用伊藤微积分（Itô calculus）进行运算。
 
 \subsection{为何使用标准布朗运动}
 
@@ -99,9 +103,109 @@
     Z_T - Z_t & \sim N(0,T-t)
 \end{align*}
 
+\subsection{二次变差（Quadratic variation）}
+
+考虑区间$[0,T]$，定义$\Pi=\{0=t_0<t_1<t_2<\dots<t_N=T\}$和最大步幅$\left\Vert\Pi \right\Vert = \max\limits_{i}(t_{i+1}-t_{i})$。为方便后续推导，假设步幅相同，即$t_{i+1} - t_{i} = \tfrac{T}{n}$。$s_i \in (t_i,t_{i+1})$,则有对于任意一个连续函数$f(t)$，其二次变差定义为：
+\begin{equation*}
+    \sum^{N-1}_{i=0} \left[ f(t_{i+1} - f(t_i)) \right]^2
+\end{equation*}
+
+对于一个连续且在$[0,T]$中处处可微的函数$f(t)$。利用微分中值定理，可以看到随着时间的越来越细的划分，$\left\Vert\Pi \right\Vert$趋近于零，则应有处处可微的连续函数，在区间$[0,T]$的二次变分为0。
+\begin{align*}
+    \sum_i \left[ f(t_{i+1}) -f(t_{i}) \right]^2 
+    &= \sum_i f'(s_i)^2 (t_{i+1} - t_{i})^2 \\
+    &\leq \max_{s\in [0,T]}f'(s)^2 \cdot \sum_i (t_{i+1} -t_{i})^2 \\
+    &\leq \max_{s\in [0,T]}f'(s)^2 \cdot \max\limits_{i}(t_{i+1} -t_{i})\cdot T
+\end{align*}
+
+而对于布朗运动$B(t)$，虽然连续，但处处不可微分：
+对于Brown运动，其非零的二次变分说明随机性使得它的波动太频繁，以至于不管我们如何细分区间、得到多么微小的划分区间T，这些微小区间上的位移差的平方逐段累加起来的总和(二次变分的几何意义)都不会消失（即二次变分不为0），而是等于这个区间的长度T
+
+布朗运动的二次变差可写为$(dB)^2=dt$
+
+\begin{thm}
+    设$\Pi=\{0=t_0<t_1<t_2<\dots<t_N=T\}$为$[0,T]$的分划。则对应的样本二次变差有：
+    \begin{align*}
+        Q_{\Pi} = \sum_{i=0}^{N-1} \left[ B(t_{i+1}) - B(t_{i}) \right]^2 = T \qquad \text{almost surely.}
+    \end{align*}
+\end{thm}
+
+\begin{proof}
+    样本二次变差为独立随机变量所组成，因此其均值为这些随机变量的均值，方差为这些随机变量方差之和。并且有$\Var X = \E X^2 - \E^2 X $：
+    \begin{equation*}
+        \E [(B(t_{i+1}) - B(t_{i}))^2] = \Var [B(t_{i+1}) - B(t_{i})] + \E^2 [B(t_{i+1}) - B(t_{i})]= t_{i+1} - t_{i}
+    \end{equation*}
+
+    由此可以得到：
+    \begin{equation*}
+        \lim\limits_{\left\Vert\Pi\right\Vert \rightarrow 0} \E(Q_{\Pi})
+        = \sum_{i=0}^{N-1} \E \left[(B(t_{i+1}) - B(t_{i}))^2 \right]
+        =  \sum_{i=0}^{N-1} (t_{i+1} - t_{i}) = T
+    \end{equation*}
+
+    对于方差，应有：
+    \begin{equation*}
+        \Var [(B(t_{i+1}) - B(t_{i}))^2] = \E [(B(t_{i+1}) - B(t_{i}))^4] - \E^2 [(B(t_{i+1}) - B(t_{i}))^2]
+    \end{equation*}
+
+    对于四次方项$\E [(B(t_{i+1}) - B(t_{i}))^4]$，可通过对正态分布矩母函数$M_X(t)$对$t$不断求导得到其期望，需求四阶导数$M_X^{(4)}(t)$：
+    \begin{align*}
+        M_X(t) &= \E(e^{xt}) = e^{\mu t + \frac{1}{2} \sigma^2 t^2} \\
+        M'_X(t) &= (\mu + \sigma^2 t)e^{\mu t + \frac{1}{2} \sigma^2 t^2} \\
+        M''_X(t) &= (\mu^2 + 2 \mu \sigma^2 t + \sigma^4 t^2 + \sigma^2)e^{\mu t +\frac{1}{2} \sigma^2 t^2} \\
+        M^{(3)}_X(t) &= (\mu^3 + 3 \mu^2 \sigma^2 t + 3\mu \sigma^4 t^2 + 3\mu \sigma^2 + \sigma^6 t^3 + 3\sigma^4 t)e^{\mu t +\frac{1}{2} \sigma^2 t^2} \\
+        M^{(4)}_X(t) &= (\mu^4 + 4 \mu^3 \sigma^2 t + 6 \mu^2 \sigma^4 t^2 + 6\mu^2 \sigma^2 + 4\mu\sigma^6 t^3 + 12\mu\sigma^4 t + \sigma^8 t^4 + 6\sigma^6 t^2 + 3\sigma^4)e^{\mu t +\frac{1}{2} \sigma^2 t^2}
+    \end{align*}
+
+    因为$B(t_{i+1}) - B(t_{i}) \sim N(0,t_{i+1}-t_{i})$，其均值$\mu=0$计算四阶中心矩$M_X^{(4)}(0) = 3\sigma^2$，令$t=0$：
+    \begin{equation*}
+        \E [(B(t_{i+1}) - B(t_{i}))^4] = 3(t_{i+1}-t_{i})^2 
+    \end{equation*}
+
+    因此可继续计算单个时间间隔的方差：
+    \begin{align*}
+        \Var [(B(t_{i+1}) - B(t_{i}))^2] &= \E [(B(t_{i+1}) - B(t_{i}))^4] - \E^2 [(B(t_{i+1}) - B(t_{i}))^2] \\
+        &= 3(t_{i+1}-t_{i})^2 - (t_{i+1}-t_{i})^2 \\
+        &= 2(t_{i+1}-t_{i})^2
+    \end{align*}
+
+    因此在$[0,T]$的方差为：
+    \begin{align*}
+        \Var(Q_{\Pi}) &= \sum_{i=0}^{N-1} \Var \left[(B(t_{i+1}) - B(t_{i}))^2 \right] \\
+        &=  \sum_{i=0}^{N-1} 2(t_{i+1}-t_{i})^2
+        \leq \sum_{i=0}^{N-1} 2\left\Vert \Pi \right\Vert (t_{i+1}-t_{i}) \\
+        &= 2\left\Vert \Pi \right\Vert \sum_{i=0}^{N-1} (t_{i+1}-t_{i}) \\
+        &= 2\left\Vert \Pi \right\Vert T
+    \end{align*}
+
+    由此可知当最大步幅$||\Pi||$趋近于零时，方差也将趋近于零：
+    \begin{align*}
+        \lim\limits_{\left\Vert\Pi\right\Vert \rightarrow 0} \Var(Q_{\Pi}) = 0
+    \end{align*}
+
+    利用切比雪夫不等式（Chebyshev's inequality）：
+    \begin{align*}
+        P(\left\vert Q_{\Pi} - \E(Q_{\Pi}) \right\vert &\geq \frac{1}{n}) \leq n^2 \Var(Q_{\Pi}) \\
+        \lim_{\left\Vert\Pi\right\Vert \rightarrow 0} P(\left\vert Q_{\Pi} - T ) \right\vert &\geq \frac{1}{n}) \leq n^2 \lim_{\left\Vert\Pi\right\Vert \rightarrow 0} \Var(Q_{\Pi})  \\
+        \lim_{n \rightarrow \infty} P(\left\vert Q_{\Pi} - T ) \right\vert &\geq \frac{1}{n}) = 0
+    \end{align*}
+    
+    因此在概率上几乎必然成立，即虽然有可能存在某些布朗运动使得其二次变差为T不成立，但这样的情形概率为0:
+    \begin{equation*}
+        \lim_{\left\Vert\Pi\right\Vert \rightarrow 0} Q_{\Pi} = \E Q_\Pi = T
+    \end{equation*}
+    
+\end{proof}
+
+
+
+
 \subsection{几种随机过程}
 
-\textbf{广义维纳过程（generalized Wiener process）}，a与b为常数。此时，易知其均值为$\E(dX_t) = adt$，由于$b$为常数，且$\Var(dZ_t)=dt$，则有方差为$\Var(dX_t)=b^2 dt$。
+\textbf{随机微分方程}（Stochastic differential equation，SDE）指的是包含随机过程的微分方程。
+
+
+\textbf{广义维纳过程}（generalized Wiener process），a与b为常数。此时，易知其均值为$\E(dX_t) = adt$，由于$b$为常数，且$\Var(dZ_t)=dt$，则有方差为$\Var(dX_t)=b^2 dt$。
 \begin{equation*}
     dX_t =a dt + b dZ_t
 \end{equation*}
@@ -111,14 +215,9 @@
     dX_t =a(t) dt + b(t) dZ_t
 \end{equation*}
 
-\textbf{扩散过程（Diffusion Process）}，此时$a(X(t),t)$与$b(X(t),t)$都为$X_t$和$t$的确定性函数。由于漂移项与方差项都包含$X(t)$，使得扩散之后过程的条件分布无法保证仍是正态分布。但更能刻画一般动态变化，未加入新的风险源，仍具有独立增量，马尔可夫性，和方差可加性等性质。
+\textbf{伊藤扩散过程}（Itô diffusion），此时$a(X(t),t)$与$b(X(t),t)$都为$X_t$和$t$的确定性函数。由于漂移项与方差项都包含$X(t)$，使得扩散之后过程的条件分布无法保证仍是正态分布。但更能刻画一般动态变化，未加入新的风险源，仍具有独立增量，马尔可夫性，和方差可加性等性质。
 \begin{equation*}
     dX_t =a(X(t),t) dt + b(X(t),t) dZ_t
-\end{equation*}
-
-\textbf{伊藤过程（Itô's Process）}，最一般化的随机过程，$a_t$和$b_t$为任意函数或随机过程。
-\begin{equation*}
-    dX_t =a_t dt + b_t dZ_t
 \end{equation*}
 
 \section{伊藤引理（Itô lemma）}

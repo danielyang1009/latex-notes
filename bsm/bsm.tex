@@ -1,13 +1,19 @@
 \documentclass[11pt]{article}
-\usepackage[a4paper,left=4em,right=4em,top=4em,bottom=4em]{geometry}
-\usepackage{amsmath,amsfonts,amsthm,bbm}
-\usepackage{booktabs,float,multirow}
-\usepackage{enumitem}
-\setitemize{leftmargin=2em,itemsep=0em}
+\usepackage[a4paper,left=6em,right=6em]{geometry}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{bbold}
 \usepackage{cancel}
+\usepackage{enumitem}
+\usepackage{booktabs,float,multirow}
+\usepackage[titletoc]{appendix}
+\usepackage{multicol}
 \usepackage{graphicx}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
 \usepackage{footmisc}
 \usepackage{hyperref}
+\usepackage{tocloft}
 \hypersetup{
     colorlinks=true, %set true if you want colored links
     linkcolor=blue,
@@ -18,15 +24,23 @@
 }
 \usepackage[UTF8]{ctex}
 
-\newcommand{\E}{\operatorname{E}}
-\newcommand{\Var}{\operatorname{Var}}
-\newcommand{\Cov}{\operatorname{Cov}}
+\setlength{\cftbeforesecskip}{6pt}
+\setlength{\parskip}{0.6em}
+\renewcommand{\baselinestretch}{1.3}
+\setlist{noitemsep,topsep=0em,leftmargin=4em}
+\setlist[2]{leftmargin=2em}
 
-% 根据chapter,section或subsection编号
-\newtheorem{thm}{定理}[subsection] 
-\newtheorem{definition}[thm]{定义}
-\newtheorem{lemma}[thm]{引理}
-\newtheorem{property}[thm]{性质}
+\newtheorem{thm}{定理}[section] 
+\newtheorem{defi}[thm]{定义}
+\newtheorem{lemm}[thm]{引理}
+\newtheorem{coro}[thm]{推论}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\rnE}{\widetilde{\mathbb{E}}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\abs}[1]{\left\lvert #1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
 
 \title{BSM公式}
 \author{杨弘毅}
@@ -96,25 +110,25 @@
     W_T - W_t & \sim N(0,T-t)
 \end{align*}
 
-\subsection{二次变差（Quadratic variation）}
+\subsection{二次变差}
 
-考虑区间$[0,T]$，定义$\Pi=\{0=t_0<t_1<t_2<\dots<t_N=T\}$和最大步幅$\left\Vert\Pi \right\Vert = \max\limits_{i}(t_{i+1}-t_{i})$。为方便后续推导，假设步幅相同，即$t_{i+1} - t_{i} = \tfrac{T}{n}$。$s_i \in (t_i,t_{i+1})$,则有对于任意一个连续函数$f(t)$，其二次变差定义为：
+考虑区间$[0,T]$，定义$\Pi=\{0=t_0<t_1<t_2<\dots<t_N=T\}$和最大步幅$\norm{\Pi} = \max\limits_{i}(t_{i+1}-t_{i})$。为方便后续推导，假设步幅相同，即$t_{i+1} - t_{i} = \tfrac{T}{n}$。$s_i \in (t_i,t_{i+1})$,则有对于任意一个连续函数$f(t)$，其二次变差（Quadratic variation）定义为：
 \begin{equation*}
     \sum^{N-1}_{i=0} \left[ f(t_{i+1} - f(t_i)) \right]^2
 \end{equation*}
 
-对于一个连续且在$[0,T]$中处处可微的函数$f(t)$，$t_{i^*} \in [t_{i},t_{i+1}]$，利用微分中值定理，可以看到随着时间的越来越细的划分，$\left\Vert\Pi \right\Vert$趋近于零。则可得到处处可微的连续函数，在区间$[0,T]$的二次变分为0。
+对于一个连续且在$[0,T]$中处处可微的函数$f(t)$，$t_{i^*} \in [t_{i},t_{i+1}]$，利用微分中值定理，可以看到随着时间的越来越细的划分，$\norm{\Pi}$趋近于零。则可得到处处可微的连续函数，在区间$[0,T]$的二次变分为0。
 \begin{align*}
     \sum_{i=0}^{N-1} \left[ f(t_{i+1}) -f(t_{i}) \right]^2 
     &= \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i})^2 \\
-    &= \left\Vert \Pi \right\Vert \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i})
+    &= \norm{\Pi} \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i})
 \end{align*}
 
 于是有：
 \begin{align*}
-    [f,f](T) &= \lim\limits_{||\Pi|| \rightarrow 0} \left\Vert \Pi \right\Vert \left[ \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i}) \right] \\
-    &= \lim\limits_{||\Pi|| \rightarrow 0} \left\Vert \Pi \right\Vert \cdot \lim\limits_{||\Pi|| \rightarrow 0} \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i}) \\
-    &= \lim\limits_{||\Pi|| \rightarrow 0} \left\Vert \Pi \right\Vert \cdot \int^T_0 f'(t_{i^*})^2 dt = 0
+    [f,f](T) &= \lim\limits_{\norm{\Pi} \rightarrow 0} \norm{\Pi} \left[ \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i}) \right] \\
+    &= \lim\limits_{\norm{\Pi} \rightarrow 0} \norm{\Pi} \cdot \lim\limits_{\norm{\Pi} \rightarrow 0} \sum_{i=0}^{N-1} f'(t_{i^*})^2 (t_{i+1} - t_{i}) \\
+    &= \lim\limits_{\norm{\Pi} \rightarrow 0} \norm{\Pi} \cdot \int^T_0 f'(t_{i^*})^2 dt = 0
 \end{align*}
 
 证明需要假设$\int^T_0 f'(t_{i^*})^2 dt$为有限，如果为无限则会出现$0\cdot \infty$的情形。
@@ -134,7 +148,7 @@
 
     由此可以得到：
     \begin{equation*}
-        \lim\limits_{\left\Vert\Pi\right\Vert \rightarrow 0} \E(Q_{\Pi})
+        \lim\limits_{\norm{\Pi} \rightarrow 0} \E(Q_{\Pi})
         = \sum_{i=0}^{N-1} \E \left[(W(t_{i+1}) - W(t_{i}))^2 \right]
         =  \sum_{i=0}^{N-1} (t_{i+1} - t_{i}) = T
     \end{equation*}
@@ -150,7 +164,8 @@
         M'_X(t) &= (\mu + \sigma^2 t)e^{\mu t + \frac{1}{2} \sigma^2 t^2} \\
         M''_X(t) &= (\mu^2 + 2 \mu \sigma^2 t + \sigma^4 t^2 + \sigma^2)e^{\mu t +\frac{1}{2} \sigma^2 t^2} \\
         M^{(3)}_X(t) &= (\mu^3 + 3 \mu^2 \sigma^2 t + 3\mu \sigma^4 t^2 + 3\mu \sigma^2 + \sigma^6 t^3 + 3\sigma^4 t)e^{\mu t +\frac{1}{2} \sigma^2 t^2} \\
-        M^{(4)}_X(t) &= (\mu^4 + 4 \mu^3 \sigma^2 t + 6 \mu^2 \sigma^4 t^2 + 6\mu^2 \sigma^2 + 4\mu\sigma^6 t^3 + 12\mu\sigma^4 t + \sigma^8 t^4 + 6\sigma^6 t^2 + 3\sigma^4)e^{\mu t +\frac{1}{2} \sigma^2 t^2}
+        M^{(4)}_X(t) &= (\mu^4 + 4 \mu^3 \sigma^2 t + 6 \mu^2 \sigma^4 t^2 + 6\mu^2 \sigma^2 + 4\mu\sigma^6 t^3 \\
+        &\qquad + 12\mu\sigma^4 t + \sigma^8 t^4 + 6\sigma^6 t^2 + 3\sigma^4)e^{\mu t +\frac{1}{2} \sigma^2 t^2}
     \end{align*}
 
     因为$W(t_{i+1}) - W(t_{i}) \sim N(0,t_{i+1}-t_{i})$，其均值$\mu=0$计算四阶中心矩$M_X^{(4)}(0) = 3\sigma^2$，令$t=0$：
@@ -169,26 +184,26 @@
     \begin{align*}
         \Var(Q_{\Pi}) &= \sum_{i=0}^{N-1} \Var \left[(W(t_{i+1}) - W(t_{i}))^2 \right] \\
         &=  \sum_{i=0}^{N-1} 2(t_{i+1}-t_{i})^2
-        \leq \sum_{i=0}^{N-1} 2\left\Vert \Pi \right\Vert (t_{i+1}-t_{i}) \\
-        &= 2\left\Vert \Pi \right\Vert \sum_{i=0}^{N-1} (t_{i+1}-t_{i}) \\
-        &= 2\left\Vert \Pi \right\Vert T
+        \leq \sum_{i=0}^{N-1} 2\norm{\Pi} (t_{i+1}-t_{i}) \\
+        &= 2\norm{\Pi} \sum_{i=0}^{N-1} (t_{i+1}-t_{i}) \\
+        &= 2\norm{\Pi} T
     \end{align*}
 
-    由此可知当最大步幅$||\Pi||$趋近于零时，方差也将趋近于零：
+    由此可知当最大步幅$\norm{\Pi}$趋近于零时，方差也将趋近于零：
     \begin{align*}
-        \lim\limits_{\left\Vert\Pi\right\Vert \rightarrow 0} \Var(Q_{\Pi}) = 0
+        \lim\limits_{\norm{\Pi} \rightarrow 0} \Var(Q_{\Pi}) = 0
     \end{align*}
 
     利用切比雪夫不等式（Chebyshev's inequality）：
     \begin{align*}
-        P(\left\vert Q_{\Pi} - \E(Q_{\Pi}) \right\vert &\geq \frac{1}{n}) \leq n^2 \Var(Q_{\Pi}) \\
-        \lim_{\left\Vert\Pi\right\Vert \rightarrow 0} P(\left\vert Q_{\Pi} - T ) \right\vert &\geq \frac{1}{n}) \leq n^2 \lim_{\left\Vert\Pi\right\Vert \rightarrow 0} \Var(Q_{\Pi})  \\
-        \lim_{n \rightarrow \infty} P(\left\vert Q_{\Pi} - T ) \right\vert &\geq \frac{1}{n}) = 0
+        P\left( \abs{Q_{\Pi} - \E(Q_{\Pi}} \geq \frac{1}{n} \right) &\leq n^2 \Var(Q_{\Pi}) \\
+        \lim_{\norm{\Pi} \rightarrow 0} P\left( \abs{Q_{\Pi} - T} \geq \frac{1}{n} \right) &\leq n^2 \lim_{\norm{\Pi} \rightarrow 0} \Var(Q_{\Pi})  \\
+        \lim_{\norm{\Pi} \rightarrow 0} P\left( \abs{Q_{\Pi} - T} \geq \frac{1}{n} \right) &= 0
     \end{align*}
     
     因此在概率上几乎必然成立，即虽然有可能存在某些布朗运动使得其二次变差为T不成立，但这样的情形概率为0:
     \begin{equation*}
-        \lim_{\left\Vert\Pi\right\Vert \rightarrow 0} Q_{\Pi} = \E Q_\Pi = T
+        \lim_{\norm{\Pi} \rightarrow 0} Q_{\Pi} = \E Q_\Pi = T
     \end{equation*}
 \end{proof}
 
@@ -213,7 +228,7 @@
 
 以上都为\textbf{随机微分方程}（Stochastic differential equation，SDE），与普通微分方程的延伸，特指的是包含随机过程的微分方程。\textbf{注意}：虽然$B(t)$处处不可微，单$dB(t)$指布朗运动在一个无限小的时间间隔内的变化。
 
-\section{伊藤引理（Itô lemma）}
+\section{伊藤引理}
 
 \subsection{古典微积分为何失效}
 
@@ -241,8 +256,8 @@
 
 \subsection{伊藤引理与证明}
 
-\begin{lemma}
-    假设变量$X_t$遵循如下随机过程：
+\begin{lemm}
+    伊藤引理（Itô lemma），假设变量$X_t$遵循如下随机过程：
     \begin{equation*}
         dX_t =\mu_t dt + \sigma_t dW_t
     \end{equation*}
@@ -251,7 +266,7 @@
     \begin{equation*}
         df(X_t,t) = \left(\frac{\partial f}{\partial t} + \mu_t \frac{\partial f}{\partial x} + \frac{1}{2} \sigma_t^2 \frac{\partial^2 f}{\partial x^2} \right)dt + \sigma_t \frac{\partial f}{\partial X} dW_t
     \end{equation*}
-\end{lemma}
+\end{lemm}
 
 \begin{proof}
     $f(X,t)$的泰勒展开式为：
@@ -287,12 +302,12 @@
     而连续形式为：
     \begin{align*}
         df_t & = \frac{\partial f}{\partial X}  dX_t + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
-        & = \frac{\partial f}{\partial X} (a_t dt + b_t dZ_t) + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
-        & = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dZ_t
+        & = \frac{\partial f}{\partial X} (a_t dt + b_t dW_t) + \frac{\partial f}{\partial t} dt + \frac{1}{2} \frac{\partial^2 f}{\partial X^2} b^2 dt \\
+        & = \left(\frac{\partial f}{\partial X}a_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial X^2} b^2_t \right)dt + \frac{\partial f}{\partial X} b_t dW_t
     \end{align*}
 \end{proof}
 
-为方便记忆，可记为（金融随机分析第二卷 P118）：
+由此可知，$f$作为随机过程$X$与时间$t$的函数，其本身也是一个随机过程。而$df_t$与$dX_t$的随机性\textbf{来源于同一布朗运动}$dW_t$，而非两个独立的布朗运动。为方便记忆，可记为（金融随机分析第二卷 P118）：
 \begin{equation*}
     \boxed{
         df(X(t),t) = f_t(X(t),t)dt + f_x(X(t),t)dX(t) + \frac{1}{2}f_{xx}(X(t),t)dX(t)dX(t)
@@ -310,12 +325,12 @@
 
 由上可知随机过程$X(t)$随着时间$t$的变化，可能为负数，但股票价格显然不可能为负。收益率却有正有负，因此可以使用$X(t)$来描绘收益率。假设$S_t$为股票价格，可以假设其百分比收益率遵循如下随机过程：
 \begin{equation*}
-    \frac{dS_t}{S_t} = \mu dt + \sigma dZ_t
+    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
 \end{equation*}
 
 因此$S_t$的随机微分形式如下，此时股票价格$S_t$服从\textbf{几何布朗运动}（Geometric Brownian Motion，GBM）：
 \begin{equation*}
-    dS_t = \mu S_t dt + \sigma S_t dZ_t
+    dS_t = \mu S_t dt + \sigma S_t dW_t
 \end{equation*}
 
 令$f(S_t) = \ln S_t$，此时：
@@ -327,22 +342,22 @@
 
 代入伊藤引理之中,此时$a_t=\mu S_t$，$b_t=\sigma S_t$，则有：
 \begin{align*}
-    df_t = d \ln S_t & = \left( \frac{1}{S_t}\mu S_t + 0 - \frac{1}{2} \frac{1}{S_t^2} \sigma^2 S_t^2 \right) dt + \frac{1}{S_t}\sigma S_t dZ_t \\
-    & = \left( \mu - \frac{1}{2}\sigma^2\right)dt + \sigma dZ_t
+    df_t = d \ln S_t & = \left( \frac{1}{S_t}\mu S_t + 0 - \frac{1}{2} \frac{1}{S_t^2} \sigma^2 S_t^2 \right) dt + \frac{1}{S_t}\sigma S_t dW_t \\
+    & = \left( \mu - \frac{1}{2}\sigma^2\right)dt + \sigma dW_t
 \end{align*}
 
 连续形式下有：
 \begin{equation*}
-    d\ln S = \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
+    d\ln S = \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dW_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right)
 \end{equation*}
 
 离散形式下为：
 \begin{align*}
-    \Delta \ln S &= \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \\
+    \Delta \ln S &= \ln S_T - \ln S_t = \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (W_T - W_t) \\
     \Delta \ln S &\sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
 \end{align*}
 
-可以看到\textbf{连续复利收益率}或\textbf{对数收益率}服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。对于日频收益率的计算，此时得到的正态分布均值以及方差均为日频（$T-t=\frac{1}{252}$），需乘以252进行年化，得到年化的收益率均值与波动率。在$T$时刻，\textbf{股票价格的对数}（$\ln S$），也服从\textbf{正态分布}（\textbf{股票价格}（$S$）服从\textbf{对数正态分布}）。
+可以看到\textbf{连续复利收益率}或\textbf{对数收益率}服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。对于日频收益率的计算，此时得到的正态分布均值以及方差均为日频（$T-t=\frac{1}{252}$），需乘以252进行年化，得到年化的收益率均值与波动率。在$T$时刻，\textbf{股票价格的对数}（$\ln S$），也服从\textbf{正态分布}，则有\textbf{股票价格}（$S$）服从\textbf{对数正态分布}。
 \begin{equation*}
     \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{equation*}
@@ -359,118 +374,9 @@
     \item 在计算时，期限、漂移率（无风险利率）、波动率的时间单位应匹配（一般以年为单位，使用交易日计算）
     \item 由于只有交易日才有历史数据与收益率数据，波动率使用交易天数进行年化，中国240天左右，美国252天
     \item 无风险利率选择即期利率（Spot rate）而非到期收益率（YTM，真实收益率，票息5\%，但非平价发行）
-    \item 波动率为一个时间窗口内（一般为年，252天交易日），日频连续复利收益率（对数收益率）（$\ln S_t/S_{t-1}$）标准差进行年化得到。即日波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$）。同理，月频收益率得到的波动率应乘以$\sqrt{252/21}$进行年化。
+    \item 波动率为一个时间窗口内（一般为年，252天交易日），日频连续复利收益率或对数收益率（$\ln\frac{S_{t+1}}{S_{t}}$）标准差进行年化得到。
+    \item 即日波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$）。同理，月频收益率得到的波动率应乘以$\sqrt{252/21}$进行年化。
 \end{itemize}
-
-\section{比例收益率与对数收益率}
-
-\subsection{分类}
-
-对于计算\textbf{单期}的收益率，可分为\textbf{百分比收益}或（Arithmetic return）或称为简单收益（Simple return），与
-\textbf{连续复利收益}（Continuously compounded return），或称为对数收益（Logarithmic return，或Log return）。记符号$r$为收益率（rate of return）为将一段时间的收益（return）$R$，转化为在标准化期限内的收益。对于标准化期限为一年的收益率，称为年化收益率（annulized return）。
-\begin{table}[H]
-\centering
-\begin{tabular}{@{}cll@{}}
-\toprule
-\multicolumn{1}{l}{}
-& \multicolumn{1}{c}{\textbf{百分比收益}} & \multicolumn{1}{c}{\textbf{对数收益}} \\
-\midrule
-\multirow{1}{*}{\textbf{单期}} 
-& $R_{pct} = \frac{V_T}{V_t}-1$
-& $R_{log} = \ln \frac{V_T}{V_t}$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-而计算\textbf{多期}的平均收益率，有\textbf{算术平均收益率}（Arithmetic mean rate of return），和\textbf{几何平均收益率}（Geometric mean rate of return）两种方式。其中算术平均收益率为：
-\begin{equation*}
-    \bar{r}_{arithmetic} = \frac{1}{n} \sum^{n}_{i=1} = \frac{1}{n} (r_1 + r_2 + \dots + r_n)
-\end{equation*}
-
-几何平均收益率为：
-\begin{equation*}
-    \bar{r}_{geometric} = \left( \prod^{n}_{i=1}(1+r_i) \right)^{\frac{1}{n}} - 1
-\end{equation*}
-
-\subsubsection*{百分比收益率}
-
-对于没有再投资（reinvestment）的百分比年化收益率为（$\tau$单位为年）：
-\begin{equation*}
-    r_{pct} = \frac{R_{pct}}{\tau}
-\end{equation*}
-
-对进行了再投资的百分比收益率为：
-\begin{align*}
-    1+R_{pct} &= (1+r_{pct})^\tau \\
-    r_{pct} &= (1+R_{pct})^{\frac{1}{\tau}} - 1
-\end{align*}
-
-对于单期或\textbf{多期}的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率，计算算术平均没有经济学意义。
-
-\subsubsection*{对数收益率}
-
-对数年化收益率为（t单位为年）：
-\begin{equation*}
-    r_{log} = \frac{R_{log}}{\tau}
-\end{equation*}
-
-假设一支股票在一个交易日内对数收益率$R_{log}=0.14\%$，平均一年有252个交易日（每个月21个交易日），则应有年化收益率为$r_{log} = \frac{R_{log}}{1/252} = 252R_{log} = 35.28\%$。即$V_t e^{r\tau} = V_T$，那么有$r = \frac{1}{\tau} \ln \frac{V_T}{V_t}$。同时因为根据对数收益率的性质，只需要将分段内收益率相加，即可得到整体收益率：
-\begin{align*}
-    R_{log} = \sum^{n}_{i=1} R_{log,i} & = R_{log,1} + R_{log,2} + \dots + R_{log,n} \\ 
-    &= \ln\frac{V_2}{V_1} + \ln\frac{V_1}{V_0} + \dots + \ln\frac{V_n}{V_{n-1}} \\
-    &= \cancel{\ln V_1} - \ln V_0 + \dots + \ln V_n - \cancel{\ln V_{n-1}} \\
-    &= \ln\frac{V_n}{V_0} 
-\end{align*}
-
-对于\textbf{多期}（多年）的对数收益，由于对数收益率可相机的性质，只需要计算其\textbf{算术平均}，即为其平均年化收益率。
-
-\subsection{期望}
-
-如上式所述，$\mu$为$\Delta t$时间内\textbf{百分比年化预期收益率}：
-\begin{equation*}
-    \E(\frac{\Delta S_t}{S_t}) = \mu \Delta t
-\end{equation*}
-
-而年化连续复利收益率或年化对数收益率的期望则为：
-\begin{equation*}
-    \E(d\ln S_t) = (\mu - \frac{\sigma^2}{2})dt
-\end{equation*}
-
-比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望值$\mu$为0，但实际上相比期起初有-43.75\%的亏损。使用几何平均计算，年化亏损$\sqrt[4]{1.5*0.5*1.5*0.5} - 1 = -13.40\%$。可以发现，在盈亏的计算上，应使用几何平均的方式计算，使用算术平均比例收益率没有意义。
-
-若使用对数收益率（模型），其期望为$\mu-\frac{\sigma^2}{2}$，即算术平均$\mu$需要减去$\frac{\sigma^2}{2}$。因此如果收益率越稳定，两者将越为接近。在此例子中百分比收益率均值为0，样本方差为$\frac{1}{3}$，此时对数收益率的期望为$-\frac{1}{6}\approx -16.67\%$。即波动越大，降低实际收益率，更符合现实情况，贴近几何平均收益率，具有经济学意义。计算实际对数收益率的算术平均为$2(\ln 1.5 + \ln 0.5)/4 = -14.38\%$。
-
-\subsection{性质}
-
-由上文可知，\textbf{对数收益率}或\textbf{连续复利收益率}的连续以及离散形式如下：
-\begin{align*}
-    d\ln S &= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right) \\
-    \Delta \ln S &= \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right) 
-\end{align*}
-
-已知正态分布有如下性质：$X_1$与$X_2$为两个独立的正态分布的随机变量（均值为$\mu_1$与$\mu_2$，标准差为$\sigma_1$与$\sigma_2$），则有随机变量$Y=X_1+X_2$服从均值为$\mu_1+\mu_2$，方差为$\sigma_1^2+\sigma_2^2$的正态分布。\textbf{注意}:为随机变量相加（Sum of normally distributed random variables），而非正态分布相叠加（Sum of normal distribution）。如图
-\ref{fig:mix-dist}所示，正态分布相叠加将产生混合分布（Mixture distribution）。
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=0.6\textwidth]{fig/gaussian-mixture-distribution.png}
-    \caption{混合分布}
-    \label{fig:mix-dist}
-\end{figure}
-
-由于对数收益率的的可叠加性（较长时间内的对数收益率可分解为较短时间间隔对数收益率相叠加）,并且利用上述正态分布性质，可知正态分布随机变量$d\ln S$（极短时间内）与叠加之后的$\Delta \ln S$（较长时间内）都应服从\textbf{正态分布}。
-
-对比\textbf{比例收益率}在极短时间内（连续形式）与较长时间内（离散形式）:
-\begin{align*}
-    \frac{dS_t}{S_t} &= \mu dt + \sigma dZ_t \\
-    \frac{\Delta S_t}{S_t} &= \mu \Delta t + \sigma(Z_T - Z_t)
-\end{align*}
-
-百分比收益率虽然在极短时间（连续形式）服从正态分布。由于分母$S_t$不断改变，并不能通过叠加的形式得到较长时间的分布，即：
-\begin{equation*}
-    \frac{S_n - S_0}{S_0} \neq \frac{S_1- S_0}{S_0} + \frac{S_2-S_1}{S_1} + \dots + \frac{S_{n}-S_{n-1}}{S_{n-1}}
-\end{equation*}
-
-\textbf{存疑}：比例收益率在较短时间与较长时间应该也服从正态分布，通过累加两者服从的分布相同，变量不同，仅都服从同一正态分布。与对数收益率相比漂移项不同。且现实中比例收益率取值范围为$[-100\%,+\inf)$，并不符合正态分布，这点与模型不符。$\Delta S$则不服从正态分布，随着$S_t$的变化，其均值与方差也在不断改变。
 
 \section{对数正态分布}
 
@@ -479,7 +385,7 @@
     \ln S_T \sim N(\mu,\sigma^2) \quad \leftrightarrow \quad S_T \sim \text{Log-normal}(\mu,\sigma^2)
 \end{align*}
 
-已知对数正态分布$X \sim \text{Log-normal}(\mu,\sigma^2)$，其期望与标准差为：
+对于对数正态分布$X \sim \text{Log-normal}(\mu,\sigma^2)$，其期望与标准差为：
 \begin{align*}
     \E(X) & = e^{\mu+\frac{\sigma^2}{2}} \\
     \Var(X) & = e^{2\mu+\sigma^2} (e^{\sigma^2}-1)
@@ -490,7 +396,12 @@
     \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{equation*}
 
-可知股票价格$S_T$服从对数正态分布，代入上式可知其期望及方差为：
+那么股票价格$S_T$服从如下对数正态分布：
+\begin{equation*}
+    S_T  \sim \text{Log-normal} \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
+\end{equation*}
+
+可求得股票价格得期望与方差为：
 \begin{align*}
     \E(S_T)   & = \exp\left( \ln S_t + (\mu - \frac{\sigma^2}{2})(T-t)+\frac{\sigma^2(T-t)}{2}\right) \\
     & = \exp \left( \ln S_t + \mu(T-t) \right) \\
@@ -545,7 +456,7 @@
     \label{fig:lognormal}
 \end{figure}
 
-\subsection{具体推导}
+\subsection{PDF推导}
 
 如上文所述，对于相同参数$\mu$与$\sigma^2$的正态分布与对数正态分布可以相互转化。两者互相经过转化后，其累积分布函数（Cumulative distribution fuction，CDF）相同。如图\ref{fig:lognormal}所示，假设随机变量$Y \sim N(\mu,\sigma^2)$ 服从正态分布，随机变量$X \sim \text{Log}N(\mu,\sigma^2)$，则应有如下关系，对服从对数正态分布的随机变量$X$取对数，使其转化为正态分布：
 \begin{equation*}
@@ -610,12 +521,122 @@
     &= e^{2\mu+\sigma^2}\left(e^{\sigma^2} - 1\right)\\
 \end{align*}
 
-\section{BSM 偏微分方程（PDE）}
+\section{比例收益率与对数收益率}
+
+\subsection{对比}
+
+对于计算\textbf{单期}的收益率，可分为\textbf{百分比收益}或（Arithmetic return）或称为简单收益（Simple return），与
+\textbf{连续复利收益}（Continuously compounded return），或称为对数收益（Logarithmic return，或Log return）。记符号$r$为收益率（rate of return）为将一段时间的收益（return）$R$，转化为在标准化期限内的收益。对于标准化期限为一年的收益率，称为年化收益率（annulized return）。
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+\multicolumn{1}{l}{}
+& \multicolumn{1}{c}{\textbf{百分比收益}} & \multicolumn{1}{c}{\textbf{对数收益}} \\
+\midrule
+\multirow{1}{*}{\textbf{单期}} 
+& $R_{pct} = \frac{V_T}{V_t}-1$
+& $R_{log} = \ln \frac{V_T}{V_t}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+而计算\textbf{多期}的平均收益率，有\textbf{算术平均收益率}（Arithmetic mean rate of return），和\textbf{几何平均收益率}（Geometric mean rate of return）两种方式。其中算术平均收益率为：
+\begin{equation*}
+    \bar{r}_{arithmetic} = \frac{1}{n} \sum^{n}_{i=1} = \frac{1}{n} (r_1 + r_2 + \dots + r_n)
+\end{equation*}
+
+几何平均收益率为：
+\begin{equation*}
+    \bar{r}_{geometric} = \left( \prod^{n}_{i=1}(1+r_i) \right)^{\frac{1}{n}} - 1
+\end{equation*}
+
+\subsubsection*{百分比收益率}
+
+对于没有再投资（reinvestment）的百分比年化收益率为（$\tau$单位为年）：
+\begin{equation*}
+    r_{pct} = \frac{R_{pct}}{\tau}
+\end{equation*}
+
+对进行了再投资的百分比收益率为：
+\begin{align*}
+    1+R_{pct} &= (1+r_{pct})^\tau \\
+    r_{pct} &= (1+R_{pct})^{\frac{1}{\tau}} - 1
+\end{align*}
+
+对于单期或\textbf{多期}的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率，计算算术平均没有经济学意义。
+
+\subsubsection*{对数收益率}
+
+对数年化收益率为（t单位为年）：
+\begin{equation*}
+    r_{log} = \frac{R_{log}}{\tau}
+\end{equation*}
+
+假设一支股票在一个交易日内对数收益率$R_{log}=0.14\%$，平均一年有252个交易日（每个月21个交易日），则应有年化收益率为$r_{log} = \frac{R_{log}}{1/252} = 252R_{log} = 35.28\%$。即$V_t e^{r\tau} = V_T$，那么有$r = \frac{1}{\tau} \ln \frac{V_T}{V_t}$。同时因为根据对数收益率的性质，只需要将分段内收益率相加，即可得到整体收益率：
+\begin{align*}
+    R_{log} = \sum^{n}_{i=1} R_{log,i} & = R_{log,1} + R_{log,2} + \dots + R_{log,n} \\ 
+    &= \ln\frac{V_2}{V_1} + \ln\frac{V_1}{V_0} + \dots + \ln\frac{V_n}{V_{n-1}} \\
+    &= \cancel{\ln V_1} - \ln V_0 + \dots + \ln V_n - \cancel{\ln V_{n-1}} \\
+    &= \ln\frac{V_n}{V_0} 
+\end{align*}
+
+对于\textbf{多期}（多年）的对数收益，由于对数收益率可相机的性质，只需要计算其\textbf{算术平均}，即为其平均年化收益率。
+
+\subsection{期望}
+
+如上式所述，$\mu$为$\Delta t$时间内\textbf{百分比年化收益率的期望}或预期收益率为$\mu$：
+\begin{equation*}
+    \E(\frac{\Delta S_t}{S_t}) = \mu \Delta t
+\end{equation*}
+
+而年化连续复利收益率或\textbf{年化对数收益率的期望}则为$\mu-\frac{\sigma^2}{2}$：
+\begin{equation*}
+    \E(d\ln S_t) = (\mu - \frac{\sigma^2}{2})dt
+\end{equation*}
+
+比例收益率在实际应用过程中意义较小，假设4年盈亏为$+50\%$，$-50\%$，$+50\%$，$-50\%$，其比例收益率期望值$\mu$为0，但实际上相比期起初有-43.75\%的亏损。使用几何平均计算，年化亏损$\sqrt[4]{1.5*0.5*1.5*0.5} - 1 = -13.40\%$。可以发现，在盈亏的计算上，应使用几何平均的方式计算，使用算术平均比例收益率没有意义。
+
+若使用对数收益率（模型），其期望为$\mu-\frac{\sigma^2}{2}$，即算术平均$\mu$需要减去$\frac{\sigma^2}{2}$。因此如果收益率越稳定，两者将越为接近。在此例子中百分比收益率均值为0，样本方差为$\frac{1}{3}$，此时对数收益率的期望为$-\frac{1}{6}\approx -16.67\%$。即波动越大，降低实际收益率，更符合现实情况，贴近几何平均收益率，具有经济学意义。计算实际对数收益率的算术平均为$2(\ln 1.5 + \ln 0.5)/4 = -14.38\%$。
+
+\subsection{性质}
+
+由上文可知，\textbf{对数收益率}或\textbf{连续复利收益率}的连续以及离散形式如下：
+\begin{align*}
+    d\ln S &= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right) \\
+    \Delta \ln S &= \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right) 
+\end{align*}
+
+已知正态分布有如下性质：$X_1$与$X_2$为两个独立的正态分布的随机变量（均值为$\mu_1$与$\mu_2$，标准差为$\sigma_1$与$\sigma_2$），则有随机变量$Y=X_1+X_2$服从均值为$\mu_1+\mu_2$，方差为$\sigma_1^2+\sigma_2^2$的正态分布。\textbf{注意}:为随机变量相加（Sum of normally distributed random variables），而非正态分布相叠加（Sum of normal distribution）。如图
+\ref{fig:mix-dist}所示，正态分布相叠加将产生混合分布（Mixture distribution）。
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/gaussian-mixture-distribution.png}
+    \caption{混合分布}
+    \label{fig:mix-dist}
+\end{figure}
+
+由于对数收益率的的可叠加性（较长时间内的对数收益率可分解为较短时间间隔对数收益率相叠加）,并且利用上述正态分布性质，可知正态分布随机变量$d\ln S$（极短时间内）与叠加之后的$\Delta \ln S$（较长时间内）都应服从\textbf{正态分布}。
+
+对比\textbf{比例收益率}在极短时间内（连续形式）与较长时间内（离散形式）:
+\begin{align*}
+    \frac{dS_t}{S_t} &= \mu dt + \sigma dZ_t \\
+    \frac{\Delta S_t}{S_t} &= \mu \Delta t + \sigma(Z_T - Z_t)
+\end{align*}
+
+百分比收益率虽然在极短时间（连续形式）服从正态分布。由于分母$S_t$不断改变，并不能通过叠加的形式得到较长时间的分布，即：
+\begin{equation*}
+    \frac{S_n - S_0}{S_0} \neq \frac{S_1- S_0}{S_0} + \frac{S_2-S_1}{S_1} + \dots + \frac{S_{n}-S_{n-1}}{S_{n-1}}
+\end{equation*}
+
+\textbf{存疑}：比例收益率在较短时间与较长时间应该也服从正态分布，通过累加两者服从的分布相同，变量不同，仅都服从同一正态分布。与对数收益率相比漂移项不同。且现实中比例收益率取值范围为$[-100\%,+\inf)$，并不符合正态分布，这点与模型不符。$\Delta S$则不服从正态分布，随着$S_t$的变化，其均值与方差也在不断改变。
+
+\section{BSM 偏微分方程（PDE方法）}
 
 \subsection{假设}
 \begin{itemize}
     \item 人性假设
-    \begin{itemize}
+    \begin{itemize}[leftmargin=2em]
         \item 不存在无风险套利机会（无套利）
     \end{itemize}
     \item 完美世界
@@ -657,30 +678,43 @@
 \begin{align*}
     \Delta \Pi_t & = -\Delta f_t + \frac{\partial f}{\partial S} \Delta S_t \\
     & = -\left[ \left(\frac{\partial f}{\partial S} \mu S_t  + \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t + \frac{\partial f}{\partial S} \sigma S_t \Delta Z_t \right] + \frac{\partial f}{\partial S} \left( \mu S_t \Delta t + \sigma S_t \Delta Z_t \right) \\
-    & = -\left( \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t \\
+    & = -\left( \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t
 \end{align*}
 
 由于此时组合消除了风险，因此组合只应获得无风险收益率：
 \begin{align*}
     \Delta \Pi_t & = r \Pi_t \Delta t \\
-    -\left( \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t & =  r \left( -f_t + \frac{\partial f}{\partial S} S_t \right) \Delta t \\
+    -\left( \frac{\partial f}{\partial t} + \frac{1}{2}\frac{\partial^2 f}{\partial S^2} \sigma^2 S_t^2 \right) \Delta t & =  r \left( -f_t + \frac{\partial f}{\partial S} S_t \right) \Delta t
 \end{align*}
 
-整理等式，消去$\Delta t$，即可得到\textbf{BSM偏微分方程}（Black-Scholes equation）：
+整理等式，消去$\Delta t$，即可得到\textbf{BSM偏微分方程}（Black-Scholes equation）。由于使用了Delta对冲的方法消除了其中的随机性，最终结果中并不包含任何随机过程，为普通的偏微分方程，为非随机微分方程。求解PDE需要给定的边界条件，如对于欧式看涨期权，其边界条件有当时间$t=T$到达其期限，期权价格$C=\max(S(T)-K,0)$。
 \begin{equation*}
     \frac{\partial f}{\partial t} + r S_t \frac{\partial f}{\partial S} + \frac{1}{2} \sigma^2 S_t^2 \frac{\partial^2 f}{\partial S^2} = r f_t
 \end{equation*}
 
 \section{BSM公式（鞅方法）}
 
-在风险中性世界中，无收益资产在$t$时刻，其看涨期权价值的期望为：
+\subsection{风险中性世界}
+
+\textbf{风险中性定价理论}就来源于BSM微分方程中的一个关键性质，在推导的过程中所有变量，如：股票价格、时间、波动率、无风险利率，均都不涉及投资者的风险偏好。在推导BSM微分方程中，使用Delta对冲方法消除了随机源之后。在不存在无风险套利的市场中，投资组合的收益率必须等于无风险收益率，否则就存在套利机会（\textbf{注意}：这一性质来源于无套利，而非假设）。因此最终结果中中并不包含预期收益率$\mu$，因为投资者对于风险的厌恶程度越高，其所要求的$\mu$也就越高。因此我们可以利用这个特点，即风险偏好在方程中不出现，即其可以随意取值，均不会影响方程的解。因此在计算期权价格中，可以使用任意风险偏好，而最简单的就是\textbf{假设所有投资者都是风险中性的}。所有投资的回报率期望均为无风险利率$r$，对风险中性的投资者而言，他们对风险的态度是中性的，因此不需要额外的风险溢酬。在一个风险中性世界里，任何现金流的现值都可以通过对其期望值以无风险利率贴现来得到。因此利用风险中性定价原理对衍生品定价的过程如下：
+\begin{itemize}
+    \item 假定标的资产的收益率期望为无风险利率（即假定$\mu=r$）
+    \item 计算衍生产品到期时收益的期望
+    \item 用无风险利率$r$对衍生品收益期望进行贴现。
+\end{itemize}
+
+风险中性定价是获得期权定价公式的一个人为工具或数学方法，其求得的解不但在风险中性世界中成立，在现实世界中也成立。当我们从风险中性世界换到风险厌恶世界时，两件事会发生：股票价格变动的增长率期望以及对衍生产品收益所必需使用的贴现率都将会变化，而这两种变化刚好相互抵消。
+
+\subsection{BSM期权定价公式}
+
+在风险中性世界中，看涨期权价值的期望为：
 \begin{equation*}
-    \tilde{\E}_t \left[ \max(S_T-K,0) \right]
+    \rnE_t \left[ \max(S_T-K,0) \right]
 \end{equation*}
 
-欧式看涨期权的现值应为其期望值以无风险利率进行贴现：
+欧式看涨期权的现值应为其在$T$时刻期望值以无风险利率进行贴现：
 \begin{equation*}
-    c = e^{-r(T-t)} \tilde{\E}_t \left[ \max(S_T-K,0) \right]
+    c = e^{-r(T-t)} \rnE_t \left[ \max(S_T-K,0) \right]
 \end{equation*}
 
 同时在风险中性世界下，漂移率$\mu$应等于无风险收益率r，因此有：
@@ -690,57 +724,93 @@
 
 已知：
 \begin{equation*}
-    S_T = S_t \exp\left[\left(r-\frac{\sigma^2}{2}\right)\left(T-t\right) + \sigma\left(Z_T - Z_t \right)\right]
+    S_T = S_t \exp\left[\left(r-\frac{\sigma^2}{2}\right)\left(T-t\right) + \sigma\left(W_T - W_t \right)\right]
 \end{equation*}
 
-已知$Y = \frac{Z_T - Z_t}{\sqrt{T-t}} \sim N(0,1)$，其概率密度函数（PDF）为：
+已知$Y = \frac{W_T - W_t}{\sqrt{T-t}} \sim N(0,1)$服从标准正态分布，其概率密度函数为：
 \begin{equation*}
     \varphi(y) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}y^2}
 \end{equation*}
 
 在风险中性下的期望，可以改写为如下积分的形式：
 \begin{align*}
-    \tilde{\E}_t \left[ \max(S_T-K,0) \right] & = \tilde{\E}_t \left[ S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \right]^+ \\
+    \rnE_t \left[ \max(S_T-K,0) \right] & = \rnE_t \left[ S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \right]^+ \\
     & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy
 \end{align*}
 
 当$S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}Y} - K \geq 0$时，有$y \geq \frac{ \ln (K/S_t) - (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}$，设其为$-d_2$，同时假设$d_1 = d_2 + \sigma \sqrt{T-t}$。
 \begin{align*}
-    \tilde{\E}_t \left[ \max(S_T-K,0) \right] & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy \\
+    \rnE_t \left[ \max(S_T-K,0) \right] & = \int_{-\infty}^{\infty} \left( S_t e^{(r-\frac{1}{2}\sigma^2)(T-t) + \sigma\sqrt{T-t}y} - K \right)^+ \varphi(y) dy \\
     & = S_t e^{(r-\frac{1}{2}\sigma^2)(T-t)} \int_{-d_2}^{\infty} e^{\sigma\sqrt{T-t} y} \varphi(y)dy - K\int_{-d_2}^{\infty} \varphi(y)dy \\
     & = S_t e^{(r-\frac{1}{2} \sigma^2) (T-t)} \int_{-d_2}^{\infty}{e^{\sigma\sqrt{T-t}y} \frac{1}{\sqrt{2\pi\ }}e^{-\frac{y^2}{2}}dy} - KN\left(d_2\right) \\
     & = S_t e^{r(T-t)} \int_{-d_2}^{\infty} \frac{1}{\sqrt{2\pi}} e^{\left( -\frac{\sigma^2 (T-t)}{2} + \sigma\sqrt{T-t}y - \frac{y^2}{2} \right)} dy - KN(d_2) \\
-    & = S_t e^{r(T-t)} \int_{y = -d_2}^{y = \infty} \frac{1}{\sqrt{2\pi}}e^{-\frac{\left(y-\sigma\sqrt{T-t}\right)^2}{2}}dy - KN(d_2) \quad \text{（换元法：$u =y -\sigma\sqrt{T-t}$）} \\
+    & = S_t e^{r(T-t)} \int_{y = -d_2}^{y = \infty} \frac{1}{\sqrt{2\pi}}e^{-\frac{\left(y-\sigma\sqrt{T-t}\right)^2}{2}}dy - KN(d_2) \\
+    &\hspace{4em} \text{（换元法：$u =y -\sigma\sqrt{T-t}$）} \\
     & =S_t e^{r(T-t)} \int_{u = -d_2-\sigma\sqrt{T-t}}^{u = \infty} \frac{1}{\sqrt{2\pi\ }}e^{-\frac{u^2}{2}}du - KN(d_2) \quad \text{（$dy = du$）} \\
     & = S_t e^{r(T-t)} \int_{-d_1}^{\infty} \frac{1}{\sqrt{2\pi}}e^{-\frac{u^2}{2}} du - KN(d_2) \\
     & = S_t e^{r(T-t)}N(d_1) - KN(d_2)
 \end{align*}
 
-得到\textbf{BSM公式}（Black-Scholes formula），即欧式看涨期权的解析解（注：$N(\cdot)$为标准正态分布的累积分布函数（CDF），而$N'(\cdot)$为标准正态分布的概率分布函数（PDF））：
-\begin{align*}
-    c & = e^{-r(T-t)} \tilde{\E}_t \left[ \max(S_T-K,0) \right] \\
-    & = S_t N(d_1) - Ke^{-r(T-t)} N(d_2)
-\end{align*}
+得到\textbf{BSM公式}（Black-Scholes formula），即欧式看涨期权的定价公式，其中$N(\cdot)$为标准正态分布的累积分布函数（CDF）。
+\begin{equation*}
+    \boxed{
+        c = S_t N(d_1) - Ke^{-r(T-t)} N(d_2)
+    }
+\end{equation*}
 
-已知期权平价公式：
+并且已知期权平价公式：
 \begin{equation*}
     c + K e^{r(T-t)} = p + S_t
 \end{equation*}
 
-代入BSM看涨期权解析解中，可得：
+将BSM看涨期权定价公式代入：
 \begin{align*}
     p & = c + K e^{-r(T-t)} - S_t \\
     & = S_t N(d_1) - Ke^{-r(T-t)} N(d_2) +  Ke^{-r(T-t)} - S_t \\
     & = S_t (N(d_1) - 1) - K e^{-r(T-t)}(N(d_2)-1) \\
     & = S_t (-N(-d_1)) - K e^{-r(T-t)}(-N(-d_2)) \\
-    & = K e^{-r(T-t)}N(-d_2) - S_t N(-d_1) \\
+    & = K e^{-r(T-t)}N(-d_2) - S_t N(-d_1)
 \end{align*}
+
+可得欧式看跌期权定价公式，有：
+\begin{equation*}
+    \boxed{
+    p = K e^{-r(T-t)}N(-d_2) - S_t N(-d_1)
+    }
+\end{equation*}
 
 此时$d_1$和$d_2$分别为：
 \begin{align*}
-    d_1 = \frac{\ln \frac{S_t}{K} + (r+\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} \\
-    d_2 = \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}
+    d_1 &= \frac{\ln \frac{S_t}{K} + (r+\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} \\
+    d_2 &= \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}
 \end{align*}
+
+\subsection{关于\texorpdfstring{$N(d_1)$}{TEXT}与\texorpdfstring{$N(d_2)$}{TEXT}}
+
+对于期权，在定价时有两个不确定性需要考虑：
+\begin{itemize}
+    \item 期权到行权日到底是不是实值期权（In-The-Money），是否能够行权（能不能赚钱）
+    \item 如果能行权了，那么收益的期望到底能有多少（能赚多少）
+\end{itemize}
+
+那么$N(d_1)$与$N(d_2)$对应了两个不确定性的概率，以欧式看涨期权为例。第二项比较容易理解，$N(d_2)$为在风险中性世界中，股票被行权的概率，即为$P(S_T>K)$。因此$Ke^{-r(T-t)}N(d_2)$为在当前时刻（折现后），考虑了行权概率后，所需支付的行权费成本。
+
+第二项如果理解为成本，那么第一项代表着考虑行权概率后，当前时间点的股票收益期望。要能有收益，先决条件是能行权，即首先应有$S_T>K$。因此股票在行权时的价值应为一个条件期望$\E[S_T | S_T >K]$，是基于在行权价之上。此条件期望在乘以行权概率$N(d_2)$，并折现到当前时点，应为第一项。应有：
+\begin{equation*}
+    e^{r(T-t)} \E[S_T | S_T >K] N(d_2) = S_t N(d_1)
+\end{equation*}
+
+将上式中的$S_t$代换为$e^{r(T-t)}E[S_T]$：
+\begin{equation*}
+    e^{r(T-t)} \E[S_T | S_T >K] N(d_2) = S_t e^{r(T-t)}\E[S_T] N(d_1)
+\end{equation*}
+
+得到：
+\begin{equation*}
+    N(d_1) = \frac{\E[S_T | S_T >K]}{\E[S_T]} N(d_2)
+\end{equation*}
+
+由于最终的股票的收益并不独立于股票价格，这与行权价独立于股票价格不同，因此$N(d_1)$是基于股票价格加权后的行权概率。$N(d_1)$在数学上还有另外的解释，它是“以股票波动率$N(d_1)$为市场风险定价，并在以股票为计价单位时，期权被行权的概率”。
 
 \section{波动率}
 
@@ -756,9 +826,9 @@
     \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
 \end{equation*}
 
-\subsection{历史波动率（Historical volatility）}
+\subsection{历史波动率}
 
-历史波动率是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算：过去30个交易日的标准差。
+历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算：过去30个交易日的标准差。
 
 【核实】在 Black Scholes 的框架下，也就是假设股票价格服从 GBM 的时候，historical volatility 可以用 quadratic variation 计算。如下式：
 \begin{equation*}
@@ -767,9 +837,9 @@
 
 其中$X_t$为股票价格的对数，$t_0,t_1,\dots,t_n$为$[0,T]$区间的一个划分。注意，这个和标准差不一样，这个其实是对数收益率的二阶距。可以证明，用 quadratic variation 得到的估计量是一致估计。
 
-\subsection{已实现波动率（Readlized volatility）}
+\subsection{已实现波动率}
 
-已实现波动率是针对频率较高的数据计算的一种波动率，又称为日内波动率或高频波动率。高频数据是指以小时、分钟或秒为采集频率的数据。一般使用日内高频频率为5分钟。为：
+已实现波动率（Readlized volatility）是针对频率较高的数据计算的一种波动率，又称为日内波动率或高频波动率。高频数据是指以小时、分钟或秒为采集频率的数据。一般使用日内高频频率为5分钟。为：
 \begin{equation*}
     \text{RV}_t = \sum^{N}_{j=1} r^2_{t,j}
 \end{equation*}
@@ -782,9 +852,9 @@
     \item ...
 \end{itemize}
 
-\subsection{随机波动率（Sochastic volatility）}
+\subsection{随机波动率}
 
-随机波动率模型指随机过程的波动率为随机变量。
+随机波动率（Sochastic volatility）指随机过程的波动率为随机变量。
 % https://en.wikipedia.org/wiki/Stochastic_volatility
 \begin{itemize}
     \item Heston model
@@ -815,18 +885,20 @@ GARCH（1，1）模型方差如下：
     \text{EWMA} = a + \lambda r^{2}_{t-1,t} + (1-\lambda) \sigma^{2}_{t-1}
 \end{equation*}
 
-\subsection{局部波动率（Local volatility）}
+\subsection{局部波动率}
 
 【核实】Local volatility，这个其实是一个作为 stochastic volatility 的一种替代做法，就是认为 volatility 是一个关于时间和资产价格的确定性函数$\sigma(t,S_t)$ ,因此也叫 Deterministic Volatility Function (DVF)。这样做也就是为了避免 Heston Model 等 stochastic volatility 带来的计算复杂度。Dupire 给出了一种计算 local volatility 的方法：
 \begin{equation*}
     \sigma^2(K,T) = \frac{\frac{\partial C}{\partial T}}{\frac{1}{2} K^2 \frac{\partial^2 C}{\partial K^2}}
 \end{equation*}
 
-\subsection{隐含波动率（Implied volatility）}
+\subsection{隐含波动率}
 
-\subsubsection{BS隐含波动率（BS implied volatility）}
+隐含波动率（Implied volatility）
 
-假定市场上的期权或者权证的交易价格满足Black-Scholes-Merton（BSM）期权定价公式，将市场上可以观测到的标的资产价格（$S$）、执行价格（$K$）、利率（$r$）、期限（$\tau$）作为已知变量代入定价公式中，则可以得到期权当前的市场价格所隐含的波动率，此时提取的为期限内的波动率（Option-implied volatility expectations until expiration），为未来波动率的预期。
+\subsubsection{BS隐含波动率}
+
+假定市场上的期权或者权证的交易价格满足Black-Scholes-Merton（BSM）期权定价公式，将市场上可以观测到的标的资产价格（$S$）、执行价格（$K$）、利率（$r$）、期限（$\tau$）作为已知变量代入定价公式中，则可以得到期权当前的市场价格所隐含的波动率，此时提取的为期限内的波动率（Option-implied volatility expectations until expiration），BS隐含波动率（BS implied volatility）为未来波动率的预期。
 \begin{align*}
     c &= S_t N(d_1) - Ke^{-r(T-t)} N(d_2) \\
     p & = K e^{-r(T-t)}N(-d_2) - S_t N(-d_1) \\
@@ -834,9 +906,9 @@ GARCH（1，1）模型方差如下：
     d_2 &= \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}
 \end{align*}
 
-\subsubsection{无模型波动率（Model-free implied volatility）}
+\subsubsection{无模型波动率}
 
-虽然一般将无模型波动率认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内波动率平方（Total variance）的期望。
+虽然一般将无模型波动率（Model-free implied volatility）认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内波动率平方（Total variance）的期望。
 
 对期权进行定价往往采用风险中性定价法，在风险中性的世界里，所有资产的预期收益率都等于无风险利率。同样对于未来一段时间内的波动率平均值的估计也可以认为是一种广义的“定价”，因此广义波动率被定义为风险中性的世界里从0时刻到T时刻期间的方差序列的平均值的平方根。
 
@@ -872,8 +944,8 @@ GARCH（1，1）模型方差如下：
 
 如上所述，只有使得在签订时，互换合约价值为0的固定方差$X_{var}$才是公平的，那么根据风险中性定价：
 \begin{equation*}
-    e^{-rT} \tilde{\E} \left[ \frac{1}{T} \int^T_0 \sigma^2 dt - X_{var} \right] = 0 \quad \Rightarrow \quad
-    X_{var} = \tilde{\E} \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right]
+    e^{-rT} \rnE \left[ \frac{1}{T} \int^T_0 \sigma^2 dt - X_{var} \right] = 0 \quad \Rightarrow \quad
+    X_{var} = \rnE \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right]
 \end{equation*}
 
 在风险中性测度下，此时$\mu=r$为常数，并且根据上述对数收益率$d\ln S_t$，积分形式有：
@@ -886,28 +958,29 @@ GARCH（1，1）模型方差如下：
     &= - \left[ \ln \frac{S_T}{S_0 e^{rT}} \right] + \int^T_0 \sigma_t d\tilde{Z}_t
 \end{align*}
 
-由于$\int^T_0 \sigma_t d\tilde{Z}_t$为随机波动项，因此取期望后为0。需要注意$S_T$为随机变量，并且有$\tilde{\E}_0(S_T)=S_0 e^{rT}=F_{0,T}$，令$f(x)=\ln x$。利用下述两种方法（带积分余项的泰勒展开式以及使用狄拉克$\delta$函数）在$K=K_0$处展开带有随机变量的$S_T$的$\ln\frac{S_T}{K_0}$项则有：
+由于$\int^T_0 \sigma_t d\tilde{Z}_t$为随机波动项，因此取期望后为0。需要注意$S_T$为随机变量，并且有$\rnE_0(S_T)=S_0 e^{rT}=F_{0,T}$，令$f(x)=\ln x$。利用下述两种方法（带积分余项的泰勒展开式以及使用狄拉克$\delta$函数）在$K=K_0$处展开带有随机变量的$S_T$的$\ln\frac{S_T}{K_0}$项则有：
 \begin{align*}
-    X_{var} &= \frac{2}{T} \tilde{\E} \left[ - \ln\frac{S_T}{S_0 e^{rT}} \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ - \ln\frac{S_T}{F} \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[\ln\frac{F}{K_0} - \ln\frac{S_T}{K_0}  \right] \\
-    &= \frac{2}{T} \tilde{\E}  \left[ \ln\frac{F}{K_0}- f'(K_0) (S_T-K_0) - \int^{K_0}_{0} f''(K) (K-S_T)^+ dK - \int^{\infty}_{K_0} f''(K) (S_T-K)^+ dK  \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} + \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
+    X_{var} &= \frac{2}{T} \rnE \left[ - \ln\frac{S_T}{S_0 e^{rT}} \right] \\
+    &= \frac{2}{T} \rnE \left[ - \ln\frac{S_T}{F} \right] \\
+    &= \frac{2}{T} \rnE \left[\ln\frac{F}{K_0} - \ln\frac{S_T}{K_0}  \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln\frac{F}{K_0}- f'(K_0) (S_T-K_0) - \int^{K_0}_{0} f''(K) (K-S_T)^+ dK - \int^{\infty}_{K_0} f''(K) (S_T-K)^+ dK  \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} + \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
 \end{align*}
 
 对于前两项，并使用泰勒级数分解$\ln \frac{F}{K_0}$，即令$f(x) = \ln(x)$，并在$\frac{F}{K_0}$处展开，应有：
 \begin{align*}
-    \tilde{\E} \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} \right]
-    &= -\frac{\tilde{\E}(S_T)-K_0}{K_0} + \ln \frac{F}{K_0} \\
-    &= -\frac{F-K_0}{K_0} + \left[ f(1) + f'(1)\left(\frac{F}{K_0}-1\right) + \frac{1}{2}f''(1)\left(\frac{F}{K_0}-1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
+    \rnE \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} \right]
+    &= -\frac{\rnE(S_T)-K_0}{K_0} + \ln \frac{F}{K_0} \\
+    &= -\frac{F-K_0}{K_0} + \left[ f(1) + f'(1)\left(\frac{F}{K_0}-1\right) \right. \\
+    &\hspace{8em} + \left. \frac{1}{2}f''(1)\left(\frac{F}{K_0}-1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
     &= - \left( \frac{F}{K_0} -1 \right) + \left[ 0 + \left(\frac{F}{K_0} - 1\right) - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3 \right] \\
     &= - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3
 \end{align*}
 
 对于后两项积分项，将其离散化，其中$Q(K_i)$为行权价为$K_i$，\textbf{虚值}看涨和看跌期权的价格：
 \begin{align*}
-    \tilde{\E} \left[ \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
-    &= \int^{K_0}_{0} \frac{\tilde{\E}(K-S_T)^+ }{K^2} dK + \int^{\infty}_{K_0} \frac{\tilde{\E}(S_T-K)^+}{K^2} dK \\
+    \rnE \left[ \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
+    &= \int^{K_0}_{0} \frac{\rnE(K-S_T)^+ }{K^2} dK + \int^{\infty}_{K_0} \frac{\rnE(S_T-K)^+}{K^2} dK \\
     &= \int^{K_0}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{K_0} \frac{e^{rT}C(K)}{K^2} dK \\
     &\approx \sum_{K_i < K_0} \frac{\Delta K_i}{K_i^2} e^{rT} P(K_i) + \sum_{K_i \geq K_0} \frac{\Delta K_i}{K_i^2} e^{rT} C(K_i) \\
     &= \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i)
@@ -935,14 +1008,14 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 将$\frac{dS_t}{S_t}$与$d\ln S_t$两式相减，进消去随机波动项$\sigma_t dZ_t$，并在风险中性下求期望：
 \begin{align*}
-    \sigma^2 &= \tilde{\E} \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right] \\
-    &= \frac{2}{T} \tilde{\E} \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \int^T_0 rdt + \int^T_0\sigma dZ_t  - \ln \frac{S_T}{S_0} \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ rT  - \ln \frac{S_T}{S_0} \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \ln S_0 e^{rT} -\ln K_0 + \ln K_0 - \ln S_T \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \ln \frac{S_0 e^{rT}}{K_0} - \ln \frac{S_T}{K_0} \right] \\
-    &= \frac{2}{T} \tilde{\E} \left[ \ln \frac{F}{K_0} - \ln \frac{S_T}{K_0} \right] \qquad \text{（可按上述方法进行推导）} 
+    \sigma^2 &= \rnE \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right] \\
+    &= \frac{2}{T} \rnE \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
+    &= \frac{2}{T} \rnE \left[ \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right] \\
+    &= \frac{2}{T} \rnE \left[ \int^T_0 rdt + \int^T_0\sigma dZ_t  - \ln \frac{S_T}{S_0} \right] \\
+    &= \frac{2}{T} \rnE \left[ rT  - \ln \frac{S_T}{S_0} \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln S_0 e^{rT} -\ln K_0 + \ln K_0 - \ln S_T \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln \frac{S_0 e^{rT}}{K_0} - \ln \frac{S_T}{K_0} \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln \frac{F}{K_0} - \ln \frac{S_T}{K_0} \right] \qquad \text{（可按上述方法进行推导）} 
 \end{align*}
 
 \subsubsection*{方法1：积分型余项的泰勒公式}
@@ -988,12 +1061,12 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \end{cases}
 \end{equation*}
 
-\begin{property}
+\begin{coro}
     \begin{equation*}
         \int\limits^{\infty}_{-\infty} \delta(x) dx =
         \int\limits^{\infty}_{-\infty} \delta(-x) dx = 1
     \end{equation*}
-\end{property}
+\end{coro}
 
 \begin{proof}
     假设有函数：
@@ -1017,11 +1090,11 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \end{equation*}
 \end{proof}
 
-\begin{property}
+\begin{coro}
     \begin{equation*}
         \int\limits^{\infty}_{-\infty} f(x) \delta(x-x_0) dx = f(x_0)
     \end{equation*}
-\end{property}
+\end{coro}
 
 \begin{proof}
     \begin{equation*}
@@ -1036,11 +1109,11 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \end{equation*}
 \end{proof}
 
-\begin{property}
+\begin{coro}
     \begin{equation*}
         f(x)\delta(x-x_0) = f(x_0)\delta(x-x_0)        
     \end{equation*}
-\end{property}
+\end{coro}
 
 \begin{proof}
     易知$\delta$函数只在$x=x_0$有定义，因此等式两边函数性质相同，并且由如上可知两者积分性质也相同，因此等式两边相等。
@@ -1052,11 +1125,11 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 \end{proof}
 利用如上性质，令$f(x)=x$，$x_0=0$易知$x\delta(x)=0$
 
-\begin{property}
+\begin{coro}
     \begin{equation*}
         \int\limits^{\infty}_{-\infty} \delta(x-x_1) \delta(x-x_2) dx = \delta(x_1-x_2)
     \end{equation*}
-\end{property}
+\end{coro}
 
 \begin{proof}
     已知：
@@ -1071,7 +1144,7 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \end{equation*}
 \end{proof}
 
-\begin{property}
+\begin{coro}
     已知赫维赛德阶跃函数（Heaviside step function）或单位阶跃函数定义如下：
     \begin{equation*}
         H(x) =
@@ -1079,9 +1152,9 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
             1 \; & x \geq 0 \\
             0 \; & x<0
         \end{cases}
-        \equiv \mathbbm{1}(x \geq 0)
+        \equiv \mathbb{1}(x \geq 0)
     \end{equation*}
-    其中$\mathbbm{1}(\cdot)$为指示函数（Indicator function）。并有狄拉克$\delta$函数为赫维赛德阶跃函数的导数，两者有如下关系：
+    其中$\mathbb{1}(\cdot)$为指示函数（Indicator function）。并有狄拉克$\delta$函数为赫维赛德阶跃函数的导数，两者有如下关系：
     \begin{equation*}
         H'(x) = \delta(x) \qquad \text{且} \qquad H(x) = \int^{x}_{-\infty}\delta(s)ds
     \end{equation*}
@@ -1089,10 +1162,10 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \begin{equation*}
         (x)^+ = \max(x,0) = \int H(x) dx
     \end{equation*}
-\end{property}
+\end{coro}
 
 \subsubsection*{方法2：狄拉克$\delta$函数}
-参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting property改写函数为积分形式，并将积分分解为两部分（$K_0$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
+参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting coro改写函数为积分形式，并将积分分解为两部分（$K_0$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
 \begin{align*}
     f(F) &= \int^{\infty}_{0}f(K)\delta(F-K)dK \\
     &= \int^{K_0}_{0}f(K)\delta(F-K)dK + \int^{\infty}_{K_0}f(K)\delta(F-K)dK \\
@@ -1108,9 +1181,9 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 已知对于狄拉克$\delta$函数可使用赫维赛德阶跃函数或指示函数表示其积分。令$u=f(K)$，$u'=f'(K)$，$v'=\delta(K-F)$，$1$，因此对于第一项积分有：
 \begin{align*}
     \int^{K_0}_{0}f(K)\delta(K-F)dK 
-    &= \bigg[ f(K) \mathbbm{1}(F<K) \bigg]^{K_0}_{0} - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK \\ 
-    &= f(K_0) \mathbbm{1}(F<K_0) - \cancel{f(0)\mathbbm{1}(F<0)} - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK \\
-    &= f(K_0)\mathbbm{1}(F<K_0) - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK
+    &= \bigg[ f(K) \mathbb{1}(F<K) \bigg]^{K_0}_{0} - \int^{K_0}_{0} f'(K) \mathbb{1}(F<K) dK \\ 
+    &= f(K_0) \mathbb{1}(F<K_0) - \cancel{f(0)\mathbb{1}(F<0)} - \int^{K_0}_{0} f'(K) \mathbb{1}(F<K) dK \\
+    &= f(K_0)\mathbb{1}(F<K_0) - \int^{K_0}_{0} f'(K) \mathbb{1}(F<K) dK
 \end{align*}
 
 同理对于第二项积分，令$u=f(K)$，$du = f'(K)dK$，$dv=\delta(F-K)dK$，此时需注意链式法则，如对$H(F-K)$求导应有：
@@ -1118,24 +1191,24 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \frac{dH(F-K)}{dK} = H'(F-K) \frac{d(F-K)}{dK} = \delta(F-K)\cdot(-1)
 \end{equation*}
 
-因此有$v=-H(F-K)=-\mathbbm{1}(F -K \geq 0)=-\mathbbm{1}(F \geq K)$ ，得到：
+因此有$v=-H(F-K)=-\mathbb{1}(F -K \geq 0)=-\mathbb{1}(F \geq K)$ ，得到：
 \begin{align*}
     \int^{\infty}_{K_0} f(K)\delta(F-K)dK 
-    &= \bigg[ - f(K) \mathbbm{1}(F \geq K) \bigg]^{\infty}_{K_0} + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK \\
-    &= - \cancel{f(\infty) \mathbbm{1}(F\geq \infty)} + f(K_0) \mathbbm{1}(F\geq K_0 ) + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK \\
-    &= f(K_0) \mathbbm{1}(F\geq K_0 ) + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK
+    &= \bigg[ - f(K) \mathbb{1}(F \geq K) \bigg]^{\infty}_{K_0} + \int^{\infty}_{K_0} f'(K) \mathbb{1}(F \geq K) dK \\
+    &= - \cancel{f(\infty) \mathbb{1}(F\geq \infty)} + f(K_0) \mathbb{1}(F\geq K_0 ) + \int^{\infty}_{K_0} f'(K) \mathbb{1}(F \geq K) dK \\
+    &= f(K_0) \mathbb{1}(F\geq K_0 ) + \int^{\infty}_{K_0} f'(K) \mathbb{1}(F \geq K) dK
 \end{align*}
 
 将两部分积分代入原式整理可得：
 \begin{align*}
-    f(F) &=  f(K_0)\mathbbm{1}(F<K_0) + f(K_0)\mathbbm{1}(F \geq K_0)
-    - \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK 
-    + \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F \geq K) dK
+    f(F) &=  f(K_0)\mathbb{1}(F<K_0) + f(K_0)\mathbb{1}(F \geq K_0) \\
+    &\hspace{4em} - \int^{K_0}_{0} f'(K) \mathbb{1}(F<K) dK 
+    + \int^{\infty}_{K_0} f'(K) \mathbb{1}(F \geq K) dK
 \end{align*}
 
-再次使用分部积分法继续分解上式中的两项积分。对于指示函数的积分$\int^{K_0}_{0}\mathbbm{1}(F<K) dK$，即计算高度为1的矩形面积。其宽度为$F$至积分上限$K_0$，如果$F<K_0$则有其积分（面积）为$K_0-F$；如过$F>K_0$，则有积分值为0：
+再次使用分部积分法继续分解上式中的两项积分。对于指示函数的积分$\int^{K_0}_{0}\mathbb{1}(F<K) dK$，即计算高度为1的矩形面积。其宽度为$F$至积分上限$K_0$，如果$F<K_0$则有其积分（面积）为$K_0-F$；如过$F>K_0$，则有积分值为0：
 \begin{equation*}
-    \int^{K_0}_{0}\mathbbm{1}(F<K) dK =
+    \int^{K_0}_{0}\mathbb{1}(F<K) dK =
     \begin{cases}
         K_0 - F \; & F<K_0 \\
         0 \; & F>K_0
@@ -1144,17 +1217,17 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     (K_0 - F)^+
 \end{equation*}
 
-或令$u=f'(K)$，$du=f''(K)dK$，$dv=\mathbbm{1}(F<K)dK$，$v=(K-F)^+$，因此第一项积分有：
+或令$u=f'(K)$，$du=f''(K)dK$，$dv=\mathbb{1}(F<K)dK$，$v=(K-F)^+$，因此第一项积分有：
 \begin{align*}
-    \int^{K_0}_{0} f'(K) \mathbbm{1}(F<K) dK 
+    \int^{K_0}_{0} f'(K) \mathbb{1}(F<K) dK 
     &= \bigg[ f'(K)(K-F)^+ \bigg]^{K_0}_{0} - \int^{K_0}_{0} f''(K) (K-F)^+ dK \\
     &= f'(K_0)(K_0-F)^+ - \cancel{f'(0)(0-F)^+} - \int^{K_0}_{0} f''(K) (K-F)^+ dK \\
     &= f'(K_0)(K_0 - F)^+ - \int^{K_0}_{0} f''(K) (K-F)^+ dK
 \end{align*}
 
-对于第二项积分，令$u=f'(K)$，$du=f''(K)dK$，同时需注意链式法则带来的符号改变$dv=\mathbbm{1}(F \geq K)dK$，$v=-(F-K)^+$：
+对于第二项积分，令$u=f'(K)$，$du=f''(K)dK$，同时需注意链式法则带来的符号改变$dv=\mathbb{1}(F \geq K)dK$，$v=-(F-K)^+$：
 \begin{align*}
-    \int^{\infty}_{K_0} f'(K) \mathbbm{1}(F\geq K) dK 
+    \int^{\infty}_{K_0} f'(K) \mathbb{1}(F\geq K) dK 
     &= \bigg[ -f'(K)(F-K)^+ \bigg]^{\infty}_{K_0} + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK \\
     &= - \cancel{f'(\infty)(F - \infty)^+} + f'(K_0)(F - K_0)^+ + \int^{K_0}_{0} f''(K) (F-K)^+ dK \\
     &= f'(K_0)(F - K_0)^+ + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK
@@ -1162,11 +1235,13 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 整理，最终结果为：
 \begin{align*}
-    f(F) &= f(K_0)\mathbbm{1}(F<K_0) + f(K_0)\mathbbm{1}(F \geq K_0) \\
-    &\quad - \left[ f'(K_0)(K_0 - F)^+ - \int^{K_0}_{0} f''(K) (K-F)^+ dK \right]
-    + \left[ f'(K_0)(F - K_0)^+ + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK \right] \\
-    & = f(K_0) + f'(K_0) \left[ (F-K_0)^+ - (K_0 - F)^+ \right] + \int^{K_0}_{0} f''(K) (K-F)^+ dK + \int^{K_0}_{0} f''(K) (F-K)^+ dK \\
-    & = f(K_0) + f'(K_0) (F-K_0) + \int^{K_0}_{0} f''(K) (K-F)^+ dK + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK
+    f(F) &= f(K_0)\mathbb{1}(F<K_0) + f(K_0)\mathbb{1}(F \geq K_0) \\
+    &\qquad - \left[ f'(K_0)(K_0 - F)^+ - \int^{K_0}_{0} f''(K) (K-F)^+ dK \right] \\
+    &\qquad + \left[ f'(K_0)(F - K_0)^+ + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK \right] \\
+    & = f(K_0) + f'(K_0) \left[ (F-K_0)^+ - (K_0 - F)^+ \right] \\
+    &\qquad + \int^{K_0}_{0} f''(K) (K-F)^+ dK + \int^{K_0}_{0} f''(K) (F-K)^+ dK \\
+    & = f(K_0) + f'(K_0) (F-K_0) \\
+    &\qquad + \int^{K_0}_{0} f''(K) (K-F)^+ dK + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK
 \end{align*}
 
 \subsubsection*{含义}
@@ -1210,6 +1285,8 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 \section{希腊值}
 
+BSM定价公式的核心价值在于它构建了量化数学模型，以此可以计算期权的各种风险敞口，这对于将期权交易者至关重要。由BSM公式出发可以方便的求出期权价格对标的资产、时间、利率、波动率的偏导数，从而确定期权在这些因素上的风险敞口，常见的风险敞口由五类，由希腊字母表示，称为\text{希腊值}，分别是：Delta、Gamma、Vega、Theta与Rho。
+
 \subsection{正态分布与性质}
 
 对于正态分布或高斯分布（Gaussian distribution），其\textbf{概率密度函数}（Probability Density Function，PDF）：
@@ -1237,11 +1314,11 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 定义衍生品价格，对标的价格的一阶导为Delta，对标的价格的二阶导为Gamma，对于期限的一阶导为Theta，对于无风险利率的一阶导为Rho，对于波动率的一阶导为Sigma。
 \begin{equation*}
-    \text{Delta} = \frac{\partial V}{\partial S} \qquad 
-    \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \qquad
-    \text{Theta} = -\frac{\partial V}{\partial \tau} \qquad
-    \text{Rho} = \frac{\partial V}{\partial r} \qquad
-    \text{Vega} = \frac{\partial V}{\partial\sigma} \qquad
+    \text{Delta} = \frac{\partial V}{\partial S} \quad 
+    \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \quad
+    \text{Theta} = -\frac{\partial V}{\partial \tau} \quad
+    \text{Rho} = \frac{\partial V}{\partial r} \quad
+    \text{Vega} = \frac{\partial V}{\partial\sigma} \quad
 \end{equation*}
 
 \subsection{Black模型}
@@ -1292,7 +1369,7 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     d_2 &= d_1 - \sigma \sqrt{\tau}
 \end{align*}
 
-\begin{lemma}
+\begin{lemm}
     \begin{equation*}
         \frac{\partial d_2}{\partial S} = \frac{\partial d_1}{\partial S} = \frac{\frac{\partial \ln(S/K)}{\partial S} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln S - \ln K)/\partial S}{\sigma\sqrt{\tau}} = \frac{1}{S\sigma\sqrt{\tau}}
     \end{equation*}
@@ -1305,14 +1382,14 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
     \begin{equation*}
         \frac{\partial d_2}{\partial r} = \frac{\partial d_1}{\partial r}
     \end{equation*}
-\end{lemma}
+\end{lemm}
 
-\begin{lemma}
+\begin{lemm}
     对于BSM公式，有：
     \begin{equation*}
         S_t N'(d_1) = Ke^{-r\tau} N'(d_2)
     \end{equation*}
-\end{lemma}
+\end{lemm}
 
 \begin{proof}
     已知：
@@ -1504,14 +1581,190 @@ Long put, long delta stock/ short put, short delta stock
 
 可见delta、vega、gamma对应了上式中的前三项。而交易员也将$\tfrac{\partial^2 V}{\partial \sigma^2_{imp}}$称为Vomma，即Vega对于$\sigma_{imp}$的敏感程度，或Vega的Vega。将$\tfrac{\partial^2 V}{\partial S\partial \sigma_{imp}}$称为Vanna，或理解为Delta的Vega，即对于$\sigma_{imp}$的变动，Delta的敏感程度。
 
-\section{平价期权}
+\section{看跌-看涨平价公式}
+
+看跌-看涨平价公式（Put-call parity）或买卖权平价关系，指具有相同的行权价与到期日的欧式看涨期权与欧式看跌期权，其价格之间存在的关系。若平价关系不成立，则意味着存在套利的空间。现实市场中存在交易成本，因此买卖权平价关系不完全成立。然而流动性较好的市场中，可以近似认为买卖权平价关系成立。
+
+\subsection{欧式期权PCP}
+使用远期合约（适用于中国市场与美国市场），构建如下两个组合：
+
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：欧式看涨多头
+    \item 组合B：欧式看跌多头 + 远期合约多头（交割价格（Delivery Price）为K）
+\end{itemize}
+
+在T时刻，组合A与组合B价值为：
+\begin{multicols}{2}
+当$S_T \geq K$时:
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$S_T-K$
+    \item 组合B：$0 + (S_T-K)$
+\end{itemize}
+\vfill\columnbreak
+当$S_T < K$时：
+\begin{itemize}
+    \item 组合A：$0$
+    \item 组合B：$(K - S_T) + (S_T-K)$
+\end{itemize}
+\end{multicols}
+
+可以发现组合A与组合B，在T时刻，无论哪种情况下两者价值都相等。因此根据无套利原则，t时刻两个组合价格也必须相同，则有对于远期的PCP公式（$S_T=F_T$）：
+\begin{equation*}
+    c = p + (F_T-K)e^{-r(T-t)} \quad\text{或}\quad c = p + S_t - Ke^{-r(T-t)}
+\end{equation*}
+
+对于已知红利资产，支付红利现值为$I_t$，红利率为$q$：
+\begin{align*}
+    c &= p + S_t - I_t - Ke^{-r(T-t)} \quad \text{（已知红利）} \\
+    c &= p + S_t e^{-q(T-t)} - Ke^{-r(T-t)}  \quad \text{（已知红利率）}
+\end{align*}
+
+\subsection{期权隐含价格}
+
+通过欧式看跌看涨平价关系，其中隐藏期货价格：
+\begin{equation*}
+    F^*_t = (c-p)e^{r(T-t)} + K
+\end{equation*}
+
+隐藏现货价格：
+\begin{equation*}
+    S^*_t = (c-p) + K e^{r(T-t)}
+\end{equation*}
+
+在中国市场中，若ETF成分股分红，分红会留存在ETF之内，因此ETF期权有红利保护，即ETF价格中已经反应了红利。而对于股指期货而言，股指仅根据股票价格计算得出，成分股分红，股票价格与股指自动回落。因此股指期货无红利保护，需要调整红利：
+\begin{equation*}
+    c + Ke^{-r(T-t)} = p + F_t e^{-r(T-t)} + I_t 
+\end{equation*}
+\begin{equation*}
+    F^*_t = (c-p)e^{r(T-t)} + K + I_t e^{r(T-t)}
+\end{equation*}
+
+\subsection{美式期权PCP}
+
+美式期权提前行权的影响如下：
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+\multicolumn{1}{l}{}
+& \multicolumn{1}{c}{\textbf{美式看涨期权}} & \multicolumn{1}{c}{\textbf{美式看跌期权}} \\
+\midrule
+\multirow{3}{*}{\textbf{无红利}} 
+& 1.需提前支付行权价，& 1.提前获得行权价格，\\
+&\hspace{1em} 损失行权价格利息 &\hspace{1em} 可获得行前价格利息 \\
+& 2.损失期权时间价值 & 2.失去期权时间价值 \\
+\textbf{有红利} & 3.提前行权获得股票，获得红利 & 3.放弃红利 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{无红利资产}
+构造如下两个组合：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：欧式看涨多头（c） + K单位现金（用无风险利率投资）
+    \item 组合B：美式看跌多头（P，用大写表示） + 一单位股票
+\end{itemize}
+
+在\textbf{不提前行权}的情况下，如下所示，组合A的价值都将大于组合B的价值：
+\begin{multicols}{2}
+当$S_T \geq K$时:
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$(S_T-K) + Ke^{r(T-t)}$
+    \item 组合B：$S_T$
+\end{itemize}
+\vfill\columnbreak
+当$S_T < K$时：
+\begin{itemize}
+    \item 组合A：$Ke^{r(T-t)}$
+    \item 组合B：$(K - S_T) + S_T$
+\end{itemize}
+\end{multicols}
+
+只有当$S_\tau<K$时，才会\textbf{提前行权}。此时欧式看涨期权内在价值为零，但仍有时间价值。此时仍有组合A价值大于组合B价值：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$ \text{时间价值} + Ke^{r(T-t)}$
+    \item 组合B：$(K-S_\tau) + S_\tau$
+\end{itemize}
+
+即无论美式期权是否提前行权，都有组合A价值大于等于组合B的价值，且由于美式期权价格大于等于欧式期权（可提前行权和获得股票，进而获得红利），则有：
+\begin{equation*}
+    c + K \geq P + S_t \quad \rightarrow \quad C + K \geq P + S_t
+\end{equation*}
+
+又由于$P \geq p$（可提前获得行权价格，进而获得行权价的利息），由3欧式期权PCP可得，$P\geq p = c + Ke^{-r(T-t)} - S_t$。当标的资产为无收益资产（无股息红利）时，$c=C$，则有：
+\begin{equation*}
+    C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+因此：
+\begin{equation*}
+   S_t - K \leq C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+\subsubsection{有红利资产}
+假设股票将派发红利，其现值$I_t$，构造如下两个组合，注意组合B由于持有股票，将在T时刻获得红利$I_t e^{r(T-t)}$：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：欧式看涨多头（c） + （K+I）单位现金（用无风险利率投资）
+    \item 组合B：美式看跌多头（P，用大写表示） + 一单位股票
+\end{itemize}
+
+在\textbf{不提前行权}的情况下，组合A的价值都将大于组合B的价值：
+\begin{multicols}{2}
+当$S_T \geq K$时:
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$(S_T-K) + (K+I_t)e^{r(T-t)}$
+    \item 组合B：$S_T + I_t e^{r(T-t)}$
+\end{itemize}
+\vfill\columnbreak
+当$S_T < K$时：
+\begin{itemize}
+    \item 组合A：$(K+I_t)e^{r(T-t)}$
+    \item 组合B：$K- S_T + S_T + I_t e^{r(T-t)}$
+\end{itemize}
+\end{multicols}
+
+同理，只有在$S_\tau<K$时，才会\textbf{提前行权}，假设此时时刻为$t<\tau<T$，虽然看涨期权内在价值为0，但仍有时间价值，则有：
+\begin{itemize}
+\setlength{\itemindent}{2em}
+    \item 组合A：$ 时间价值 + (K+I_t)e^{r(T-t)}$
+    \item 组合B：$(K-S_\tau) + S_\tau + I_t e^{r(T-t)}$
+\end{itemize}
+
+即无论是否提前行权，都有组合A价值大于组合B价值，同时因$C \geq c$，则有：
+\begin{equation*}
+    c + K + I \geq P + S_t \quad \rightarrow \quad C + K +I \geq P + S_t
+\end{equation*}
+
+即：
+\begin{equation*}
+    C-P \geq S_t - K - I
+\end{equation*}
+
+因有红利资产，再发放红利之后股价自然回落，因此看涨期权价格更低，看跌期权更高，$C-P$组合价值更低，并由无红利资产美式期权推导得：
+\begin{equation*}
+    C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+因此：
+\begin{equation*}
+   S_t - K - I \leq C-P \leq S_t - Ke^{r(T-t)}
+\end{equation*}
+
+\section{平价期权估计}
 
 当平值点为$S = K e^{-r(T-t)}$时，将其带入看涨BSM公式当中，则有：
-\begin{equation}
+\begin{equation*}
     \frac{c}{S} = N(d_1) - N(d_2)
-\end{equation}
+\end{equation*}
 
-对于看跌期权则有：
+同样，对于看跌期权则有：
 \begin{align*}
     \frac{p}{S} & = N(-d_2) - N(-d_1) \\
     & = 1 - N(d_2) - [1-N(d_1)] \\
@@ -1519,33 +1772,67 @@ Long put, long delta stock/ short put, short delta stock
 \end{align*}
 
 对于$d_1$和$d_2$，此时有：
-\begin{equation}
-    d_1 = \frac{ln(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = \frac{\sigma}{2}\sqrt{T-t}
-\end{equation}
-
-\begin{equation}
-    d_2 = \frac{ln(S/K)+(r-\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}= -\frac{\sigma}{2}\sqrt{T-t}
-\end{equation}
-
-则对于欧式平价期权：
 \begin{align*}
-    \frac{c}{S} & = \frac{p}{S} = N \left( \frac{\sigma\sqrt{T-t}}{2} \right) - N\left( -\frac{\sigma\sqrt{T-t}}{2} \right) \\
-    & = 2N\left( \frac{\sigma\sqrt{T-t}}{2} \right) - 1 \\
-    & = 2\left[\frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left(\frac{\sigma\sqrt{T-t}}{2} - \frac{(\sigma\sqrt{T-t}/2)^3}{6} + \frac{(\sigma\sqrt{T-t}/2)^5}{40} - \dots + \dots\right) \right] - 1 \qquad (\text{使用泰勒展开}) \\
-    & \approx \frac{\sigma\sqrt{T-t}}{2\pi} \approx 0.4\sqrt{T-t}
+    d_1 &= \frac{\ln(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = \frac{\sigma}{2}\sqrt{T-t} \\
+    d_2 &= \frac{\ln(S/K)+(r-\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}= -\frac{\sigma}{2}\sqrt{T-t}
+\end{align*}
+
+则对于欧式平价看涨或看跌期权，有看涨与看跌期权价格相等，将期权价格记为$V$：
+\begin{align*}
+    \frac{V}{S} &= N \left( \frac{\sigma\sqrt{T-t}}{2} \right) - N\left( -\frac{\sigma\sqrt{T-t}}{2} \right) \\
+    & = N \left( \frac{\sigma\sqrt{T-t}}{2} \right) - N\left( -\frac{\sigma\sqrt{T-t}}{2} \right) \\
+    & = 2N\left( \frac{\sigma\sqrt{T-t}}{2} \right) - 1
+\end{align*}
+
+对于正态分布有CDF：
+\begin{equation*}
+   N(x) = \int \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
+\end{equation*}
+
+已知对于自然指数$e^x$，其泰勒展开有：
+\begin{equation*}
+    e^x = \sum^{\infty}_{n=0} \frac{x^n}{n!} = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots
+\end{equation*}
+
+替换将$x$替换为$-\frac{x^2}{2}$:
+\begin{equation*}
+    e^{-\frac{x^2}{2}} = 1 -\frac{x^2}{2}  + \frac{x^4}{8} - \frac{x^6}{48} + \dots
+\end{equation*}
+
+使用泰勒展开，将正态分布的自然指数替换:
+\begin{align*}
+   G(x) &= \frac{1}{\sqrt{2\pi}} \int e^{-\frac{x^2}{2}} dx \\
+   &= \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}} \int \left( 1 -\frac{x^2}{2}  + \frac{x^4}{8} - \frac{x^6}{48} + \dots \right) dx \\
+   &= \frac{1}{\sqrt{2\pi}} \left( x -\frac{x^3}{6} + \frac{x^5}{40} - \frac{x^7}{336} + \dots \right) 
+\end{align*}
+
+注意在求泰勒展开的积分之后，还需要加上常数项$C$，因此应有：
+\begin{equation*}
+    N(x) = G(x) + C
+\end{equation*}
+
+已知$N(0) = G(0) + C = \frac{1}{2}$，因此$C=\frac{1}{2}$，即：
+\begin{equation*}
+   N(x) = \frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left( x -\frac{x^3}{6} + \frac{x^5}{40} - \frac{x^7}{336} + \dots \right) 
+\end{equation*}
+
+令$x=\frac{\sigma\sqrt{T-t}}{2}$代入上式，则对于欧式平价期权：
+\begin{align*}
+    \frac{V}{S} & = 2N\left( \frac{\sigma\sqrt{T-t}}{2} \right) - 1 \\
+    & = 2\left[\frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left(\frac{\sigma\sqrt{T-t}}{2} - \frac{(\sigma\sqrt{T-t}/2)^3}{6} + \frac{(\sigma\sqrt{T-t}/2)^5}{40} - \dots + \dots\right) \right] - 1\\
+    &\approx \frac{\sigma\sqrt{T-t}}{\sqrt{2\pi}} \approx 0.4\sigma\sqrt{T-t}
 \end{align*}
 
 \section{中国市场}
 
 \subsection{内在价值}
 
-由于：
+已知期权价值可分解为内在价值与时间价值两个部分，即：
 \begin{equation*}
     \text{期权价值（Option value）} = \text{内在价值（Intrinsic value）} + \text{时间价值（Time value）}
 \end{equation*}
 
 内在价值为即\textbf{不考虑资产价格波动}的情况下，期权条款赋予期权多头的最高价值。而时间价值为\textbf{标的资产价格波动}为期权多头（权利方）所带来的隐含价值，由于期权权利方只有权力而无义务，因此期权的时间价值应该大于0。内在价值不受时间价值的影响，因而可以使用二分法。
-
 
 若定义内在价值为，期权若在当下时点到期，期权所含的的价值（Hull，CME）。这样考虑的缺点为没有考虑货币的时间价值，且在中国市场由于现货的卖空限制，其价格高于其真实价格。
 \begin{align*}
@@ -1611,5 +1898,222 @@ Long put, long delta stock/ short put, short delta stock
         c = e^{-r(T-t)} \left[ F_t N(d_1)-K N(d_2) \right]
     \end{equation*}
 \end{enumerate}
+
+\appendix
+
+\begin{appendices}
+
+\section{矩}
+
+\subsection{含义}
+数学中矩的概念来自物理学，在物理学中，矩表示距离和物理量的乘积。如力与力臂（参考点的距离）的乘积，得到的是力矩（或扭矩）。可以理解为一杆“秤”，“秤”的平衡的两边重量与距离的乘积相同，则能保持平衡。
+
+而在概率论上，可以理解秤为一杆秤的两端的概率为1，中心点概率为0。如一端秤砣重量，为中奖金额$500$元，但中奖概率为千分之一，即离中心点距离为$0.1\%$，那么期望为$0.5$元。可以理解为了使得秤保持平衡，则另一端，在概率为1，其秤砣重量，中奖金额应为$0.5$元。
+
+\subsection{期望}
+
+这样既可以把期望看成是矩，即距离（概率）乘以力（随机变量）的大小。对于$n$阶矩即对$x^n$q求期望，在离散形式下有：
+\begin{equation*}
+    E[x] = \sum_i p_i x_i
+\end{equation*}
+
+在连续形式下，n阶矩可以表示为$(x-c)^n$的期望，其中$f(x)$为概率密度函数（probability density function）：
+\begin{equation*}
+    \mu_n = \int_{-\infty}^{\infty} (x-c)^n f(x) dx
+\end{equation*}
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+阶（Order） & \multicolumn{1}{c}{非中心矩（Non-central）} & \multicolumn{1}{c}{中心矩（Central）} \\ \midrule
+1st & $\E(x)=\mu $ & \\
+2nd & $\E(x^2) $ & $\E[(x-\mu)^2]$   \\
+3rd & $\E(x^3) $ & $\E[(x-\mu)^3]$   \\
+4th & $\E(x^4) $ & $\E[(x-\mu)^4]$   \\ \bottomrule
+\end{tabular}
+\end{table}
+
+常用的有一至四阶矩：
+\begin{itemize}
+    \setlength{\itemsep}{0em}
+    \item 均值 $\text{Mean}(x)$ 为一阶中心矩
+    \item 方差 $\text{Variance}(x) = \E(x-\mu)^2$ 为二阶非中心矩
+    \item 偏度 $\text{Skewness}(x) = \frac{\E[(x-\mu)^4]}{\sigma^3}$ 为三阶标准矩 
+    \item 峰度 $\text{Kurtosis}(x) = \frac{\E[(x-\mu)^4]}{\sigma^4}$ 为四阶标准矩
+\end{itemize}
+
+\subsection{分类}
+
+\subsubsection*{原点矩（Raw/crude moment）}
+
+当$c=0$时，称为原点矩。此时则有\textbf{平均数（mean）}或\textbf{期望（expected value）}的连续形式为：
+\begin{equation*}
+    \mu = E(x) = \int_{-\infty}^{\infty} (x-0)^1 f(x) dx =
+    \int_{-\infty}^{\infty} x f(x) dx
+\end{equation*}
+
+其离散形式为：
+\begin{equation*}
+    \mu = E(x) = \sum_i x_i p_i
+\end{equation*}
+
+\subsubsection*{中心矩（Central moment）}
+
+期望值可以成为随机变量的中心，即当$c=E(x)$时
+\begin{equation*}
+    \mu_n = E[(x-E(x))^n] = \int_{-\infty}^{\infty} (x-E(x))^n f(x) dx
+\end{equation*}
+
+同时可知任何变量的一阶中心矩为0：
+\begin{align*}
+    \mu_1 &= \int_{-\infty}^{\infty} (x-E(x))^1 f(x) dx \\
+    &= \int_{-\infty}^{\infty} x f(x) dx - \int_{-\infty}^{\infty} E(x) f(x) dx \\
+    &= E(x) - E(x) \int_{-\infty}^{\infty} f(x) dx \\
+    &= E(x) - E(x) \times 1 = 0 
+\end{align*}
+
+而二阶中心矩（second central moment）为\textbf{方差（Variance）}
+\begin{align*}
+    \mu_2 &= \int_{-\infty}^{\infty} (x-E(x))^2 f(x) dx \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 E(x) \int_{-\infty}^{\infty} x f(x)dx + [E(x)]^2\int_{-\infty}^{\infty}f(x)dx \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 E(x) E(x) + [E(x)]^2\times 1 \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - [E(x)]^2 \\
+    &= E(x^2) - [E(x)]^2 = \sigma^2
+\end{align*}
+
+其离散形式则有：
+\begin{equation*}
+    \text{Var}(x) = \sigma^2 = \sum p_i (x_i - \mu)^2 
+\end{equation*}
+
+\subsubsection*{标准矩（Standardized moment）}
+
+标准矩为标准化（除以标准差）后的中心矩，第$n$阶中心矩（standardized moment of degree n）有：
+\begin{equation*}
+    \mu_n = E[(x-\mu)^n] = \int_{-\infty}^{\infty} (x-\mu)^n f(x)dx
+\end{equation*}
+
+已知标准差的$n$次方有：
+\begin{equation*}
+    \sigma^n = \left(\sqrt{E[(x-\mu)^2]}\right)^n = (E[(x-\mu^2)])^{n/2}
+\end{equation*}
+
+此时，第$n$阶标准矩有：
+\begin{equation*}
+    \tilde{\mu}_n = \frac{\mu_n}{\sigma^n} = E\left[ \left(\frac{x-\mu}{\sigma}\right)^n \right]
+\end{equation*}
+
+由一阶中心矩为$0$，可知一阶标准矩（first standardized moment）也为$0$。而二阶标准矩（second standardized moment）则有：
+\begin{equation*}
+    \tilde{\mu}_2 = \frac{\mu_2}{\sigma^2} = \frac{E[(x-\mu)^2]}{\left(E[(x-\mu)^2]\right)^{2/2}} = 1
+\end{equation*}
+
+\subsubsection*{偏度（skewness）}
+
+三阶标准矩（third standardized moment）为\textbf{偏度}：
+\begin{equation*}
+    \tilde{\mu}_3 = \frac{\mu_3}{\sigma^3} = \frac{E[(x-\mu)^3]}{\left(E[(x-\mu)^2]\right)^{3/2}}
+\end{equation*}
+
+偏度分为两种：
+\begin{itemize}
+    \item 负偏态或左偏态：左侧的尾部更长，分布的主体集中在右侧
+    \item 正偏态或右偏态：右侧的尾部更长，分布的主体集中在左侧
+\end{itemize}
+
+\subsubsection*{峰度（kurtosis）}
+四阶标准矩（third standardized moment）为\textbf{峰度}：
+\begin{equation*}
+    \tilde{\mu}_4 = \frac{\mu_4}{\sigma^4} = \frac{E[(x-\mu)^4]}{\left(E[(x-\mu)^2]\right)^{4/2}} 
+\end{equation*}
+
+定义\textbf{超值峰度（excess kurtosis）}为峰度$-3$，使得正态分布的峰度为0：
+\begin{equation*}
+    \text{excess kurtosis} = \tilde{\mu}_4-3
+\end{equation*}
+\begin{itemize}
+    \item 如果超值峰度为正，即峰度值大于3，称为高狭峰（leptokurtic）
+    \item 如果超值峰度为负，即峰度值小于3，称为低阔峰（platykurtic）
+\end{itemize}
+
+\subsection{矩母函数}
+
+\subsubsection{定义}
+
+矩母函数或称为矩生成函数（Moment generating fuction，MGF）或动差生成函数，顾名思义就是产生矩的函数。对于随机变量$X$，其矩生成函数定义为：
+\begin{equation*}
+    \boxed{
+        M_X(t) = \E(e^{tX})
+    }
+\end{equation*}
+
+离散形式下有：
+\begin{equation*}
+    \E[e^{tx}] = \sum e^{tx} P(x)
+\end{equation*}
+
+而在连续形势下有：
+\begin{equation*}
+    \E[e^{tx}] = \int_{-\infty}^{\infty} e^{tx} f(x) dx
+\end{equation*}
+
+\begin{thm}
+    将矩母函数进行n次求导，并令$t=0$则可得到$\E(X^n)$
+    \begin{equation*}
+        \E(X^n) = \left. \frac{d^n}{dt^n} M_X(t) \right\vert_{t=0}
+    \end{equation*}
+\end{thm}
+
+\begin{proof}
+    对于$e^x$使用泰勒展开有：
+    \begin{equation*}
+        e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots + \frac{x^n}{n!}
+    \end{equation*}
+
+    那么$e^{tx}$的期望为：
+    \begin{align*}
+        \E[e^{tx}] &= \E\left[1 + tx + \frac{(tx)^2}{2!} + \frac{(tx)^3}{3!} + \dots + \frac{(tx)^n}{n!} \right] \\
+        &= \E(1) + t\E(x) + \frac{t^2}{2!}\E(x^2) + \frac{t^3}{3!}\E(x^3) + \dots + \frac{t^n}{n!}\E(x^n) 
+    \end{align*}
+
+    对其求一阶导：
+    \begin{align*}
+        \frac{d}{dt} \E[e^{tx}] 
+        &= \frac{d}{dt} \left[ \E(1) + t\E(x) + \frac{t^2}{2!}\E(x^2) + \frac{t^3}{3!}\E(x^3) + \dots + \frac{t^n}{n!}\E(x^n) \right] \\
+        &= 0 + \E(x) + t\E(x^2) + \frac{t^2}{2}\E(x^3) + \dots + \frac{t^{n-1}}{(n-1)!}\E(x^n) \\
+        & \qquad \text{（代入$t=0$）} \\
+        &= 0 + \E(x) + 0 + 0 + \dots + 0 \\
+        &= \E(x) 
+    \end{align*}
+\end{proof}
+
+\subsubsection{性质}
+
+对于标准正态分布$N\sim(0,1)$的矩母函数，则有：
+\begin{align*}
+    M_X(t) &= \E (e^{xt}) = \int e^{xt} \frac{1}{\sqrt{\pi}} e^{-\frac{1}{2}x^2}dx \\
+    &= \int \frac{1}{\sqrt{\pi}} e^{xt-\frac{1}{2}x^2}dx \\
+    &= \int \frac{1}{\sqrt{\pi}} e^{-\frac{1}{2} (x^2 -2xt + t^2 -t^2)}dx \\
+    &= \int \frac{1}{\sqrt{\pi}} e^{-\frac{1}{2} (x-t)^2 + \frac{1}{2}t^2}dx \\
+    &= e^{\frac{1}{2} t^2} \int \frac{1}{\sqrt{\pi}} e^{-\frac{1}{2} (x-t)^2 }dx \\
+    &= e^{\frac{1}{2} t^2}
+\end{align*}
+
+对于正态分布$N\sim(\mu,\sigma)$的矩母函数，则有：
+\begin{equation*}
+    M_X(t) = \E (e^{xt}) = \int e^{xt} \frac{1}{\sigma\sqrt{\pi}} e^{-\frac{1}{2} \left( \frac{x-\mu}{\sigma} \right)} dx
+\end{equation*}
+
+此时代换$z=\frac{x-\mu}{\sigma}$，即$x= \sigma z + \mu$，并有$dx=\sigma dz$：
+\begin{align*}
+    M_X(t) &= \int e^{(\sigma z + \mu)t} \frac{1}{\sigma\sqrt{\pi}} e^{-\frac{1}{2}z^2}dx \\
+    &= e^{\mu t} \int e^{\sigma z t} \frac{1}{\sigma\sqrt{\pi}} e^{-\frac{1}{2}z^2}dx \\
+    &= e^{\mu t} \int \frac{1}{\sigma\sqrt{\pi}} e^{-\frac{1}{2} (z^2 -2\sigma t z + (\sigma t)^2 -(\sigma t)^2)}dx \\
+    &= e^{\mu t} e^{\frac{1}{2} \sigma^2 t^2} \int \frac{1}{\sigma\sqrt{\pi}} e^{-\frac{1}{2} (z - \sigma t)^2}dx \\
+    &= e^{\mu t + \frac{1}{2} \sigma^2 t^2}
+\end{align*}
+
+\end{appendices}
 
 \end{document}

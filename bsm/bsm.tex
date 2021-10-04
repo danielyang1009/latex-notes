@@ -5,9 +5,16 @@
 \usepackage{cancel}
 \usepackage{enumitem}
 \usepackage{booktabs,float,multirow}
-\usepackage[toc,title]{appendix}
 \usepackage{multicol}
 \usepackage{graphicx}
+\usepackage[toc,title]{appendix}
+\usepackage{tikz}
+\usetikzlibrary{
+    decorations.pathreplacing,
+    decorations.pathmorphing,
+    arrows.meta
+}
+\usepackage{subcaption}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \setlength{\headheight}{15pt}
@@ -1661,6 +1668,103 @@ Long put, long delta stock/ short put, short delta stock
     \item 远期利率协议：本国的无风险利率
 \end{itemize}
 
+\subsection{\texorpdfstring{$F_{t,T}$}{TEXT}与\texorpdfstring{$S_t$}{TEXT}}
+
+在t时刻，远期（期货）价格$F_t$与现货价格$S_t$有如下关系，易知持仓成本即将现货持有到期的成本，否则将可进行套利。由于远期为合约，只在规定到期日交割标的资产。在合约到期之前并不持有实际现货，因此无法获得持有现货的收益，并且持有现货到合约到期日的成本需计算在远期价格内，两者关系应有如下关系。其中对于商品期货，便利收益指实际持有持有现货带来的收益，一般认为由于持有现货有两点优势：可从短期商品的紧缺中获利，也可保持生产线的运转。
+\begin{align*}
+    F_{t,T} &= S_t + \textbf{净持仓成本（Net cost of carry）} \\
+    &= S_t + \text{合约期限内成本（Carry cost）} - \text{合约期限内收益（Carry return）} \\
+    &= S_t + \text{利息成本} + \text{储藏成本（storage cost）} - \text{红利收益} - \text{便利收益（Convenience yield）}
+\end{align*}
+
+由于在$t$时刻，如现货价格和持仓成本都为已知，则可确定期货价格。相反已知期货的价格与持仓成本，则可确定现货价格，此为期货的价格发现功能。两者为相对价格关系，基于无套利条件得到。在中国往往有现货价格$S_t$大于期货价格$F_t$（期货贴水，此时有正基差），即现货价格被高估。这是由于现货做空机制不完善，很难进行融券，即使能融券成本也较高。使得套利投资者无法在现货被高估的情况下，通过卖出现货（卖出开仓）买进期货（因为只有持有现货才能卖出）进行套利。造成现货与期货市场的分割，无法达到一体化的预期。另外由于买卖现货需要交纳印花税，而期货不需要，且期货佣金往往低于现货。
+
+\subsubsection*{基差与期货升贴水}
+
+基差（Basis）指现货与远期价格之差（现货价格Spot price有时又被称为Cash price）。\textbf{注意}：如在万德中定义基差为期货价格减去现货价格。在此定义下，“负基差”指现货价格高于期货价格。如上式$F_t$与$S_t$的关系可知，现货价格高于期货价格，期货处于贴水状态，此时净持仓成本为负。
+\begin{equation*}
+    \textbf{基差} = \text{现货价格} - \text{期货价格}
+\end{equation*}
+
+对于远期（期货）而言，\textbf{升水}（contango）指当期货价格高于现货价格，此时有负基差。也称为正向市场（Normal market），即期限较短的合约（Near-maturity contract）价格低于期限较远的合约（Far-maturity contract）。相反而言，如期货价格低于现货价格，则称期货\textbf{贴水}（Backwardation），此时为现货溢价，有正基差。或称为逆向市场（Inverted market），即期限较短合约的价格高于期限较远的合约。
+
+\begin{figure}[ht!]
+    \centering
+    \begin{tikzpicture}
+        \draw[->,thick] (0,0) node[below]{$t$} -- (4,0) node[below]{时间} -- (9,0);
+        \draw[->,thick] (0,0)--(0,5) node[above]{价格};  
+        \draw[dashed, draw opacity=0.6] (8,0) node[below]{到期日} -- (8,4.5);
+        \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,0.5) node[left,xshift=-1em]{\small $F_{t,T}$贴水} -- (8,2.5);
+        \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,2.5) node[left,xshift=-1em]{\small $S_t$} -- (8,2.5);
+        \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,4.5) node[left,xshift=-1em]{\small $F_{t,T}$升水} -- (8,2.5);
+        \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,0.5) -- (0,2.5) node[midway,right,xshift=0.6em]{\small 正基差};
+        \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,2.5) -- (0,4.5) node[midway,right,xshift=0.6em]{\small 负基差};
+    \end{tikzpicture}
+    \caption{$F_{t,T}$与$S_t$}
+\end{figure}
+
+\subsection{\texorpdfstring{$F_{t,T}$}{TEXT}与\texorpdfstring{$\E_t[S_T]$}{TEXT}}
+
+在现实测度下，两者应相差风险溢价，但由于风险溢价的不确定性，因此两者关系并不确定：
+\begin{equation*}
+    F_{t,T}=\E[S_T]-\text{风险溢价}
+\end{equation*}
+
+从现货角度出发，在现实测度下设$\mu$为到期收益率，则应有$\E_t[S_T]=S_t e^{\mu(T-t)}$，此时$\mu$为无风险收益率与风险溢酬之和。如果标的资产$S$\textbf{系统性风险为正}，则要求有\textbf{正的风险溢酬}。在T时刻，假设期货价格$S_T = F_{T,T}$为2000，标的资产的系统风险为正，对持有者不利，则要求500元的正的风险溢价为承担风险的补偿，此时$S_t$为1500元。则有到期收益率大于无风险收益率$\mu>r$，因为承担额外的风险需要额外的风险溢酬作为回报。
+
+\begin{figure}[ht!]  
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{tikzpicture}[scale=0.88]
+        \draw[->,thick] (0,0) node[below] {$0$} -- (6,0) node[below] {时间};  
+        \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
+        \draw (4.5,0) node[below] {$T$} -- (4.5,4);
+        \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$\E_t[S_T]$}; 
+        \draw [draw opacity=0.6](0,1.5) node[left] {$F_{t,T}$} -- (4.5,2.5);
+        \draw [dashed, draw opacity=0.6] (0,2.5) -- (4.5,2.5);  
+        \draw [dashed, draw opacity=0.6] (0,0.5) -- (4.5,0.5);  
+        \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,0.5) -- (0,1.5) node[midway,right,xshift=0.6em]{\small r};
+        \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,1.5) -- (0,2.5) node[midway,right,xshift=0.6em]{\small 正风险溢酬};
+        \draw[decorate,decoration={brace,amplitude=5pt,raise=0.2em}] (4.5,0.5) -- (4.5,2.5) node[midway,left,xshift=-0.6em]{\small $\mu$};
+    \end{tikzpicture}
+    \subcaption{正系统性风险} 
+    \label{fig:M1}  
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{tikzpicture}[scale=0.88]
+        \draw[->,thick] (0,0) node[below] {$0$} -- (6,0) node[below] {时间};  
+        \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
+        \draw (4.5,0) node[below] {$T$} -- (4.5,4);
+        \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$\E_t[S_T]$}; 
+        \draw [draw opacity=0.6](0,3.5) node[left] {$F_{t,T}$} -- (4.5,2.5);
+        \draw [dashed, draw opacity=0.6] (0,2.5) -- (4.5,2.5);
+        \draw [dashed, draw opacity=0.6] (0,0.5) -- (4.5,0.5);  
+        \draw [decorate,decoration={brace,amplitude=5pt,raise=0.2em}] (0,0.5) -- (0,3.5) node[midway,left,xshift=-0.6em]{\small r};
+        \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,2.5) -- (0,3.5) node[midway,right,xshift=0.6em]{\small 负风险溢酬};
+        \draw[decorate,decoration={brace,amplitude=5pt,raise=0.2em}] (4.5,0.5) -- (4.5,2.5) node[midway,left,xshift=-0.6em]{\small $\mu$};
+    \end{tikzpicture}
+    \subcaption{负系统性风险}
+    \label{fig:M2}  
+    \end{subfigure}
+    \caption{现实测度下$F_{t,T}=S_t e^{r(T-t)}$与$\E(S_T)$}
+\end{figure}  
+
+相反，如果标的资产$S$\textbf{系统性风险为负}（如VIX系统性风险为负），则应有\textbf{负的风险溢酬}。即标的资产能对冲风险，减少风险敞口，此时风溢酬为负，减少收益，使得到期收益率小于无风险收益率$\mu<r$。
+
+
+从期货角度出发，同样在现实测度下，因为购买期货无需占用资金（假设保证金可获得无风险收益），所以不要求无风险收益。仅要求对其承担的未来不确定性风险，有对应的风险补偿，收益率为$\mu-r$，可以得到$\E_t[F_{T,T}] = F_{t,T} e^{(\mu-r)(T-t)}$。期货到期日T时刻，有期货价格等于现货价格$F_{T,T} = S_T$，即在t时刻下也应有两者期望$\E_t[F_{T,T}] = \E_t[S_T]$。另外虽然现货价格可以从市场交易信息中得到，但由于期货市场交易成本较低，反应较为灵敏迅速，价格变化一般都由期货市场传递至现货市场。在t时刻，期货与现货以及其现实测度期望关系如下图所示：
+
+\begin{figure}[ht!]  
+    \centering
+    \begin{tikzpicture}
+        \draw [<->,thick] (1,0) node [left,xshift=-0.4em]{$S_t$} -- (6,0) node [right]{$\E_t[S_T]$} node [midway,below,yshift=-0.4em]{\small $\E_t[S_T] = S_t e^{\mu(T-t)}$};
+        \draw [<->,thick] (1,2) node [left]{$F_{t,T}$} -- (6,2) node [right]{$\E_t[F_{T,T}]$} node [midway,above,yshift=0.4em]{\small $\E_t[F_{T,T}] =F_{t,T} e^{(\mu-r)(T-t)}$};
+        \draw [<->,thick] (0.5,0.5) -- (0.5,1.5) node [midway,left,xshift=-0.4em]{\small $F_{t,T}=S_t e^{r(T-t)}$};
+        \draw [<->,thick] (6.5,0.5) -- (6.5,1.5) node [midway,right,xshift=0.4em]{\small $F_{T,T}=S_T$};
+    \end{tikzpicture}
+    \caption{现货期货以及现实测度期望关系}
+\end{figure}
+
 \section{看跌-看涨平价关系（欧式期权）}
 
 看跌-看涨期权平价关系（Put-call parity），指具有相同的行权价与到期日的欧式看涨期权与欧式看跌期权，其价格之间存在的关系。若平价关系不成立，则意味着存在套利的空间。现实市场中存在交易成本，又如在中国市场现货无法自由做多做空，因此买卖权平价关系不完全成立。然而欧美市场等流动性较好的市场中，可以近似认为买卖权平价关系成立。
@@ -1770,7 +1874,7 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 
 交易所之所以会在分红后进行期权合约调整，是因为ETF分红后期权买卖双方的权利义务大小会相应变化。核心的问题是如何通过调整来维持期权合约买卖双方权利义务的均衡。一般来说，期权合约调整有两个目标：
 \begin{itemize}
-    \item 调整后，合约名义价值（行权价格$\times$合约单位）不变
+    \item 调整后，合约行权成本（行权价格$\times$合约单位）不变
     \item 调整后，合约市值（结算价格$\times$合约单位）不变
 \end{itemize}
 
@@ -1807,7 +1911,7 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     \text{新结算价格} = \frac{\text{原结算价格}\times\text{原合约单位}}{\text{新合约单位}} = \frac{10000}{10145} \times 0.5616 = 0.5536
 \end{equation*}
 
-可以看到期权合约对于分红的调整有如下几步，先根据ETF27日（除息日30日前一交易日）的收盘价及分红调整合约单位，其实质为缩放比例，为分红调整之后价格与分红之前价格比值的倒数。再根据新合约单位（缩放比例），等比例缩小行权价格与结算价格。合约单位比例放大与价格比例缩小相互抵消，使得合约名义价值与实际市值保持不变。
+可以看到期权合约对于分红的调整有如下几步，先根据ETF27日（除息日30日前一交易日）的收盘价及分红调整合约单位，其实质为缩放比例，为分红调整之后价格与分红之前价格比值的倒数。再根据新合约单位（缩放比例），等比例缩小行权价格与结算价格。合约单位比例放大与价格比例缩小相互抵消，使得合约行权与实际市值保持不变。
 
 \subsubsection*{关于结算价格}
 

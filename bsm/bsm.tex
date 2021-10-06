@@ -8,7 +8,7 @@
 \usepackage{multicol}
 \usepackage{graphicx}
 \usepackage[toc,title]{appendix}
-\usepackage{tikz}
+\usepackage{tikz,pgfplots}
 \usetikzlibrary{
     decorations.pathreplacing,
     decorations.pathmorphing,
@@ -1670,7 +1670,7 @@ Long put, long delta stock/ short put, short delta stock
 
 \subsection{\texorpdfstring{$F_{t,T}$}{TEXT}与\texorpdfstring{$S_t$}{TEXT}}
 
-在t时刻，远期（期货）价格$F_t$与现货价格$S_t$有如下关系，易知持仓成本即将现货持有到期的成本，否则将可进行套利。由于远期为合约，只在规定到期日交割标的资产。在合约到期之前并不持有实际现货，因此无法获得持有现货的收益，并且持有现货到合约到期日的成本需计算在远期价格内，两者关系应有如下关系。其中对于商品期货，便利收益指实际持有持有现货带来的收益，一般认为由于持有现货有两点优势：可从短期商品的紧缺中获利，也可保持生产线的运转。
+如上部分讨论，对于对于无红利股票远期与现货，有$F_{t,T} = S_t e^{r(T-t)}$，由于持有股票的持仓成本即为占用资金的成本。而对于大宗商品等则需要考虑持仓成本，在t时刻，远期（期货）价格$F_t$与现货价格$S_t$有如下关系，易知持仓成本即将现货持有到期的成本，否则将可进行套利。由于远期为合约，只在规定到期日交割标的资产。在合约到期之前并不持有实际现货，因此无法获得持有现货的收益，并且持有现货到合约到期日的成本需计算在远期价格内，两者关系应有如下关系。其中对于商品期货，便利收益指实际持有持有现货带来的收益，一般认为由于持有现货有两点优势：可从短期商品的紧缺中获利，也可保持生产线的运转。
 \begin{align*}
     F_{t,T} &= S_t + \textbf{净持仓成本（Net cost of carry）} \\
     &= S_t + \text{合约期限内成本（Carry cost）} - \text{合约期限内收益（Carry return）} \\
@@ -1681,7 +1681,7 @@ Long put, long delta stock/ short put, short delta stock
 
 \subsubsection*{基差与期货升贴水}
 
-基差（Basis）指现货与远期价格之差（现货价格Spot price有时又被称为Cash price）。\textbf{注意}：如在万德中定义基差为期货价格减去现货价格。在此定义下，“负基差”指现货价格高于期货价格。如上式$F_t$与$S_t$的关系可知，现货价格高于期货价格，期货处于贴水状态，此时净持仓成本为负。
+基差（Basis）指现货与远期价格之差（现货价格Spot price有时又被称为Cash price）。\textbf{注意}：如在万得中定义基差为期货价格减去现货价格。在此定义下，“负基差”指现货价格高于期货价格。如上式$F_t$与$S_t$的关系可知，现货价格高于期货价格，期货处于贴水状态，此时净持仓成本为负。
 \begin{equation*}
     \textbf{基差} = \text{现货价格} - \text{期货价格}
 \end{equation*}
@@ -1694,9 +1694,9 @@ Long put, long delta stock/ short put, short delta stock
         \draw[->,thick] (0,0) node[below]{$t$} -- (4,0) node[below]{时间} -- (9,0);
         \draw[->,thick] (0,0)--(0,5) node[above]{价格};  
         \draw[dashed, draw opacity=0.6] (8,0) node[below]{到期日} -- (8,4.5);
-        \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,0.5) node[left,xshift=-1em]{\small $F_{t,T}$贴水} -- (8,2.5);
+        \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,0.5) node[left,xshift=-1em]{\small $F_{t,T}$贴水} -- (8,2.5) node[midway,above,sloped]{\small 逆向市场};
         \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,2.5) node[left,xshift=-1em]{\small $S_t$} -- (8,2.5);
-        \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,4.5) node[left,xshift=-1em]{\small $F_{t,T}$升水} -- (8,2.5);
+        \draw[decorate, decoration = {snake,segment length=2em,amplitude=1mm}] (0,4.5) node[left,xshift=-1em]{\small $F_{t,T}$升水} -- (8,2.5) node[midway,above,sloped]{\small 正向市场};
         \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,0.5) -- (0,2.5) node[midway,right,xshift=0.6em]{\small 正基差};
         \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,2.5) -- (0,4.5) node[midway,right,xshift=0.6em]{\small 负基差};
     \end{tikzpicture}
@@ -1716,7 +1716,7 @@ Long put, long delta stock/ short put, short delta stock
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
     \begin{tikzpicture}[scale=0.88]
-        \draw[->,thick] (0,0) node[below] {$0$} -- (6,0) node[below] {时间};  
+        \draw[->,thick] (0,0) node[below] {$t$} -- (6,0) node[below] {时间};  
         \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
         \draw (4.5,0) node[below] {$T$} -- (4.5,4);
         \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$\E_t[S_T]$}; 
@@ -1732,7 +1732,7 @@ Long put, long delta stock/ short put, short delta stock
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
     \begin{tikzpicture}[scale=0.88]
-        \draw[->,thick] (0,0) node[below] {$0$} -- (6,0) node[below] {时间};  
+        \draw[->,thick] (0,0) node[below] {$t$} -- (6,0) node[below] {时间};  
         \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
         \draw (4.5,0) node[below] {$T$} -- (4.5,4);
         \draw [draw opacity=0.6](0,0.5) node[left] {$S_t$} -- (4.5,2.5) node[right] {$\E_t[S_T]$}; 
@@ -1751,7 +1751,6 @@ Long put, long delta stock/ short put, short delta stock
 
 相反，如果标的资产$S$\textbf{系统性风险为负}（如VIX系统性风险为负），则应有\textbf{负的风险溢酬}。即标的资产能对冲风险，减少风险敞口，此时风溢酬为负，减少收益，使得到期收益率小于无风险收益率$\mu<r$。
 
-
 从期货角度出发，同样在现实测度下，因为购买期货无需占用资金（假设保证金可获得无风险收益），所以不要求无风险收益。仅要求对其承担的未来不确定性风险，有对应的风险补偿，收益率为$\mu-r$，可以得到$\E_t[F_{T,T}] = F_{t,T} e^{(\mu-r)(T-t)}$。期货到期日T时刻，有期货价格等于现货价格$F_{T,T} = S_T$，即在t时刻下也应有两者期望$\E_t[F_{T,T}] = \E_t[S_T]$。另外虽然现货价格可以从市场交易信息中得到，但由于期货市场交易成本较低，反应较为灵敏迅速，价格变化一般都由期货市场传递至现货市场。在t时刻，期货与现货以及其现实测度期望关系如下图所示：
 
 \begin{figure}[ht!]  
@@ -1768,6 +1767,17 @@ Long put, long delta stock/ short put, short delta stock
 \section{看跌-看涨平价关系（欧式期权）}
 
 看跌-看涨期权平价关系（Put-call parity），指具有相同的行权价与到期日的欧式看涨期权与欧式看跌期权，其价格之间存在的关系。若平价关系不成立，则意味着存在套利的空间。现实市场中存在交易成本，又如在中国市场现货无法自由做多做空，因此买卖权平价关系不完全成立。然而欧美市场等流动性较好的市场中，可以近似认为买卖权平价关系成立。
+
+PCP平价可以直接从BS公式中推导；
+\begin{align*}
+    C_{t,T} &= P_{t,T} + S_t -K \\
+    S_t N(d_1) - K e^{-r(T-t)} N(d_2) &= K e^{-r(T-t)} N(-d_2) - S_t N(-d_1) S_t -Ke^{-r(T-t)} \\
+    &= K e^{-r(T-t)} [1- N(d_2)] - S_t [1 - N(d_1) ] + S_t -Ke^{-r(T-t)} \\
+    &= \cancel{K e^{-r(T-t)}} - K^{-r(T-t)} N(d_2) - \cancel{S_t} + S_t N(d_1) + \cancel{S_t} - \cancel{K^{-r(T-t)}} \\
+    &= C_{t,T}
+\end{align*}
+也可以看到，相同行权价到期时间的看涨看跌期权，两者波动率应该相等，否则PCP平价不成立。
+
 
 \subsection{无红利资产}
 
@@ -1860,7 +1870,7 @@ $S_T < K$ & $0$ & $(K - S_T) + (S_T-K)$ \\
 
 ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因此建立两者之间的PCP关系式则需要调整红利。已知$F_{t,T} = (S_t - I_t)e^{r(T-t)}$，将其代入现货PCP公式可得下列关系式。可理解为由于远期无红利保护，而ETF期权有红利保护，应将远期加上分红，调整为有分红资产：
 \begin{equation*}
-    C_{t,T} = P_{t,T} + \left( F_{t,T}-K \right) e^{-r{T-t}} + I_t
+    C_{t,T} = P_{t,T} + \left( F_{t,T}-K \right) e^{-r(T-t)} + I_t
 \end{equation*}
 
 利用如上PCP关系式，则可以使用ETF期权计算出隐藏ETF远期价格：
@@ -1923,75 +1933,131 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 
 期权合约挂牌首日，以上交所公布的开盘参考价作为合约前结算价格。合约标的出现除权、除息的，合约前结算价格按照以下公式进行调整：新合约前结算价格=原合约前结算价格×（原合约单位/新合约单位）。除权除息日，以调整后的合约前结算价作为涨跌幅限制与保证金收取的计算依据。
 
+\section{中国市场特殊处理}
 
-\section{中国市场}
+在中国市场存在理论与实务脱节的问题。主要有卖空限制导致现货价格高估，内在价值与时间价值，与平值点定义需要更改。解决同一行权价到期期限的看涨看跌波动率相差大；解决隐含波动率为0；看跌期权时间价值明显高于看涨期权的时间价值；期权时间价值为负；平值点时间价值不是最大等问题。
+
+\textbf{关于无套利与可复制}：无套利指当套利机会出现，人们会利用套利机会获利，使得套利机会消失，表达的是人的主观意愿的假设。而可复制表达是是否能利用套利机会，表达是市场环境是否能允许套利进行。如现货价格被高估，期货价格被低估，虽然人们愿意进行套利，但在中国市场由于现货卖空存在限制，所以难以复制，最终导致了套利无法进行，无套利不满足。
+
+\subsection{做空限制}
+
+在中国市场中，现货市场存在较大的做空限制，使得市场中的价格由所以看多者和少量看空者决定，看空者的情绪无法表达，因此并不能反应所有投资者的真实情绪，现货价格相对被高估。如$F_{t,T}=S_t e^{r(T-t)}$，现货由于卖空限制，难以复制并进行套利。违法BSM假设中允许卖空标的证券的条件，若使用现货价格进入BSM模型存在较大误差。主要解决方法为使用衍生品市场信息代替：
+\begin{enumerate}
+    \item 继续使用BSM公式，但从衍生品市场提取隐含合理的现货价格：
+    \begin{itemize}
+        \item 期货中隐含的现货价格（无红利资产）：
+        \begin{equation*}
+            S^*_t = F_{t,T} e^{-r(T-t)}
+        \end{equation*}
+        \item ETF期权中隐含的现货价格，虽然ETF有红利但期权会进行调整，可视为无红利资产：
+        \begin{equation*}
+            S^*_t = \left( C_{t,T} - P_{t,T} \right) + Ke^{-r(T-t)}
+        \end{equation*}
+        \item 股指期权中隐含的现货价格（已知红利率），成分股分行股指不做调整，自然回落：
+        \begin{equation*}
+            S^*_t = \left( C_{t,T} - P_{t,T} \right)e^{q(T-t)} + Ke^{-(r-q)(T-t)}
+        \end{equation*}
+    \end{itemize}
+    \item 直接使用Black公式，使用期货价格进行计算，即：
+    \begin{align*}
+        C_{t,T} &= e^{-r(T-t)} \left[ F_{t,T} N(d_1) - K N(d_2) \right] \\
+        P_{t,T} &= e^{-r(T-t)} \left[ K N(-d_2) - F_{t,T} N(-d_1) \right]
+    \end{align*}
+\end{enumerate}
 
 \subsection{内在价值}
 
-已知期权价值可分解为内在价值与时间价值两个部分，即：
+已知期权价值可分解为内在价值（Intrinsic value）与时间价值（Time value）两个部分，即：
 \begin{equation*}
-    \text{期权价值（Option value）} = \text{内在价值（Intrinsic value）} + \text{时间价值（Time value）}
+    \boxed{
+        \text{期权价值} = \text{内在价值} + \text{时间价值}
+    }
 \end{equation*}
 
-内在价值为即\textbf{不考虑资产价格波动}的情况下，期权条款赋予期权多头的最高价值。而时间价值为\textbf{标的资产价格波动}为期权多头（权利方）所带来的隐含价值，由于期权权利方只有权力而无义务，因此期权的时间价值应该大于0。内在价值不受时间价值的影响，因而可以使用二分法。
+以波动划分，内在价值为\textbf{不考虑资产价格波动}的情况下，期权条款赋予期权多头的最高价值。而时间价值为\textbf{标的资产价格波动}为期权多头（权利方）所带来的隐含价值，由于期权的权利方只有权力而无义务，因此期权的内在价值以及时间价值都应大于0。时间价值受内在价值的影响，但内在价值不受时间价值的影响，因而使用两分法。即先计算出期权的内在价值，使用二分法，再确定期权的时间价值。
 
-若定义内在价值为，期权若在当下时点到期，期权所含的的价值（Hull，CME）。这样考虑的缺点为没有考虑货币的时间价值，且在中国市场由于现货的卖空限制，其价格高于其真实价格。
-\begin{align*}
-    \text{看涨期权内在价值} & = \max(S_t-K) \\
-    \text{看跌期权内在价值} & = \max(K-S_t)
+\subsubsection*{John Hull定义}
+
+定义内在价值为，期权若在当下时点到期，期权所含的的内在价值，如OFOD教科书、上交所、万得中。若美式期权，这样定义就是合理的，由于美式期权在到期日之前可以随时行权，则其内在价值都基于当前时点的股价与行权价进行计算。但如果是欧式期权，则没有考虑行权价货币的时间价值，现货价格为当前时点，但行权价为未来时点，应该对未来时点的行权价进行贴现。且在中国市场由于现货的卖空限制，其实际价格被高估。
+\noindent\begin{align*}
+    \text{看涨期权内在价值} & = \max(S_t-K,0) \\
+    \text{看跌期权内在价值} & = \max(K-S_t,0)
 \end{align*}
 
-在考虑货币时间价值的情形内在价值如下，缺点为依然没有考虑中国市场的卖空限制。
+\subsubsection*{完美市场定义}
+
+在考虑货币时间价值的情形内在价值如下，在完美市场中可适用，但没有考虑中国市场的卖空限制，需要进一步进行调整。
 \begin{align*}
-    \text{看涨期权内在价值} & = \max(S_t-Ke^{-r(T-t)}) \\
-    \text{看跌期权内在价值} & = \max(Ke^{-r(T-t)}-S_t)
+    \text{看涨期权内在价值} & = \max\left(S_t-Ke^{-r(T-t)},0\right) \\
+    \text{看跌期权内在价值} & = \max\left(Ke^{-r(T-t)}-S_t,0\right)
 \end{align*}
 
-因此考虑使用期货价格代替现货价格，以为期货市场多空双方均能自由表达其看法，因此有：
+\subsubsection*{中国市场定义}
+
+不考虑时间价值，那么欧式看涨权利方与远期合约多头的差别就是期权只有权利而没有义务，因此内在价值应为$\max(f_{t,T},0)$。同理，对于欧式看跌期权应有$\max(-f_{t,T},0)$。即使用期货价格代替现货价格，在期货市场多空双方均能自由表达其看法，且中美市场均可使用，因此有：
 \begin{align*}
-    \text{看涨期权内在价值} & = \max((F_{t,T}-K)e^{-r(T-t)}) \\
-    \text{看跌期权内在价值} & = \max((K-F_{t,T})e^{-r(T-t)})
+    \text{看涨期权内在价值} & = \max\left[(F_{t,T}-K)e^{-r(T-t)},0\right] \\
+    \text{看跌期权内在价值} & = \max\left[(K-F_{t,T})e^{-r(T-t)},0\right]
 \end{align*}
 
-由于在中国市场ETF期权有红利保护机制，即会下调行权价格，放大每手期权数量，相当于变相抬高了股票价格，或复权（加挂A标记的期权）。且在ETF中的成分股分红，其分红留在ETF当中。而ETF没有期货，只有股指期货，而股指期货不对分红进行调整，即没有红利保护，即其成分股分红后股指自然下跌。因而在使用股指期货或期权以及ETF现货或期权时，需要做红利调整。即在ETF现货中将红利剔除，此时有：
+\subsubsection*{ETF期权股指期货定义}
+
+由于在中国市场ETF期权，如50ETF，有红利保护机制。即会下调行权价格，放大每手期权数量，相当于变相抬高了股票价格进行复权，修复由于分红带来的影响，因此可视为无红利资产进行处理。而在中国市场中并没有50ETF期货，只有股指期货，且股指期货不对分红进行调整，即没有红利保护，即其成分股分红后股指自然下跌。因此使用股指期货计算ETF期权内在价值时，还需要再做红利调整。由于在计算期货时将现货中的红利剔除：
 \begin{equation*}
-    F_{t,T} = (S_t-I)e^{r(T-t)}
+    F_{t,T} = ( S_t - I_t )e^{r(T-t)}
 \end{equation*}
 
-此时则有，将上式代入，在中国市场中：
+因此，在计算内在价值时应将剔除的红利加回：
 \begin{align*}
-    \text{看涨期权内在价值} & = \max((F_{t,T}-K)e^{-r(T-t)}+I) \\
-    \text{看跌期权内在价值} & = \max((K-F_{t,T})e^{-r(T-t)}-I)
+    \text{看涨期权内在价值} & = \max\left[ (F_{t,T}-K) e^{-r(T-t)} + I_t \right] \\
+    \text{看跌期权内在价值} & = \max\left[ (K-F_{t,T}) e^{-r(T-t)} - I_t \right]
 \end{align*}
 
-因为平值点为使内在价值为零，则平值点定义为为$F_{t,T}=K$，这样定义使得实值虚值部分左右较为对称，有利于比较。此时有当$F<K$为OTM，此时值域为正，当$F>K$为ITM，则有值域为负。此时有对数在值状态（log-moneyness）：
+\subsection{平值点与在值程度}
+
+平值点是使得期权内在价值由正值变化到零（内在价值非负）的临界行权价，因为平值点使得内在价值变为零，则平值点使用远期价格的定义应为$F_{t,T}=K$，这样的定义使得实值虚值部分左右较为对称，利于比较。
+
+同理，对于现货（中国市场使用隐含现货价格）而言，平值点应有：
+\begin{itemize}
+    \item 无红利：$S_t e^{r(T-t)}$
+    \item 有红利：$\left(S_t - I_t \right)e^{r(T-t)} $
+    \item 红利率：$S_t e^{(r-q)(T-t)}$
+\end{itemize}
+
+使用对数在值程度（Log-moneyness）作为在值程度的定义，优点是使得值域范围有$(-\infty,\infty)$，使得实值期权与虚值期权幅度上对称。
 \begin{equation*}
-    \ln{\frac{K}{K_{atm}}} = \ln{\frac{K}{F}}
+    \ln \frac{K}{K_{\text{ATM}}} = \ln \frac{K}{F}
 \end{equation*}
 
-同时可以发现，在PCP下：
+同时可以发现，根据PCP公式：
 \begin{equation*}
-    c = p + (F_{t,T}-K) e^{-r(T-t)}
+    C_{t,T} = P_{t,T} + \left( F_{t,T} - K \right) e^{-r(T-t)}
 \end{equation*}
 
-对于平直期权ATM，则有$F_{t,T}=K$，易得此时$c=p$。而当看涨期权为ITM，其内在价值部分不为零。而对于此时得看跌期权为OTM，其内在价值为零，而仅有时间价值，因此可以得到，在新平值点定义下的，相同行权价，相同期限的看涨看跌期权：
-\begin{equation*}
-    c_{\text{时间价值}} = p_{\text{时间价值}}
-\end{equation*}
+根据平值期权ATM定义有$F_{t,T}=K$，易得此时$C_{t,T}=P_{t,T}$。
 
+当$F_{t,T} \geq K$时，此时看涨期权ITM，同时具有内在价值与时间价值。而看跌期权OTM，因此只具有时间价值。由如上定义，此时看涨期权内在价值为$\left( F_{t,T} - K \right) e^{-r(T-t)}$。根据PCP可以看到：
+\begin{align*}
+    C_{t,T} &= P_{t,T} + \left( F_{t,T} - K \right) e^{-r(T-t)} \\
+    \cancel{C_{\text{内在价值}}} + C_{\text{时间价值}}
+    &= P_{\text{时间价值}} + \cancel{C_{\text{内在价值}}} \\
+    C_{\text{时间价值}} &= P_{\text{时间价值}}
+\end{align*}
+
+同理，当$F_{t,T}<K$时，看跌期权为实值，同时具有内在价值与时间价值。因此，在新平值点定义下，\textbf{相同行权价、相同期限的看涨期权与看跌期权的时间价值应该相等}。
 
 \section{平价期权估计}
 
-当平值点为$S = K e^{-r(T-t)}$时，将其带入看涨BSM公式当中，则有：
+当平值点为$S_t = K e^{-r(T-t)}$时，将其带入看涨BSM公式当中，则有：
 \begin{equation*}
-    \frac{c}{S} = N(d_1) - N(d_2)
+    \frac{C}{S} = N(d_1) - N(d_2)
 \end{equation*}
 
 同样，对于看跌期权则有：
 \begin{align*}
-    \frac{p}{S} & = N(-d_2) - N(-d_1) \\
+    \frac{P}{S} & = N(-d_2) - N(-d_1) \\
     & = 1 - N(d_2) - [1-N(d_1)] \\
-    & = N(d_1) - N(d_2) = \frac{c}{S}
+    & = N(d_1) - N(d_2) = \frac{C}{S}
 \end{align*}
 
 对于$d_1$和$d_2$，此时有：
@@ -2046,26 +2112,6 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     &\approx \frac{\sigma\sqrt{T-t}}{\sqrt{2\pi}} \approx 0.4\sigma\sqrt{T-t}
 \end{align*}
 
-\subsection{做空限制}
-
-且在中国市场中现货存在较大的做空限制，即在现货市场的价格由看多者和少量看空者决定，并不能反应所有投资者的真实情绪，以至于难以复制期权，违法BSM公式假设条件。解决方法有：
-\begin{enumerate}
-    \item 使用期货进行贴现，得到其隐含现货价格，使用BSM进行计算，其中有：
-    \begin{itemize}
-        \item 期货隐含现货价格
-        \begin{equation*}
-            S^* = F e^{-r(T-t)}
-        \end{equation*}
-        \item 期权隐含现货价格
-        \begin{equation*}
-            S^*_t = \left( C_{t,T} - P_{t,T} \right) + Ke^{-r(T-t)}
-        \end{equation*}
-    \end{itemize}
-    \item 直接使用Black公式，使用期货价格进行计算，即：
-    \begin{equation*}
-        C = e^{-r(T-t)} \left[ F_t N(d_1)-K N(d_2) \right]
-    \end{equation*}
-\end{enumerate}
 
 
 \appendix

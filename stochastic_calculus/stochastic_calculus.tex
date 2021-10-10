@@ -1,10 +1,9 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,left=6em,right=6em]{geometry}
-\usepackage{amsmath,amsfonts,amsthm}
-\usepackage{bbold}
+\usepackage{amsmath,amsfonts,amsthm,bbold}
+\usepackage{booktabs,float,multirow}
 \usepackage{cancel}
 \usepackage{enumitem}
-\usepackage{booktabs,float,multirow}
 \usepackage{multicol}
 \usepackage{graphicx}
 \usepackage[toc,title]{appendix}
@@ -51,7 +50,7 @@
 \newcommand{\abs}[1]{\left\lvert #1\right\rvert}
 \newcommand{\norm}[1]{\left\lVert #1\right\rVert}
 
-\title{BSM公式}
+\title{随机分析}
 \author{杨弘毅}
 \date{创建: 2020 年 4 月 19 日 \\修改: \today}
 
@@ -839,18 +838,26 @@
 
 历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算：过去30个交易日的标准差。
 
-【核实】在 Black Scholes 的框架下，也就是假设股票价格服从 GBM 的时候，historical volatility 可以用 quadratic variation 计算。如下式：
+【待核实】在 Black Scholes 的框架下，也就是假设股票价格服从 GBM 的时候，historical volatility 可以用 quadratic variation 计算。如下式：
 \begin{equation*}
     \lim_{n\rightarrow \infty} \sum^{n}_{i=1}(X_{t_i} - X_{t_{i-1}})^2 = [X,X]_T = \sigma^2 T
 \end{equation*}
 
-其中$X_t$为股票价格的对数，$t_0,t_1,\dots,t_n$为$[0,T]$区间的一个划分。注意，这个和标准差不一样，这个其实是对数收益率的二阶距。可以证明，用 quadratic variation 得到的估计量是一致估计。
+其中$X_t$为股票价格的对数，$t_0,t_1,\dots,t_n$为$[0,T]$区间的一个划分。注意，这个和标准差不一样，这个其实是对数收益率的二阶距。可以证明，用 quadratic variation 得到的估计量是一致估计。???
+
+BSIV与MFIV为风险中性下的波动率
+
+
 
 \subsection{已实现波动率}
 
-已实现波动率（Readlized volatility）是针对频率较高的数据计算的一种波动率，又称为日内波动率或高频波动率。高频数据是指以小时、分钟或秒为采集频率的数据。一般使用日内高频频率为5分钟。为：
+【待整理】已实现波动率（Realized volatility），顾名思义，为已发生的波动率。
+
+一种为特定针对隐含波动率，目的用于对比，对应的已实现波动率。即如在t-30天的时点，观察未来30天的隐含波动率，而后在t时间，观察已发生的30日之内的历史波动率。
+
+一种为针对频率较高的数据计算的一种波动率，又称为日内波动率或高频波动率。高频数据是指以小时、分钟或秒为采集频率的数据。一般使用日内高频频率为5分钟。为：
 \begin{equation*}
-    \text{RV}_t = \sum^{N}_{j=1} r^2_{t,j}
+    \text{RV}_t = \sum^{T}_{i=1} r^2_{t} = \sum^{N}_{i=1} \left( \ln \frac{S_{t}}{S_{t-1}} \right)^2
 \end{equation*}
 
 以上只是最基础的计算日内高频波动率的方法，还有其他的计算日内波动率的方式如：
@@ -893,6 +900,24 @@ GARCH（1，1）模型方差如下：
 \begin{equation*}
     \text{EWMA} = a + \lambda r^{2}_{t-1,t} + (1-\lambda) \sigma^{2}_{t-1}
 \end{equation*}
+
+\subsubsection{GJR-GARCH波动率}
+
+\begin{gather*}
+    \sigma^2_t = \omega + \left( \alpha + \gamma I_{t-1]} \right) \varepsilon_{t-1}^2 + \beta \sigma_{t-1}^2 \\
+    r_t = \mu + \varepsilon_t \\
+    \varepsilon_t = \sigma_t z_t
+\end{gather*}
+
+\begin{equation*}
+    I_{t-1} = 
+    \begin{cases}
+        0 \quad\text{if}\quad r_{t-1} \geq \mu \\
+        1 \quad\text{if}\quad r_{t-1} < \mu 
+    \end{cases}
+\end{equation*}
+
+
 
 \subsubsection{局部波动率}
 
@@ -1287,7 +1312,7 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 
 \section{波动率曲面}
 
-波动率曲面（Volatility surface）
+【待添加】波动率曲面（Volatility surface），期限结构（到期时间与波动率），波动率偏斜曲线Volatility Skew Curve，或波动率微笑（在值程度与波动率）
 
 \section{希腊值}
 

@@ -1,67 +1,92 @@
 \documentclass[11pt]{article}
-\usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
-\usepackage{amsmath}
-% \usepackage{amstext}
-% \usepackage{float}
-% \usepackage{booktabs}
-% \usepackage{multirow}
+\usepackage[a4paper,left=6em,right=6em]{geometry}
+\usepackage{amsmath,amsfonts,amsthm,bbold}
+\usepackage{booktabs,float,multirow}
+\usepackage{cancel}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage[toc,title]{appendix}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+\usepackage{footmisc}
+\usepackage{hyperref}
+\usepackage{tocloft}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linkcolor=blue,
+    linktoc=all, %set to all if you want both sections and subsections linked
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black
+}
 \usepackage[UTF8]{ctex}
 
-\newcommand{\E}{\operatorname{E}}
-\newcommand{\Cov}{\operatorname{Cov}}
-\newcommand{\Var}{\operatorname{Var}}
+\setlength{\cftbeforesecskip}{6pt}
+\setlength{\parskip}{0.6em}
+\renewcommand{\baselinestretch}{1.3}
+\setlist{noitemsep,itemindent=1em,topsep=0em,leftmargin=4em,rightmargin=4em}
+\setlist[2]{leftmargin=2em}
+\newcommand{\divider}{\vspace{-\parskip}\noindent\rule{\linewidth}{0.4pt}}
 
-\title{统计知识复习}
+\newtheorem{thm}{定理}[section] 
+\newtheorem{defi}[thm]{定义}
+\newtheorem{lemm}[thm]{引理}
+\newtheorem{coro}[thm]{推论}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\rnE}{\widetilde{\mathbb{E}}}
+\newcommand{\wt}[1]{\widetilde{#1}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\abs}[1]{\left\lvert #1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+
+\title{计量经济学}
 \author{杨弘毅}
 \date{创建: 2020 年 4 月 9 日 \\修改: \today}
+
 \begin{document}
 \maketitle
 
-\section{Definition}
+\tableofcontents
 
-\subsection*{Expected Value}
-\noindent
+\section{基础}
+
+\subsection{期望}
+
+对于随机变量$X$，其概率空间为$(\Omega,\mathcal{F},P)$，期望值$\E[X]$，应有：
+\begin{equation*}
+    \E[X] = \int_{\Omega} X(\omega) dP(\omega)
+\end{equation*}
+
+在离散以及连续情形下有如下定义，其中$f(x)$为变量$X$的概率密度函数（PDF）。
 \begin{align*}
     \E[X] &= \sum_{i=i}^n x_i p_i =x_1 p_1 + x_2 p_2 + \dots + x_n p_n \\
-    &= \int x f(x) dx
+    \E[X] &= \int x f(x) dx
 \end{align*}
 
-\subsection*{Variance}
-\noindent
-\begin{align*}
-\Var(X) &= \Cov(X,X) = \sigma_X^2\\ 
-&= \E[(X-\E[X])^2] \\
-&= \E[X^2 - 2X\E[X] + \E[X]^2] \\
-&= \E[X^2] - 2\E[X]^2 + \E[X]^2 \\
-&= \E[X^2] - \E[X]^2
-\end{align*}
-
-\subsection*{Covariance}
-\noindent
-\begin{align*}
-\Cov(X,Y) &= \E[(X-E(X))(Y-E(Y))] \\
-&= \E[XY - X\E[Y] -Y\E[X]+ \E[X]\E[Y]] \\
-&= \E[XY] - \E[X]\E[Y] - \E[X]\E[Y] + \E[X]\E[Y] \\
-&= \E[XY] - \E[X]\E[Y]
-\end{align*}
-
-\subsection*{Correlation Coefficient}
-\noindent
-\begin{align*}
-\rho_{X,Y} &= \frac{\Cov(X,Y)}{\sigma_X\sigma_Y} \\
-&= \frac{\E[(X-\E[X])(Y-\E[Y])]}{\sigma_X\sigma_Y}
-\end{align*}
-
-\section{Expected Value Properties}
-\noindent
+其性质有：
 \begin{align*}
     \E[X+Y] &= \E[X] + \E[Y] \\
     \E[aX] &= a \E[X] \\
     \E[XY] &= \E[X]\E[Y] \quad \text{(X,Y are independent)}
 \end{align*}
 
-\section{Variance Properties}
-\noindent
+
+\subsection{方差}
+
+对于方差（Variance），定义有：
+\begin{align*}
+    \Var(X) &= \Cov(X,X) = \sigma_X^2\\ 
+    &= \E[(X-\E[X])^2] \\
+    &= \E[X^2 - 2X\E[X] + \E[X]^2] \\
+    &= \E[X^2] - 2\E[X]^2 + \E[X]^2 \\
+    &= \E[X^2] - \E[X]^2
+\end{align*}
+
+其性质有：
 \begin{align*}
     \Var(X + a) &= \Var(X) \\
     \Var(aX) &= a^2\Var(X) \\
@@ -72,8 +97,17 @@
     &= \sum_{i=1}^{N}a_i^2\Var(X_i) + 2\sum_{1 \leq i \leq j \leq N} a_i a_j \Cov(X_i,X_j)
 \end{align*}
 
-\section{Covariance Properties}
-\noindent
+\subsection{协方差}
+
+对于协方差（Covariance）其定义有：
+\begin{align*}
+    \Cov(X,Y) &= \E[(X-E(X))(Y-E(Y))] \\
+    &= \E[XY - X\E[Y] -Y\E[X]+ \E[X]\E[Y]] \\
+    &= \E[XY] - \E[X]\E[Y] - \E[X]\E[Y] + \E[X]\E[Y] \\
+    &= \E[XY] - \E[X]\E[Y]
+\end{align*}
+
+性质有：
 \begin{align*}
     \Cov(X,a) &= 0 \\
     \Cov(X,X) &= \Var(X) \\
@@ -82,6 +116,14 @@
     \Cov(X+a,Y+b) &= \Cov(X,Y) \\
     \Cov(aX+bY,cW+dV) &= ac\Cov(X,W)+ad\Cov(X,V)+bc\Cov(Y,W)+bd\Cov(Y,V)
 \end{align*}
+
+\subsection{相关系数}
+
+相关系数（Correlation Coefficient），为研究变量间线性相关程度的量。最早由统计学家卡尔·皮尔逊设计，也称为皮尔逊积矩相关系数（Pearson product-moment correlation coefficient），或皮尔逊相关系数：
+\begin{equation*}
+    \rho_{X,Y} = \frac{\Cov(X,Y)}{\sigma_X\sigma_Y}
+    = \frac{\E[(X-\E[X])(Y-\E[Y])]}{\sigma_X\sigma_Y}
+\end{equation*}
 
 \section{假设检验（Statistical hypothesis testing）}
 

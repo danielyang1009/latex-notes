@@ -38,9 +38,13 @@
 \newcommand{\divider}{\vspace{-\parskip}\noindent\rule{\linewidth}{0.4pt}}
 
 \newtheorem{thm}{定理}[section] 
-\newtheorem{defi}[thm]{定义}
-\newtheorem{lemm}[thm]{引理}
-\newtheorem{coro}[thm]{推论}
+\newtheorem{proposition}[thm]{命题}
+\newtheorem{lemma}[thm]{引理}
+\newtheorem{corollary}[thm]{推论}
+\newtheorem{property}[thm]{性质}
+\newtheorem{remark}[thm]{备注}
+\newtheorem{note}[thm]{注释}
+\newtheorem{example}[thm]{例子}
 
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\rnE}{\widetilde{\mathbb{E}}}
@@ -264,7 +268,7 @@
 
 \subsection{伊藤引理与证明}
 
-\begin{lemm}
+\begin{lemma}
     伊藤引理（Itô lemma），假设变量$X_t$遵循如下随机过程：
     \begin{equation*}
         dX_t =\mu_t dt + \sigma_t dW_t
@@ -274,7 +278,7 @@
     \begin{equation*}
         df(X_t,t) = \left(\frac{\partial f}{\partial t} + \mu_t \frac{\partial f}{\partial x} + \frac{1}{2} \sigma_t^2 \frac{\partial^2 f}{\partial x^2} \right)dt + \sigma_t \frac{\partial f}{\partial X} dW_t
     \end{equation*}
-\end{lemm}
+\end{lemma}
 
 \begin{proof}
     $f(X,t)$的泰勒展开式为：
@@ -910,7 +914,7 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
     d_2 &= d_1 - \sigma \sqrt{\tau}
 \end{align*}
 
-\begin{lemm}
+\begin{lemma}
     \begin{equation*}
         \frac{\partial d_2}{\partial S} = \frac{\partial d_1}{\partial S} = \frac{\frac{\partial \ln(S/K)}{\partial S} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln S - \ln K)/\partial S}{\sigma\sqrt{\tau}} = \frac{1}{S\sigma\sqrt{\tau}}
     \end{equation*}
@@ -923,14 +927,14 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
     \begin{equation*}
         \frac{\partial d_2}{\partial r} = \frac{\partial d_1}{\partial r}
     \end{equation*}
-\end{lemm}
+\end{lemma}
 
-\begin{lemm}
+\begin{lemma}
     对于BSM公式，有：
     \begin{equation*}
         S_t N'(d_1) = Ke^{-r\tau} N'(d_2)
     \end{equation*}
-\end{lemm}
+\end{lemma}
 
 \begin{proof}
     已知：
@@ -1463,12 +1467,12 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \end{cases}
 \end{equation*}
 
-\begin{coro}
+\begin{corollary}
     \begin{equation*}
         \int\limits^{\infty}_{-\infty} \delta(x) dx =
         \int\limits^{\infty}_{-\infty} \delta(-x) dx = 1
     \end{equation*}
-\end{coro}
+\end{corollary}
 
 \begin{proof}
     假设有函数：
@@ -1492,11 +1496,11 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \end{equation*}
 \end{proof}
 
-\begin{coro}
+\begin{corollary}
     \begin{equation*}
         \int\limits^{\infty}_{-\infty} f(x) \delta(x-x_0) dx = f(x_0)
     \end{equation*}
-\end{coro}
+\end{corollary}
 
 \begin{proof}
     \begin{equation*}
@@ -1511,11 +1515,11 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \end{equation*}
 \end{proof}
 
-\begin{coro}
+\begin{corollary}
     \begin{equation*}
         f(x)\delta(x-x_0) = f(x_0)\delta(x-x_0)        
     \end{equation*}
-\end{coro}
+\end{corollary}
 
 \begin{proof}
     易知$\delta$函数只在$x=x_0$有定义，因此等式两边函数性质相同，并且由如上可知两者积分性质也相同，因此等式两边相等。
@@ -1527,11 +1531,11 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
 \end{proof}
 利用如上性质，令$f(x)=x$，$x_0=0$易知$x\delta(x)=0$
 
-\begin{coro}
+\begin{corollary}
     \begin{equation*}
         \int\limits^{\infty}_{-\infty} \delta(x-x_1) \delta(x-x_2) dx = \delta(x_1-x_2)
     \end{equation*}
-\end{coro}
+\end{corollary}
 
 \begin{proof}
     已知：
@@ -1546,7 +1550,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \end{equation*}
 \end{proof}
 
-\begin{coro}
+\begin{corollary}
     已知赫维赛德阶跃函数（Heaviside step function）或单位阶跃函数定义如下：
     \begin{equation*}
         H(x) =
@@ -1564,10 +1568,10 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \begin{equation*}
         (x)^+ = \max(x,0) = \int H(x) dx
     \end{equation*}
-\end{coro}
+\end{corollary}
 
 \subsubsection*{方法2：狄拉克$\delta$函数}
-参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting coro改写函数为积分形式，并将积分分解为两部分（$K_0$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
+参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting corollary改写函数为积分形式，并将积分分解为两部分（$K_0$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
 \begin{align*}
     f(F) &= \int^{\infty}_{0}f(K)\delta(F-K)dK \\
     &= \int^{K_0}_{0}f(K)\delta(F-K)dK + \int^{\infty}_{K_0}f(K)\delta(F-K)dK \\

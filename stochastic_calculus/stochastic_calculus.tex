@@ -1282,9 +1282,9 @@ GARCH（1，1）模型方差如下：
 
 \subsubsection{无模型波动率}
 
-虽然一般将无模型波动率（Model-free implied volatility）认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。虽然早期的VIX是由8个期权的隐含BS波动率加权得到的30天（日历日或22天交易日）波动率预期（Whaley 1993），但现今已更新为无模型波动率。且发布时是根据S\&P100（OEX），因为其交易量较大，而当时S\&P500（SPX）交易量只有其五分之一。
+虽然一般将无模型波动率（Model-free implied volatility）认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。虽然早期的VIX是由8个期权的隐含BS波动率加权得到的30天（日历日或22天交易日）波动率预期（Whaley (1993)），但现今已更新为无模型波动率（Demeterfi et al. (1999)）。且发布时是根据S\&P100（OEX），因为其交易量较大，而当时S\&P500（SPX）交易量只有其五分之一。
 
-如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内波动率平方（Total variance）的期望。
+如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dW_t$，其中$\mu_t$与$\sigma_t$均为时变，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内已实现波动率平方（Total variance）的期望。
 
 对期权进行定价往往采用风险中性定价法，在风险中性的世界里，所有资产的预期收益率都等于无风险利率。同样对于未来一段时间内的波动率平均值的估计也可以认为是一种广义的“定价”，因此广义波动率被定义为风险中性的世界里从0时刻到T时刻期间的方差序列的平均值的平方根。
 
@@ -1333,17 +1333,24 @@ GARCH（1，1）模型方差如下：
     d \ln S_t = \left(\mu_t - \frac{\sigma^2_t}{2} \right) dt + \sigma_t dW_t
 \end{equation*}
 
-在风险中性测度下，此时$\mu=r$为常数，并且根据上述对数收益率$d\ln S_t$，积分形式有：
+在风险中性测度下，此时$\mu=r$为常数，由于$\int^T_0 \sigma_t d\wt{W}_t$为随机波动项，因此取期望后为0。
+\begin{align*}
+    \rnE \left[ \int_0^T \frac{dS_t}{S_t} \right] 
+    &= \rnE \left[ \int^T_0 r dt + \int^T_0 \sigma_t d\wt{W}_t \right] \\
+    &= \rnE \left[ r \int^T_0 dt \right] = rT
+\end{align*}
+
+对于上述对数收益率$d\ln S_t$，在风险中性下有：
 \begin{align*}
     \int^T_0 \frac{\sigma^2_t}{2} dt 
     &= \int^T_0 r dt + \int^T_0 \sigma_t d\wt{W}_t -\int^T_0 d\ln S_t \\
     &= rT - \ln S_T + \ln S_0 + \int^T_0 \sigma_t d\wt{W}_t \\
-    &= -\ln S_T + \ln S_t + \ln e^{rT} + \int^T_0 \sigma_t d\wt{W}_t \\
+    &= \ln e^{rT} -\ln S_T + \ln S_t + \int^T_0 \sigma_t d\wt{W}_t \\
     &= - \left[ \ln S_T - \ln S_0 e^{rT} \right] + \int^T_0 \sigma_t d\wt{W}_t \\
     &= - \left[ \ln \frac{S_T}{S_0 e^{rT}} \right] + \int^T_0 \sigma_t d\wt{W}_t
 \end{align*}
 
-由于$\int^T_0 \sigma_t d\wt{W}_t$为随机波动项，因此取期望后为0。需要注意$S_T$为随机变量，并且有$\rnE_0(S_T)=S_0 e^{rT}=F_{0,T}$。
+需要注意$S_T$为随机变量，并且有$\rnE_0(S_T)=S_0 e^{rT}=F_{0,T}$。
 \begin{align*}
     K_{var} &= \frac{1}{T} \rnE \left[ \int^T_0 \sigma^2_t dt \right] \\
     &= \frac{2}{T} \rnE \left[ - \ln\frac{S_T}{S_0 e^{rT}} \right] 
@@ -1356,12 +1363,11 @@ GARCH（1，1）模型方差如下：
     \frac{d S_t}{S_t} - d \ln S_t = \frac{1}{2}\sigma^2 dt
 \end{equation*}
 
-带入未来已实现方差中：
+则未来已实现方差应为：
 \begin{align*}
     K_{var} &= \frac{1}{T} \rnE \left[ \int^T_0 \sigma^2_t dt \right] \\
     &= \frac{2}{T} \rnE \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
     &= \frac{2}{T} \rnE \left[ \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right] \\
-    &= \frac{2}{T} \rnE \left[ \int^T_0 rdt + \int^T_0\sigma dZ_t  - \ln \frac{S_T}{S_0} \right] \\
     &= \frac{2}{T} \rnE \left[ rT  - \ln \frac{S_T}{S_0} \right] \\
     &= \frac{2}{T} \rnE \left[ \ln S_0 e^{rT} -\ln K_0 + \ln K_0 - \ln S_T \right] \\
     &= \frac{2}{T} \rnE \left[ \ln \frac{S_0 e^{rT}}{K_0} - \ln \frac{S_T}{K_0} \right] \\

@@ -1290,38 +1290,47 @@ GARCH（1，1）模型方差如下：
 
 \subsubsection*{方差互换与VIX}
 
-一个方差互换合约的价值（或payoff）定义如下：其中第一项为已实现波动率，而第二项$X_{var}$为使得合约在签订之时，合约价值为0的用于交换的固定方差：
+一个方差互换远期合约$f$在$t=0$时刻价值（Payoff）定义如下，其中$V$为\textbf{未来已实现方差}（$\sigma_R^2$），为浮动端，而$K$为交割价格（Delivery price）。应为未来价值在\textbf{风险中性}下期望在当前时点的现值：
 \begin{equation*}
-    \frac{252}{N} \sum^{N}_{i=1}\left(\ln S_i - \ln S_{i-1} \right)^2
-    = \frac{252}{N} \sum^{N}_{i=1}\left(\ln \frac{S_i}{S_{i-1}} \right)^2 - X_{var}
+    f = e^{-rT)} \rnE \left[V - K_{var} \right]
+\end{equation*}
+
+其中未来已实现方差的离散形式应有，假设一年有252个交易日：
+\begin{equation*}
+    V = \frac{252}{N} \sum^{N}_{i=1}\left(\ln S_i - \ln S_{i-1} \right)^2
+    = \frac{252}{N} \sum^{N}_{i=1}\left(\ln \frac{S_i}{S_{i-1}} \right)^2
+\end{equation*}
+
+未来已实现方差的近似为，未来N个时间间距内的方差之和，并进而从离散形式逼近连续形式：
+\begin{equation*}
+    V = \frac{252}{N} \sum^{N}_{i=1}\left(\ln \frac{S_i}{S_{i-1}} \right)^2
+    \approx \frac{1}{N\delta t} \sum^{N}_{i=1} \sigma^{2}_{t_{i-1}}\delta t
+    \quad\rightarrow\quad \frac{1}{T} \int^T_0 \sigma^2_t dt
+\end{equation*}
+
+因此在连续积分下，未来已实现方差应为：
+\begin{equation*}
+    V = \frac{1}{T} \int^T_0 \sigma^2_t dt
+\end{equation*}
+
+只有在远期签订时，使得合约价值为0的固定方差$K_{var}$才是公平的：
+\begin{equation*}
+    f = e^{-rT} \rnE \left[ \frac{1}{T} \int^T_0 \sigma^2 dt - K_{var} \right] = 0
+\end{equation*}
+
+此时具有公平交割价值（fair delivery value）的固定方差应为：
+\begin{equation*}
+    K_{var} = \frac{1}{T} \rnE \left[ \int^T_0 \sigma^2_t dt \right]
 \end{equation*}
 
 假设标的资产价格满足如下随机过程：
 \begin{equation*}
-    \frac{dS_t}{S_t} = \mu_t dt + \sigma_t dZ_t
+    \frac{dS_t}{S_t} = \mu_t dt + \sigma_t dW_t
 \end{equation*}
 
 使用Ito公式可得，对数收益率为：
 \begin{equation*}
-    d \ln S_t = \left(\mu_t - \frac{\sigma^2_t}{2} \right) dt + \sigma_t dZ_t
-\end{equation*}
-
-已实现波动率的近似可改写为在N个时间间距内的方差的期望，并进而从离散形式逼近连续形式：
-\begin{equation*}
-    \frac{252}{N} \sum^{N}_{i=1}\left(\ln \frac{S_i}{S_{i-1}} \right)^2
-    \approx \frac{1}{N\delta t} \sum^{N}_{i=1} \sigma^{2}_{t_{i-1}}\delta t
-    \rightarrow \frac{1}{T} \int^T_0 \sigma^2_t dt
-\end{equation*}
-
-因此在连续时间下，应有：
-\begin{equation*}
-    \frac{1}{T} \int^T_0 \sigma^2_t dt - X_{var}
-\end{equation*}
-
-如上所述，只有使得在签订时，互换合约价值为0的固定方差$X_{var}$才是公平的，那么根据风险中性定价：
-\begin{equation*}
-    e^{-rT} \rnE \left[ \frac{1}{T} \int^T_0 \sigma^2 dt - X_{var} \right] = 0 \quad \Rightarrow \quad
-    X_{var} = \rnE \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right]
+    d \ln S_t = \left(\mu_t - \frac{\sigma^2_t}{2} \right) dt + \sigma_t dW_t
 \end{equation*}
 
 在风险中性测度下，此时$\mu=r$为常数，并且根据上述对数收益率$d\ln S_t$，积分形式有：
@@ -1334,12 +1343,37 @@ GARCH（1，1）模型方差如下：
     &= - \left[ \ln \frac{S_T}{S_0 e^{rT}} \right] + \int^T_0 \sigma_t d\wt{W}_t
 \end{align*}
 
-由于$\int^T_0 \sigma_t d\wt{W}_t$为随机波动项，因此取期望后为0。需要注意$S_T$为随机变量，并且有$\rnE_0(S_T)=S_0 e^{rT}=F_{0,T}$，令$f(x)=\ln x$。利用下述两种方法（带积分余项的泰勒展开式以及使用狄拉克$\delta$函数）在$K=K_0$处展开带有随机变量的$S_T$的$\ln\frac{S_T}{K_0}$项则有：
+由于$\int^T_0 \sigma_t d\wt{W}_t$为随机波动项，因此取期望后为0。需要注意$S_T$为随机变量，并且有$\rnE_0(S_T)=S_0 e^{rT}=F_{0,T}$。
 \begin{align*}
-    X_{var} &= \frac{2}{T} \rnE \left[ - \ln\frac{S_T}{S_0 e^{rT}} \right] \\
-    &= \frac{2}{T} \rnE \left[ - \ln\frac{S_T}{F} \right] \\
+    K_{var} &= \frac{1}{T} \rnE \left[ \int^T_0 \sigma^2_t dt \right] \\
+    &= \frac{2}{T} \rnE \left[ - \ln\frac{S_T}{S_0 e^{rT}} \right] 
+    = \frac{2}{T} \rnE \left[ - \ln\frac{S_T}{F} \right] \\
+    &= \frac{2}{T} \rnE \left[\ln\frac{F}{K_0} - \ln\frac{S_T}{K_0}  \right]
+\end{align*}
+
+或将$\frac{dS_t}{S_t}$与$d\ln S_t$两式相减，进消去随机波动项$\sigma_t dW_t$：
+\begin{equation*}
+    \frac{d S_t}{S_t} - d \ln S_t = \frac{1}{2}\sigma^2 dt
+\end{equation*}
+
+带入未来已实现方差中：
+\begin{align*}
+    K_{var} &= \frac{1}{T} \rnE \left[ \int^T_0 \sigma^2_t dt \right] \\
+    &= \frac{2}{T} \rnE \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
+    &= \frac{2}{T} \rnE \left[ \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right] \\
+    &= \frac{2}{T} \rnE \left[ \int^T_0 rdt + \int^T_0\sigma dZ_t  - \ln \frac{S_T}{S_0} \right] \\
+    &= \frac{2}{T} \rnE \left[ rT  - \ln \frac{S_T}{S_0} \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln S_0 e^{rT} -\ln K_0 + \ln K_0 - \ln S_T \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln \frac{S_0 e^{rT}}{K_0} - \ln \frac{S_T}{K_0} \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln \frac{F}{K_0} - \ln \frac{S_T}{K_0} \right]
+\end{align*}
+
+利用下述两种方法：带积分余项的泰勒展开式，以及狄拉克$\delta$函数，在$K=K_0$处展开带有随机变量的$S_T$的$\ln\frac{S_T}{K_0}$项则有：
+\begin{align*}
+    K_{var} &=  \frac{1}{T} \rnE \left[ \int^T_0 \sigma^2_t dt \right] \\
     &= \frac{2}{T} \rnE \left[\ln\frac{F}{K_0} - \ln\frac{S_T}{K_0}  \right] \\
-    &= \frac{2}{T} \rnE \left[ \ln\frac{F}{K_0}- f'(K_0) (S_T-K_0) - \int^{K_0}_{0} f''(K) (K-S_T)^+ dK - \int^{\infty}_{K_0} f''(K) (S_T-K)^+ dK  \right] \\
+    &= \frac{2}{T} \rnE \left[ \ln\frac{F}{K_0}- f'(K_0) (S_T-K_0) \right. \\
+    &\hspace{4em} \left. - \int^{K_0}_{0} f''(K) (K-S_T)^+ dK - \int^{\infty}_{K_0} f''(K) (S_T-K)^+ dK  \right] \\
     &= \frac{2}{T} \rnE \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} + \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
 \end{align*}
 
@@ -1375,24 +1409,10 @@ GARCH（1，1）模型方差如下：
     }
 \end{equation*}
 
-VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。因此需要将两个不同期限的方差进行线性插值即可得到：
+VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。因此需要将两个不同期限的方差进行线性插值即可得到：
 \begin{equation*}
     \text{VIX} = 100 \times \sqrt{ \left\{ T_1 \sigma^2_1 \left[ \frac{N_{T_2} - N_{30}}{N_{T_2}-N_{T_1}}\right] + T_2 \sigma^2_2 \left[ \frac{N_{30} - N_{T_1}}{N_{T_2}-N_{T_1}}\right] \right\}\times \frac{N_{365}}{N_{30}} }
 \end{equation*}
-
-\subsubsection*{简化推导}
-
-将$\frac{dS_t}{S_t}$与$d\ln S_t$两式相减，进消去随机波动项$\sigma_t dZ_t$，并在风险中性下求期望：
-\begin{align*}
-    \sigma^2 &= \rnE \left[ \frac{1}{T} \int^T_0 \sigma^2_t dt \right] \\
-    &= \frac{2}{T} \rnE \int^T_0 \left[ \frac{d S_t}{S_t} - d \ln S_t \right] \\
-    &= \frac{2}{T} \rnE \left[ \int^T_0 \frac{d S_t}{S_t} - \int^T_0 d \ln S_t \right] \\
-    &= \frac{2}{T} \rnE \left[ \int^T_0 rdt + \int^T_0\sigma dZ_t  - \ln \frac{S_T}{S_0} \right] \\
-    &= \frac{2}{T} \rnE \left[ rT  - \ln \frac{S_T}{S_0} \right] \\
-    &= \frac{2}{T} \rnE \left[ \ln S_0 e^{rT} -\ln K_0 + \ln K_0 - \ln S_T \right] \\
-    &= \frac{2}{T} \rnE \left[ \ln \frac{S_0 e^{rT}}{K_0} - \ln \frac{S_T}{K_0} \right] \\
-    &= \frac{2}{T} \rnE \left[ \ln \frac{F}{K_0} - \ln \frac{S_T}{K_0} \right] \qquad \text{（可按上述方法进行推导）} 
-\end{align*}
 
 \subsubsection*{方法1：积分型余项的泰勒公式}
 在Carr和Wu（2006）《A Tale of Two Indices》中使用了带积分余项（Integral form of the remainder）的泰勒公式进行求解（三种余项分别为：积分余项、Lagrange余项和Peano余项）。令$f(x) = \ln x$，$x=F$，$a=K_0$和$n=1$，则有：

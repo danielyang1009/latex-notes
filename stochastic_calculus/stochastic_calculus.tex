@@ -823,6 +823,344 @@
     \item 如果到期时间（time to maturity）是根据日历日（calendar day）计算，那么此时的隐含波动率则为每日历日（per calendar day），而VIX计算是根据交易日（trading day），因此进行转换，并根据计算的日历日或交易日进行年化。
 \end{itemize}
 
+\section{希腊值}
+
+BSM定价公式的核心价值在于它构建了量化数学模型，以此可以计算期权的各种风险敞口，这对于将期权交易者至关重要。由BSM公式出发可以方便的求出期权价格对标的资产、时间、利率、波动率的偏导数，从而确定期权在这些因素上的风险敞口，常见的风险敞口由五类，由希腊字母表示，称为\text{希腊值}，分别是：Delta、Gamma、Vega、Theta与Rho。
+
+\subsection{正态分布与性质}
+
+对于正态分布或高斯分布（Gaussian distribution），其\textbf{概率密度函数}（Probability Density Function，PDF）：
+\begin{equation*}
+    f(x;\mu,\sigma) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma} \right)^2}
+\end{equation*}
+
+则有$N(x)$为标准正态分布（Standard normal distribution）的\textbf{累积分布函数}（CDF，Cumulative Distribution Function）为:
+\begin{equation*}
+    N(x) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{x}e^{-\frac{z^2}{2}}dz
+\end{equation*}
+
+则有$N'(x)$为标准正态分布的概率密度函数：
+\begin{equation*}
+    N'(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
+\end{equation*}
+
+由于正态分布的对称性，易知有如下性质：
+\begin{equation*}
+    N(-x) = 1-N(x) \qquad \qquad
+    N'(x) = N'(-x)
+\end{equation*}
+
+\subsection{希腊值定义}
+
+定义衍生品价格，对标的价格的一阶导为Delta，对标的价格的二阶导为Gamma，对于期限的一阶导为Theta，对于无风险利率的一阶导为Rho，对于波动率的一阶导为Sigma。
+\begin{equation*}
+    \text{Delta} = \frac{\partial V}{\partial S} \quad 
+    \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \quad
+    \text{Theta} = -\frac{\partial V}{\partial \tau} \quad
+    \text{Rho} = \frac{\partial V}{\partial r} \quad
+    \text{Vega} = \frac{\partial V}{\partial\sigma} \quad
+\end{equation*}
+
+\subsection{Black模型}
+
+\begin{align*}
+    C &= e^{-r\tau}[FN(d_1) - KN(d_2)] \\
+    P &= e^{-r\tau}[KN(-d_2) - FN(-d_1)]
+\end{align*}
+
+其中有：
+\begin{align*}
+    d_1 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= d_1 - \sigma \sqrt{\tau}
+\end{align*}
+
+\begin{equation*}
+    \frac{\partial d_1}{\partial F} = \frac{\partial d_2}{\partial F} = \frac{\frac{\partial \ln(F/K)}{\partial F} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln F - \ln K)/\partial F}{\sigma\sqrt{\tau}} = \frac{1}{F\sigma\sqrt{\tau}}
+\end{equation*}
+
+\subsubsection{Delta}
+
+\begin{align*}
+    FN'(d_1) &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
+    KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{\tau}-\sigma^2\tau/2} \\
+    &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\ln(F/K)} 
+    \qquad \left(d_1\sigma\sqrt{\tau} = \ln(F/K)+\sigma^2\tau\right) \\
+    &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
+    &= FN'(d_1) \\
+    \text{Delta}_C &= e^{-r\tau}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
+    &= e^{-r\tau}N(d_1) \\
+    \text{Delta}_P &= e^{-r\tau}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
+    &= e^{-r\tau}(-N(-d_1)) \qquad \left(KN'(-d_2) = KN'(d_2),\, FN'(-d_1)= FN'(d_1)\right) \\
+    &= e^{-r\tau}(N(d_1)-1)
+\end{align*}
+
+\subsection{BSM模型}
+
+当红利率为$q$时，有：
+\begin{align*}
+    C_t &= S_te^{-q\tau}N(d_1) - Ke^{-r\tau}N(d_2) \\
+    P_t &= -S_te^{-q\tau}N(-d_1) + Ke^{-r\tau}N(-d_2)
+\end{align*}
+
+其中有：
+\begin{align*}
+    d_1 &= \frac{\ln(S/K) + (r+-q+\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= \frac{\ln(S/K) + (r-q-\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= d_1 - \sigma \sqrt{\tau}
+\end{align*}
+
+\begin{lemm}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial S} = \frac{\partial d_1}{\partial S} = \frac{\frac{\partial \ln(S/K)}{\partial S} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln S - \ln K)/\partial S}{\sigma\sqrt{\tau}} = \frac{1}{S\sigma\sqrt{\tau}}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial \tau} = \frac{\partial d_1}{\partial \tau} - \frac{1}{2}\frac{\sigma}{\sqrt{\tau}}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial \sigma} = \frac{\partial d_1}{\partial \tau} - \sqrt{\tau}
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial d_2}{\partial r} = \frac{\partial d_1}{\partial r}
+    \end{equation*}
+\end{lemm}
+
+\begin{lemm}
+    对于BSM公式，有：
+    \begin{equation*}
+        S_t N'(d_1) = Ke^{-r\tau} N'(d_2)
+    \end{equation*}
+\end{lemm}
+
+\begin{proof}
+    已知：
+    \begin{align*}
+        d_2^2-d_1^2 &= (d_2-d_1)(d_2+d_1) \\
+        &= (-\sigma\sqrt{\tau})(2d_1-\sigma\sqrt{\tau}) \\
+        &= (-\sigma\sqrt{\tau})\left(\frac{2\ln(S_t/K) + 2(r+\sigma^2/2)\tau}{\sigma\sqrt{\tau}} -\sigma\sqrt{\tau}\right) \\
+        &= -2\left[\ln\frac{S_t}{K}+r\tau\right]
+    \end{align*}
+
+    同时已知$N'(x)=\frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}$，则有：
+    \begin{equation*}
+        \ln\left(\frac{N'(d_1)}{N'(d_2)}\right)
+        = -\frac{d_1^2}{2} + \frac{d_2^2}{2}
+        = \frac{1}{2} (d_2^2-d_1^2)
+        = -\left[\ln\frac{S_t}{K} +r\tau\right]
+    \end{equation*}
+
+    对等式两边取指数：
+    \begin{align*}
+        \frac{N'(d_1)}{N'(d_2)} 
+        &= \exp\left( -\left[\ln\frac{S_t}{K} +r\tau\right] \right) \\
+        &= \exp \left( \ln\frac{K}{S_t}-r\tau \right) \\
+        &= \frac{K}{S_t} e^{-r\tau} \\
+        S_t N'(d_1) &= Ke^{-r\tau} N'(d_2)
+    \end{align*}
+\end{proof}
+
+\subsubsection{Delta}
+
+对于无红利，即$q=0$时，Delta（$\Delta$）有：
+\begin{align*}
+    \text{Delta}_C &= \frac{\partial C}{\partial S}
+    = N(d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
+    \text{Delta}_P &= \frac{\partial P}{\partial S}
+    = -N(-d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
+\end{align*}
+
+当已知红利率时，有：
+\begin{align*}
+    \text{Delta}_C &= -e^{-q\tau} N(d_1) \\
+    \text{Delta}_P &= -e^{-q\tau} N(-d_1)
+\end{align*}
+
+\subsubsection{Gamma}
+
+对于Gamma（$\Gamma$）而言，看涨与看跌期权Gamma相同：
+\begin{equation*}
+    \text{Gamma} = \frac{\partial^2 V}{\partial S^2} = \frac{\partial N(d_1)}{\partial S} = N'(d_1)\frac{\partial d_1}{\partial S} = \frac{N'(d_1)}{S\sigma\sqrt{\tau}}
+\end{equation*}
+
+\subsubsection{Vega}
+
+对于Vega而言，看涨与看跌期权Vega相同
+\begin{equation*}
+    \text{Vega} = \frac{\partial V}{\partial \sigma}  = SN'(d_1)\sqrt{\tau}
+\end{equation*}
+
+当红利率为$q$时有：
+\begin{equation*}
+    \text{Vega}_C = \text{Vega}_P = S e^{-q\tau}N'(d_1)\sqrt{\tau}
+\end{equation*}
+
+推导：
+\begin{align*}
+    \text{Vega} &= \frac{\partial C}{\partial \sigma} = \frac{\partial}{\partial \sigma} \left[S N(d_1) - K e^{-r\tau}N(d_2)\right] \\
+    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \frac{\partial d_2}{\partial \sigma} \\
+    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \left[ \frac{\partial d_1}{\partial \sigma} -\sqrt{\tau} \right] \qquad \text{（对$d_2 = d_1 - \sigma\sqrt{\tau}$求导）} \\
+    &= \left[ S N'(d_1) - Ke^{-r\tau}N'(d_2) \right] \frac{\partial d_1}{\partial \sigma} + Ke^{-r\tau}N'(d_2) \sqrt{\tau} \\
+    &= S N'(d_1)\sqrt{\tau} \qquad \text{（已知$S N'(d_1) = Ke^{-r\tau}N'(d_2)$）}
+\end{align*}
+
+\subsubsection{Theta}
+
+对于欧式看涨期权有其Theta（$\Theta$）：
+\begin{equation*}
+    \text{Theta}_C = \frac{\partial C}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} - r K e^{-r\tau}N(d_2)
+\end{equation*}
+
+证明：
+\begin{align*}
+    \text{Theta}_C &= -\frac{\partial C}{\partial \tau} = - \frac{\partial [S_t N(d_1) - Ke^{-r\tau} N(d_2)]}{\partial \tau} \\ 
+    &= -\frac{\partial S_t N(d_1)}{\tau} + \frac{\partial Ke^{-r\tau} N(d_2)}{\partial \tau} \\ 
+    &= -S_t N'(d_1)\frac{\partial d_1}{\partial \tau} - rKe^{-r\tau}N(d_2) + Ke^{-r\tau} N'(d_2)\frac{\partial d_2}{\partial \tau} \\
+    &= -S_t N'(d_1)\frac{\partial d_1}{\partial \tau} - rKe^{-r\tau} N(d_2) + Ke^{-r\tau}N'(d_2)\left(\frac{\partial d_1}{\partial \tau} -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} \right) \\
+    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{-S_t N'(d_1) + Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ -rN(d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
+    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) - rKe^{-r\tau} N(d_2)
+\end{align*}
+
+对于欧式看跌期权有：
+\begin{equation*}
+    \text{Theta}_P = \frac{\partial P}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} + r K e^{-r\tau}N(-d_2)
+\end{equation*}
+
+证明：
+\begin{align*}
+    \text{Theta}_P &= -\frac{\partial P}{\partial \tau} = - \frac{\partial [-S_t N(-d_1) + Ke^{-r\tau} N(-d_2)]}{\partial \tau} \\ 
+    &= \frac{\partial S_t N(-d_1)}{\tau} - \frac{\partial Ke^{-r\tau} N(-d_2)}{\partial \tau} \\ 
+    &= S_t N'(-d_1)\frac{\partial d_1}{\partial \tau} + rKe^{-r\tau}N(-d_2) - Ke^{-r\tau} N'(-d_2)\frac{\partial d_2}{\partial \tau} \\
+    &= S_t N'(d_1)\frac{\partial d_1}{\partial \tau} + r Ke^{-r\tau} N(-d_2) - Ke^{-r\tau}N'(d_2)\left(\frac{\partial d_1}{\partial \tau} -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} \right) \\
+    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{S_t N'(d_1) - Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ rN(-d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
+    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau} N(-d_2) \\
+    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau}[1- N(d_2) ] = \text{Theta}_c + rKe^{-r\tau}
+\end{align*}
+
+另有，利用Put-Call Parity可知：
+\begin{equation*}
+    C + Ke^{-r\tau} = P + S_t \qquad \Rightarrow \qquad \frac{\partial C}{\partial \tau} - rKe^{-r\tau} = \frac{\partial P}{\partial \tau} 
+\end{equation*}
+
+等式两边对$\tau$求偏导：
+\begin{align*}
+    -\frac{\partial P}{\partial \tau} & = -\frac{\partial C}{\partial \tau} + rKe^{-r\tau} \\
+    \text{Theta}_P &= \text{Theta}_C + rKe^{-r\tau}
+\end{align*}
+
+\subsubsection{Rho}
+
+欧式看涨期权，对无风险利率求导可得：
+\begin{align*}
+    \text{Rho}_C &= \frac{\partial C}{\partial r} = 
+    \frac{\partial [S_t N(d_1) - Ke^{-r\tau} N(d_2)]}{\partial r} \\
+    &= S_t N'(d_1) \frac{\partial d_1}{\partial r} - Ke^{-r\tau} N'(d_2)\frac{\partial d_2}{\partial r} + \tau K e^{-r\tau} N(d_2) \\
+    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{S_t N'(d_1) - Ke^{-r\tau} N'(d_2) } \right] + \tau K e^{-r\tau} N(d_2) \\
+    &= \tau K e^{-r\tau} N(d_2)
+\end{align*}
+
+同理，对于欧式看跌期权：
+\begin{align*}
+    \text{Rho}_P &= \frac{\partial P}{\partial r} = 
+    \frac{\partial [-S_t N(-d_1) + Ke^{-r\tau} N(-d_2)]}{\partial r} \\
+    &= -S_t N'(d_1) \frac{\partial d_1}{\partial r} + Ke^{-r\tau} N'(-d_2)\frac{\partial d_2}{\partial r} - \tau Ke^{-r\tau} N(-d_2) \\
+    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{-S_t N'(d_1) + Ke^{-r\tau} N'(d_2) } \right] - \tau K e^{-r\tau} N(-d_2) \\
+    &= -\tau K e^{-r\tau} N(-d_2)
+\end{align*}
+
+\subsection{Delta对冲}
+Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
+\begin{equation*}
+    \Delta = \frac{\partial V}{\partial S}
+\end{equation*}
+
+而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
+\begin{equation*}
+    \Delta V \times N_V = \Delta S \times N_S \qquad \Rightarrow \qquad
+    \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
+\end{equation*}
+
+而对于投资组合而言，其净Delta（Net portfolio delta）应为组合内所有某合约Delta与该合约数量乘积之和：
+\begin{equation*}
+    \sum_{i=1}^{n} \text{Delta}_i \times \text{期权合约数}_i
+\end{equation*}
+
+同样对于Vega而言，投资组合净Vega（Net portfolio vega）为：
+\begin{equation*}
+    \sum_{i=1}^{n} \text{Vega}_i \times \text{期权合约数}_i
+\end{equation*}
+
+假定股票价格遵循几何布朗运动，则有在现实测度（Physical probability measure）下：
+\begin{equation*}
+    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
+\end{equation*}
+
+根据伊藤引理：
+\begin{equation*}
+    f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
+\end{equation*}
+
+【待整理】 在Bakshi and Kapadia 2003中，
+
+在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
+\begin{equation*}
+    \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+\begin{equation*}
+    \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+
+Long call, short delta stock/ short call, long delta stock
+
+Long put, long delta stock/ short put, short delta stock
+
+\subsection{泰勒级数}
+
+级数为无穷的序列（sequences）（或无穷多项）的和。泰勒级数（Taylor series）使用无限项序列来表示一个函数，每项由该函数在某一点的导数求得。一个函数的有限项的泰勒级数叫做泰勒多项式（Taylor polynomial）。对于一元函数在$x=a$处展开的泰勒级数有：
+\begin{align*}
+    f(x) &= \sum^{\infty}_{n=0} \frac{f^{(n)}(a)}{n!}(x-a)^n \\
+    &= \frac{f(a)}{1}(1)+ \frac{f'(a)}{1}(x-a) + \frac{f''(a)}{2}(x-a)^2 + \frac{f'''(a)}{6}(x-a)^3 + \dots \\
+    &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a) + \frac{f'''(a)}{6}(x-a)^3 + \dots
+\end{align*}
+
+对于多元函数在$(a,b)$处展开的泰勒级数为：
+\begin{align*}
+    f(x,y) &= f(a,b) + f'_x(a,b)(x-a) + f'_y(a,b)(y-b) \\
+    &\quad + \frac{1}{2}f''_{xx}(a,b)(x-a)^2 + \frac{1}{2}f''_{yy}(a,b)(y-b)^2 +\cancel{2*\frac{1}{2}}f''_{xy}(a,b)(x-a)(y-b)
+\end{align*}
+
+\subsubsection*{原理}
+假设使用多项式$P(x) = c_0 + c_1 (x-a) + c_2 (x-a)^2 + \dots$近似原函数。则应有多项式与原函数，从零阶导开始至$n$阶导，在$x=a$点的取值都与原函数相同（即从单个点，提取原函数所有导数信息）：
+\begin{itemize}
+    \item $x-a$使得带入a进行计算时，除了当前导数对应次数的项之外都等于零。如原函数在$a$点的二阶导$f''(a)$，对应泰勒级数$x$二次项的系数$c_2$：一阶导为$P'(x) = c_1 + 2c_2(x-a)+\dots$，二阶导为$P''(x) = 2c_2 + 3c_3(x-a)^2 + \dots$，则有$P''(a) = 2c_2 = f''(a)$，此时$c_2 = \tfrac{f''(a)}{2}$
+    \item 小于当前求导次数的泰勒级数项，由于求导都为零（如上所示求二阶导后，常数项与一次项都为0），使得多项式每一项的系数$c_n$都独立对应原函数n阶导数值
+    \item 系数为$\frac{1}{n!}$是为了取消多次求导的影响，如$P'''(x)=3 \cdot 2 \cdot 1 \cdot c_3(x-a) + \cdots$
+\end{itemize}
+
+\subsection{对冲参数}
+
+假设投资组合$\Pi$为标的资产价格$S$与时间$t$的函数,则有在$(S_0,t_0)$展开为：
+\begin{align*}
+    \Pi(S,T) &= \Pi(S_0,t_0) + \frac{\partial \Pi}{\partial S}(S-S_0) + \frac{\partial \Pi}{\partial t}(t-t_0) \\
+    &\quad + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}(S-S_0)^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}(t-t_0)^2 + \frac{\partial^2 \Pi}{\partial S \partial t}(S-S_0)(t-t_0) + \dots
+\end{align*}
+
+整理可得：
+\begin{equation*}
+    \Delta \Pi = \frac{\partial \Pi}{\partial S}\Delta S + \frac{\partial \Pi}{\partial t}\Delta t + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}\Delta S^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}\Delta t^2 + \frac{\partial^2 \Pi}{\partial S \partial t}\Delta S \Delta t + \dots
+\end{equation*}
+
+将阶数高于$\Delta t$的项忽略（前三项之后），可以发现对于一个Delta中立的投资组合，应有\footnote{见OFOD第十版附录19A\label{ofod_19a}}：
+\begin{equation*}
+    \Delta \Pi = \Theta \Delta t + \frac{1}{2} \Gamma \Delta S^2
+\end{equation*}
+
+在实践中,波动率并非为常数。在短时间内忽略无风险利率的变化，仅仅关注标的资产价格$S$以及隐含波动率$\sigma_{imp}$作为期权价格$V$的近似，则有\footref{ofod_19a}：
+\begin{equation*}
+    \Delta V = \frac{\partial V}{\partial S}\Delta S + \frac{\partial V}{\partial \sigma_{imp}}\Delta \sigma_{imp} + \frac{1}{2} \frac{\partial^2 V}{\partial S^2}\Delta S^2 + \frac{1}{2} \frac{\partial^2 V}{\partial \sigma^2_{imp}} \Delta \sigma^2_{imp} + \frac{\partial^2 V}{\partial S \partial \sigma_{imp}}\Delta S \Delta \sigma_{imp} + \dots
+\end{equation*}
+
+可见delta、vega、gamma对应了上式中的前三项。而交易员也将$\tfrac{\partial^2 V}{\partial \sigma^2_{imp}}$称为Vomma，即Vega对于$\sigma_{imp}$的敏感程度，或Vega的Vega。将$\tfrac{\partial^2 V}{\partial S\partial \sigma_{imp}}$称为Vanna，或理解为Delta的Vega，即对于$\sigma_{imp}$的变动，Delta的敏感程度。
+
 \section{波动率}
 
 波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
@@ -851,7 +1189,6 @@
 BSIV与MFIV为风险中性下的波动率
 
 
-
 \subsection{已实现波动率}
 
 【待整理】已实现波动率（Realized volatility），顾名思义，为已发生的波动率。
@@ -871,18 +1208,7 @@ BSIV与MFIV为风险中性下的波动率
     \item ...
 \end{itemize}
 
-\subsection{随机波动率}
-
-随机波动率（Sochastic volatility）指随机过程的波动率为随机变量。
-% https://en.wikipedia.org/wiki/Stochastic_volatility
-\begin{itemize}
-    \item Heston model
-    \item SABR
-    \item CEV（Constant elasticity of variance model）
-    \item GARCH
-\end{itemize}
-
-\subsubsection{GARCH波动率}
+\subsection{GARCH波动率}
 
 GARCH为广义自回归条件异方差模型（Generalized autoregressive conditional heteroskedasticity）。Robert Engle于1982年在《计量经济学》上提出了ARCH模型用于估计和预测波动率。在此基础上，Bollerslev(1986)建立了广义自回归条件异方差(GARCH)模型。
 
@@ -920,6 +1246,17 @@ GARCH（1，1）模型方差如下：
     \end{cases}
 \end{equation*}
 
+\subsection{随机波动率}
+
+随机波动率（Sochastic volatility）指随机过程的波动率为随机变量。
+% https://en.wikipedia.org/wiki/Stochastic_volatility
+\begin{itemize}
+    \item Heston model
+    \item SABR
+    \item CEV（Constant elasticity of variance model）
+    \item Local volatility
+\end{itemize}
+
 \subsubsection{局部波动率}
 
 【核实】Local volatility，这个其实是一个作为 stochastic volatility 的一种替代做法，就是认为 volatility 是一个关于时间和资产价格的确定性函数$\sigma(t,S_t)$ ,因此也叫 Deterministic Volatility Function (DVF)。这样做也就是为了避免 Heston Model 等 stochastic volatility 带来的计算复杂度。Dupire 给出了一种计算 local volatility 的方法：
@@ -945,7 +1282,9 @@ GARCH（1，1）模型方差如下：
 
 \subsubsection{无模型波动率}
 
-虽然一般将无模型波动率（Model-free implied volatility）认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内波动率平方（Total variance）的期望。
+虽然一般将无模型波动率（Model-free implied volatility）认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。虽然早期的VIX是由8个期权的隐含BS波动率加权得到的30天（日历日或22天交易日）波动率预期（Whaley 1993），但现今已更新为无模型波动率。且发布时是根据S\&P100（OEX），因为其交易量较大，而当时S\&P500（SPX）交易量只有其五分之一。
+
+如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dZ_t$，其中$\mu_t$与$\sigma_t$均为时变，即微观上类几何布朗运动，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内波动率平方（Total variance）的期望。
 
 对期权进行定价往往采用风险中性定价法，在风险中性的世界里，所有资产的预期收益率都等于无风险利率。同样对于未来一段时间内的波动率平均值的估计也可以认为是一种广义的“定价”，因此广义波动率被定义为风险中性的世界里从0时刻到T时刻期间的方差序列的平均值的平方根。
 
@@ -1316,344 +1655,6 @@ VIX为未来30天的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。
 \section{波动率曲面}
 
 【待添加】波动率曲面（Volatility surface），期限结构（到期时间与波动率），波动率偏斜曲线Volatility Skew Curve，或波动率微笑（在值程度与波动率）
-
-\section{希腊值}
-
-BSM定价公式的核心价值在于它构建了量化数学模型，以此可以计算期权的各种风险敞口，这对于将期权交易者至关重要。由BSM公式出发可以方便的求出期权价格对标的资产、时间、利率、波动率的偏导数，从而确定期权在这些因素上的风险敞口，常见的风险敞口由五类，由希腊字母表示，称为\text{希腊值}，分别是：Delta、Gamma、Vega、Theta与Rho。
-
-\subsection{正态分布与性质}
-
-对于正态分布或高斯分布（Gaussian distribution），其\textbf{概率密度函数}（Probability Density Function，PDF）：
-\begin{equation*}
-    f(x;\mu,\sigma) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma} \right)^2}
-\end{equation*}
-
-则有$N(x)$为标准正态分布（Standard normal distribution）的\textbf{累积分布函数}（CDF，Cumulative Distribution Function）为:
-\begin{equation*}
-    N(x) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{x}e^{-\frac{z^2}{2}}dz
-\end{equation*}
-
-则有$N'(x)$为标准正态分布的概率密度函数：
-\begin{equation*}
-    N'(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
-\end{equation*}
-
-由于正态分布的对称性，易知有如下性质：
-\begin{equation*}
-    N(-x) = 1-N(x) \qquad \qquad
-    N'(x) = N'(-x)
-\end{equation*}
-
-\subsection{希腊值定义}
-
-定义衍生品价格，对标的价格的一阶导为Delta，对标的价格的二阶导为Gamma，对于期限的一阶导为Theta，对于无风险利率的一阶导为Rho，对于波动率的一阶导为Sigma。
-\begin{equation*}
-    \text{Delta} = \frac{\partial V}{\partial S} \quad 
-    \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \quad
-    \text{Theta} = -\frac{\partial V}{\partial \tau} \quad
-    \text{Rho} = \frac{\partial V}{\partial r} \quad
-    \text{Vega} = \frac{\partial V}{\partial\sigma} \quad
-\end{equation*}
-
-\subsection{Black模型}
-
-\begin{align*}
-    C &= e^{-r\tau}[FN(d_1) - KN(d_2)] \\
-    P &= e^{-r\tau}[KN(-d_2) - FN(-d_1)]
-\end{align*}
-
-其中有：
-\begin{align*}
-    d_1 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
-    d_2 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
-    d_2 &= d_1 - \sigma \sqrt{\tau}
-\end{align*}
-
-\begin{equation*}
-    \frac{\partial d_1}{\partial F} = \frac{\partial d_2}{\partial F} = \frac{\frac{\partial \ln(F/K)}{\partial F} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln F - \ln K)/\partial F}{\sigma\sqrt{\tau}} = \frac{1}{F\sigma\sqrt{\tau}}
-\end{equation*}
-
-\subsubsection{Delta}
-
-\begin{align*}
-    FN'(d_1) &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
-    KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{\tau}-\sigma^2\tau/2} \\
-    &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\ln(F/K)} 
-    \qquad \left(d_1\sigma\sqrt{\tau} = \ln(F/K)+\sigma^2\tau\right) \\
-    &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
-    &= FN'(d_1) \\
-    \text{Delta}_C &= e^{-r\tau}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
-    &= e^{-r\tau}N(d_1) \\
-    \text{Delta}_P &= e^{-r\tau}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
-    &= e^{-r\tau}(-N(-d_1)) \qquad \left(KN'(-d_2) = KN'(d_2),\, FN'(-d_1)= FN'(d_1)\right) \\
-    &= e^{-r\tau}(N(d_1)-1)
-\end{align*}
-
-\subsection{BSM模型}
-
-当红利率为$q$时，有：
-\begin{align*}
-    C_t &= S_te^{-q\tau}N(d_1) - Ke^{-r\tau}N(d_2) \\
-    P_t &= -S_te^{-q\tau}N(-d_1) + Ke^{-r\tau}N(-d_2)
-\end{align*}
-
-其中有：
-\begin{align*}
-    d_1 &= \frac{\ln(S/K) + (r+-q+\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
-    d_2 &= \frac{\ln(S/K) + (r-q-\frac{\sigma^2}{2})\tau}{\sigma \sqrt{\tau}} \\
-    d_2 &= d_1 - \sigma \sqrt{\tau}
-\end{align*}
-
-\begin{lemm}
-    \begin{equation*}
-        \frac{\partial d_2}{\partial S} = \frac{\partial d_1}{\partial S} = \frac{\frac{\partial \ln(S/K)}{\partial S} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln S - \ln K)/\partial S}{\sigma\sqrt{\tau}} = \frac{1}{S\sigma\sqrt{\tau}}
-    \end{equation*}
-    \begin{equation*}
-        \frac{\partial d_2}{\partial \tau} = \frac{\partial d_1}{\partial \tau} - \frac{1}{2}\frac{\sigma}{\sqrt{\tau}}
-    \end{equation*}
-    \begin{equation*}
-        \frac{\partial d_2}{\partial \sigma} = \frac{\partial d_1}{\partial \tau} - \sqrt{\tau}
-    \end{equation*}
-    \begin{equation*}
-        \frac{\partial d_2}{\partial r} = \frac{\partial d_1}{\partial r}
-    \end{equation*}
-\end{lemm}
-
-\begin{lemm}
-    对于BSM公式，有：
-    \begin{equation*}
-        S_t N'(d_1) = Ke^{-r\tau} N'(d_2)
-    \end{equation*}
-\end{lemm}
-
-\begin{proof}
-    已知：
-    \begin{align*}
-        d_2^2-d_1^2 &= (d_2-d_1)(d_2+d_1) \\
-        &= (-\sigma\sqrt{\tau})(2d_1-\sigma\sqrt{\tau}) \\
-        &= (-\sigma\sqrt{\tau})\left(\frac{2\ln(S_t/K) + 2(r+\sigma^2/2)\tau}{\sigma\sqrt{\tau}} -\sigma\sqrt{\tau}\right) \\
-        &= -2\left[\ln\frac{S_t}{K}+r\tau\right]
-    \end{align*}
-
-    同时已知$N'(x)=\frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}$，则有：
-    \begin{equation*}
-        \ln\left(\frac{N'(d_1)}{N'(d_2)}\right)
-        = -\frac{d_1^2}{2} + \frac{d_2^2}{2}
-        = \frac{1}{2} (d_2^2-d_1^2)
-        = -\left[\ln\frac{S_t}{K} +r\tau\right]
-    \end{equation*}
-
-    对等式两边取指数：
-    \begin{align*}
-        \frac{N'(d_1)}{N'(d_2)} 
-        &= \exp\left( -\left[\ln\frac{S_t}{K} +r\tau\right] \right) \\
-        &= \exp \left( \ln\frac{K}{S_t}-r\tau \right) \\
-        &= \frac{K}{S_t} e^{-r\tau} \\
-        S_t N'(d_1) &= Ke^{-r\tau} N'(d_2)
-    \end{align*}
-\end{proof}
-
-\subsubsection{Delta}
-
-对于无红利，即$q=0$时有：
-\begin{align*}
-    \text{Delta}_C &= \frac{\partial C}{\partial S}
-    = N(d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
-    \text{Delta}_P &= \frac{\partial P}{\partial S}
-    = -N(-d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
-\end{align*}
-
-当已知红利率时，有：
-\begin{align*}
-    \text{Delta}_C &= -e^{-q\tau} N(d_1) \\
-    \text{Delta}_P &= -e^{-q\tau} N(-d_1)
-\end{align*}
-
-\subsubsection{Gamma}
-
-对于gamma而言，calls和puts相同
-\begin{equation*}
-    \text{Gamma} = \frac{\partial^2 V}{\partial S^2} = \frac{\partial N(d_1)}{\partial S} = N'(d_1)\frac{\partial d_1}{\partial S} = \frac{N'(d_1)}{S\sigma\sqrt{\tau}}
-\end{equation*}
-
-\subsubsection{Vega}
-
-对于Vega而言，看涨与看跌期权Vega相同
-\begin{equation*}
-    \text{Vega} = \frac{\partial V}{\partial \sigma}  = SN'(d_1)\sqrt{\tau}
-\end{equation*}
-
-当红利率为$q$时有：
-\begin{equation*}
-    \text{Vega}_C = \text{Vega}_P = S e^{-q\tau}N'(d_1)\sqrt{\tau}
-\end{equation*}
-
-推导：
-\begin{align*}
-    \text{Vega} &= \frac{\partial C}{\partial \sigma} = \frac{\partial}{\partial \sigma} \left[S N(d_1) - K e^{-r\tau}N(d_2)\right] \\
-    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \frac{\partial d_2}{\partial \sigma} \\
-    &= S N'(d_1) \frac{\partial d_1}{\partial \sigma} - Ke^{-r\tau}N'(d_2) \left[ \frac{\partial d_1}{\partial \sigma} -\sqrt{\tau} \right] \qquad \text{（对$d_2 = d_1 - \sigma\sqrt{\tau}$求导）} \\
-    &= \left[ S N'(d_1) - Ke^{-r\tau}N'(d_2) \right] \frac{\partial d_1}{\partial \sigma} + Ke^{-r\tau}N'(d_2) \sqrt{\tau} \\
-    &= S N'(d_1)\sqrt{\tau} \qquad \text{（已知$S N'(d_1) = Ke^{-r\tau}N'(d_2)$）}
-\end{align*}
-
-\subsubsection{Theta}
-
-对于欧式看涨期权有：
-\begin{equation*}
-    \text{Theta}_C = \frac{\partial C}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} - r K e^{-r\tau}N(d_2)
-\end{equation*}
-
-证明：
-\begin{align*}
-    \text{Theta}_C &= -\frac{\partial C}{\partial \tau} = - \frac{\partial [S_t N(d_1) - Ke^{-r\tau} N(d_2)]}{\partial \tau} \\ 
-    &= -\frac{\partial S_t N(d_1)}{\tau} + \frac{\partial Ke^{-r\tau} N(d_2)}{\partial \tau} \\ 
-    &= -S_t N'(d_1)\frac{\partial d_1}{\partial \tau} - rKe^{-r\tau}N(d_2) + Ke^{-r\tau} N'(d_2)\frac{\partial d_2}{\partial \tau} \\
-    &= -S_t N'(d_1)\frac{\partial d_1}{\partial \tau} - rKe^{-r\tau} N(d_2) + Ke^{-r\tau}N'(d_2)\left(\frac{\partial d_1}{\partial \tau} -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} \right) \\
-    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{-S_t N'(d_1) + Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ -rN(d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
-    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) - rKe^{-r\tau} N(d_2)
-\end{align*}
-
-对于欧式看跌期权有：
-\begin{equation*}
-    \text{Theta}_P = \frac{\partial P}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} + r K e^{-r\tau}N(-d_2)
-\end{equation*}
-
-证明：
-\begin{align*}
-    \text{Theta}_P &= -\frac{\partial P}{\partial \tau} = - \frac{\partial [-S_t N(-d_1) + Ke^{-r\tau} N(-d_2)]}{\partial \tau} \\ 
-    &= \frac{\partial S_t N(-d_1)}{\tau} - \frac{\partial Ke^{-r\tau} N(-d_2)}{\partial \tau} \\ 
-    &= S_t N'(-d_1)\frac{\partial d_1}{\partial \tau} + rKe^{-r\tau}N(-d_2) - Ke^{-r\tau} N'(-d_2)\frac{\partial d_2}{\partial \tau} \\
-    &= S_t N'(d_1)\frac{\partial d_1}{\partial \tau} + r Ke^{-r\tau} N(-d_2) - Ke^{-r\tau}N'(d_2)\left(\frac{\partial d_1}{\partial \tau} -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} \right) \\
-    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{S_t N'(d_1) - Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ rN(-d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
-    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau} N(-d_2) \\
-    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau}[1- N(d_2) ] = \text{Theta}_c + rKe^{-r\tau}
-\end{align*}
-
-另有，利用Put-Call Parity可知：
-\begin{equation*}
-    C + Ke^{-r\tau} = P + S_t \qquad \Rightarrow \qquad \frac{\partial C}{\partial \tau} - rKe^{-r\tau} = \frac{\partial P}{\partial \tau} 
-\end{equation*}
-
-等式两边对$\tau$求偏导：
-\begin{align*}
-    -\frac{\partial P}{\partial \tau} & = -\frac{\partial C}{\partial \tau} + rKe^{-r\tau} \\
-    \text{Theta}_P &= \text{Theta}_C + rKe^{-r\tau}
-\end{align*}
-
-\subsubsection{Rho}
-
-欧式看涨期权，对无风险利率求导可得：
-\begin{align*}
-    \text{Rho}_C &= \frac{\partial C}{\partial r} = 
-    \frac{\partial [S_t N(d_1) - Ke^{-r\tau} N(d_2)]}{\partial r} \\
-    &= S_t N'(d_1) \frac{\partial d_1}{\partial r} - Ke^{-r\tau} N'(d_2)\frac{\partial d_2}{\partial r} + \tau K e^{-r\tau} N(d_2) \\
-    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{S_t N'(d_1) - Ke^{-r\tau} N'(d_2) } \right] + \tau K e^{-r\tau} N(d_2) \\
-    &= \tau K e^{-r\tau} N(d_2)
-\end{align*}
-
-同理，对于欧式看跌期权：
-\begin{align*}
-    \text{Rho}_P &= \frac{\partial P}{\partial r} = 
-    \frac{\partial [-S_t N(-d_1) + Ke^{-r\tau} N(-d_2)]}{\partial r} \\
-    &= -S_t N'(d_1) \frac{\partial d_1}{\partial r} + Ke^{-r\tau} N'(-d_2)\frac{\partial d_2}{\partial r} - \tau Ke^{-r\tau} N(-d_2) \\
-    &= \frac{\partial d_1}{\partial \tau} \left[\cancel{-S_t N'(d_1) + Ke^{-r\tau} N'(d_2) } \right] - \tau K e^{-r\tau} N(-d_2) \\
-    &= -\tau K e^{-r\tau} N(-d_2)
-\end{align*}
-
-\subsection{Delta对冲}
-Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
-\begin{equation*}
-    \Delta = \frac{\partial V}{\partial S}
-\end{equation*}
-
-而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
-\begin{equation*}
-    \Delta V \times N_V = \Delta S \times N_S \qquad \Rightarrow \qquad
-    \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
-\end{equation*}
-
-而对于投资组合而言，其净Delta（Net portfolio delta）应为组合内所有某合约Delta与该合约数量乘积之和：
-\begin{equation*}
-    \sum_{i=1}^{n} \text{Delta}_i \times \text{期权合约数}_i
-\end{equation*}
-
-同样对于Vega而言，投资组合净Vega（Net portfolio vega）为：
-\begin{equation*}
-    \sum_{i=1}^{n} \text{Vega}_i \times \text{期权合约数}_i
-\end{equation*}
-
-假定股票价格遵循几何布朗运动，则有在现实测度（Physical probability measure）下：
-\begin{equation*}
-    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
-\end{equation*}
-
-根据伊藤引理：
-\begin{equation*}
-    f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
-\end{equation*}
-
-【待整理】 在Bakshi and Kapadia 2003中，
-
-在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
-\begin{equation*}
-    \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
-\end{equation*}
-\begin{equation*}
-    \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
-\end{equation*}
-
-Long call, short delta stock/ short call, long delta stock
-
-Long put, long delta stock/ short put, short delta stock
-
-\subsection{泰勒级数}
-
-级数为无穷的序列（sequences）（或无穷多项）的和。泰勒级数（Taylor series）使用无限项序列来表示一个函数，每项由该函数在某一点的导数求得。一个函数的有限项的泰勒级数叫做泰勒多项式（Taylor polynomial）。对于一元函数在$x=a$处展开的泰勒级数有：
-\begin{align*}
-    f(x) &= \sum^{\infty}_{n=0} \frac{f^{(n)}(a)}{n!}(x-a)^n \\
-    &= \frac{f(a)}{1}(1)+ \frac{f'(a)}{1}(x-a) + \frac{f''(a)}{2}(x-a)^2 + \frac{f'''(a)}{6}(x-a)^3 + \dots \\
-    &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a) + \frac{f'''(a)}{6}(x-a)^3 + \dots
-\end{align*}
-
-对于多元函数在$(a,b)$处展开的泰勒级数为：
-\begin{align*}
-    f(x,y) &= f(a,b) + f'_x(a,b)(x-a) + f'_y(a,b)(y-b) \\
-    &\quad + \frac{1}{2}f''_{xx}(a,b)(x-a)^2 + \frac{1}{2}f''_{yy}(a,b)(y-b)^2 +\cancel{2*\frac{1}{2}}f''_{xy}(a,b)(x-a)(y-b)
-\end{align*}
-
-\subsubsection*{原理}
-假设使用多项式$P(x) = c_0 + c_1 (x-a) + c_2 (x-a)^2 + \dots$近似原函数。则应有多项式与原函数，从零阶导开始至$n$阶导，在$x=a$点的取值都与原函数相同（即从单个点，提取原函数所有导数信息）：
-\begin{itemize}
-    \item $x-a$使得带入a进行计算时，除了当前导数对应次数的项之外都等于零。如原函数在$a$点的二阶导$f''(a)$，对应泰勒级数$x$二次项的系数$c_2$：一阶导为$P'(x) = c_1 + 2c_2(x-a)+\dots$，二阶导为$P''(x) = 2c_2 + 3c_3(x-a)^2 + \dots$，则有$P''(a) = 2c_2 = f''(a)$，此时$c_2 = \tfrac{f''(a)}{2}$
-    \item 小于当前求导次数的泰勒级数项，由于求导都为零（如上所示求二阶导后，常数项与一次项都为0），使得多项式每一项的系数$c_n$都独立对应原函数n阶导数值
-    \item 系数为$\frac{1}{n!}$是为了取消多次求导的影响，如$P'''(x)=3 \cdot 2 \cdot 1 \cdot c_3(x-a) + \cdots$
-\end{itemize}
-
-\subsection{对冲参数}
-
-假设投资组合$\Pi$为标的资产价格$S$与时间$t$的函数,则有在$(S_0,t_0)$展开为：
-\begin{align*}
-    \Pi(S,T) &= \Pi(S_0,t_0) + \frac{\partial \Pi}{\partial S}(S-S_0) + \frac{\partial \Pi}{\partial t}(t-t_0) \\
-    &\quad + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}(S-S_0)^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}(t-t_0)^2 + \frac{\partial^2 \Pi}{\partial S \partial t}(S-S_0)(t-t_0) + \dots
-\end{align*}
-
-整理可得：
-\begin{equation*}
-    \Delta \Pi = \frac{\partial \Pi}{\partial S}\Delta S + \frac{\partial \Pi}{\partial t}\Delta t + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}\Delta S^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}\Delta t^2 + \frac{\partial^2 \Pi}{\partial S \partial t}\Delta S \Delta t + \dots
-\end{equation*}
-
-将阶数高于$\Delta t$的项忽略（前三项之后），可以发现对于一个Delta中立的投资组合，应有\footnote{见OFOD第十版附录19A\label{ofod_19a}}：
-\begin{equation*}
-    \Delta \Pi = \Theta \Delta t + \frac{1}{2} \Gamma \Delta S^2
-\end{equation*}
-
-在实践中,波动率并非为常数。在短时间内忽略无风险利率的变化，仅仅关注标的资产价格$S$以及隐含波动率$\sigma_{imp}$作为期权价格$V$的近似，则有\footref{ofod_19a}：
-\begin{equation*}
-    \Delta V = \frac{\partial V}{\partial S}\Delta S + \frac{\partial V}{\partial \sigma_{imp}}\Delta \sigma_{imp} + \frac{1}{2} \frac{\partial^2 V}{\partial S^2}\Delta S^2 + \frac{1}{2} \frac{\partial^2 V}{\partial \sigma^2_{imp}} \Delta \sigma^2_{imp} + \frac{\partial^2 V}{\partial S \partial \sigma_{imp}}\Delta S \Delta \sigma_{imp} + \dots
-\end{equation*}
-
-可见delta、vega、gamma对应了上式中的前三项。而交易员也将$\tfrac{\partial^2 V}{\partial \sigma^2_{imp}}$称为Vomma，即Vega对于$\sigma_{imp}$的敏感程度，或Vega的Vega。将$\tfrac{\partial^2 V}{\partial S\partial \sigma_{imp}}$称为Vanna，或理解为Delta的Vega，即对于$\sigma_{imp}$的变动，Delta的敏感程度。
 
 \section{远期（期货）}
 

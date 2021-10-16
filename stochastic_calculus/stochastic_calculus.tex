@@ -35,7 +35,9 @@
 \renewcommand{\baselinestretch}{1.3}
 \setlist{noitemsep,itemindent=1em,topsep=0em,leftmargin=4em,rightmargin=4em}
 \setlist[2]{leftmargin=2em}
+% \DeclareMathSizes{10}{10}{7}{4}
 \newcommand{\divider}{\vspace{-\parskip}\noindent\rule{\linewidth}{0.4pt}}
+\newcommand{\tops}[1]{\texorpdfstring{#1}{TEXT}}
 
 \newtheorem{thm}{定理}[section] 
 \newtheorem{proposition}[thm]{命题}
@@ -53,6 +55,7 @@
 \DeclareMathOperator{\Cov}{Cov}
 \newcommand{\abs}[1]{\left\lvert #1\right\rvert}
 \newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+
 
 \title{随机分析}
 \author{杨弘毅}
@@ -788,7 +791,7 @@
     d_2 &= \frac{\ln \frac{S_t}{K} + (r-\frac{1}{2}\sigma^2)(T-t)}{\sigma\sqrt{T-t}}
 \end{align*}
 
-\subsection{关于\texorpdfstring{$N(d_1)$}{TEXT}与\texorpdfstring{$N(d_2)$}{TEXT}}
+\subsection{关于\tops{$N(d_1)$}与\tops{$N(d_2)$}}
 
 对于期权，在定价时有两个不确定性需要考虑：
 \begin{itemize}
@@ -1298,13 +1301,13 @@ GARCH（1，1）模型方差如下：
 
 \subsubsection{无模型波动率}
 
-虽然一般将无模型波动率（Model-free implied volatility）认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。虽然早期的VIX是由8个期权的隐含BS波动率加权得到的30天（日历日或22天交易日）波动率预期（Whaley (1993)），但现今已更新为无模型波动率（Demeterfi et al. (1999)）。且发布时是根据S\&P100（OEX），因为其交易量较大，而当时S\&P500（SPX）交易量只有其五分之一。
+虽然一般将无模型波动率（Model-free implied volatility）认为是“BS隐含波动率的一种加权平均”更方便理解，但事实上无模型波动率与BS模型完全没有关系。虽然早期的VIX是由8个期权的隐含BS波动率加权得到的30天（日历日或22天交易日）波动率预期（Whaley (1993)），标的为S\&P100（OEX），而当时S\&P500（SPX）交易量只有其五分之一。CBOE于2003年将VIX更新为无模型波动率（Demeterfi et al. (1999)）,并保持了原有的VIX名称，而之前指数的更名为VXO。
 
 如计算BS隐含波动率，使用这样的方法估计未来波动率的预期，其本质是基于BS期权定价模型的，即根据定价模型去拟合市场的价格，从而得到其中隐含的波动率。可想而知，根据定价模型的不同，得到的隐含波动率也不相同。由此引申出的无模型方法并不依赖具体的定价模型，只做最基本的假设，并且利用方差互换的原理进行计算。这样的波动率估计只需要假定股票价格的随机过程为$dS_t/S_t =\mu_t dt + \sigma_t dW_t$，其中$\mu_t$与$\sigma_t$均为时变，而不需要其他更严格的假定。这样计算出的无模型隐含波动率（如VIX）并非某一合约的隐含波动率，而是未来一段时间内已实现波动率平方（Total variance）的期望。
 
 对期权进行定价往往采用风险中性定价法，在风险中性的世界里，所有资产的预期收益率都等于无风险利率。同样对于未来一段时间内的波动率平均值的估计也可以认为是一种广义的“定价”，因此广义波动率被定义为风险中性的世界里从0时刻到T时刻期间的方差序列的平均值的平方根。
 
-\subsubsection*{方差互换与VIX}
+\subsubsection{方差互换与VIX}
 
 一个方差互换远期合约$f$在$t=0$时刻价值（Payoff）定义如下，其中$V$为\textbf{未来已实现方差}（$\sigma_R^2$），为浮动端，而$K$为交割价格（Delivery price）。应为未来价值在\textbf{风险中性}下期望在当前时点的现值：
 \begin{equation*}
@@ -1399,7 +1402,7 @@ GARCH（1，1）模型方差如下：
     &= \frac{2}{T} \rnE \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} + \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
 \end{align*}
 
-对于前两项，并使用泰勒级数分解$\ln \frac{F}{K_0}$，即令$f(x) = \ln(x)$，并在$\frac{F}{K_0}$处展开，应有：
+对于前两项，并使用泰勒级数分解$\ln \frac{F}{K_0}$，即令$f(x) = \ln(x)$，并在$\frac{F}{K_0}$处展开。在使用泰勒展开时忽略了二次以上的高次项，因此存在着估计误差（Approximation error）：
 \begin{align*}
     \rnE \left[ \ln\frac{F}{K_0} - \frac{S_T-K_0}{K_0} \right]
     &= -\frac{\rnE(S_T)-K_0}{K_0} + \ln \frac{F}{K_0} \\
@@ -1409,7 +1412,7 @@ GARCH（1，1）模型方差如下：
     &= - \frac{1}{2} \left(\frac{F}{K_0} - 1\right)^2 + \mathcal{O}\left( \frac{F}{K_0} - 1 \right)^3
 \end{align*}
 
-对于后两项积分项，将其离散化，其中$Q(K_i)$为行权价为$K_i$，\textbf{虚值}看涨和看跌期权的价格：
+对于后两项积分项，将其离散化，其中$Q(K_i)$为行权价为$K_i$，\textbf{虚值}看涨和看跌期权的价格，注意在离散化的过程中会出现离散误差（Discretization error）的估计误差：
 \begin{align*}
     \rnE \left[ \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
     &= \int^{K_0}_{0} \frac{\rnE(K-S_T)^+ }{K^2} dK + \int^{\infty}_{K_0} \frac{\rnE(S_T-K)^+}{K^2} dK \\
@@ -1424,19 +1427,19 @@ GARCH（1，1）模型方差如下：
     &= \frac{2}{T} \left[ \int^{K_0}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{K_0} \frac{e^{rT}C(K)}{K^2} dK \right] - \frac{1}{T} \left( \frac{F}{K_0} -1 \right)^2
 \end{align*}
 
-最终得到方差计算如下：
+最终得到方差计算如下，其中$F$为到期期限与期权相同的远期价格，$K_0$为第一个低于远期价格的行权价，而$\Delta K = \tfrac{K_{i+1}-K_{i-1}}{2}$，为上下两个行权价间隔的一半，实则为平均行权价间隔。同时由于现实中行权价范围并非无限，为$[K_L,K_U]$，将出现截断误差（Truncation error）的估计误差：
 \begin{equation*}
     \boxed{
         \sigma^2 = \frac{2}{T} \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i) - \frac{1}{T} \left[\frac{F}{K_0} - 1\right]^2 
     }
 \end{equation*}
 
-VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\text{VIX}=\sigma_{30d} \times 100$。因此需要将两个不同期限的方差进行线性插值即可得到：
+VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\text{VIX}=\sigma_{30D} \times 100$。因此需要将两个不同期限的方差进行线性插值即可得到：
 \begin{equation*}
     \text{VIX} = 100 \times \sqrt{ \left\{ T_1 \sigma^2_1 \left[ \frac{N_{T_2} - N_{30}}{N_{T_2}-N_{T_1}}\right] + T_2 \sigma^2_2 \left[ \frac{N_{30} - N_{T_1}}{N_{T_2}-N_{T_1}}\right] \right\}\times \frac{N_{365}}{N_{30}} }
 \end{equation*}
 
-\subsubsection*{方法1：积分型余项的泰勒公式}
+\subsubsection{积分型余项的泰勒公式方法}
 在Carr和Wu（2006）《A Tale of Two Indices》中使用了带积分余项（Integral form of the remainder）的泰勒公式进行求解（三种余项分别为：积分余项、Lagrange余项和Peano余项）。令$f(x) = \ln x$，$x=F$，$a=K_0$和$n=1$，则有：
 \begin{equation*}
     f(F) = \frac{f(K_0)}{0!}(F-K_0)^0 + \frac{f'(K_0)}{1!}(F-K_0)^1 + \frac{1}{1!} \int^{F}_{K_0} f''(K) (F - K)^1 dK
@@ -1462,7 +1465,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \ln F = \ln K_0 + \frac{F-K_0}{K_0} - \int^{K_0}_{0} \frac{(K-F)^+}{K^2} dK - \int^{\infty}_{K_0} \frac{(F-K)^+}{K^2} dK 
 \end{equation*}
 
-\subsubsection*{狄拉克$\delta$函数性质}
+\subsubsection{狄拉克\tops{$\delta$}函数性质}
 
 对于狄拉克函数（Dirac delta function）定义如下。根据定义易知$\delta(x)=\delta(-x)$。并且对其平移$\delta(x-a)$，即在$x=a$为无穷。
 \begin{equation*}
@@ -1582,7 +1585,8 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \end{equation*}
 \end{corollary}
 
-\subsubsection*{方法2：狄拉克$\delta$函数}
+\subsubsection{狄拉克\tops{$\delta$}函数方法}
+
 参考Carr和Madan（1998）在《Towards a Theory of Volatility Trading》中推导。假设$f(x)$为payoff，则根据狄拉克$\delta$函数的Sifting corollary改写函数为积分形式，并将积分分解为两部分（$K_0$非负）。为方便后续计算，利用狄拉克$\delta$函数偶函数的性质将第一部分积分改写为$K-F$。
 \begin{align*}
     f(F) &= \int^{\infty}_{0}f(K)\delta(F-K)dK \\
@@ -1662,13 +1666,55 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     &\qquad + \int^{K_0}_{0} f''(K) (K-F)^+ dK + \int^{\infty}_{K_0} f''(K) (F-K)^+ dK
 \end{align*}
 
-\subsubsection*{含义}
-
+\begin{remark}
 观察分解式，可以理解为对数期货的盈亏分解式，或人造对数合约（synthetic log-future）的合成。其中包含了四个部分：等式左边为对数期货多头；等式右边第一项为持有了$\frac{1}{S_0}$份的期货多头；第二项为持有$\frac{1}{K^2}$份，期限为$T$，行权价在$0$与$S_0$之间的认沽期权空头的组合；同样，第三项为$\frac{1}{K^2}$份，期限为$T$，行权价在$S_0$与$\infty$之间的认购期权空头的组合。
 \begin{equation*}
     \boxed{
         \ln F - \ln K_0 = \frac{F-K_0}{K_0} - \int^{K_0}_{0} \frac{(K-F)^+}{K^2} dK - \int^{\infty}_{K_0} \frac{(F-K)^+}{K^2} dK 
     }
+\end{equation*}
+\end{remark}
+
+\subsubsection{DDKZ方差与BJN方差}
+
+在Jiang和Tian（2007）中，证明了Demeterfi et al.（1999）或称DDKZ方差，Britten-Jones和Neuberger（2000）与Jiang和Tian（2005）的无模型隐含方差（Model-free implied variance）为或称BJN方差等价关系。对于BJN方差，具体为：
+\begin{equation*}
+    V_{\text{BJN}} = \frac{2}{T} \int_{0}^{\infty} \frac{e^{rT}C(T,K) - \max(0,S_0 e^{rT}-K)}{K^2} dK
+\end{equation*}
+
+并将积分以$F_0 = S_0 e^{rT}$分为两个部分，即实值和虚值两部分,因此有：
+\begin{equation*}
+    V_{\text{BJN}} = \frac{2 e^{rT}}{T} \left[ \int_{0}^{F_0} \frac{C(T,K) - S_0 + K e^{-rT})}{K^2}dk + \int_{F_0}^{\infty} \frac{C(T,K)}{K^2} dK \right]
+\end{equation*}
+
+使用看涨-看跌平价关系，可以将第一项积分转化为看跌期权价格：
+\begin{equation*}
+    V_{\text{BJN}} = \frac{2 e^{rT}}{T} \left[ \int_{0}^{F_0} \frac{P(T,K)}{K^2} dk + \int_{F_0}^{\infty} \frac{C(T,K)}{K^2} dK \right]
+\end{equation*}
+
+进一步改写为$S_*$与$F_0$为边界的积分：
+\begin{equation*}
+    V_{\text{BJN}} = \frac{2 e^{rT}}{T} \left[ \int_{0}^{S_*} \frac{P(T,K)}{K^2} dk + \int_{S_*}^{\infty} \frac{C(T,K)}{K^2} dK + \int_{S_*}^{F_0} \frac{P(T,K) - C(T,K)}{K^2} dK \right]
+\end{equation*}
+
+再次使用看涨-看跌平价关系，可以将第三项改写：
+\begin{equation*}
+    V_{\text{BJN}} = \frac{2 e^{rT}}{T} \left[ \int_{0}^{S_*} \frac{P(T,K)}{K^2} dk + \int_{S_*}^{\infty} \frac{C(T,K)}{K^2} dK  + \int_{S_*}^{F_0} \frac{K e^{-rT} - S_0 }{K^2} dK \right]
+\end{equation*}
+
+将第三项积分可得：
+\begin{align*}
+    \int_{S_*}^{F_0} \frac{K e^{-rT} - S_0 }{K^2} dK &= e^{-rT} \int_{S_*}^{F_0} \frac{1}{K} dK - S_0 \int_{S_*}^{F_0} \frac{1}{K^2} dK \\
+    &= e^{-rT} \left[ \ln K \right]_{S_*}^{F_0} + S_0 \left[ \frac{1}{K}  \right]_{S_*}^{F_0} \\
+    &= e^{-rT} \left[ \ln F_0 - \ln S_* \right] + S_0 \left[ \frac{1}{F_0} - \frac{1}{S_*} \right] \\
+    &= e^{-rT} \left[\ln S_0 + \ln e^{-rT} - \ln S* \right] + S_0 \left[ \frac{S_* - F_0}{F_0 S_*} \right] \\
+    &= e^{-rT} rT - e^{-rT} \ln \frac{S_*}{S_0} + e^{-rT}\left[ \frac{S_* - S_0 e^{rT}}{S_*} \right] \\
+    &= e^{-rT} \left[ rT - \frac{S_0 e^{rT} - S_*}{S_*} - \ln \frac{S_*}{S_0} \right]
+\end{align*}
+
+代回原式：
+\begin{equation*}
+    V_{\text{BJN}} = \frac{2}{T} \left[ rT - \frac{S_0 e^{rT} - S_*}{S_*} - \ln \frac{S_*}{S_0} + e^{rT} \int_{0}^{S_*} \frac{P(T,K)}{K^2} dk + e^{rT} \int_{S_*}^{\infty} \frac{C(T,K)}{K^2} dK \right] 
 \end{equation*}
 
 \subsection{典型实证现象}
@@ -1779,7 +1825,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \item 远期利率协议：本国的无风险利率
 \end{itemize}
 
-\subsection{\texorpdfstring{$F_{t,T}$}{TEXT}与\texorpdfstring{$S_t$}{TEXT}}
+\subsection{\tops{$F_{t,T}$}与\tops{$S_t$}}
 
 如上部分讨论，对于对于无红利股票远期与现货，有$F_{t,T} = S_t e^{r(T-t)}$，由于持有股票的持仓成本即为占用资金的成本。而对于大宗商品等则需要考虑持仓成本，在t时刻，远期（期货）价格$F_t$与现货价格$S_t$有如下关系，易知持仓成本即将现货持有到期的成本，否则将可进行套利。由于远期为合约，只在规定到期日交割标的资产。在合约到期之前并不持有实际现货，因此无法获得持有现货的收益，并且持有现货到合约到期日的成本需计算在远期价格内，两者关系应有如下关系。其中对于商品期货，便利收益指实际持有持有现货带来的收益，一般认为由于持有现货有两点优势：可从短期商品的紧缺中获利，也可保持生产线的运转。
 \begin{align*}
@@ -1814,7 +1860,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \caption{$F_{t,T}$与$S_t$}
 \end{figure}
 
-\subsection{\texorpdfstring{$F_{t,T}$}{TEXT}与\texorpdfstring{$\E_t[S_T]$}{TEXT}}
+\subsection{\tops{$F_{t,T}$}与\tops{$\E_t[S_T]$}}
 
 在现实测度下，两者应相差风险溢价，但由于风险溢价的不确定性，因此两者关系并不确定：
 \begin{equation*}
@@ -2211,7 +2257,7 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     N(x) = G(x) + C
 \end{equation*}
 
-已知$N(0) = G(0) + C = \frac{1}{2}$，因此$C=\frac{1}{2}$，即：
+已知对于标准正态分布CDF，$N(0) = G(0) + C = \frac{1}{2}$，因此$C=\frac{1}{2}$，即：
 \begin{equation*}
    N(x) = \frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left( x -\frac{x^3}{6} + \frac{x^5}{40} - \frac{x^7}{336} + \dots \right) 
 \end{equation*}

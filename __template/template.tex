@@ -1,61 +1,23 @@
 \documentclass[11pt]{article}
-\usepackage[a4paper,left=20mm,right=20mm,top=15mm,bottom=15mm]{geometry}
-\usepackage{amsmath,amsfonts,amsthm,cancel}
-% === math cases ===
-\usepackage{cases}
-% === itemize ===
-\usepackage{enumitem}
-\setitemize{leftmargin=2em,itemsep=0em}
-% === graph packages ===
-% \usepackage{tikz}
-% \usetikzlibrary{trees,matrix}
-% \usepackage{mathtools}
-% == table packages ==
-% \usepackage{booktabs,float,multirow}
-% == figure packages ==
-% \usepackage{graphicx}
-% == footnote ==
-% \usepackage{footmisc}
-% === url packages ===
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true, %set true if you want colored links
-    linkcolor=blue,
-    linktoc=all, %set to all if you want both sections and subsections linked
-    citecolor=black,
-    filecolor=black,
-    urlcolor=black
-}
-% ctex与amsmath冲突，放最后可解决
-\usepackage[UTF8]{ctex}
 
-\newcommand{\E}{\operatorname{E}}
-\newcommand{\Var}{\operatorname{Var}}
-\newcommand{\Cov}{\operatorname{Cov}}
+\def\articlename{笔记模板}
+\def\authorname{杨弘毅}
+\def\startdate{2020年4月9日}
 
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
+\input{../header.tex}
 
-% 根据chapter,section或subsection编号
-\newtheorem{thm}{定理}[subsection] 
-\newtheorem{definition}[thm]{定义}
-\newtheorem{lemma}[thm]{引理}
-\newtheorem{property}[thm]{性质}
-
-\title{XXXX}
-\author{杨弘毅}
-\date{创建: 20XX 年 X 月 X 日 \\修改: \today}
 \begin{document}
 \maketitle
+\tableofcontents
 
 % shortcut sse
-\section{}
+\section{Section 1}
 
 % shortcut sss
-\subsection{}
+\subsection{Subsection 1}
 
 % shortcut ss2
-\subsubsection{}
+\subsubsection{Subsubsection 1}
 
 % shortcut beq besq
 \begin{equation*}
@@ -66,17 +28,17 @@
 \end{align*}
 
 % shortcut bit
-\begin{itemize}[leftmargin=0em]
-	\item 1
-	\item 2
-	\item 3
+\begin{itemize}
+	\item blablabla
+	\item blablabla
+	\item blablabla
 \end{itemize}
 
 % shortcut ben
 \begin{enumerate}
-	\item 1
-	\item 2
-	\item 3
+	\item blablabla
+	\item blablabla
+	\item blablabla
 \end{enumerate}
 
 \begin{figure}[ht!]
@@ -85,9 +47,19 @@
 	\caption{}
 \end{figure}
 
+\section{Section 2}
 
+\section{Section 3}
 
 \appendix
-\section{some appendix}
+
+\begin{appendices}
+
+\section{Appendix 1}
+
+\section{Appendix 2}
+
+\end{appendices}
+
 
 \end{document}

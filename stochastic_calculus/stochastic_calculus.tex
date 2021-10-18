@@ -2213,4 +2213,65 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     &\approx \frac{\sigma\sqrt{T-t}}{\sqrt{2\pi}} \approx 0.4\sigma\sqrt{T-t}
 \end{align*}
 
+\appendix
+
+\begin{appendices}
+
+\section{牛顿迭代法}
+
+牛顿迭代法（Newton's method）又称为牛顿-拉弗森方法（Newton-Raphson method），是一种迭代估计方程根的算法。
+
+\subsection{\tops{$f(x)$}的根}
+
+对于函数$y = f(x)$，使用泰勒公式进行展开
+\begin{equation*}
+    f(x) = f(x_0) + f'(x_0)(x-x_0) + \frac{1}{2}f''(x_0)(x-x_0)^2 + \dots + \frac{1}{n!}f^{(n)}(x_0)(x-x_0)^n
+\end{equation*}
+
+保留前两项，并令$f(x) = 0$，即有：
+\begin{equation*}
+    f(x) = f(x_0) + f'(x_0)(x-x_0) = 0
+\end{equation*}
+
+整理上式，当$f'(x_0) \neq 0$时应有：
+\begin{equation*}
+    x = x_0 - \frac{f(x_0)}{f'(x_0)}
+\end{equation*}
+
+迭代可得令$f(x) = 0$的根：
+\begin{equation*}
+    x_{t+1} = x_t - \frac{f(x_t)}{f'(x_t)}
+\end{equation*}
+
+\subsection{\tops{$f'(x)$}的根}
+
+同理，对于$f'(x)$的根，使用泰勒公式，并保留前三项：
+\begin{equation*}
+    f(x) = f(x_0) + f'(x_0)(x-x_0) + \frac{1}{2}f''(x_0)(x-x_0)^2
+\end{equation*}
+
+对等式两边求导可得：
+\begin{equation*}
+    f'(x) = 0 + f'(x_0) + \frac{1}{2}f''(x_0)*2(x-x_0)
+\end{equation*}
+
+同理，令$f'(x) = 0$可得：
+\begin{equation*}
+    f'(x) = f'(x_0) + f''(x_0)(x-x_0) = 0
+\end{equation*}
+
+当$f''(x_0) \neq 0$应有：
+\begin{equation*}
+    x = x_0 - \frac{f'(x_0)}{f''(x_0)}
+\end{equation*}
+
+迭代可得令$f'(x) = 0$的根：
+\begin{equation*}
+    x_{t+1} = x_t - \frac{f'(x_t)}{f''(x_t)}
+\end{equation*}
+
+\end{appendices}
+
+
+
 \end{document}

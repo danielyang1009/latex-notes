@@ -10,9 +10,10 @@
 \maketitle
 \tableofcontents
 
-\section*{TODO}
+\section{TODO}
 \begin{itemize}
     \item 参数与非参数方法
+    \item conditional probability projection
     \item likelihood, log-likelihood, goodness-of-fit, quasi-maximum likelihood, ratio test
     \item Chi-square, joint hypothesis
     \item Newey West 1987
@@ -40,7 +41,6 @@
     \E[aX] &= a \E[X] \\
     \E[XY] &= \E[X]\E[Y] \quad \text{(X,Y are independent)}
 \end{align*}
-
 
 \subsection{方差}
 
@@ -94,10 +94,21 @@
 
 \section{矩}
 
-\subsection{含义}
-数学中矩的概念来自物理学，在物理学中，矩表示距离和物理量的乘积。如力与力臂（参考点的距离）的乘积，得到的是力矩（或扭矩）。可以理解为一杆“秤”，“秤”的平衡的两边重量与距离的乘积相同，则能保持平衡。
+\subsection{理解}
 
-而在概率论上，可以理解秤为一杆秤的两端的概率为1，中心点概率为0。如一端秤砣重量，为中奖金额$500$元，但中奖概率为千分之一，即离中心点距离为$0.1\%$，那么期望为$0.5$元。可以理解为了使得秤保持平衡，则另一端，在概率为1，其秤砣重量，中奖金额应为$0.5$元。
+在物理学中，矩（Moment）源于阿基米德的杠杆原理，可简单认为是物理量与参照点距离的乘积。具体而言，$n$阶矩$\mu_n$为物理量$Q$与某参考点$r$的$n$次方的乘积，即$\mu_n = r^n Q$。常见的物理量如力或电荷等，若物理量并非集中在单点上，矩就应该是在物理量在空间上的积分，因有：$\mu_u = \int r^n \rho(r) dr$，其中$\rho(r)$为物理量的密度分布函数。
+
+
+如力与力臂（参考点的距离）的乘积，得到的是力矩（或扭矩）。可以理解为一杆“秤”，“秤”的平衡的两边重量与距离的乘积相同，则能保持平衡。
+
+而物理中的矩与数学中的矩概念相通，而在概率论上，可以理解秤为一杆秤的两端的概率为1，中心点概率为0。如一端秤砣重量，为中奖金额$500$元，但中奖概率为千分之一，即离中心点距离为$0.1\%$，那么期望为$0.5$元。可以理解为了使得秤保持平衡，则另一端，在概率为1，其秤砣重量，中奖金额应为$0.5$元。
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/moment-matching.png}
+    \caption{矩匹配}
+    \label{fig:moment-match}
+\end{figure}
 
 \subsection{期望}
 
@@ -356,6 +367,83 @@ L( mean = 34 and standard deviation = 2.5 | mouse weights 34g ) = 0.21
 测量了数只老鼠的重量，尝试找到其分布，miximizes the likelihood 找到最大化所有观察重量likelihood的分布，找到mean 和standard deviation
 
 
+\section{Time series}
+
+Autoregressive (AR) model
+
+vector autoregressive model (VAR) (more than one random variable)
+
+Moving-average (MA) model
+
+ARMA / ARIMA
+
+autoregressive–moving-average (ARMA) / autoregressive integrated moving average (ARIMA)
+
+TODO: Autocorrelation (serial correlation)
+- $cov(u_i,u_j) \neq 0$, for $i \neq j$ 
+- some other estimator will have a lower variance, no longer best estimate
+- Unit root processes, autoregressive processes, and moving average processes are specific forms of processes with autocorrelation.
+
+Autocorrelation and Partial Autocorrelation
+
+The coefficient of correlation between two values in a time series is called the autocorrelation function (ACF), $Corr(x_t, x_{t-k}), k=1,2,3,\dotsc$
+
+$$
+\begin{aligned}
+\rho_k &= \frac{cov(x_t,x_{t-k})}{\sigma_{x_t} \sigma_{x_{t-k}}} = \frac{\gamma_k}{\gamma_0} \\
+\gamma_k &= \sum^{T-k}_{t=1} (x_t-\bar{x})(x_{t+k}-\bar{x}) / T\\
+\gamma_0 &= \sum^{T}_{t=1} (x_t-\bar{x})^2 / T
+\end{aligned}
+$$
+
+Durbin-Watson test
+
+- H0: $\rho = 0$, no autocorrelation / serial correlation in residual
+- H1: $\rho \neq 0$, autocorrelation in residual, follow first order autoregressive process
+
+Test statistic
+- resitual at lag 1, $\epsilon_t = \rho \epsilon_{t-1} + u_t$
+- $DW = \frac{\sum_{t=2}^{T} (\epsilon_t - \epsilon_{t-1})^2}{\sum_{t=1}^{T} \epsilon^2_t}$
+
+
+2 -> no autocorrelation
+0-2 -> positive autocorrelation
+2-4 -> negative autocorrelation
+
+Ljung-Box test 
+
+Test the null hypothesis that a series of residuals exhibits no autocorrelation for a fixed number of lags L. (See Box \& Pierce 1970, Q test)
+
+- H0: No residual autocorrelation
+- H1: There is residual autocorrelation
+
+Test statistic
+
+$$
+Q = T(T+2) \sum^L_{k=1} \frac{\rho(k)^2}{T-k} > \chi^2_L
+$$
+
+- Q is chi-square with L degrees of freedom
+
+Dickey-Fuller test
+H0: there is unit root, $\delta = \rho - 1 =0$, no stationary, random walk
+H1: stationay, mean and variance do not change over time
+
+A simple AR(1) model $y_t = \alpha + \rho y_{t-1} + u_t$, then we have $\Delta y_t = \alpha + (\rho -1) y_{t-1} + u_t = \alpha + \delta y_{t-1} + u_t$, 
+
+Augmented Dickey-Fuller 
+
+H0: there is unit root, $\delta = 0$
+H1: stationary, $\delta < 0$
+
+ADF test: $\Delta y_t = \alpha + \delta y_{t-1} + \beta_1 \Delta y_{t-1} + \cdots + \beta_{p} \Delta y_{t-p} + u_t$
+
+AR(1) model: $\Delta y_t = \alpha + \delta y_{t-1} + u_t$
+AR(2) model: $\Delta y_t = \alpha + \delta y_{t-1} + \beta \Delta y_{t-1} + u_t$
+
+Test statistics: (negative, more negatvie -> reject H0)
+
+-  $DF_{\delta} = \frac{\hat{\delta}}{SE(\hat{\delta})}$
 
 
 \end{document}

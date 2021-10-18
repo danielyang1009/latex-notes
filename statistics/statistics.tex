@@ -96,12 +96,11 @@
 
 \subsection{理解}
 
-在物理学中，矩（Moment）源于阿基米德的杠杆原理，可简单认为是物理量与参照点距离的乘积。具体而言，$n$阶矩$\mu_n$为物理量$Q$与某参考点$r$的$n$次方的乘积，即$\mu_n = r^n Q$。常见的物理量如力或电荷等，若物理量并非集中在单点上，矩就应该是在物理量在空间上的积分，因有：$\mu_u = \int r^n \rho(r) dr$，其中$\rho(r)$为物理量的密度分布函数。
+在物理学中，矩（Moment）源于阿基米德的杠杆原理，可简单认为是物理量与参照点距离的乘积，如力与力臂（参考点的距离）的乘积，得到的是力矩（或扭矩）。如一杆“秤”，“秤”的平衡的两边重量与距离的乘积相同，则能保持平衡。
 
+具体而言，$n$阶矩$\mu_n$为物理量$Q$与某参考点$x$的$n$次方的乘积，即$\mu_n = x^n Q$。常见的物理量如力或电荷等，若物理量并非集中在单点上，矩就应该是在物理量在空间上的积分，因有：$\mu_u = \int x^n f(x) dr$，其中$f(x)$为物理量的密度分布函数。
 
-如力与力臂（参考点的距离）的乘积，得到的是力矩（或扭矩）。可以理解为一杆“秤”，“秤”的平衡的两边重量与距离的乘积相同，则能保持平衡。
-
-而物理中的矩与数学中的矩概念相通，而在概率论上，可以理解秤为一杆秤的两端的概率为1，中心点概率为0。如一端秤砣重量，为中奖金额$500$元，但中奖概率为千分之一，即离中心点距离为$0.1\%$，那么期望为$0.5$元。可以理解为了使得秤保持平衡，则另一端，在概率为1，其秤砣重量，中奖金额应为$0.5$元。
+而物理中的矩与数学中的矩概念相通，而在概率论上，如一端秤砣重量为中奖金额$500$元，中奖概率为百分之一，即离中心点距离为$0.01$，那么其期望应为为$5$元。可以理解为了使得秤保持平衡，则另一端，在距离中心距离为$1$，对应其秤砣重量中奖金额应为$5$元。
 
 \begin{figure}[ht!]
     \centering
@@ -110,44 +109,45 @@
     \label{fig:moment-match}
 \end{figure}
 
-\subsection{期望}
+\subsection{定义}
 
-这样既可以把期望看成是矩，即距离（概率）乘以力（随机变量）的大小。对于$n$阶矩即对$x^n$q求期望，在离散形式下有：
+根据上述理解，物理学中与数学中的矩概念相通，即距离（概率）乘以物理量（随机变量）的大小。$p_i$为概率质量函数（Probability mass function，PMF），则对于n阶矩的离散形式有：
 \begin{equation*}
-    E[x] = \sum_i p_i x_i
+    E[x^n] = \sum_i x_i^n p_i
 \end{equation*}
 
-在连续形式下，n阶矩可以表示为$(x-c)^n$的期望，其中$f(x)$为概率密度函数（probability density function）：
+在连续形式下，n阶矩可以表示为$(x-c)^n$的期望，其中$f(x)$为概率密度函数（Probability density function，PDF），其中c为均值。当c为0时，即称为中心距（Central moment）。相反，则称为非中心矩，或原始矩（Raw moment）：
 \begin{equation*}
-    \mu_n = \int_{-\infty}^{\infty} (x-c)^n f(x) dx
+    E[x^n] = \mu_n = \int_{-\infty}^{\infty} (x-c)^n f(x) dx
 \end{equation*}
 
-\begin{table}[ht!]
-\centering
-\begin{tabular}{@{}cll@{}}
-\toprule
-阶（Order） & \multicolumn{1}{c}{非中心矩（Non-central）} & \multicolumn{1}{c}{中心矩（Central）} \\ \midrule
-1st & $\E(x)=\mu $ & \\
-2nd & $\E(x^2) $ & $\E[(x-\mu)^2]$   \\
-3rd & $\E(x^3) $ & $\E[(x-\mu)^3]$   \\
-4th & $\E(x^4) $ & $\E[(x-\mu)^4]$   \\ \bottomrule
-\end{tabular}
-\end{table}
-
-常用的有一至四阶矩：
+除了根据$c$是否为零，根据是否进行标准化处理，可细分为标准矩。常用的矩有：
 \begin{itemize}
-    \setlength{\itemsep}{0em}
-    \item 均值 $\text{Mean}(x)$ 为一阶中心矩
-    \item 方差 $\text{Variance}(x) = \E(x-\mu)^2$ 为二阶非中心矩
+    \item 均值 $\text{Mean}(x)=\E(x)$ 为一阶非中心矩
+    \item 方差 $\text{Variance}(x) = \E(x-\mu)^2$ 为二阶中心矩
     \item 偏度 $\text{Skewness}(x) = \frac{\E[(x-\mu)^4]}{\sigma^3}$ 为三阶标准矩 
     \item 峰度 $\text{Kurtosis}(x) = \frac{\E[(x-\mu)^4]}{\sigma^4}$ 为四阶标准矩
 \end{itemize}
 
 \subsection{分类}
 
-\subsubsection*{原点矩（Raw/crude moment）}
+根据如上定义，从零阶至四阶的原始矩与中心矩有如下定义，其中定义$\sigma = \left(\E[(x-\mu)^2]\right)^{\frac{1}{2}}$：
+\begin{table}[ht!]
+\centering
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{阶} & \multicolumn{1}{c}{\textbf{原始矩}} & \multicolumn{1}{c}{\textbf{中心矩}} & \multicolumn{1}{c}{\textbf{标准矩}} \\ \midrule
+\textbf{0} & $\E(x^0)= 1 $ & $\E[(x-\mu)^0] = 1$ & $\frac{\E[(x-\mu)^0]}{\sigma^0} = 1$ \\
+\textbf{1} & $\E(x^1)= \mu \,\text{（均值）} $ & $\E[(x-\mu)^1] = 0$ & $\frac{\E[(x-\mu)^1]}{\sigma^1} = 0$ \\
+\textbf{2} & $\E(x^2) $ & $\E[(x-\mu)^2] = \sigma^2$ \,\text{（方差）} & $\frac{\E[(x-\mu)^2]}{\sigma^2} = 1$ \\
+\textbf{3} & $\E(x^3) $ & $\E[(x-\mu)^3]$ & $\frac{\E[(x-\mu)^3]}{\sigma^3}\,\text{（偏度）} $ \\
+\textbf{4} & $\E(x^4) $ & $\E[(x-\mu)^4]$ & $\frac{\E[(x-\mu)^4]}{\sigma^4}\,\text{（峰度）} $ \\ \bottomrule
+\end{tabular}
+\end{table}
 
-当$c=0$时，称为原点矩。此时则有\textbf{平均数（mean）}或\textbf{期望（expected value）}的连续形式为：
+\subsubsection*{原始矩（Raw/crude moment）}
+
+当$c=0$时，称为原始矩。此时则有\textbf{平均数（mean）}或\textbf{期望（expected value）}的连续形式为：
 \begin{equation*}
     \mu = E(x) = \int_{-\infty}^{\infty} (x-0)^1 f(x) dx =
     \int_{-\infty}^{\infty} x f(x) dx
@@ -196,24 +196,24 @@
 
 已知标准差的$n$次方有：
 \begin{equation*}
-    \sigma^n = \left(\sqrt{E[(x-\mu)^2]}\right)^n = (E[(x-\mu^2)])^{n/2}
+    \sigma^n = \left(\sqrt{E[(x-\mu)^2]}\right)^n = \left( E \left[ (x-\mu^2 )\right]\right)^{\frac{n}{2}}
 \end{equation*}
 
 此时，第$n$阶标准矩有：
 \begin{equation*}
-    \tilde{\mu}_n = \frac{\mu_n}{\sigma^n} = E\left[ \left(\frac{x-\mu}{\sigma}\right)^n \right]
+    \wt{\mu}_n = \frac{\mu_n}{\sigma^n} = \frac{\E\left[(x-\mu)^n\right]}{\sigma^n}
 \end{equation*}
 
 由一阶中心矩为$0$，可知一阶标准矩（first standardized moment）也为$0$。而二阶标准矩（second standardized moment）则有：
 \begin{equation*}
-    \tilde{\mu}_2 = \frac{\mu_2}{\sigma^2} = \frac{E[(x-\mu)^2]}{\left(E[(x-\mu)^2]\right)^{2/2}} = 1
+    \wt{\mu}_2 = \frac{\mu_2}{\sigma^2} = \frac{E[(x-\mu)^2]}{\left(E[(x-\mu)^2]\right)^{2/2}} = 1
 \end{equation*}
 
 \subsubsection*{偏度（skewness）}
 
 三阶标准矩（third standardized moment）为\textbf{偏度}：
 \begin{equation*}
-    \tilde{\mu}_3 = \frac{\mu_3}{\sigma^3} = \frac{E[(x-\mu)^3]}{\left(E[(x-\mu)^2]\right)^{3/2}}
+    \wt{\mu}_3 = \frac{\mu_3}{\sigma^3} = \frac{E[(x-\mu)^3]}{\left(E[(x-\mu)^2]\right)^{3/2}}
 \end{equation*}
 
 偏度分为两种：
@@ -225,12 +225,12 @@
 \subsubsection*{峰度（kurtosis）}
 四阶标准矩（third standardized moment）为\textbf{峰度}：
 \begin{equation*}
-    \tilde{\mu}_4 = \frac{\mu_4}{\sigma^4} = \frac{E[(x-\mu)^4]}{\left(E[(x-\mu)^2]\right)^{4/2}} 
+    \wt{\mu}_4 = \frac{\mu_4}{\sigma^4} = \frac{E[(x-\mu)^4]}{\left(E[(x-\mu)^2]\right)^{4/2}} 
 \end{equation*}
 
 定义\textbf{超值峰度（excess kurtosis）}为峰度$-3$，使得正态分布的峰度为0：
 \begin{equation*}
-    \text{excess kurtosis} = \tilde{\mu}_4-3
+    \text{excess kurtosis} = \wt{\mu}_4-3
 \end{equation*}
 \begin{itemize}
     \item 如果超值峰度为正，即峰度值大于3，称为高狭峰（leptokurtic）

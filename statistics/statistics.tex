@@ -13,7 +13,7 @@
 \section{TODO}
 \begin{itemize}
     \item 参数与非参数方法
-    \item conditional probability projection
+    \item conditional probability / projection
     \item likelihood, log-likelihood, goodness-of-fit, quasi-maximum likelihood, ratio test
     \item Chi-square, joint hypothesis
     \item Newey West 1987
@@ -81,7 +81,8 @@
     \Cov(X,Y) &= \Cov(Y,X) \\
     \Cov(aX,bY) &= ab\Cov(X,Y) \\
     \Cov(X+a,Y+b) &= \Cov(X,Y) \\
-    \Cov(aX+bY,cW+dV) &= ac\Cov(X,W)+ad\Cov(X,V)+bc\Cov(Y,W)+bd\Cov(Y,V)
+    \Cov(aX+bY,cW+dV) &= ac\Cov(X,W)+ad\Cov(X,V) \\
+    &\hspace{2em} +bc\Cov(Y,W)+bd\Cov(Y,V)
 \end{align*}
 
 \subsection{相关系数}
@@ -91,6 +92,17 @@
     \rho_{X,Y} = \frac{\Cov(X,Y)}{\sigma_X\sigma_Y}
     = \frac{\E[(X-\E[X])(Y-\E[Y])]}{\sigma_X\sigma_Y}
 \end{equation*}
+
+
+\subsection{假设检验}
+
+在假设检验（Statistical hypothesis testing）中，\textbf{原假设（$\text{H}_0$，null hypothesis）}，也称为零假设或虚无假设。而与原假设相反的假设称为\textbf{备择假设（$\text{H}_a$，althernative hypothesis）}。假设检验的核心为\textbf{反证法}。在数学中，由于不能穷举所有可能性，因此无法通过举例的方式证明一个命题的正确性。但是可以通过举一个反例，来证明命题的错误。在掷骰子的例子中，在每次掷的过程相当于一次举例，假设进行了上万次的实验，即便实验结果均值为3.5，也无法证明总体的均值为3.5，因为无法穷举。
+
+可以理解为原假设为希望拒绝的假设，或反证法中希望推翻的命题。我们先构造一个小概率事件作为原假设（$\text{H}_0$），并假设其正确。如样本均值等于某值，两个样本均值是否相等，样本中的不同组直接是否等概率发生，一般使用等式（小概率）作为原假设。如果抽样检验中小概率事件发生，则说明原假设的正确性值得怀疑。如此时假设实验的结果（样本）远大于或小于理论计算结果3.5，即发生了小概率事件，那么就有理由相信举出了一个反例，这时就可以否定原命题（reject the null hypothesis）。而相反，如果原假设认为均值为3.5，在实验的过程中结果大概率不会偏离这个理论值太多，可以认为我们并没办法举出反例。由于不能直接证明原命题为真，只能说”We can not(fail to) reject the null hypothesis“，无法拒绝原命题。
+
+在需要评估总体数据的时候，由于经常无法统计全部数据，需要从总体中抽出一部分样本进行评估。假设掷骰子一个骰子，其期望为3.5，但假设掷骰子了100次，计算均值为3.47，由于总体的理论值和样本呢的实验值可能存在偏差，误差永远存在，无法避免。那么是否可以认为么3.47“等于”3.5？这时候就需要要界定一个\textbf{显著水平（$\alpha$，significant level）}，相当于设定一个等于的阈值范围。即多小概率的事情发生，是$10\%$还是$5\%$的概率，使我们认为举出了一个反例，值得去怀疑原命题的正确性。当我们知道随机变量的分布时候，根据所进行的检验，我们可以根据计算出的\textbf{统计量（test statistic）}，由于分布已知，统计量对应了一个\textbf{p值（p-value）}，即小概率（极端）事件发生的概率，因此在图形上表示为统计量向两侧延申的线下区域。如果这个概率足够低，如小于$\alpha=5\%$，那么就有理由拒绝原假设。
+
+用1-显著水平（$1-\alpha$），得到值称为\textbf{置信水平（confidence level）}（概率大小）。置信水平越大，对应的置信区间也越大（随机变量范围）。此时有置信水平为$1-\alpha$，假设置信区间为$(a,b)$，那么有$P(a<\text{随机变量}<b)=1-\alpha$。对于双侧检验，有置信水平为$1-\alpha$（概率大小），两侧拒绝域分别为$\alpha/2$。对于单侧检验，则有单侧拒绝域大小为$\alpha$。
 
 \section{矩}
 
@@ -113,12 +125,12 @@
 
 根据上述理解，物理学中与数学中的矩概念相通，即距离（概率）乘以物理量（随机变量）的大小。$p_i$为概率质量函数（Probability mass function，PMF），则对于n阶矩的离散形式有：
 \begin{equation*}
-    E[x^n] = \sum_i x_i^n p_i
+    \E[x^n] = \sum_i x_i^n p_i
 \end{equation*}
 
 在连续形式下，n阶矩可以表示为$(x-c)^n$的期望，其中$f(x)$为概率密度函数（Probability density function，PDF），其中c为均值。当c为0时，即称为中心距（Central moment）。相反，则称为非中心矩，或原始矩（Raw moment）：
 \begin{equation*}
-    E[x^n] = \mu_n = \int_{-\infty}^{\infty} (x-c)^n f(x) dx
+    \E[x^n] = \mu_n = \int_{-\infty}^{\infty} (x-c)^n f(x) dx
 \end{equation*}
 
 除了根据$c$是否为零，根据是否进行标准化处理，可细分为标准矩。常用的矩有：
@@ -131,7 +143,7 @@
 
 \subsection{分类}
 
-根据如上定义，从零阶至四阶的原始矩与中心矩有如下定义，其中定义$\sigma = \left(\E[(x-\mu)^2]\right)^{\frac{1}{2}}$：
+根据如上定义，从零阶至四阶的原始矩与中心矩有如下定义，其中定义$\sigma = \left(\E[(x-\mu)^2]\right)^{\frac{1}{2}}$。注意到三阶矩以上都称标准矩，如同方差要去除均值的影响，偏度和峰度也要去除方差的影响。
 \begin{table}[ht!]
 \centering
 \begin{tabular}{@{}clll@{}}
@@ -149,37 +161,37 @@
 
 当$c=0$时，称为原始矩。此时则有\textbf{平均数（mean）}或\textbf{期望（expected value）}的连续形式为：
 \begin{equation*}
-    \mu = E(x) = \int_{-\infty}^{\infty} (x-0)^1 f(x) dx =
+    \E(x) = \mu = \int_{-\infty}^{\infty} (x-0)^1 f(x) dx =
     \int_{-\infty}^{\infty} x f(x) dx
 \end{equation*}
 
 其离散形式为：
 \begin{equation*}
-    \mu = E(x) = \sum_i x_i p_i
+    \mu = \E(x) = \sum_i x_i p_i
 \end{equation*}
 
 \subsubsection*{中心矩（Central moment）}
 
-期望值可以成为随机变量的中心，即当$c=E(x)$时
+期望值可以成为随机变量的中心，即当$c=\E(x)$时
 \begin{equation*}
-    \mu_n = E[(x-E(x))^n] = \int_{-\infty}^{\infty} (x-E(x))^n f(x) dx
+    \mu_n = \E[(x-E(x))^n] = \int_{-\infty}^{\infty} (x-\E(x))^n f(x) dx
 \end{equation*}
 
 同时可知任何变量的一阶中心矩为0：
 \begin{align*}
-    \mu_1 &= \int_{-\infty}^{\infty} (x-E(x))^1 f(x) dx \\
-    &= \int_{-\infty}^{\infty} x f(x) dx - \int_{-\infty}^{\infty} E(x) f(x) dx \\
-    &= E(x) - E(x) \int_{-\infty}^{\infty} f(x) dx \\
-    &= E(x) - E(x) \times 1 = 0 
+    \mu_1 &= \int_{-\infty}^{\infty} (x-\E(x))^1 f(x) dx \\
+    &= \int_{-\infty}^{\infty} x f(x) dx - \int_{-\infty}^{\infty} \E(x) f(x) dx \\
+    &= \E(x) - \E(x) \int_{-\infty}^{\infty} f(x) dx \\
+    &= \E(x) - \E(x) \times 1 = 0 
 \end{align*}
 
 而二阶中心矩（second central moment）为\textbf{方差（Variance）}
 \begin{align*}
-    \mu_2 &= \int_{-\infty}^{\infty} (x-E(x))^2 f(x) dx \\
-    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 E(x) \int_{-\infty}^{\infty} x f(x)dx + [E(x)]^2\int_{-\infty}^{\infty}f(x)dx \\
-    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 E(x) E(x) + [E(x)]^2\times 1 \\
-    &= \int_{-\infty}^{\infty} x^2 f(x)dx - [E(x)]^2 \\
-    &= E(x^2) - [E(x)]^2 = \sigma^2
+    \mu_2 &= \int_{-\infty}^{\infty} (x-\E(x))^2 f(x) dx \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 \E(x) \int_{-\infty}^{\infty} x f(x)dx + [\E(x)]^2\int_{-\infty}^{\infty}f(x)dx \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - 2 \E(x) \E(x) + [\E(x)]^2\times 1 \\
+    &= \int_{-\infty}^{\infty} x^2 f(x)dx - [\E(x)]^2 \\
+    &= \E(x^2) - [\E(x)]^2 = \sigma^2
 \end{align*}
 
 其离散形式则有：
@@ -191,12 +203,12 @@
 
 标准矩为标准化（除以标准差）后的中心矩，第$n$阶中心矩（standardized moment of degree n）有：
 \begin{equation*}
-    \mu_n = E[(x-\mu)^n] = \int_{-\infty}^{\infty} (x-\mu)^n f(x)dx
+    \mu_n = \E[(x-\mu)^n] = \int_{-\infty}^{\infty} (x-\mu)^n f(x)dx
 \end{equation*}
 
 已知标准差的$n$次方有：
 \begin{equation*}
-    \sigma^n = \left(\sqrt{E[(x-\mu)^2]}\right)^n = \left( E \left[ (x-\mu^2 )\right]\right)^{\frac{n}{2}}
+    \sigma^n = \left(\sqrt{\E[(x-\mu)^2]}\right)^n = \left( \E \left[ (x-\mu^2)\right]\right)^{\frac{n}{2}}
 \end{equation*}
 
 此时，第$n$阶标准矩有：
@@ -206,14 +218,14 @@
 
 由一阶中心矩为$0$，可知一阶标准矩（first standardized moment）也为$0$。而二阶标准矩（second standardized moment）则有：
 \begin{equation*}
-    \wt{\mu}_2 = \frac{\mu_2}{\sigma^2} = \frac{E[(x-\mu)^2]}{\left(E[(x-\mu)^2]\right)^{2/2}} = 1
+    \wt{\mu}_2 = \frac{\mu_2}{\sigma^2} = \frac{\E[(x-\mu)^2]}{\left(\E[(x-\mu)^2]\right)^{2/2}} = 1
 \end{equation*}
 
 \subsubsection*{偏度（skewness）}
 
 三阶标准矩（third standardized moment）为\textbf{偏度}：
 \begin{equation*}
-    \wt{\mu}_3 = \frac{\mu_3}{\sigma^3} = \frac{E[(x-\mu)^3]}{\left(E[(x-\mu)^2]\right)^{3/2}}
+    \wt{\mu}_3 = \frac{\mu_3}{\sigma^3} = \frac{\E[(x-\mu)^3]}{\left(\E[(x-\mu)^2]\right)^{3/2}}
 \end{equation*}
 
 偏度分为两种：
@@ -225,7 +237,7 @@
 \subsubsection*{峰度（kurtosis）}
 四阶标准矩（third standardized moment）为\textbf{峰度}：
 \begin{equation*}
-    \wt{\mu}_4 = \frac{\mu_4}{\sigma^4} = \frac{E[(x-\mu)^4]}{\left(E[(x-\mu)^2]\right)^{4/2}} 
+    \wt{\mu}_4 = \frac{\mu_4}{\sigma^4} = \frac{\E[(x-\mu)^4]}{\left(\E[(x-\mu)^2]\right)^{4/2}} 
 \end{equation*}
 
 定义\textbf{超值峰度（excess kurtosis）}为峰度$-3$，使得正态分布的峰度为0：
@@ -314,21 +326,119 @@
     &= e^{\mu t + \frac{1}{2} \sigma^2 t^2}
 \end{align*}
 
+\section{条件概率}
 
-\section{假设检验（Statistical hypothesis testing）}
+\subsection{条件概率}
 
-\textbf{原假设（$\text{H}_0$，null hypothesis）}，也称为零假设或虚无假设。而与原假设相反的假设称为\textbf{备择假设（$\text{H}_a$，althernative hypothesis）}。假设检验的核心为\textbf{反证法}。在数学中，由于不能穷举所有可能性，因此无法通过举例的方式证明一个命题的正确性。但是可以通过举一个反例，来证明命题的错误。在掷骰子的例子中，在每次掷的过程相当于一次举例，假设进行了上万次的实验，即便实验结果均值为3.5，也无法证明总体的均值为3.5，因为无法穷举。
+条件概率（Conditional probability）记为$P(A|B)$，指已知事件B发生的情况下事件A发生的概率，即把原本的样本空间，缩小为只有B发生的样本空间，从中再计算A发生的概率。而联合概率表示两个事件同时发生的概率，记为$P(A,B)$或$P(A\cap B)$，其样本空间为原本未缩小的空间。
+\begin{equation*}
+    P(A|B) = \frac{P(A \cap B)}{P(B)}
+\end{equation*}
 
-可以理解为原假设为希望拒绝的假设，或反证法中希望推翻的命题。我们先构造一个小概率事件作为原假设（$\text{H}_0$），并假设其正确。如样本均值等于某值，两个样本均值是否相等，样本中的不同组直接是否等概率发生，一般使用等式（小概率）作为原假设。如果抽样检验中小概率事件发生，则说明原假设的正确性值得怀疑。如此时假设实验的结果（样本）远大于或小于理论计算结果3.5，即发生了小概率事件，那么就有理由相信举出了一个反例，这时就可以否定原命题（reject the null hypothesis）。而相反，如果原假设认为均值为3.5，在实验的过程中结果大概率不会偏离这个理论值太多，可以认为我们并没办法举出反例。由于不能直接证明原命题为真，只能说”We can not(fail to) reject the null hypothesis“，无法拒绝原命题。
+\begin{remark}
+    同理$P(B|A) = \frac{P(A \cap B)}{P(A)}$，即有$P(A \cap B) = P(B|A)P(A) = P(A|B)P(B)$。易知同时满足AB条件的概率，即为已知满足A条件的子集中，再满足条件B的概率（为条件概率，即其样本空间为缩小后满足条件A的空间）。或满足条件B的子集中，再满足条件A的概率。
+\end{remark}
 
-在需要评估总体数据的时候，由于经常无法统计全部数据，需要从总体中抽出一部分样本进行评估。假设掷骰子一个骰子，其期望为3.5，但假设掷骰子了100次，计算均值为3.47，由于总体的理论值和样本呢的实验值可能存在偏差，误差永远存在，无法避免。那么是否可以认为么3.47“等于”3.5？这时候就需要要界定一个\textbf{显著水平（$\alpha$，significant level）}，相当于设定一个等于的阈值范围。即多小概率的事情发生，是$10\%$还是$5\%$的概率，使我们认为举出了一个反例，值得去怀疑原命题的正确性。当我们知道随机变量的分布时候，根据所进行的检验，我们可以根据计算出的\textbf{统计量（test statistic）}，由于分布已知，统计量对应了一个\textbf{p值（p-value）}，即小概率（极端）事件发生的概率，因此在图形上表示为统计量向两侧延申的线下区域。如果这个概率足够低，如小于$\alpha=5\%$，那么就有理由拒绝原假设。
+\begin{example}
+    假设有两个小碗，分别为甲碗与乙碗，每个小碗中有若干小球，共有蓝色与黄色两种颜色，具体数量如下。
+    \begin{table}[ht!]
+    \centering
+    \begin{tabular}{cccc}\toprule
+    & \textbf{蓝色} & \textbf{黄色} \\ \midrule
+    \textbf{甲碗} & 1 & 4  \\
+    \textbf{乙碗} & 3 & 2  \\ \bottomrule
+    \end{tabular}
+    \end{table}
 
-用1-显著水平（$1-\alpha$），得到值称为\textbf{置信水平（confidence level）}（概率大小）。置信水平越大，对应的置信区间也越大（随机变量范围）。此时有置信水平为$1-\alpha$，假设置信区间为$(a,b)$，那么有$P(a<\text{随机变量}<b)=1-\alpha$。对于双侧检验，有置信水平为$1-\alpha$（概率大小），两侧拒绝域分别为$\alpha/2$。对于单侧检验，则有单侧拒绝域大小为$\alpha$。
+    那么任意选取一个碗，并从中选取一个小球，颜色为蓝色的概率应为$P(\text{蓝色})=\frac{4}{10}$，同时有$P(\text{黄色})=\frac{6}{10}$。若已知取的碗为甲碗，那么选取蓝色小球的概率应为$P(\text{蓝色}|\text{碗}=\text{甲碗})=\frac{1}{5}$，此时样本空间改变，被限制在了甲碗中，此时称为条件概率。
+
+    若此时任意从两个碗中选取一个小球，小球颜色是蓝色，那么此时该小球是从甲碗中选取的概率为$P(\text{甲碗}|\text{颜色}=\text{蓝色})=\frac{1}{4}$，注意$P(\text{甲碗}|\text{蓝色})$与$P(\text{蓝色}|\text{甲碗})$的概率并不相同。
+\end{example}
+
+\begin{example}
+    假设某病患被检测出了某癌症阳性，该癌症在人群中的患病的概率为$\frac{1}{1000}$，并且该诊断的正确率为$99\%$。
+    \begin{figure}[ht!]
+    \centering
+    \begin{tikzpicture}[
+    grow = right, 
+    level distance = 7em,
+    level 1/.style={sibling distance=4.5em, anchor=west},
+    level 2/.style={sibling distance=3em, anchor=west},
+    ]
+    \node {病患}
+    child {
+        node {不患癌症} 
+        child {node {检测阴性} edge from parent node [above,sloped] {0.99}}
+        child {node {检测阳性} edge from parent node [above,sloped] {0.01}}
+        edge from parent node [above,sloped]{0.999}
+    }
+    child {
+        node {患有癌症} 
+        child {node {检测阴性} edge from parent node [above, sloped] {0.01}}
+        child {node {检测阳性} edge from parent node [above,sloped] {0.99}}
+        edge from parent node [above,sloped]{0.001}
+    };
+    \end{tikzpicture}
+    \end{figure}
+
+    该病人检测为阳性，因此有关的概率为$P(\text{患有癌症} \cap \text{检测阳性})$与$P(\text{不患癌症} \cap \text{检测阳性})$，而该病人在检测为阳性的前提下，真正患有癌症的概率应为：
+    \begin{align*}
+        P(\text{患有癌症}|\text{检测阳性}) &= \frac{P(\text{患有癌症} \cap \text{检测阳性})}{P(\text{检测阳性})} \\
+        &= \frac{P(\text{患有癌症} \cap \text{检测阳性})}{P(\text{患有癌症} \cap \text{检测阳性}) + P(\text{不患癌症} \cap \text{检测阳性})} \\
+        &= \frac{0.001 \times 0.99}{0.001\times 0.99 + 0.999\times 0.01} \approx 9.016\% 
+    \end{align*}
+
+    或使用表格表示：
+    \begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}lcc@{}} \toprule
+    & 患有癌症（0.001） & 不患癌症（0.999） \\ \midrule
+    检测正确（$0.99$）& \textbf{检测结果：阳性} & 检测结果：阴性 \\
+    检测错误（$0.01$）& 检测结果：阴性 & \textbf{检测结果：阳性} \\ \bottomrule
+    \end{tabular}
+    \end{table}
+\end{example}
+
+\subsection{贝叶斯定理}
+
+通常而言，事件A在给定事件B已发生的条件下发生的概率，与事件B在给定事件A已发生的条件下发生的概率是不一样的。然而这两者是有确定的关系的，贝叶斯定理（Bayes' theorem）就是这种关系的陈述，具体而言有：
+\begin{equation*}
+    P(A|B) = \frac{P(A)P(B|A)}{P(B)}
+\end{equation*}
+
+$P(A)$为先验概率（Prior probability），即不考虑任何B方面的因素。而$P(A|B)$为已知B发生后，A发生的概率，也称为A的后验概率（Posterior probability）或条件概率。同理，所要求的条件概率$P(B|A)$也称为B的后验概率，因为是在已知A发生的情况下，B发生的概率。
+
+\begin{example}
+    继续使用小球的例子，并计算相应概率有：
+    \begin{table}[ht!]
+    \centering
+    \begin{tabular}{cccc}\toprule
+    & \text{蓝色（0.4）} & \text{黄色（0.6）} \\ \midrule
+    \text{甲碗（0.5）} & 1 & 4  \\
+    \text{乙碗（0.5）} & 3 & 2  \\ \bottomrule
+    \end{tabular}
+    \end{table}
+
+    要计算$P(\text{甲碗}|\text{蓝色})$，即应知道甲乙两个碗中蓝球的数目，最直观的计算方法为：
+    \begin{equation*}
+        P(\text{甲碗}|\text{蓝色}) = \frac{P(\text{甲碗中蓝色球的数目})}{P(\text{甲碗中蓝色球的数目}) + P(\text{乙碗中蓝色球的数目})} 
+    \end{equation*}
+
+    其中分子甲碗中的蓝色球数目，应有甲碗的概率再乘以，已知甲碗蓝色球的概率（即在甲碗这个缩小的样本空间内，蓝色球的概率），若使用较为严谨的数学语音表达，则有：
+    \begin{align*}
+        P(\text{甲碗}|\text{蓝色}) &= \frac{P(\text{甲碗})\times P(\text{蓝色}|\text{甲碗})}{P(\text{甲碗}) \times P(\text{蓝色}|\text{甲碗}) + P(\text{乙碗}) \times P(\text{蓝色}|\text{乙碗})} \\
+        &= \frac{P(\text{甲碗})\times P(\text{蓝色}|\text{甲碗})}{P(\text{蓝色})} \\
+        &= \frac{0.5 \times 0.2}{0.4} = \frac{1}{4}
+    \end{align*}
+\end{example}
+
+\subsection{似然函数}
+
+似然函数（Likelihood function）
 
 \section{Chi-square distribution}
 
 假设有随机变量$X$服从标准正态分布，即有$X \sim N(0,1)$，此时有随机变量$Q_1=X^2$，则有随机变量$Q_1$服从卡方分布（$\chi^2\text{-distribution}$），由于此时只有一个随机变量，因此卡方分布自由度（degree of freedom）为1，即$Q_1 \sim \chi^2(1)$。如随机变量$Q_2 = X_1^2 + X_2^2$，且$X_1$与$X_2$同时服从标准正态分布。则此时$Q_2$服从自由度为2的卡方分布，即$Q_2 \sim \chi^2(2)$。
-
 
 \subsection*{Goodness of fit}
 

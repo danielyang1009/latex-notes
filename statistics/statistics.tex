@@ -24,7 +24,7 @@
 
 \subsection{期望}
 
-对于随机变量$X$，其概率空间为$(\Omega,\mathcal{F},P)$，期望值$\E[X]$，应有：
+对于随机变量$X$，其概率空间为$(\Omega,\mathcal{F},P)$，期望值$\E[X]$或$\mu$，应有：
 \begin{equation*}
     \E[X] = \int_{\Omega} X(\omega) dP(\omega)
 \end{equation*}
@@ -44,13 +44,21 @@
 
 \subsection{方差}
 
-对于方差（Variance），定义有：
+对于方差（Variance）或$\sigma^2$，定义有：
 \begin{align*}
-    \Var(X) &= \Cov(X,X) = \sigma_X^2\\ 
+    \Var(X) &= \E\left[ (X-\mu)^2 \right]\\
     &= \E[(X-\E[X])^2] \\
     &= \E[X^2 - 2X\E[X] + \E[X]^2] \\
     &= \E[X^2] - 2\E[X]^2 + \E[X]^2 \\
-    &= \E[X^2] - \E[X]^2
+    &= \E[X^2] - \E[X]^2 \\
+    &= \Cov(X,X)
+\end{align*}
+
+同理，或其连续积分形式有：
+\begin{align*}
+    \Var(X) &= \int (x-\mu)^2 f(x) dx \\
+    &= \int x^2 f(x) dx - 2\mu \int xf(x)dx + \mu^2 \int f(x)dx \\
+    &= \int x^2 f(x) dx - \mu^2
 \end{align*}
 
 其性质有：
@@ -406,7 +414,9 @@
     P(A|B) = \frac{P(A)P(B|A)}{P(B)}
 \end{equation*}
 
-$P(A)$为先验概率（Prior probability），即不考虑任何B方面的因素。而$P(A|B)$为已知B发生后，A发生的概率，也称为A的后验概率（Posterior probability）或条件概率。同理，所要求的条件概率$P(B|A)$也称为B的后验概率，因为是在已知A发生的情况下，B发生的概率。
+$P(A)$为先验概率（Prior probability），即不考虑任何B方面的因素。而$P(A|B)$为已知B发生后，A发生的概率，也称为A的后验概率（Posterior probability）或似然（Likelihood）。同理，所要求的条件概率$P(B|A)$也称为B的后验概率，因为是在已知A发生的情况下，B发生的概率。
+
+已知$P(A \cap B) = P(B|A)P(A) = P(A|B)P(B)$，由此变形可推导推导贝叶斯定理，即两个条件概率之间的关系。\textbf{注意}：只有当$A$与$B$互相独立时，才有$P(A \cap B) = P(A) \times P(B)$。由于此时$P(B|A) = P(B)$，A不受B的影响。
 
 \begin{example}
     继续使用小球的例子，并计算相应概率有：
@@ -419,7 +429,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \end{tabular}
     \end{table}
 
-    要计算$P(\text{甲碗}|\text{蓝色})$，即应知道甲乙两个碗中蓝球的数目，最直观的计算方法为：
+    要计算$P(\text{甲碗}|\text{蓝色})$，将样本空间限制在蓝色球的范围内，即应知道甲乙两个碗中蓝球的数目，最直观的计算方法为：
     \begin{equation*}
         P(\text{甲碗}|\text{蓝色}) = \frac{P(\text{甲碗中蓝色球的数目})}{P(\text{甲碗中蓝色球的数目}) + P(\text{乙碗中蓝色球的数目})} 
     \end{equation*}
@@ -431,6 +441,143 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         &= \frac{0.5 \times 0.2}{0.4} = \frac{1}{4}
     \end{align*}
 \end{example}
+
+\begin{remark}
+    假设集合A为某假设，而集合B为某事实，那么有：
+    \begin{equation*}
+        P(\text{假设}|\text{事实}) = \frac{P(\text{假设})P(\text{事实}|\text{假设})}{P(\text{假设})P(\text{事实}|\text{假设}) + P(\lnot \text{假设})P(\text{事实}|\lnot \text{假设})}
+    \end{equation*}
+    
+    贝叶斯定理可以通过图形进行理解与记忆，假设如下为边长为1的正方形，此时正方形面积为1代表整体概率为1。
+    \begin{figure}[ht!]
+    \centering
+        \begin{tikzpicture}
+            \draw (0, 0) rectangle (4, 4);
+            \draw (1,0) -- (1,4);
+            \draw (0,1.6) -- (1,1.6);
+            \fill[pattern= north east lines] (0,0) rectangle (1,1.6);
+            \draw (1,0.8) -- (4,0.8);
+            \fill[pattern=north west lines] (1,0) rectangle (4,0.8);
+            \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,0) -- (1,0) node[midway,below,yshift=-0.6em]{\small $P(\text{假设})$};
+            \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (1,0) -- (4,0) node[midway,below,yshift=-0.6em]{\small $P(\lnot \text{假设})$};
+            \draw[decorate,decoration={brace,amplitude=5pt,raise=0.2em}] (0,0) -- (0,1.6) node[midway,left,xshift=-0.6em]{\small $P(\text{事实}|\text{假设})$};
+            \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (4,0) -- (4,0.8) node[midway,right,xshift=0.6em]{\small $P(\text{事实}|\lnot \text{假设})$};
+        \end{tikzpicture}
+    \end{figure}
+
+    假设$P(\text{假设})$不变，当$P(\text{事实}|\text{假设}) = P(\text{事实}|\lnot \text{假设})$时，即上图两个长方体高度相同。此时易知$P(\text{假设}|\text{事实}) = P(\text{假设})$。此时，事实为真的概率，在假设条件为真与假设条件为假的两个子集中，概率相同，因此其概率就应该等于全样本下的先验概率，即后验概率不发生改变。由此可知，当事实为真的概率，在假设为真与假设为假的概率差别越大时，后验概率的变化也越大。
+\end{remark}
+
+\subsection{条件概率分布}
+
+继续推广条件概率的概念，条件概率分布（Conditional probability distribution），在离散形势下有称为条件概率质量函数（Conditional probability mass function）：
+\begin{equation*}
+    P(X=x|Y=y) = \frac{P(X=x\cap Y=y)}{P(Y=y)}
+\end{equation*}
+
+与条件概率相同，有等价关系$P(Y=y|X=x)P(X=x) = P\left[(X=x)\cap (Y=y)\right] = P(X=x|Y=y)P(Y=y)$。
+
+\begin{example}
+    有一个骰子，假设当掷出来的数字为偶数（如：$2,4,6$）时$X=1$，而奇数时$X=0$。同时假设当掷出来的数字为质数（如：$2,3,5$）时$Y=1$，其他情况下$Y=0$。
+    \begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ccccccc@{}}
+    \toprule
+    & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} \\ \midrule
+    \textbf{X} & 0 & 1 & 0 & 1 & 0 & 1 \\
+    \textbf{Y} & 0 & 1 & 1 & 0 & 1 & 0 \\ \bottomrule
+    \end{tabular}
+    \end{table}
+    
+    对于无条件概率$P(X=1) = \frac{1}{2}$，而条件概率$P(X=1|Y=1) = \frac{1}{3}$，具体计算如下：
+    \begin{align*}
+        P(X=1|Y=1) &= \frac{P(X=1)P(Y=1|X=1)}{P(Y=1)} \\
+        &= \frac{P(X=1)P(Y=1|X=1)}{P(X=1)P(Y=1|X=1) + P(X=0)P(Y=1|X=0)} \\
+        &= \frac{1}{1+2} = \frac{1}{3}
+    \end{align*}
+\end{example}
+
+对于连续情形下，有条件概率密度函数（Conditional probability density function）：
+\begin{equation*}
+    f_{X|Y}(x|y) = \frac{f_{X,Y}(x,y)}{f_Y(y)}
+\end{equation*}
+
+其中$f_{X,Y}(x,y)$为联合分布（Joint probability distribution）。对于离散随机变量而言，称为联合分布概率质量函数（Joint probability mass function），对于连续随机变量也称为联合分布概率密度函数（joint probability density function）。而$f_Y(y)$为边缘分布（Marginal distribution）,同样分为边缘概率质量函数（Marginal probability mass function）与边缘概率密度函数（Marginal probability density function）。
+
+\subsubsection{条件期望}
+
+与条件概率原理相同，条件期望（Conditional expectation），记为$\E(X|Y)$或$\E(X|Y=y)$，即限制条件$Y=y$缩小样本空间后，计算X的期望。在离散的情形下有如下表达式，其中$P(X=x,Y=y)$为联合概率密度函数。
+\begin{equation*}
+    \E(X|Y=y) = \sum_x x P(X=x|Y=y) = \sum_x x \frac{P(X=x,Y=y)}{P(Y=y)}
+\end{equation*}
+
+\begin{example}
+    在上述投掷骰子的例子，对于无条件概率$\E(X) = \frac{1}{2}$，而条件期望$\E(X|Y=1) = \frac{1+0+0}{3} = \frac{1}{3}$，条件期望$\E(X|Y=0) = \frac{0+1+1}{3} = \frac{2}{3}$
+\end{example}
+
+对于连续随机变量，其中$f_{X,Y}(x,y)$为X与Y的联合概率密度函数，$f_Y(y)$为Y的概率密度函数，令$f_{X|Y}(x|y) = \frac{f_{X,Y}(x,y)}{f_Y(y)}$：
+\begin{equation*}
+    \E(X|Y=y) = \int_x x f_{X|Y}(x|y) dx = \frac{1}{f_Y(y)} \int x f_{X,Y}(x,y) dx
+\end{equation*}
+
+\subsubsection{条件方差}
+
+条件方差（Conditional variance）定义为：
+\begin{align*}
+    \Var(X|Y) &= \E \left[\left( X-E(X|Y) \right)^2 |Y \right] \\
+    &= \E \left[ X^2 - 2X\E(X|Y) + \E^2(X|Y) |Y \right] \\
+    &= \E (X^2|Y) - \E^2(X|Y)
+\end{align*}
+
+\begin{proposition}
+    总期望定律（Law of total expectation）或称为双重期望定理（Double expectation theorem）有：
+    \begin{equation*}
+        \E(X) = \E\left[ \E(X|Y) \right]
+    \end{equation*}
+    
+    \begin{proof}
+        \begin{align*}
+            \E\left[ \E(X|Y) \right]
+            &= \sum_y \E(X|Y=y) P(Y=y)\\
+            &= \sum_y \left[ \sum_x x P(X=x|Y=y) \right] P(Y=y) \\
+            &= \sum_y \sum_x x P(X=x|Y=y) P(Y=y) \\
+            &= \sum_y \sum_x x P(Y=y|X=x) P(X=x) \\
+            &= \sum_x \sum_y x P(Y=y|X=x) P(X=x) \\
+            &= \sum_x x P(X=x) \left[ \sum_y P(Y=y|X=x)\right] \\
+            &= \sum_x x P(X=x) = \E(X)
+        \end{align*}
+    \end{proof}
+\end{proposition}
+
+\begin{remark}
+    或可以先展开内层期望进行证明$\E\left[ \E(X|Y) \right] = \E\left[ \sum_x x P(X=x|Y) \right]$。由此可以发现内层条件期望求得的结果为关于Y的函数，因此外层的期望作用于随机变量Y，而内层的期望作用于随机变量X。积分先后顺序可以对调，可以理解为一个矩形面积，可以由积分底再积分高获得，或先积分高再积分底，两者结果相同。且倒数第二步，可以将与随机变量Y无关的，只关于随机变量X的部分提出至括弧外。
+\end{remark}
+
+\begin{proposition}
+    总方差定律（Law of total variance）有：
+    \begin{equation*}
+        \Var(X) = \E\left[ \Var(X|Y) \right] + \Var\left[ \E(X|Y) \right]
+    \end{equation*}
+
+    \begin{proof}
+        计算等式右边第一项，并且根据总期望定律：
+        \begin{align*}
+            \E[\Var(X|Y)] &= \E\left[ \E(X^2|Y) - \left( \E(X|Y) \right)^2 \right] \\
+            &= \E(X^2) - \E\left[ \left(\E(X|Y)\right)^2 \right]
+        \end{align*}
+
+        对于等式右边第二项，根据方差的定义有：
+        \begin{align*}
+            \Var\left[\E(X|Y)\right] &= \E \left[ \E(X|Y) - \E\left[ \E(X|Y) \right] \right]^2 \\
+            &= \E \left[ \E(X|Y) - \E(X) \right]^2 \\
+            &= \E \left[ [\E(X|Y)]^2 - 2\E(X|Y)\E(X) + \E^2(X) \right] \\
+            &= \E \left[ [\E(X|Y)]^2 \right] - \E^2(X)
+        \end{align*}
+            
+        将两项相加，再次根据方差定义$\Var(X) = \E(X^2) - \E^2(X)$替换，得证。
+    \end{proof}
+\end{proposition}
+
 
 \subsection{似然函数}
 

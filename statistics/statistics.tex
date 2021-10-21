@@ -762,5 +762,65 @@ Test statistics: (negative, more negatvie -> reject H0)
 
 -  $DF_{\delta} = \frac{\hat{\delta}}{SE(\hat{\delta})}$
 
+\section{Time Series}
+
+ADF-Test: 检验结果为负，越负越拒绝原假设，即有单位根。单位根存在，即$y_t = a + b y_{t-1} + e_t$，$|b|=1$，为随机。
+
+\section{Maximum Likelihood}
+
+\section{Kalman Filter}
+
+\subsection{State Space Representation}
+$$
+\begin{aligned}
+   \mathbf{\xi_{t+1}} &= \mathbf{F \xi_{t}} + \mathbf{v_{t+1}} \\
+   \mathbf{y_{t}} &= \mathbf{A'} \mathbf{x_{t}} + \mathbf{H'\xi_{t}} + \mathbf{w_t}
+\end{aligned}
+$$
+
+\subsection{Definition}
+
+$$
+\begin{aligned}
+    \mathbf{P_{t|t-1}} \equiv E[(\xi_{t} - \hat{\xi}_{t|t-1})(\xi_{t} - \hat{\xi}_{t|t-1})'] \\
+    \mathbf{K_t} = \mathbf{FP_{t|t-1}H(H'P_{t|t-1}H+R)^{-1}}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+    E[(\xi_{t} - \hat{\xi}_{t|t-1})(\xi_{t} - \hat{\xi}_{t|t-1})'] &= \mathbf{P_{t|t-1}} \\
+    E[(\mathbf{y_t} - \hat{\mathbf{y}}_{t|t-1})(\mathbf{y_t} - \hat{\mathbf{y}}_{t|t-1})'] &= \mathbf{H'P_{t|t-1}H+R} \\
+    E\{(\xi_t - \xi_{t|t-1})(\mathbf{y_t} - \hat{\mathbf{y}}_{t|t-1})'\} &= \mathbf{P_{t|t-1}H} \\
+\end{aligned}
+$$
+
+\subsection{Steps}
+
+$$
+\hat{\xi}_{1|0} = E(\xi_1)
+$$
+$$
+P_{1|0} = E\{[\xi_1 - E(\xi_1)][\xi_1 - E(\xi_1)]'\}
+$$
+
+\subsection{Iteration}
+
+% $$
+% \hat{\xi}_{t|t} &= \mathbf{\hat{\xi}_{t|t-1} + P_{t|t-1}H(H'P_{t|t-1}H+R)^{-1}(y_t - A'x_t - H'\hat{\xi}_{t|t-1})}\\
+% \hat{\xi}_{t+1|t} &= \mathbf{F \hat{\xi}}_{t|t} = \mathbf{F\hat{\xi}_{t|t-1} + K_t(y_t - A'x_t - H'\hat{\xi}_{t|t-1})} \\
+% \mathbf{P}_{t|t} = \mathbf{P_{t|t-1} - P_{t|t-1}H(H'P_{t|t-1}H+R)^{-1}H'P_{t|t-1}}
+% \mathbf{P}_{t+1|t} &= \mathbf{FP_{t|t}F'+Q} \\
+% $$
+
+\subsection{Smoothing}
+$$
+\mathbf{J_t} \equiv \mathbf{P_{t|t}F'P^{-1}_{t+1|t}}
+$$
+$$
+\hat{\mathbf{\xi}_{t|T}} = \hat{\mathbf{\xi}}_{t|t} + J(\hat{\xi}_{t+1|T} - \hat{\xi}_{t+1|t})
+$$
+
+
 
 \end{document}

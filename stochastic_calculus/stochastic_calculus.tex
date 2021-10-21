@@ -473,10 +473,12 @@
 
 \section{比例收益率与对数收益率}
 
-\subsection{对比}
+\subsection{单期收益}
 
-对于计算\textbf{单期}的收益率，可分为\textbf{百分比收益}或（Arithmetic return）或称为简单收益（Simple return），与
-\textbf{连续复利收益}（Continuously compounded return），或称为对数收益（Logarithmic return，或Log return）。记符号$r$为收益率（rate of return）为将一段时间的收益（return）$R$，转化为在标准化期限内的收益。对于标准化期限为一年的收益率，称为年化收益率（annulized return）。
+对于计算\textbf{单期}的收益，可分为\textbf{百分比收益}或（Arithmetic return）或称为简单收益（Simple return），与
+\textbf{连续复利收益}（Continuously compounded return），或称为对数收益（Logarithmic return，或Log return）。
+
+这里特指\textbf{收益}而非收益率，因为收益是指单期的，而收益率则可通过对单期收益率进行年化，或对多期收益率进行平均获得。记符号$r$为收益率（Rate of return）为将一段时间的收益（Return）$R$，转化为在标准化期限内的收益。对于标准化期限为\textbf{1年}的收益率，称为年化收益率（Annulized return）。
 \begin{table}[H]
 \centering
 \begin{tabular}{@{}cll@{}}
@@ -491,30 +493,44 @@
 \end{tabular}
 \end{table}
 
-而计算\textbf{多期}的平均收益率，有\textbf{算术平均收益率}（Arithmetic mean rate of return），和\textbf{几何平均收益率}（Geometric mean rate of return）两种方式。其中算术平均收益率为：
+由上表可知，百分比收益与对数收益有如下转换关系：
 \begin{equation*}
-    \bar{r}_{arithmetic} = \frac{1}{n} \sum^{n}_{i=1} = \frac{1}{n} (r_1 + r_2 + \dots + r_n)
+    R_{pct} = e^{R_{log}} - 1 \quad\leftrightarrow\quad R_{log} = \ln (R_{pct} + 1)
 \end{equation*}
 
-几何平均收益率为：
+\subsection{多期收益平均}
+
+而计算\textbf{多期}的平均收益率，有\textbf{算术平均收益率}（Arithmetic mean rate of return），和\textbf{几何平均收益率}（Geometric mean rate of return）两种方式。假设共有$n$期，算术平均收益率有：
 \begin{equation*}
-    \bar{r}_{geometric} = \left( \prod^{n}_{i=1}(1+r_i) \right)^{\frac{1}{n}} - 1
+    \bar{r}_{\text{算术}} = \frac{1}{n} \sum^{n}_{i=1} r_i = \frac{1}{n} (r_1 + r_2 + \dots + r_n)
 \end{equation*}
+
+几何平均收益率有：
+\begin{equation*}
+    \bar{r}_{\text{几何}} = \left( \prod^{n}_{i=1}(1+r_i) \right)^{\frac{1}{n}} - 1
+\end{equation*}
+
+\subsection{单期与多期收益率（年化）}
 
 \subsubsection*{百分比收益率}
 
-对于没有再投资（reinvestment）的百分比年化收益率为（$\tau$单位为年）：
+对于没有再投资（Reinvestment）的\textbf{单期}百分比年化收益率为（$\tau$单位为年）：
 \begin{equation*}
     r_{pct} = \frac{R_{pct}}{\tau}
 \end{equation*}
 
-对进行了再投资的百分比收益率为：
+即如半年收益为$10\%$，则$1$年的年化为$20\%$。而对进行了再投资的百分比收益率为：
 \begin{align*}
     1+R_{pct} &= (1+r_{pct})^\tau \\
     r_{pct} &= (1+R_{pct})^{\frac{1}{\tau}} - 1
 \end{align*}
 
-对于单期或\textbf{多期}的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率，计算算术平均没有经济学意义。
+此时假设$R_{pct}$为$2$年单期收益，则$\tau = 2$，最终结果$r_{pct}$为将两年收益使用几何平均为年化百分比收益率。对于\textbf{多期}平均（几何平均）年化百分比收益率，假设R时间跨度为$1$年$k$期（若月收益，则有$k=12$），持有该资产的期限为$n$年，都应有：
+\begin{equation*}
+    r_{pct} = \left[ \prod_{i=1}^{n\times k} (1+R_{pct,i}) \right]^{n} - 1
+\end{equation*}
+
+即先计算持有资产期限内所有收益的乘积，即为总收益，再按上述单期方法进行年化。对于单期或多期的百分比收益，都使用上式\textbf{几何平均}进行计算，得到其平均年化收益率，计算算术平均没有经济学意义。
 
 \subsubsection*{对数收益率}
 
@@ -1126,17 +1142,34 @@ Long put, long delta stock/ short put, short delta stock
 
 \section{波动率}
 
-波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（backward looking），一类为前瞻波动率（forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
+波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（Backward looking），一类为前瞻波动率（Forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
 
-波动率的数学定义为：假设$r_t$为一个资产的收益率时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
+波动率的数学定义为：假设$r_t$为一个资产的收益率（一般使用对数收益率）时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
 \begin{equation*}
-    \sigma^2(r_t) = \frac{1}{T-1} \sum^T_{t=1} (r_t - \bar{r})^2 
+    \sigma^2 = \frac{1}{T-1} \sum^T_{t=1} (r_t - \bar{r})^2 
 \end{equation*}
 
 其中样本均值应有：
 \begin{equation*}
     \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
 \end{equation*}
+
+\subsection{波动率特征}
+
+波动率虽然不可以直接观测，但其一部分特征能在资产的收益率序列中观察到。
+
+\subsubsection{尖峰肥尾}
+
+收益率的分布相比正态分布，呈现尖峰肥尾的特征。也就是说，它们的峰度（用方差的平方根标准化的第四中心矩）通常都大于3（高斯随机变量的峰度为3）。事实上，一种流行的检验高斯分布假设的方法，Jarque-Bera测试，能够同时测试此分布是否是对称的以及其峰度是否等于3。如果收益率是肥尾分布的，则极端事件，即非常高或非常低的收益率的发生概率，会高于收益率分布满足正态分布时其发生的概率。
+
+\subsubsection{波动率聚类}
+
+波动率聚类（Volatility clustering）指波动率可能在一段时间内高，而在另一端时间内低。即如果$t−1$时的波动率很高，$t$时的波动率也很可能会很高。即，在$t−1$时的冲击不仅会增加$t−1$时的波动率，也会影响到$t$时的波动率。换句话说，市场在某些时期较为波动，在其他时间更为平静。波动率特征按照时间集中分类。GARCH 类模型能够很好地捕捉这一现象。事实上，这些模型更准确地来说，是衡量$t$时的波动率是如何依赖历史波动率 (和其他可能的条件变量）。
+
+\subsubsection{不对称性}
+
+波动率对价格的大幅上升与价格的大幅下降翻译不同，这一不对称性过去被成为杠杆效应（Leverage effects），因为增加的风险，被认为是来自于负面冲击所引起杠杆的增加。具体而言指，当股票价格下跌时，使得公司股东权益下降，但由于公司负债不变，公司的债务股本比（Debt-to-equity ratio）会增大，公司会有更高的杠杆率。而更高的杠杆也会让公司的信用恶化，促使公司的股票价格进一步下跌。一些波动率模型具体针对已有模型刻画上述这些特征上的落点而提出的，例如EGARC和模型就是为了刻画波动率对资产收益率的不对称性而提出的。
+
 
 \subsection{历史波动率}
 
@@ -1149,14 +1182,13 @@ Long put, long delta stock/ short put, short delta stock
 
 其中$X_t$为股票价格的对数，$t_0,t_1,\dots,t_n$为$[0,T]$区间的一个划分。注意，这个和标准差不一样，这个其实是对数收益率的二阶距。可以证明，用 quadratic variation 得到的估计量是一致估计。???
 
-BSIV与MFIV为风险中性下的波动率
 
 
 \subsection{已实现波动率}
 
 【待整理】已实现波动率（Realized volatility），顾名思义，为已发生的波动率。
 
-一种为特定针对隐含波动率，目的用于对比，对应的已实现波动率。即如在t-30天的时点，观察未来30天的隐含波动率，而后在t时间，观察已发生的30日之内的历史波动率。
+一种为特定针对隐含波动率，目的用于对比，对应的已实现波动率。即如在t时点，观察未来30天的隐含波动率，而后在t+30时间，观察已发生的30日之内的历史波动率。
 
 一种为针对频率较高的数据计算的一种波动率，又称为日内波动率或高频波动率。高频数据是指以小时、分钟或秒为采集频率的数据。一般使用日内高频频率为5分钟。为：
 \begin{equation*}
@@ -1171,9 +1203,16 @@ BSIV与MFIV为风险中性下的波动率
     \item ...
 \end{itemize}
 
-\subsection{GARCH波动率}
+\subsection{条件异方差模型}
 
-GARCH为广义自回归条件异方差模型（Generalized autoregressive conditional heteroskedasticity）。Robert Engle于1982年在《计量经济学》上提出了ARCH模型用于估计和预测波动率。在此基础上，Bollerslev(1986)建立了广义自回归条件异方差(GARCH)模型。
+用于对资产收益率的波动率建模的统计方法与计量模型，统称为条件异方差模型。Robert Engle于1982年在《计量经济学》上提出了ARCH模型用于估计和预测波动率（Engle 1982）。在此基础上，Bollerslev（1986）提出了广义自回归条件异方差（GARCH）模型。后续还有如Engle、Lilien和Robins（1987）提出的ARCH-M模型，Newlson（1991）提出的EGARCH模型，Glosten、Jagannathan和Runkle（1991）提出的GJR-GARCH模型，Zakoian（1994）的TAGARCH模型等等。
+
+\subsubsection{ARCH波动率}
+
+自回归条件异方差模型（Autoregressive conditional heteroskedasticity model，ARCH模型）。
+\subsubsection{GARCH波动率}
+
+GARCH为广义自回归条件异方差模型（Generalized autoregressive conditional heteroskedasticity model）。
 
 【核实】
 EWMA方法即指数移动平均方法。EWMA根据历史数据距当前时刻的远近，分别赋予不同的权重，距离现在越近，赋予的权重越大，我们认为越远的历史信息所起的作用越小，因此计算波动率时所赋予的权重越小。GARCH与EWMA都使用到了指数移动平均，他们都赋予最近的信息以更大的权重，EWMA事实上是一种特殊形式的GARCH。
@@ -1231,7 +1270,11 @@ GARCH（1，1）模型方差如下：
 
 如上文所述，隐含波动率（Implied volatility）指并不使用历史数据进行预测，从市场价格中得到的波动率信息。因为在一个充分竞争的市场交易之中，市场当前的价格已经包含了对未来波动率的预期，因此只需要将波动率信息从当前市场价格信息中提取出来。因为波动率隐藏在市场价格之中，称之为隐含波动率。
 
+具体可分为有模型的波动率与无模型的波动率。有模型的波动率如BS隐含波动率，将市场价格通过BS模型提取其中的波动率。模型都需要基于一定的假定，而无模型波动率，不依赖期权定价模型（如BS），只需要最基本的假设，即可直接从市场价格提取出隐含波动率。
+
 【待核实】由于是根据期权市场价格求得，实际为风险中性下的，标的证券在到期日之内波动率的期望。而实际中，证券存续的时间远远超过期权存续的时间。因此隐含波动率，与现实波动率存在两个方向的差异，第一是风险中性测度与现实测度的差异，即不考虑风险溢酬，第二为存续时间的差异，期权存续时间较短，而股票存续时间较长，在较长的时间内波动应该相对更为平稳。
+
+BSIV与MFIV为风险中性下的波动率
 
 \subsubsection{BS隐含波动率}
 
@@ -1661,29 +1704,6 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     V_{\text{BJN}} = \frac{2}{T} \left[ rT - \frac{S_0 e^{rT} - S_*}{S_*} - \ln \frac{S_*}{S_0} + e^{rT} \int_{0}^{S_*} \frac{P(T,K)}{K^2} dk + e^{rT} \int_{S_*}^{\infty} \frac{C(T,K)}{K^2} dK \right] 
 \end{equation*}
 
-\subsection{典型实证现象}
-
-有些现象能够在几乎所有收益率的时间序列中观察到。一个好的条件异方差模型要能够捕捉大部分实证现象。在这个部分，我们列出在波动性分析中最知名典型实证现象。
-% https://vinsight.shnyu.edu.cn/about_volatility.php
-
-\subsubsection{波动率聚类}
-
-如果 t−1时的波动率很高，t 时的波动率也很可能会很高。即，在 t−1 时的冲击不仅会增加 t−1 时的波动率，也会影响到 t 时的波动率。换句话说，市场在某些时期较为波动，在其他时间更为平静。波动率特征按照时间集中分类。GARCH 类模型能够很好地捕捉这一现象。事实上，这些模型更准确地来说，是衡量 t 时的波动率是如何依赖历史波动率 (和其他可能的条件变量）。
-
-\subsubsection{肥尾现象}
-
-收益率的时间序列通常呈现肥尾分布，又叫做超额峰度，或者尖峰。也就是说，它们的峰度（用方差的平方根标准化的第四中心矩）通常都大于3（高斯随机变量的峰度为3）。事实上，一种流行的检验高斯分布假设的方法，Jarque-Bera测试，能够同时测试此分布是否是对称的以及其峰度是否等于3。
-
-如果收益率是肥尾分布的，则极端事件（非常高或非常低的回报率）的发生概率会高于收益率分布满足正态（高斯）分布时其发生的概率。
-
-大部分波动率模型，例如GARCH 模型会造成收益率呈现肥尾分布，不管真正的潜在冲击是高斯分布还是肥尾分布。在估计时，我们通常假设潜在冲击服从高斯分布。在样本量很大时，即使真实分布不是高斯，模型通常也能给出合适的估计值。这些估计值为最大似然估计值，并且能够在相对宽松的限制条件下给出一致的估计。
-
-\subsubsection{不对称性}
-
-有一个普通 GARCH 模型不能捕捉的实证现象是 t−1 时刻的负面冲击比正面冲击对 t 时刻的方差有更强烈的影响。尽管如此， GARCH 模型能够很容易地调整扩充从而捕捉到这种不对称性。类似的例子有门限 GARCH （TGARCH）模型，, 不对称 GARCH （AGARCH）模型和指数 GARCH （EGARCH)）模型。
-
-这一不对称性过去被成为杠杆效应，因为增加的风险被认为是来自于负面冲击所引起杠杆的增加，但是限制人们认识到这个效应不能解释所有现象，并且风险规避是一个重要的机制。
-
 \section{波动率曲面}
 
 【待添加】波动率曲面（Volatility surface），期限结构（到期时间与波动率），波动率偏斜曲线Volatility Skew Curve，或波动率微笑（在值程度与波动率）
@@ -1878,7 +1898,6 @@ PCP平价可以直接从BS公式中推导；
     &= C_{t,T}
 \end{align*}
 也可以看到，相同行权价到期时间的看涨看跌期权，两者波动率应该相等，否则PCP平价不成立。
-
 
 \subsection{无红利资产}
 

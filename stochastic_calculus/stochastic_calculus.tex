@@ -316,14 +316,14 @@
     \Delta \ln S &\sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right)
 \end{align*}
 
-可以看到\textbf{连续复利收益率}或\textbf{对数收益率}服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。对于日频收益率的计算，此时得到的正态分布均值以及方差均为日频（$T-t=\frac{1}{252}$），需乘以252进行年化，得到年化的收益率均值与波动率。在$T$时刻，\textbf{股票价格的对数}（$\ln S$），也服从\textbf{正态分布}，则有\textbf{股票价格}（$S$）服从\textbf{对数正态分布}。
+可以看到\textbf{连续复合收益率}或\textbf{对数收益率}服从期望值为$(\mu - \tfrac{\sigma^2}{2})dt$，方差为$\sigma^2 dt$的\textbf{正态分布}，与现实较为吻合。且$d\ln S_t$的定义，使得股票价格非负。对于日频收益率的计算，此时得到的正态分布均值以及方差均为日频（$T-t=\frac{1}{252}$），需乘以252进行年化，得到年化的收益率均值与波动率。在$T$时刻，\textbf{股票价格的对数}（$\ln S$），也服从\textbf{正态分布}，则有\textbf{股票价格}（$S$）服从\textbf{对数正态分布}。
 \begin{equation*}
     \ln S_T  \sim N \left(\ln S_t + (\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t)\right)
 \end{equation*}
 
 可以看到选择几何布朗运动描绘股票价格$S_t$有如下几大优点：
 \begin{itemize}[leftmargin=4em]
-    \item 正态分布：经验事实证明，股票价格的连续复利收益率，近似地服从正态分布
+    \item 正态分布：经验事实证明，股票价格的连续复合收益率，近似地服从正态分布
     \item 马尔科夫过程：由布朗运动的性质可知，利用几何布朗运动描绘的股票价格是一个马尔科夫过程，即当前价格就包含了对其未来做预测所需的全部信息，这与弱有效市场假说相符
     \item 布朗运动在时间上处处不可微以及二次变分不为零的性质符合股票收益率在时间上存在转折尖点的特征。
 \end{itemize}
@@ -473,12 +473,61 @@
 
 \section{比例收益率与对数收益率}
 
+\subsection{对数收益率推导}
+
+对数收益率，或称连续复合收益率（Continuously compounded return），以复合利率为例。假设名义利率（Nominal interest rate）为$r$，进行再投资，且一年计息$m$次，则有实际利率（Effective interest rate，EIR）为：
+\begin{equation*}
+    \begin{aligned}
+        \text{当$m=1$时：} &\quad 1+r \\
+        \text{当$m=2$时：} &\quad (1+\frac{r}{2})^2 \\
+        \text{当$m=3$时：} &\quad (1+\frac{r}{3})^3 \\
+        \dots &\quad \dots \\
+        \text{当$m=\infty$时：} &\quad \lim_{m \rightarrow \infty} (1+\frac{r}{m})^m \\
+    \end{aligned}
+\end{equation*}
+
+已知，根据定义自然常数为如下极限值：
+\begin{equation*}
+    e = \lim_{n \rightarrow \infty} \left(1+ \frac{1}{n}\right)^n
+\end{equation*}
+
+由下方推导可以看出，连续复合收益率为，
+一段时间内，给定名义利率$r$，当计息频率无限频繁$m=\infty$时的实际利率：
+\begin{equation*}
+    \lim_{m \rightarrow \infty} (1+\frac{r}{m})^m = 
+    \lim_{m \rightarrow \infty} (1+\frac{1}{m/r})^{\frac{m}{r} \times r} = e^r
+\end{equation*}
+
+以股票价格$S_t$为例，有对应的对数收益$R_{log}$为：
+\begin{eqnarray}
+    \frac{S_t}{S_{t-1}} = e^{R_{log}} \quad\rightarrow\quad R_{log} = \ln \frac{S_t}{S_{t-1}}
+\end{eqnarray}
+
+\begin{example}
+    当名义利率为$12\%$时，有年化实际利率（Effective annual interest rate或Annual equivalent rate，AER）为：
+    \begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}lll@{}}
+    \toprule
+    频率（m） & 实际利率 & 实际年化利率 \\ \midrule
+    1（一年）   & $\frac{0.12}{1}=0.12$  & $(1.12)^1-1=0.12$ \\
+    2（半年）   & $\frac{0.12}{2}=0.06$  & $(1.06)^2-1=0.1236$      \\
+    4（季度）   & $\frac{0.12}{4}=0.03$  & $(1.03)^4-1=0.125509$       \\
+    12（月度）  & $\frac{0.12}{12}=0.01$ & $(1.01)^{12}-1=0.126162$ \\
+    52（周度）  & $\frac{0.12}{52}=0.0023$  & $(1.0023)^{52}-1=0.127341$\\
+    365（日度） & $\frac{0.12}{365}=0.00033$ & $(1.00033)^365-1=0.127475$ \\
+    $\infty$ （连续）  & \multicolumn{2}{l}{$ \lim_{m \rightarrow \infty} (1+\frac{0.12}{m})^{m} - 1 = e^{0.12} = 0.127497
+    $}            \\ \bottomrule
+    \end{tabular}
+    \end{table}
+\end{example}
+
 \subsection{单期收益}
 
 对于计算\textbf{单期}的收益，可分为\textbf{百分比收益}或（Arithmetic return）或称为简单收益（Simple return），与
-\textbf{连续复利收益}（Continuously compounded return），或称为对数收益（Logarithmic return，或Log return）。
+\textbf{连续复合收益}（Continuously compounded return），或称为对数收益（Logarithmic return，或Log return）。
 
-这里特指\textbf{收益}而非收益率，因为收益是指单期的，而收益率则可通过对单期收益率进行年化，或对多期收益率进行平均获得。记符号$r$为收益率（Rate of return）为将一段时间的收益（Return）$R$，转化为在标准化期限内的收益。对于标准化期限为\textbf{1年}的收益率，称为年化收益率（Annulized return）。
+这里特指\textbf{收益}，用记号$R$表示，而非收益率，因为收益是指单期的，而收益率则可通过对单期收益率进行年化，或对多期收益率进行平均获得。记符号$r$为收益率（Rate of return）为将一段时间的收益（Return），转化为在标准化期限内的收益。对于标准化期限为\textbf{1年}的收益率，称为年化收益率（Annulized return）。
 \begin{table}[H]
 \centering
 \begin{tabular}{@{}cll@{}}
@@ -495,37 +544,45 @@
 
 由上表可知，百分比收益与对数收益有如下转换关系：
 \begin{equation*}
-    R_{pct} = e^{R_{log}} - 1 \quad\leftrightarrow\quad R_{log} = \ln (R_{pct} + 1)
+    R_{pct} = e^{R_{log}} - 1 \quad\leftrightarrow\quad R_{log} = \ln (1+R_{pct}) 
 \end{equation*}
 
-\subsection{多期收益平均}
 
-而计算\textbf{多期}的平均收益率，有\textbf{算术平均收益率}（Arithmetic mean rate of return），和\textbf{几何平均收益率}（Geometric mean rate of return）两种方式。假设共有$n$期，算术平均收益率有：
+
+
+\subsection{多期平均收益率}
+
+在这里不称为收益，而称为\textbf{收益率}是因为在平均的过程中已经转化为标准化期限，即为原数据的频率，如日频的多期平均收益率，其标准化期限就为$1$天。但只有在标准化期限为年为单位是年时，才能称为是年化的收益率。
+
+计算\textbf{多期}的平均收益率时，有\textbf{算术平均收益率}（Arithmetic mean rate of return），和\textbf{几何平均收益率}（Geometric mean rate of return）两种方式。假设共有$n$期，那么$n$期算术平均收益率有：
 \begin{equation*}
     \bar{r}_{\text{算术}} = \frac{1}{n} \sum^{n}_{i=1} r_i = \frac{1}{n} (r_1 + r_2 + \dots + r_n)
 \end{equation*}
 
-几何平均收益率有：
+$n$期几何平均收益率有：
 \begin{equation*}
     \bar{r}_{\text{几何}} = \left( \prod^{n}_{i=1}(1+r_i) \right)^{\frac{1}{n}} - 1
 \end{equation*}
 
 \subsection{单期与多期收益率（年化）}
 
-\subsubsection*{百分比收益率}
+年化即将其标准期限调整为$1$年，则称为年化收益率。单期收益可直接进行年化，而多期收益，
+一般将其合并为单期收益，再根据持有资产期限长度，以年为单位进行年化（平均），最终得到年化收益率。
 
-对于没有再投资（Reinvestment）的\textbf{单期}百分比年化收益率为（$\tau$单位为年）：
+\subsubsection*{年化百分比收益率}
+
+对于没有再投资（Reinvestment）的\textbf{单期}百分比收益进行年化，得到年化百分比收益率为（$\tau$单位为年）：
 \begin{equation*}
     r_{pct} = \frac{R_{pct}}{\tau}
 \end{equation*}
 
-即如半年收益为$10\%$，则$1$年的年化为$20\%$。而对进行了再投资的百分比收益率为：
-\begin{align*}
-    1+R_{pct} &= (1+r_{pct})^\tau \\
-    r_{pct} &= (1+R_{pct})^{\frac{1}{\tau}} - 1
-\end{align*}
+即如半年收益为$10\%$，则$1$年的年化为$20\%$。而对进行了再投资的，复合（Compound）百分比收益率为：
+\begin{equation*}
+    1+R_{pct} = (1+r_{pct})^\tau \quad\rightarrow\quad
+    r_{pct} = (1+R_{pct})^{\frac{1}{\tau}} - 1
+\end{equation*}
 
-此时假设$R_{pct}$为$2$年单期收益，则$\tau = 2$，最终结果$r_{pct}$为将两年收益使用几何平均为年化百分比收益率。对于\textbf{多期}平均（几何平均）年化百分比收益率，假设R时间跨度为$1$年$k$期（若月收益，则有$k=12$），持有该资产的期限为$n$年，都应有：
+此时假设$R_{pct}$为$2$年单期收益，则$\tau = 2$，最终结果$r_{pct}$为将两年收益使用几何平均为年化百分比收益率。对于\textbf{多期}平均（几何平均）年化百分比收益率，假设R时间跨度为$1$年$k$期（若月收益，则有$k=12$），持有该资产的期限为$n$年，应有：
 \begin{equation*}
     r_{pct} = \left[ \prod_{i=1}^{n\times k} (1+R_{pct,i}) \right]^{n} - 1
 \end{equation*}
@@ -534,12 +591,12 @@
 
 \subsubsection*{对数收益率}
 
-对数年化收益率为（t单位为年）：
+将\textbf{单期}对数收益，可以直接进行年化，可得年化对数收益率：
 \begin{equation*}
-    r_{log} = \frac{R_{log}}{\tau}
+    e^{r_{log}\tau} = e^{R_{log}} \quad\rightarrow\quad r_{log} = \frac{R_{log}}{\tau}
 \end{equation*}
 
-假设一支股票在一个交易日内对数收益率$R_{log}=0.14\%$，平均一年有252个交易日（每个月21个交易日），则应有年化收益率为$r_{log} = \frac{R_{log}}{1/252} = 252R_{log} = 35.28\%$。即$V_t e^{r\tau} = V_T$，那么有$r = \frac{1}{\tau} \ln \frac{V_T}{V_t}$。同时因为根据对数收益率的性质，只需要将分段内收益率相加，即可得到整体收益率：
+假设一支股票在一个交易日内对数收益率$R_{log}=0.14\%$，平均一年有252个交易日（每个月21个交易日），则应有年化收益率为$r_{log} = \frac{R_{log}}{1/252} = 252R_{log} = 35.28\%$。即$V_t e^{r\tau} = V_T$，那么有$r = \frac{1}{\tau} \ln \frac{V_T}{V_t}$。对于期数为$n$的\textbf{多期}对数收益率，根据其性质，只需要将每期收益相加，即可得到总收益：
 \begin{align*}
     R_{log} = \sum^{n}_{i=1} R_{log,i} & = R_{log,1} + R_{log,2} + \dots + R_{log,n} \\ 
     &= \ln\frac{V_2}{V_1} + \ln\frac{V_1}{V_0} + \dots + \ln\frac{V_n}{V_{n-1}} \\
@@ -547,7 +604,23 @@
     &= \ln\frac{V_n}{V_0} 
 \end{align*}
 
-对于\textbf{多期}（多年）的对数收益，由于对数收益率可相机的性质，只需要计算其\textbf{算术平均}，即为其平均年化收益率。
+对于\textbf{多期}（多年）的对数收益，由于对数收益率可相加的性质，只需要计算其\textbf{算术平均}，即可得到标准期限与每期期限相同的收益率，而当标准化期限为1年时得到年化对数收益率。对于平均对数收益率有：
+\begin{equation*}
+    r_{log} = \frac{1}{n} \sum^{n}_{i=1} R_{log,i}    
+\end{equation*}
+
+对于年化对数收益率有：
+\begin{gather*}
+    e^{r_{log}\tau} = e^{R_{log,1}} e^{R_{log,2}} e^{R_{log,3}} \dots e^{R_{log,n}} \\
+    r_{log}\tau = \sum^{n}_{i=1} R_{log,i} \\
+    r_{log} = \frac{1}{\tau} \sum^{n}_{i=1} R_{log,i}    
+\end{gather*}
+
+若使用相同频率的百分比收益进行改写，可以得到年化百分比收益率的算术平均计算方式：
+\begin{gather*}
+    \ln (1 + r_{pct}) = \frac{1}{\tau} \sum^{n}_{i=1} \ln (1 + R_{pct,i}) \\
+    r_{pct} = \exp \left[ \frac{1}{\tau} \sum^{n}_{i=1} \ln (1 + R_{pct,i}) \right] - 1
+\end{gather*}
 
 \subsection{期望}
 
@@ -556,7 +629,7 @@
     \E(\frac{\Delta S_t}{S_t}) = \mu \Delta t
 \end{equation*}
 
-而年化连续复利收益率或\textbf{年化对数收益率的期望}则为$\mu-\frac{\sigma^2}{2}$：
+而年化连续复合收益率或\textbf{年化对数收益率的期望}则为$\mu-\frac{\sigma^2}{2}$：
 \begin{equation*}
     \E(d\ln S_t) = (\mu - \frac{\sigma^2}{2})dt
 \end{equation*}
@@ -567,7 +640,7 @@
 
 \subsection{性质}
 
-由上文可知，\textbf{对数收益率}或\textbf{连续复利收益率}的连续以及离散形式如下：
+由上文可知，\textbf{对数收益率}或\textbf{连续复合收益率}的连续以及离散形式如下：
 \begin{align*}
     d\ln S &= \left( \mu - \frac{1}{2}\sigma^2\right) dt + \sigma dZ_t \sim N \left( (\mu-\frac{\sigma^2}{2})dt, \sigma^2 dt \right) \\
     \Delta \ln S &= \left( \mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma (Z_T - Z_t) \sim N \left((\mu-\frac{\sigma^2}{2})(T-t), \sigma^2(T-t) \right) 
@@ -785,7 +858,7 @@
     \item 在计算时，期限、漂移率（无风险利率）、波动率的时间单位应匹配（一般以年为单位，使用交易日计算）
     \item 由于只有交易日才有历史数据与收益率数据，波动率使用交易天数进行年化，中国240天左右，美国252天
     \item 无风险利率选择即期利率（Spot rate）而非到期收益率（YTM，真实收益率，票息5\%，但非平价发行）
-    \item 波动率为一个时间窗口内（一般为年，252天交易日），日频连续复利收益率或对数收益率（$\ln\frac{S_{t+1}}{S_{t}}$）标准差进行年化得到。
+    \item 波动率为一个时间窗口内（一般为年，252天交易日），日频连续复合收益率或对数收益率（$\ln\frac{S_{t+1}}{S_{t}}$）标准差进行年化得到。
     \item 即日波动率乘以$\sqrt{252}$（一天的方差为$s^2$，由于方差可加，252个交易日的方差即为$s^2 \times 252$，标准差或波动率为$s\sqrt{252}$）。同理，月频收益率得到的波动率应乘以$\sqrt{252/21}$进行年化。
     \item 如果到期时间（time to maturity）是根据日历日（calendar day）计算，那么此时的隐含波动率则为每日历日（per calendar day），而VIX计算是根据交易日（trading day），因此进行转换，并根据计算的日历日或交易日进行年化。
 \end{itemize}

@@ -547,8 +547,20 @@
     R_{pct} = e^{R_{log}} - 1 \quad\leftrightarrow\quad R_{log} = \ln (1+R_{pct}) 
 \end{equation*}
 
+具体而言：
+\begin{equation*}
+    R_{log} = \ln (1 + R_{pct}) = \ln \frac{S_t}{S_{t-1}} = \ln S_t - \ln S_{t-1}
+\end{equation*}
 
+对于投资组合$p$而言，假设其在资产$i$上的权重为$w_i$，$R_{pct,i}$为资产$i$的百分比收益，那么该投资组合其百分比收益率有：
+\begin{equation*}
+    R_{pct,p} = \sum_i w_i R_{pct,i}
+\end{equation*}
 
+但对于该投资组合的对数收益却没有如上性质，只有当百分比收益的的绝对值很小时，能近似的有：
+\begin{equation*}
+    R_{log,p} \approx \sum_i w_i R_{log,i}
+\end{equation*}
 
 \subsection{多期平均收益率}
 
@@ -564,7 +576,7 @@ $n$期几何平均收益率有：
     \bar{r}_{\text{几何}} = \left( \prod^{n}_{i=1}(1+r_i) \right)^{\frac{1}{n}} - 1
 \end{equation*}
 
-\subsection{单期与多期收益率（年化）}
+\subsection{年化收益率}
 
 年化即将其标准期限调整为$1$年，则称为年化收益率。单期收益可直接进行年化，而多期收益，
 一般将其合并为单期收益，再根据持有资产期限长度，以年为单位进行年化（平均），最终得到年化收益率。

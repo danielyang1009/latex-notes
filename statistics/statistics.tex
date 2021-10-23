@@ -567,8 +567,16 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         P(\text{患有癌症}|\text{检测阳性}) &= \frac{P(\text{患有癌症}) \times P(\text{检测阳性}|\text{患有癌症})}{P(\text{检测阳性})} \\
         &= \frac{0.001 \times 0.99}{0.001\times 0.99 + 0.999\times 0.01} \approx 9.016\% 
     \end{align*}
-\end{example}
 
+    假设该病人进行了第二次同样的检测，此时再次使用贝叶斯定理，可以继续更新该病患真正患有癌症的概率，为了简便将条件事件$(\text{患有癌症}|\text{第一次阳性})$记为$(\text{患癌首阳})$其概率近似为$9\%$代入计算。可以看到第二次检测阳性之后，实际患有癌症的几率大大提高。
+    \begin{align*}
+        &\hspace{1.6em} P(\text{患癌首阳}|\text{第二次阳性}) 
+        = \frac{P(\text{患癌首阳}) \times P(\text{第二次阳性}|\text{患癌首阳})}{P(\text{第二次阳性})} \\
+        &= \frac{P(\text{患癌首阳}) \times P(\text{第二次阳性}|\text{患癌首阳})}{P(\text{患癌首阳})\times P(\text{第二次阳性}|\text{患癌首阳})+ P(\lnot\text{患癌首阳}) \times P(\text{第二次阳性}|\lnot\text{患癌首阳})} \\
+        &= \frac{0.09 \times 0.99}{0.09\times 0.99 + 0.91\times 0.01} \approx 90.73\% 
+    \end{align*}
+
+\end{example}
 
 \begin{remark}
     假设集合A为某假设或模型，而集合B为某事实或数据，那么有：
@@ -643,24 +651,6 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 似然函数（Likelihood function）
 likelihood ratio
 
-\section{Chi-square distribution}
-
-假设有随机变量$X$服从标准正态分布，即有$X \sim N(0,1)$，此时有随机变量$Q_1=X^2$，则有随机变量$Q_1$服从卡方分布（$\chi^2\text{-distribution}$），由于此时只有一个随机变量，因此卡方分布自由度（degree of freedom）为1，即$Q_1 \sim \chi^2(1)$。如随机变量$Q_2 = X_1^2 + X_2^2$，且$X_1$与$X_2$同时服从标准正态分布。则此时$Q_2$服从自由度为2的卡方分布，即$Q_2 \sim \chi^2(2)$。
-
-\subsection*{Goodness of fit}
-
-Pearson's chi-squared test
-\begin{equation*}
-    \chi^2 = \sum_i^n \frac{(O_i - E_i)^2}{E_i}
-\end{equation*}
-
-\begin{list}{-}{}
-    \item $O_i$ the number of observations of type i
-    \item $E_i$ the expected(theoretical) number of type i
-\end{list}
-
-\section{Probability vs Likelihood}
-
 \subsection{Probability}
 
 P( data | distribution ) = area under curve
@@ -682,6 +672,22 @@ L( mean = 34 and standard deviation = 2.5 | mouse weights 34g ) = 0.21
 \subsection{Maximum likelihood}
 
 测量了数只老鼠的重量，尝试找到其分布，miximizes the likelihood 找到最大化所有观察重量likelihood的分布，找到mean 和standard deviation
+
+\section{Chi-square distribution}
+
+假设有随机变量$X$服从标准正态分布，即有$X \sim N(0,1)$，此时有随机变量$Q_1=X^2$，则有随机变量$Q_1$服从卡方分布（$\chi^2\text{-distribution}$），由于此时只有一个随机变量，因此卡方分布自由度（degree of freedom）为1，即$Q_1 \sim \chi^2(1)$。如随机变量$Q_2 = X_1^2 + X_2^2$，且$X_1$与$X_2$同时服从标准正态分布。则此时$Q_2$服从自由度为2的卡方分布，即$Q_2 \sim \chi^2(2)$。
+
+\subsection*{Goodness of fit}
+
+Pearson's chi-squared test
+\begin{equation*}
+    \chi^2 = \sum_i^n \frac{(O_i - E_i)^2}{E_i}
+\end{equation*}
+
+\begin{list}{-}{}
+    \item $O_i$ the number of observations of type i
+    \item $E_i$ the expected(theoretical) number of type i
+\end{list}
 
 
 \section{Time series}

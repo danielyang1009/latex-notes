@@ -338,13 +338,13 @@
 
 \subsection{条件概率}
 
-条件概率（Conditional probability）记为$P(A|B)$，指已知事件B发生的情况下事件A发生的概率，即把原本的样本空间，缩小为只有B发生的样本空间，从中再计算A发生的概率。而联合概率表示两个事件同时发生的概率，记为$P(A,B)$或$P(A\cap B)$，其样本空间为原本未缩小的空间。
+条件概率（Conditional probability）记为$P(A\given B)$，指已知事件B发生的情况下事件A发生的概率，即把原本的样本空间，缩小为只有B发生的样本空间，从中再计算A发生的概率。而联合概率分布（Joint probability distribution）或简称为\textbf{联合分布}，表示两个事件同时发生的概率，记为$P(A,B)$或$P(A\cap B)$，其样本空间为原本未缩小的空间。
 \begin{equation*}
-    P(A|B) = \frac{P(A \cap B)}{P(B)}
+    P(A \given B) = \frac{P(A \cap B)}{P(B)}
 \end{equation*}
 
 \begin{remark}
-    同理$P(B|A) = \frac{P(A \cap B)}{P(A)}$，即有$P(A \cap B) = P(B|A)P(A) = P(A|B)P(B)$。易知同时满足AB条件的概率，即为已知满足A条件的子集中，再满足条件B的概率（为条件概率，即其样本空间为缩小后满足条件A的空间）。或满足条件B的子集中，再满足条件A的概率。
+    同理$P(B\given A) = \frac{P(A \cap B)}{P(A)}$，即有$P(A \cap B) = P(B\given A)P(A) = P(A\given B)P(B)$。易知同时满足AB条件的概率，即为已知满足A条件的子集中，再满足条件B的概率（为条件概率，即其样本空间为缩小后满足条件A的空间）。或满足条件B的子集中，再满足条件A的概率。
 \end{remark}
 
 \begin{example}
@@ -358,9 +358,9 @@
     \end{tabular}
     \end{table}
 
-    那么任意选取一个碗，并从中选取一个小球，颜色为蓝色的概率应为$P(\text{蓝色})=\frac{4}{10}$，同时有$P(\text{黄色})=\frac{6}{10}$。若已知取的碗为甲碗，那么选取蓝色小球的概率应为$P(\text{蓝色}|\text{碗}=\text{甲碗})=\frac{1}{5}$，此时样本空间改变，被限制在了甲碗中，此时称为条件概率。
+    那么任意选取一个碗，并从中选取一个小球，颜色为蓝色的概率应为$P(\text{蓝色})=\frac{4}{10}$，同时有$P(\text{黄色})=\frac{6}{10}$。若已知取的碗为甲碗，那么选取蓝色小球的概率应为$P(\text{蓝色}\given \text{碗}=\text{甲碗})=\frac{1}{5}$，此时样本空间改变，被限制在了甲碗中，此时称为条件概率。
 
-    若此时任意从两个碗中选取一个小球，小球颜色是蓝色，那么此时该小球是从甲碗中选取的概率为$P(\text{甲碗}|\text{颜色}=\text{蓝色})=\frac{1}{4}$，注意$P(\text{甲碗}|\text{蓝色})$与$P(\text{蓝色}|\text{甲碗})$的概率并不相同。
+    若此时任意从两个碗中选取一个小球，小球颜色是蓝色，那么此时该小球是从甲碗中选取的概率为$P(\text{甲碗}\given \text{颜色}=\text{蓝色})=\frac{1}{4}$，注意$P(\text{甲碗}\given \text{蓝色})$与$P(\text{蓝色}\given \text{甲碗})$的概率并不相同。
 \end{example}
 
 \begin{example}
@@ -391,7 +391,7 @@
 
     该病人检测为阳性，因此有关的概率为$P(\text{患有癌症} \cap \text{检测阳性})$与$P(\text{不患癌症} \cap \text{检测阳性})$，而该病人在检测为阳性的前提下，真正患有癌症的概率应为：
     \begin{align*}
-        P(\text{患有癌症}|\text{检测阳性}) &= \frac{P(\text{患有癌症} \cap \text{检测阳性})}{P(\text{检测阳性})} \\
+        P(\text{患有癌症}\given \text{检测阳性}) &= \frac{P(\text{患有癌症} \cap \text{检测阳性})}{P(\text{检测阳性})} \\
         &= \frac{P(\text{患有癌症} \cap \text{检测阳性})}{P(\text{患有癌症} \cap \text{检测阳性}) + P(\text{不患癌症} \cap \text{检测阳性})} \\
         &= \frac{0.001 \times 0.99}{0.001\times 0.99 + 0.999\times 0.01} \approx 9.016\% 
     \end{align*}
@@ -407,7 +407,7 @@
     \end{table}
 
     \begin{remark}
-        在医学中将$P(\text{患病}|\text{检测阳性})$的概率称为阳性预测值（Positive Predictive Value，PPV），即在检测为阳性的前提下，有多大概率是真正患病。具体为检测阳性并真实患病的人数（True Positve），除以全体检测阳性的人数。全体检测阳性的人数中，除了正确诊断的病患之外，还包含检测阳性但并不患病的人数（False Positve）。
+        在医学中将$P(\text{患病}\given \text{检测阳性})$的概率称为阳性预测值（Positive Predictive Value，PPV），即在检测为阳性的前提下，有多大概率是真正患病。具体为检测阳性并真实患病的人数（True Positve），除以全体检测阳性的人数。全体检测阳性的人数中，除了正确诊断的病患之外，还包含检测阳性但并不患病的人数（False Positve）。
         \begin{equation*}
             \text{PPV} = \frac{\text{TP}}{\text{TP}+\text{FP}}
         \end{equation*}
@@ -420,10 +420,10 @@
 
 继续推广条件概率的概念，条件概率分布（Conditional probability distribution），在离散形势下有称为条件概率质量函数（Conditional probability mass function）：
 \begin{equation*}
-    P(X=x|Y=y) = \frac{P(X=x\cap Y=y)}{P(Y=y)}
+    P(X=x\given Y=y) = \frac{P(X=x\cap Y=y)}{P(Y=y)}
 \end{equation*}
 
-与条件概率相同，有等价关系$P(Y=y|X=x)P(X=x) = P\left[(X=x)\cap (Y=y)\right] = P(X=x|Y=y)P(Y=y)$。
+与条件概率相同，有等价关系$P(Y=y\given X=x)P(X=x) = P\left[(X=x)\cap (Y=y)\right] = P(X=x\given Y=y)P(Y=y)$。
 
 \begin{example}
     有一个骰子，假设当掷出来的数字为偶数（如：$2,4,6$）时$X=1$，而奇数时$X=0$。同时假设当掷出来的数字为质数（如：$2,3,5$）时$Y=1$，其他情况下$Y=0$。
@@ -437,89 +437,108 @@
     \end{tabular}
     \end{table}
     
-    对于无条件概率$P(X=1) = \frac{1}{2}$，而条件概率$P(X=1|Y=1) = \frac{1}{3}$，具体计算如下：
+    对于无条件概率$P(X=1) = \frac{1}{2}$，而条件概率$P(X=1\given Y=1) = \frac{1}{3}$，具体计算如下：
     \begin{align*}
-        P(X=1|Y=1) &= \frac{P(X=1)P(Y=1|X=1)}{P(Y=1)} \\
-        &= \frac{P(X=1)P(Y=1|X=1)}{P(X=1)P(Y=1|X=1) + P(X=0)P(Y=1|X=0)} \\
+        P(X=1\given Y=1) &= \frac{P(X=1)P(Y=1\given X=1)}{P(Y=1)} \\
+        &= \frac{P(X=1)P(Y=1\given X=1)}{P(X=1)P(Y=1\given X=1) + P(X=0)P(Y=1\given X=0)} \\
         &= \frac{1}{1+2} = \frac{1}{3}
     \end{align*}
 \end{example}
 
 对于连续情形下，有条件概率密度函数（Conditional probability density function）：
 \begin{equation*}
-    f_{X|Y}(x|y) = \frac{f_{X,Y}(x,y)}{f_Y(y)}
+    f_{X\given Y}(x\given y) = \frac{f_{X,Y}(x,y)}{f_Y(y)}
 \end{equation*}
 
-其中$f_{X,Y}(x,y)$为联合分布（Joint probability distribution）。对于离散随机变量而言，称为联合分布概率质量函数（Joint probability mass function），对于连续随机变量也称为联合分布概率密度函数（joint probability density function）。而$f_Y(y)$为边缘分布（Marginal distribution）,同样分为边缘概率质量函数（Marginal probability mass function）与边缘概率密度函数（Marginal probability density function）。
+如上所述其中$f_{X,Y}(x,y)$为联合分布（Joint probability distribution）。对于离散随机变量而言，称为联合分布概率质量函数（Joint probability mass function），对于连续随机变量也称为联合分布概率密度函数（joint probability density function）。而$f_Y(y)$为边缘分布（Marginal distribution）,同样分为边缘概率质量函数（Marginal probability mass function）与边缘概率密度函数（Marginal probability density function）。
+
+\subsubsection{链式法则}
+
+对于概率论，同时也有链式法则（Chain rule）或称为一般乘法法则（General product rule）,提供了使用条件概率分布计算联合概率分布的方法，如上所述对于时间$A$与事件$B$：
+\begin{equation*}
+    P(A\cap B) = P(A) \cdot P(B\given A)
+\end{equation*}
+
+对于多个事件$A_1,\dots,A_n$的联合分布，其中有$A_0$为全集，即$P(A_1\given A_0) = P(A_1)$：
+\begin{align*}
+    P(A_1 \cap \dots \cap A_n) &= P(A_1) \cdot P(A_2\given A_1) \cdot P(A_3\given A_2,A_1) \dots P(A_n\given A_{n-1},\dots,A_1) \\
+    &= \prod_{i=1}^{n} P \left( A_i \:\left|\:\bigcap_{j=1}^{i-1} A_j \right. \right)
+\end{align*}
+
+如当$n=3$时，应有:
+\begin{align*}
+    P(A_1 \cap A_2 \cap A_3) &= P(A_3 \given A_2, A_1) \cdot P(A_2, A_1) \\
+    &= P(A_3 \given A_2, A_1) \cdot P(A_2\given A_1) \cdot P(A_1)
+\end{align*}
 
 \subsubsection{条件期望}
 
-与条件概率原理相同，条件期望（Conditional expectation），记为$\E(X|Y)$或$\E(X|Y=y)$，即限制条件$Y=y$缩小样本空间后，计算X的期望。在离散的情形下有如下表达式，其中$P(X=x,Y=y)$为联合概率密度函数。
+与条件概率原理相同，条件期望（Conditional expectation），记为$\E(X\given Y)$或$\E(X\given Y=y)$，即限制条件$Y=y$缩小样本空间后，计算X的期望。在离散的情形下有如下表达式，其中$P(X=x,Y=y)$为联合概率密度函数。
 \begin{equation*}
-    \E(X|Y=y) = \sum_x x P(X=x|Y=y) = \sum_x x \frac{P(X=x,Y=y)}{P(Y=y)}
+    \E(X\given Y=y) = \sum_x x P(X=x\given Y=y) = \sum_x x \frac{P(X=x,Y=y)}{P(Y=y)}
 \end{equation*}
 
 \begin{example}
-    在上述投掷骰子的例子，对于无条件概率$\E(X) = \frac{1}{2}$，而条件期望$\E(X|Y=1) = \frac{1+0+0}{3} = \frac{1}{3}$，条件期望$\E(X|Y=0) = \frac{0+1+1}{3} = \frac{2}{3}$
+    在上述投掷骰子的例子，对于无条件概率$\E(X) = \frac{1}{2}$，而条件期望$\E(X\given Y=1) = \frac{1+0+0}{3} = \frac{1}{3}$，条件期望$\E(X\given Y=0) = \frac{0+1+1}{3} = \frac{2}{3}$
 \end{example}
 
-对于连续随机变量，其中$f_{X,Y}(x,y)$为X与Y的联合概率密度函数，$f_Y(y)$为Y的概率密度函数，令$f_{X|Y}(x|y) = \frac{f_{X,Y}(x,y)}{f_Y(y)}$：
+对于连续随机变量，其中$f_{X,Y}(x,y)$为X与Y的联合概率密度函数，$f_Y(y)$为Y的概率密度函数，令$f_{X\given Y}(x\given y) = \frac{f_{X,Y}(x,y)}{f_Y(y)}$：
 \begin{equation*}
-    \E(X|Y=y) = \int_x x f_{X|Y}(x|y) dx = \frac{1}{f_Y(y)} \int x f_{X,Y}(x,y) dx
+    \E(X\given Y=y) = \int_x x f_{X\given Y}(x\given y) dx = \frac{1}{f_Y(y)} \int x f_{X,Y}(x,y) dx
 \end{equation*}
 
 \subsubsection{条件方差}
 
 条件方差（Conditional variance）定义为：
 \begin{align*}
-    \Var(X|Y) &= \E \left[\left( X-E(X|Y) \right)^2 |Y \right] \\
-    &= \E \left[ X^2 - 2X\E(X|Y) + \E^2(X|Y) |Y \right] \\
-    &= \E (X^2|Y) - \E^2(X|Y)
+    \Var(X\given Y) &= \E \left[\left( X-E(X\given Y) \right)^2 \given Y \right] \\
+    &= \E \left[ X^2 - 2X\E(X\given Y) + \E^2(X\given Y) \given Y \right] \\
+    &= \E (X^2\given Y) - \E^2(X\given Y)
 \end{align*}
 
 \begin{proposition}
     总期望定律（Law of total expectation）或称为双重期望定理（Double expectation theorem）有：
     \begin{equation*}
-        \E(X) = \E\left[ \E(X|Y) \right]
+        \E(X) = \E\left[ \E(X\given Y) \right]
     \end{equation*}
     
     \begin{proof}
         \begin{align*}
-            \E\left[ \E(X|Y) \right]
-            &= \sum_y \E(X|Y=y) P(Y=y)\\
-            &= \sum_y \left[ \sum_x x P(X=x|Y=y) \right] P(Y=y) \\
-            &= \sum_y \sum_x x P(X=x|Y=y) P(Y=y) \\
-            &= \sum_y \sum_x x P(Y=y|X=x) P(X=x) \\
-            &= \sum_x \sum_y x P(Y=y|X=x) P(X=x) \\
-            &= \sum_x x P(X=x) \left[ \sum_y P(Y=y|X=x)\right] \\
+            \E\left[ \E(X\given Y) \right]
+            &= \sum_y \E(X\given Y=y) P(Y=y)\\
+            &= \sum_y \left[ \sum_x x P(X=x\given Y=y) \right] P(Y=y) \\
+            &= \sum_y \sum_x x P(X=x\given Y=y) P(Y=y) \\
+            &= \sum_y \sum_x x P(Y=y\given X=x) P(X=x) \\
+            &= \sum_x \sum_y x P(Y=y\given X=x) P(X=x) \\
+            &= \sum_x x P(X=x) \left[ \sum_y P(Y=y\given X=x)\right] \\
             &= \sum_x x P(X=x) = \E(X)
         \end{align*}
     \end{proof}
 \end{proposition}
 
 \begin{remark}
-    或可以先展开内层期望进行证明$\E\left[ \E(X|Y) \right] = \E\left[ \sum_x x P(X=x|Y) \right]$。由此可以发现内层条件期望求得的结果为关于Y的函数，因此外层的期望作用于随机变量Y，而内层的期望作用于随机变量X。积分先后顺序可以对调，可以理解为一个矩形面积，可以由积分底再积分高获得，或先积分高再积分底，两者结果相同。且倒数第二步，可以将与随机变量Y无关的，只关于随机变量X的部分提出至括弧外。
+    或可以先展开内层期望进行证明$\E\left[ \E(X\given Y) \right] = \E\left[ \sum_x x P(X=x\given Y) \right]$。由此可以发现内层条件期望求得的结果为关于Y的函数，因此外层的期望作用于随机变量Y，而内层的期望作用于随机变量X。积分先后顺序可以对调，可以理解为一个矩形面积，可以由积分底再积分高获得，或先积分高再积分底，两者结果相同。且倒数第二步，可以将与随机变量Y无关的，只关于随机变量X的部分提出至括弧外。
 \end{remark}
 
 \begin{proposition}
     总方差定律（Law of total variance）有：
     \begin{equation*}
-        \Var(X) = \E\left[ \Var(X|Y) \right] + \Var\left[ \E(X|Y) \right]
+        \Var(X) = \E\left[ \Var(X\given Y) \right] + \Var\left[ \E(X\given Y) \right]
     \end{equation*}
 
     \begin{proof}
         计算等式右边第一项，并且根据总期望定律：
         \begin{align*}
-            \E[\Var(X|Y)] &= \E\left[ \E(X^2|Y) - \left( \E(X|Y) \right)^2 \right] \\
-            &= \E(X^2) - \E\left[ \left(\E(X|Y)\right)^2 \right]
+            \E[\Var(X\given Y)] &= \E\left[ \E(X^2\given Y) - \left( \E(X\given Y) \right)^2 \right] \\
+            &= \E(X^2) - \E\left[ \left(\E(X\given Y)\right)^2 \right]
         \end{align*}
 
         对于等式右边第二项，根据方差的定义有：
         \begin{align*}
-            \Var\left[\E(X|Y)\right] &= \E \left[ \E(X|Y) - \E\left[ \E(X|Y) \right] \right]^2 \\
-            &= \E \left[ \E(X|Y) - \E(X) \right]^2 \\
-            &= \E \left[ [\E(X|Y)]^2 - 2\E(X|Y)\E(X) + \E^2(X) \right] \\
-            &= \E \left[ [\E(X|Y)]^2 \right] - \E^2(X)
+            \Var\left[\E(X\given Y)\right] &= \E \left[ \E(X\given Y) - \E\left[ \E(X\given Y) \right] \right]^2 \\
+            &= \E \left[ \E(X\given Y) - \E(X) \right]^2 \\
+            &= \E \left[ [\E(X\given Y)]^2 - 2\E(X\given Y)\E(X) + \E^2(X) \right] \\
+            &= \E \left[ [\E(X\given Y)]^2 \right] - \E^2(X)
         \end{align*}
             
         将两项相加，再次根据方差定义$\Var(X) = \E(X^2) - \E^2(X)$替换，得证。
@@ -530,12 +549,12 @@
 
 通常而言，事件A在给定事件B已发生的条件下发生的概率，与事件B在给定事件A已发生的条件下发生的概率是不一样的。然而这两者是有确定的关系的，贝叶斯定理（Bayes' theorem）就是这种关系的陈述，具体而言有：
 \begin{equation*}
-    P(A|B) = \frac{P(A)P(B|A)}{P(B)}
+    P(A\given B) = \frac{P(A)P(B\given A)}{P(B)}
 \end{equation*}
 
-$P(A)$为先验概率（Prior probability），即不考虑任何B方面的因素。而$P(A|B)$为已知B发生后，A发生的概率，也称为A的后验概率（Posterior probability）或似然（Likelihood）。同理，所要求的条件概率$P(B|A)$也称为B的后验概率，因为是在已知A发生的情况下，B发生的概率。
+$P(A)$为先验概率（Prior probability），即不考虑任何B方面的因素。而$P(A\given B)$为已知B发生后，A发生的概率，也称为A的后验概率（Posterior probability）或似然（Likelihood）。同理，所要求的条件概率$P(B\given A)$也称为B的后验概率，因为是在已知A发生的情况下，B发生的概率。
 
-已知$P(A \cap B) = P(B|A)P(A) = P(A|B)P(B)$，由此变形可推导推导贝叶斯定理，即两个条件概率之间的关系。\textbf{注意}：只有当$A$与$B$互相独立时，才有$P(A \cap B) = P(A) \times P(B)$。由于此时$P(B|A) = P(B)$，A不受B的影响。
+已知$P(A \cap B) = P(B\given A)P(A) = P(A\given B)P(B)$，由此变形可推导推导贝叶斯定理，即两个条件概率之间的关系。\textbf{注意}：只有当$A$与$B$互相独立时，才有$P(A \cap B) = P(A) \times P(B)$。由于此时$P(B\given A) = P(B)$，A不受B的影响。
 
 \begin{example}
     继续使用小球的例子，并计算相应概率有：
@@ -548,15 +567,15 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \end{tabular}
     \end{table}
 
-    要计算$P(\text{甲碗}|\text{蓝色})$，将样本空间限制在蓝色球的范围内，即应知道甲乙两个碗中蓝球的数目，最直观的计算方法为：
+    要计算$P(\text{甲碗}\given \text{蓝色})$，将样本空间限制在蓝色球的范围内，即应知道甲乙两个碗中蓝球的数目，最直观的计算方法为：
     \begin{equation*}
-        P(\text{甲碗}|\text{蓝色}) = \frac{P(\text{甲碗中蓝色球的数目})}{P(\text{甲碗中蓝色球的数目}) + P(\text{乙碗中蓝色球的数目})} 
+        P(\text{甲碗}\given \text{蓝色}) = \frac{P(\text{甲碗中蓝色球的数目})}{P(\text{甲碗中蓝色球的数目}) + P(\text{乙碗中蓝色球的数目})} 
     \end{equation*}
 
     其中分子甲碗中的蓝色球数目，应有甲碗的概率再乘以，已知甲碗蓝色球的概率（即在甲碗这个缩小的样本空间内，蓝色球的概率），若使用较为严谨的数学语音表达，则有：
     \begin{align*}
-        P(\text{甲碗}|\text{蓝色}) &= \frac{P(\text{甲碗})\times P(\text{蓝色}|\text{甲碗})}{P(\text{甲碗}) \times P(\text{蓝色}|\text{甲碗}) + P(\text{乙碗}) \times P(\text{蓝色}|\text{乙碗})} \\
-        &= \frac{P(\text{甲碗})\times P(\text{蓝色}|\text{甲碗})}{P(\text{蓝色})} \\
+        P(\text{甲碗}\given \text{蓝色}) &= \frac{P(\text{甲碗})\times P(\text{蓝色}\given \text{甲碗})}{P(\text{甲碗}) \times P(\text{蓝色}\given \text{甲碗}) + P(\text{乙碗}) \times P(\text{蓝色}\given \text{乙碗})} \\
+        &= \frac{P(\text{甲碗})\times P(\text{蓝色}\given \text{甲碗})}{P(\text{蓝色})} \\
         &= \frac{0.5 \times 0.2}{0.4} = \frac{1}{4}
     \end{align*}
 \end{example}
@@ -564,15 +583,15 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 \begin{example}
     上述癌症诊断例子中，患病率为$0.1\%$，并且该诊断的正确率为$99\%$。即在病患中检测出阳性的概率为真阳性率或敏感率为$99\%$，而在健康人群中检测为阴性的概率同为$99\%$，或称为真阴性率，或特异性。根据贝叶斯定理有：
     \begin{align*}
-        P(\text{患有癌症}|\text{检测阳性}) &= \frac{P(\text{患有癌症}) \times P(\text{检测阳性}|\text{患有癌症})}{P(\text{检测阳性})} \\
+        P(\text{患有癌症}\given \text{检测阳性}) &= \frac{P(\text{患有癌症}) \times P(\text{检测阳性}\given \text{患有癌症})}{P(\text{检测阳性})} \\
         &= \frac{0.001 \times 0.99}{0.001\times 0.99 + 0.999\times 0.01} \approx 9.016\% 
     \end{align*}
 
-    假设该病人进行了第二次同样的检测，此时再次使用贝叶斯定理，可以继续更新该病患真正患有癌症的概率，为了简便将条件事件$(\text{患有癌症}|\text{第一次阳性})$记为$(\text{患癌首阳})$其概率近似为$9\%$代入计算。可以看到第二次检测阳性之后，实际患有癌症的几率大大提高。
+    假设该病人进行了第二次同样的检测，此时再次使用贝叶斯定理，可以继续更新该病患真正患有癌症的概率，为了简便将条件事件$(\text{患有癌症}\given \text{第一次阳性})$记为$(\text{患癌首阳})$其概率近似为$9\%$代入计算。可以看到第二次检测阳性之后，实际患有癌症的几率大大提高。
     \begin{align*}
-        &\hspace{1.6em} P(\text{患癌首阳}|\text{第二次阳性}) 
-        = \frac{P(\text{患癌首阳}) \times P(\text{第二次阳性}|\text{患癌首阳})}{P(\text{第二次阳性})} \\
-        &= \frac{P(\text{患癌首阳}) \times P(\text{第二次阳性}|\text{患癌首阳})}{P(\text{患癌首阳})\times P(\text{第二次阳性}|\text{患癌首阳})+ P(\lnot\text{患癌首阳}) \times P(\text{第二次阳性}|\lnot\text{患癌首阳})} \\
+        &\hspace{1.6em} P(\text{患癌首阳}\given \text{第二次阳性}) 
+        = \frac{P(\text{患癌首阳}) \times P(\text{第二次阳性}\given \text{患癌首阳})}{P(\text{第二次阳性})} \\
+        &= \frac{P(\text{患癌首阳}) \times P(\text{第二次阳性}\given \text{患癌首阳})}{P(\text{患癌首阳})\times P(\text{第二次阳性}\given \text{患癌首阳})+ P(\lnot\text{患癌首阳}) \times P(\text{第二次阳性}\given \lnot\text{患癌首阳})} \\
         &= \frac{0.09 \times 0.99}{0.09\times 0.99 + 0.91\times 0.01} \approx 90.73\% 
     \end{align*}
 
@@ -581,7 +600,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 \begin{remark}
     假设集合A为某假设或模型，而集合B为某事实或数据，那么有：
     \begin{equation*}
-        P(\text{假设}|\text{事实}) = \frac{P(\text{假设})P(\text{事实}|\text{假设})}{P(\text{假设})P(\text{事实}|\text{假设}) + P(\lnot \text{假设})P(\text{事实}|\lnot \text{假设})}
+        P(\text{假设}\given \text{事实}) = \frac{P(\text{假设})P(\text{事实}\given \text{假设})}{P(\text{假设})P(\text{事实}\given \text{假设}) + P(\lnot \text{假设})P(\text{事实}\given \lnot \text{假设})}
     \end{equation*}
     
     贝叶斯定理可以通过图形进行理解与记忆，假设如下为边长为1的正方形，此时正方形面积为1代表整体概率为1。
@@ -596,12 +615,12 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
             \fill[pattern=north west lines] (1,0) rectangle (4,0.8);
             \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,0) -- (1,0) node[midway,below,yshift=-0.6em]{\small $P(\text{假设})$};
             \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (1,0) -- (4,0) node[midway,below,yshift=-0.6em]{\small $P(\lnot \text{假设})$};
-            \draw[decorate,decoration={brace,amplitude=5pt,raise=0.2em}] (0,0) -- (0,1.6) node[midway,left,xshift=-0.6em]{\small $P(\text{事实}|\text{假设})$};
-            \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (4,0) -- (4,0.8) node[midway,right,xshift=0.6em]{\small $P(\text{事实}|\lnot \text{假设})$};
+            \draw[decorate,decoration={brace,amplitude=5pt,raise=0.2em}] (0,0) -- (0,1.6) node[midway,left,xshift=-0.6em]{\small $P(\text{事实}\given \text{假设})$};
+            \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (4,0) -- (4,0.8) node[midway,right,xshift=0.6em]{\small $P(\text{事实}\given \lnot \text{假设})$};
         \end{tikzpicture}
     \end{figure}
 
-    假设$P(\text{假设})$不变，当$P(\text{事实}|\text{假设}) = P(\text{事实}|\lnot \text{假设})$时，即上图两个长方体高度相同。此时易知$P(\text{假设}|\text{事实}) = P(\text{假设})$。此时，事实为真的概率，在假设条件为真与假设条件为假的两个子集中，概率相同，因此其概率就应该等于全样本下的先验概率，即后验概率不发生改变。由此可知，当事实为真的概率，在假设为真与假设为假的概率差别越大时，后验概率的变化也越大。
+    假设$P(\text{假设})$不变，当$P(\text{事实}\given \text{假设}) = P(\text{事实}\given \lnot \text{假设})$时，即上图两个长方体高度相同。此时易知$P(\text{假设}\given \text{事实}) = P(\text{假设})$。此时，事实为真的概率，在假设条件为真与假设条件为假的两个子集中，概率相同，因此其概率就应该等于全样本下的先验概率，即后验概率不发生改变。由此可知，当事实为真的概率，在假设为真与假设为假的概率差别越大时，后验概率的变化也越大。
 \end{remark}
 
 \subsection{贝叶斯因子}
@@ -610,66 +629,94 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 关于贝叶斯定理，可以理解为根据已事实对认知进行更新。如在上述癌症诊断的例子中，原本的患病率为先验概率为$0.1\%$，通过已知的事实，原本的先验概率为后验概率，上升约为$9\%$。而这个上升的概率可以使用贝叶斯因子（Bayes factor）进行估算，是一种似然比（Likelihood ratio）。对于贝叶斯定理有：
 \begin{equation*}
-    \text{贝叶斯因子} = \frac{P(\text{事实}|\text{假设})}{P(\text{事实}|\lnot \text{假设})}
+    \text{贝叶斯因子} = \frac{P(\text{事实}\given \text{假设})}{P(\text{事实}\given \lnot \text{假设})}
 \end{equation*}
 
 贝叶斯定理可以进行如下估算：
 \begin{align*}
-    P(\text{假设}|\text{事实}) &= P(\text{假设})\times \frac{P(\text{事实}|\text{假设})}{P(\text{事实})} \\
-    &= P(\text{假设}) \times \frac{P(\text{事实}|\text{假设})}{P(\text{假设})P(\text{事实}|\text{假设}) + P(\lnot \text{假设})P(\text{事实}|\lnot \text{假设})} \\
-    &\approx P(\text{假设})\times \frac{P(\text{事实}|\text{假设})}{P(\text{事实}|\lnot \text{假设})} \\
+    P(\text{假设}\given \text{事实}) &= P(\text{假设})\times \frac{P(\text{事实}\given \text{假设})}{P(\text{事实})} \\
+    &= P(\text{假设}) \times \frac{P(\text{事实}\given \text{假设})}{P(\text{假设})P(\text{事实}\given \text{假设}) + P(\lnot \text{假设})P(\text{事实}\given \lnot \text{假设})} \\
+    &\approx P(\text{假设})\times \frac{P(\text{事实}\given \text{假设})}{P(\text{事实}\given \lnot \text{假设})} \\
     &= P(\text{假设})\times \text{贝叶斯因子}
 \end{align*}
 
 \begin{example}
     在上述癌症诊断例子中，患病率为$0.1\%$，并且该诊断的正确率为$99\%$。此时使用贝叶斯因子对后验概率进行估计：
     \begin{equation*}
-        \frac{P(\text{检测阳性}|\text{患有癌症})}{P(\text{检测阳性}|\text{不患癌症})} = \frac{\text{True Postive Rate}}{\text{False Postive Rate}} = \frac{0.99}{0.01} = 99
+        \frac{P(\text{检测阳性}\given \text{患有癌症})}{P(\text{检测阳性}\given \text{不患癌症})} = \frac{\text{True Postive Rate}}{\text{False Postive Rate}} = \frac{0.99}{0.01} = 99
     \end{equation*}
 
-    因此$P(\text{患有癌症}|\text{检测阳性}) \approx P(\text{患有癌症}) \times 99 = 0.1\% \times 99 = 9.9\% $，与实际计算结果$9.016\%$接近。此方法只在于帮助理解，贝叶斯定理实际上是一个更新概率的过程，实际的更新因子已由贝叶斯定理给出。由上式对比贝叶斯定理与贝叶斯因子估计，可以看出，当$P(\text{假设})$较小时，贝叶斯定理分母第一项趋近于0，此时$P(\lnot \text{假设})$趋近于1，使得两者较为接近。
+    因此$P(\text{患有癌症}\given \text{检测阳性}) \approx P(\text{患有癌症}) \times 99 = 0.1\% \times 99 = 9.9\% $，与实际计算结果$9.016\%$接近。此方法只在于帮助理解，贝叶斯定理实际上是一个更新概率的过程，实际的更新因子已由贝叶斯定理给出。由上式对比贝叶斯定理与贝叶斯因子估计，可以看出，当$P(\text{假设})$较小时，贝叶斯定理分母第一项趋近于0，此时$P(\lnot \text{假设})$趋近于1，使得两者较为接近。
 \end{example}
 
 \subsubsection{发生率与贝叶斯因子}
 
 概率（Probability）与发生比（Odds）或俗称赔率的差别在于，就单一事件而言，概率中可包含多种结果，如上涨、不变、下跌，但发生率只能表示发生与不发生，两种结果。
-概率的分子为单一结果，但分母是全体事件为1，而发生率分子与概率相同为单一结果，为发生，分母也为单一结果，即不发生。使得在发生率定义下，分母中不再包含$P(\text{假设})P(\text{事实}|\text{假设})$项，使用贝叶斯因子能准确计算后验概率，而非估计，且形式更为简洁。
+概率的分子为单一结果，但分母是全体事件为1，而发生率分子与概率相同为单一结果，为发生，分母也为单一结果，即不发生。使得在发生率定义下，分母中不再包含$P(\text{假设})P(\text{事实}\given \text{假设})$项，使用贝叶斯因子能准确计算后验概率，而非估计，且形式更为简洁。
 
 \begin{example}
     同样上述癌症诊断的例子中，患病率$0.1\%$转化为发生比为$1:999$，定义为先验发生比。此时贝叶斯因子的作用，是将分子患有癌症的人群中检测为阳性与分母中不患癌症中检测为阳性的人群分别挑选出来。因此结果就是检测为阳性的人群中，实际患有癌症的发生率。由上文计算贝叶斯因子为99，那么后验发生比为：
     \begin{align*}
-        O(\text{患有癌症}|\text{检测阳性}) &= \frac{\text{检测阳性且患有癌症的人数}}{\text{检测阳性但不患癌症的人数}} \\
-        &= \frac{P(\text{患有癌症}) \times P(\text{检测阳性}|\text{患有癌症})}{P(\text{不患癌症}) \times P(\text{检测阳性}|\text{不患癌症})} \\
-        &= O(\text{患有癌症}) \times \frac{P(\text{检测阳性}|\text{患有癌症})}{P(\text{检测阳性}|\text{不患癌症})} \\
+        O(\text{患有癌症}\given \text{检测阳性}) &= \frac{\text{检测阳性且患有癌症的人数}}{\text{检测阳性但不患癌症的人数}} \\
+        &= \frac{P(\text{患有癌症}) \times P(\text{检测阳性}\given \text{患有癌症})}{P(\text{不患癌症}) \times P(\text{检测阳性}\given \text{不患癌症})} \\
+        &= O(\text{患有癌症}) \times \frac{P(\text{检测阳性}\given \text{患有癌症})}{P(\text{检测阳性}\given \text{不患癌症})} \\
         &= 1:999 \times 99 = 99:999 \\
         &\rightarrow \frac{99}{99+999} \approx 9.016\%
     \end{align*}
 \end{example}
 
+\section{似然}
+
+对于似然（Likelihood）的简单理解，若已有数据$X$，想要猜测是来自分布$f$或分布$g$。那么将X的分布作图为直方图（Histogram），并同时对比两个分布，看分布$f$或分布$g$更为接近$X$的直方图，而似然就是对比的定量值。
+
+对于数据集$X={x_1,x_2,\dots,x_n}$，并假设变量$x_i$均为独立同分布，即取值只与自己有关系，而与别的$x_j,j\neq i$无关。对于分布$f(\cdot \given \theta)$，对于任意$x_i$其概率$f(x_i \given \theta)$若非常低，则说明$x_i$出现在分布$f(\cdot \given \theta)$的概率非常低，而反之则说明概率高。即$x_i$有多大的可能性或概率，是来自分布$f(\cdot \given \theta)$，这其中的可能性或概率，即称之为似然。
+
+\subsection{似然与概率}
+
+如上所述，似然和概率，其本质都是可能性。对于由一组参数$\theta$确定的分布，概率是给定参数$\theta$，求某一结果的可能性。而相反而言，似然（Likelihood）是给定某一结果$X$，求参数$\theta$的可能性。具体而言，如对于只需要$\mu$与$\sigma$就能确定的正态分布，对于离散随机变量：
+\begin{equation*}
+    \mcl(\theta\given x) = P(X=x \given \theta)
+\end{equation*}
+
+对于连续随机变量：
+\begin{equation*}
+    \mcl(\theta\given x) = f(x\given \theta)
+\end{equation*}
+
+\begin{example}
+    对于随机抽取实验室小白鼠，并测量其体重$w$的试验中，假设小白鼠的体重服从正态分布$N\sim(\mu,\sigma)$，此时概率为给定分布参数$\theta$的情况下，求小白鼠体重对应的概率：
+    \begin{gather*}
+        P( 32<w<34 \given \mu= 32,\sigma=2.5) = 0.29 \\
+        P( w=34 \given \mu=34,\sigma=2.5) = 0.16
+    \end{gather*}
+
+    而对于似然，则为给定数据，求参数$\theta$对应的概率：
+    \begin{gather*}
+        L( \mu=32,\sigma=2.5 \given w=34) = 0.12 \\
+        L( \mu=34,\sigma=2.5 \given w=34) = 0.21
+    \end{gather*}
+
+    在调整了分布的$\mu$之后，似然变大。显然对于单次的检验，单一数据，使得抽取一只小白鼠体重为$34g$的概率最大的分布，为$\mu=34$的正态分布。
+\end{example}
+
 \subsection{似然函数}
 
 似然函数（Likelihood function）
-likelihood ratio
 
-\subsection{Probability}
+\begin{equation*}
+    \mcl(\theta \given X) = \prod_{i=1}^{n} f(x_i \given \theta)
+\end{equation*}
 
-P( data | distribution ) = area under curve
+\subsection{似然比}
 
-P( weight between 32g and 34g | mean = 32 and standard deviation = 2.5) = 0.29
+似然比（Likelihood ratio）
+\begin{equation*}
+    \Lambda(\theta_1,\theta_2 \given x) = \frac{\mcl(\theta_1 \given x)}{\mcl(\theta_2 \given x)}
+\end{equation*}
 
-P( weight > 34g | mean = 32 and standard deviation = 2.5) = 0.21
-
-\subsection{Likelihood}
-
-L( distribution | data ) = value of the curve (y)
-
-L( mean = 32 and standard deviation = 2.5 | mouse weights 34g ) = 0.12
-
-L( mean = 34 and standard deviation = 2.5 | mouse weights 34g ) = 0.21
-
-在调整了分布的mean之后，likelihood最大，在mean=34 sigma=2.5的正态分布中，抽中一只34g的老鼠的概率最大
-
-\subsection{Maximum likelihood}
+\subsection{最大似然估计}
+    
+最大似然估计（Maximum likelihood estimation，MLE）
 
 测量了数只老鼠的重量，尝试找到其分布，miximizes the likelihood 找到最大化所有观察重量likelihood的分布，找到mean 和standard deviation
 
@@ -770,63 +817,46 @@ Test statistics: (negative, more negatvie -> reject H0)
 
 \section{Time Series}
 
-ADF-Test: 检验结果为负，越负越拒绝原假设，即有单位根。单位根存在，即$y_t = a + b y_{t-1} + e_t$，$|b|=1$，为随机。
+ADF-Test: 检验结果为负，越负越拒绝原假设，即有单位根。单位根存在，即$y_t = a + b y_{t-1} + e_t$，$\abs{b} =1$，为随机。
 
-\section{Maximum Likelihood}
+\section{卡尔曼滤波}
 
-\section{Kalman Filter}
-
-\subsection{State Space Representation}
-$$
-\begin{aligned}
+卡尔曼滤波（Kalman Filter）的State Space Representation有：
+\begin{align*}
    \mathbf{\xi_{t+1}} &= \mathbf{F \xi_{t}} + \mathbf{v_{t+1}} \\
    \mathbf{y_{t}} &= \mathbf{A'} \mathbf{x_{t}} + \mathbf{H'\xi_{t}} + \mathbf{w_t}
-\end{aligned}
-$$
+\end{align*}
 
-\subsection{Definition}
+定义有：
+\begin{align*}
+    \mathbf{P_{t\given t-1}} \equiv E[(\xi_{t} - \hat{\xi}_{t\given t-1})(\xi_{t} - \hat{\xi}_{t\given t-1})'] \\
+    \mathbf{K_t} = \mathbf{FP_{t\given t-1}H(H'P_{t\given t-1}H+R)^{-1}}
+\end{align*}
 
-$$
-\begin{aligned}
-    \mathbf{P_{t|t-1}} \equiv E[(\xi_{t} - \hat{\xi}_{t|t-1})(\xi_{t} - \hat{\xi}_{t|t-1})'] \\
-    \mathbf{K_t} = \mathbf{FP_{t|t-1}H(H'P_{t|t-1}H+R)^{-1}}
-\end{aligned}
-$$
+\begin{align*}
+    E[(\xi_{t} - \hat{\xi}_{t\given t-1})(\xi_{t} - \hat{\xi}_{t\given t-1})'] &= \mathbf{P_{t\given t-1}} \\ E[(\mathbf{y_t} - \hat{\mathbf{y}}_{t\given t-1})(\mathbf{y_t} - \hat{\mathbf{y}}_{t\given t-1})'] &= \mathbf{H'P_{t\given t-1}H+R} \\
+    E\{(\xi_t - \xi_{t\given t-1})(\mathbf{y_t} - \hat{\mathbf{y}}_{t\given t-1})'\} &= \mathbf{P_{t\given t-1}H} \\
+\end{align*}
 
-$$
-\begin{aligned}
-    E[(\xi_{t} - \hat{\xi}_{t|t-1})(\xi_{t} - \hat{\xi}_{t|t-1})'] &= \mathbf{P_{t|t-1}} \\
-    E[(\mathbf{y_t} - \hat{\mathbf{y}}_{t|t-1})(\mathbf{y_t} - \hat{\mathbf{y}}_{t|t-1})'] &= \mathbf{H'P_{t|t-1}H+R} \\
-    E\{(\xi_t - \xi_{t|t-1})(\mathbf{y_t} - \hat{\mathbf{y}}_{t|t-1})'\} &= \mathbf{P_{t|t-1}H} \\
-\end{aligned}
-$$
+计算步骤
+\begin{gather*}
+    \hat{\xi}_{1\given 0} = E(\xi_1) \\
+    P_{1\given 0} = E\{[\xi_1 - E(\xi_1)][\xi_1 - E(\xi_1)]'\}
+\end{gather*}
 
-\subsection{Steps}
+迭代
+% \begin{gather*}
+%     \hat{\xi}_{t\given t} = \mathbf{\hat{\xi}_{t\given t-1} + P_{t\given t-1}H(H'P_{t\given t-1}H+R)^{-1}(y_t - A'x_t - H'\hat{\xi}_{t\given t-1})} \\
+%     \hat{\xi}_{t+1\given t} = \mathbf{F \hat{\xi}}_{t\given t} = \mathbf{F\hat{\xi}_{t\given t-1} + K_t(y_t - A'x_t - H'\hat{\xi}_{t\given t-1})} \\
+%     \mathbf{P}_{t\given t} = \mathbf{P_{t\given t-1} - P_{t\given t-1}H(H'P_{t\given t-1}H+R)^{-1}H'P_{t\given t-1}}
+%     \mathbf{P}_{t+1\given t} = \mathbf{FP_{t\given t}F'+Q}
+% \end{gather*}
 
-$$
-\hat{\xi}_{1|0} = E(\xi_1)
-$$
-$$
-P_{1|0} = E\{[\xi_1 - E(\xi_1)][\xi_1 - E(\xi_1)]'\}
-$$
-
-\subsection{Iteration}
-
-% $$
-% \hat{\xi}_{t|t} &= \mathbf{\hat{\xi}_{t|t-1} + P_{t|t-1}H(H'P_{t|t-1}H+R)^{-1}(y_t - A'x_t - H'\hat{\xi}_{t|t-1})}\\
-% \hat{\xi}_{t+1|t} &= \mathbf{F \hat{\xi}}_{t|t} = \mathbf{F\hat{\xi}_{t|t-1} + K_t(y_t - A'x_t - H'\hat{\xi}_{t|t-1})} \\
-% \mathbf{P}_{t|t} = \mathbf{P_{t|t-1} - P_{t|t-1}H(H'P_{t|t-1}H+R)^{-1}H'P_{t|t-1}}
-% \mathbf{P}_{t+1|t} &= \mathbf{FP_{t|t}F'+Q} \\
-% $$
-
-\subsection{Smoothing}
-$$
-\mathbf{J_t} \equiv \mathbf{P_{t|t}F'P^{-1}_{t+1|t}}
-$$
-$$
-\hat{\mathbf{\xi}_{t|T}} = \hat{\mathbf{\xi}}_{t|t} + J(\hat{\xi}_{t+1|T} - \hat{\xi}_{t+1|t})
-$$
-
+平滑
+\begin{gather*}
+    \mathbf{J_t} \equiv \mathbf{P_{t\given t}F'P^{-1}_{t+1\given t}} \\
+    \hat{\mathbf{\xi}_{t\given T}} = \hat{\mathbf{\xi}}_{t\given t} + J(\hat{\xi}_{t+1\given T} - \hat{\xi}_{t+1\given t})
+\end{gather*}
 
 
 \end{document}

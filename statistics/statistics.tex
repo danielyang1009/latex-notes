@@ -12,8 +12,6 @@
 
 \section{TODO}
 \begin{itemize}
-    \item 参数与非参数方法
-    \item conditional probability / projection
     \item likelihood, log-likelihood, goodness-of-fit, quasi-maximum likelihood, ratio test
     \item Chi-square, joint hypothesis
     \item Newey West 1987
@@ -101,16 +99,43 @@
     = \frac{\E[(X-\E[X])(Y-\E[Y])]}{\sigma_X\sigma_Y}
 \end{equation*}
 
-
 \subsection{假设检验}
 
-在假设检验（Statistical hypothesis testing）中，\textbf{原假设（$\text{H}_0$，null hypothesis）}，也称为零假设或虚无假设。而与原假设相反的假设称为\textbf{备择假设（$\text{H}_a$，althernative hypothesis）}。假设检验的核心为\textbf{反证法}。在数学中，由于不能穷举所有可能性，因此无法通过举例的方式证明一个命题的正确性。但是可以通过举一个反例，来证明命题的错误。在掷骰子的例子中，在每次掷的过程相当于一次举例，假设进行了上万次的实验，即便实验结果均值为3.5，也无法证明总体的均值为3.5，因为无法穷举。
+在假设检验（Statistical hypothesis testing）中，\textbf{原假设}（Null hypothesis，$H_0$），也称为零假设或虚无假设。而与原假设相反的假设称为\textbf{备择假设}（Althernative hypothesis，$H_a$）。假设检验的核心为\textbf{反证法}。在数学中，由于不能穷举所有可能性，因此无法通过举例的方式证明一个命题的正确性。但是可以通过举一个反例，来证明命题的错误。在掷骰子的例子中，在每次掷的过程相当于一次举例，假设进行了上万次的实验，即便实验结果均值为3.5，也无法证明总体的均值为3.5，因为无法穷举。
 
 可以理解为原假设为希望拒绝的假设，或反证法中希望推翻的命题。我们先构造一个小概率事件作为原假设（$\text{H}_0$），并假设其正确。如样本均值等于某值，两个样本均值是否相等，样本中的不同组直接是否等概率发生，一般使用等式（小概率）作为原假设。如果抽样检验中小概率事件发生，则说明原假设的正确性值得怀疑。如此时假设实验的结果（样本）远大于或小于理论计算结果3.5，即发生了小概率事件，那么就有理由相信举出了一个反例，这时就可以否定原命题（reject the null hypothesis）。而相反，如果原假设认为均值为3.5，在实验的过程中结果大概率不会偏离这个理论值太多，可以认为我们并没办法举出反例。由于不能直接证明原命题为真，只能说”We can not(fail to) reject the null hypothesis“，无法拒绝原命题。
 
-在需要评估总体数据的时候，由于经常无法统计全部数据，需要从总体中抽出一部分样本进行评估。假设掷骰子一个骰子，其期望为3.5，但假设掷骰子了100次，计算均值为3.47，由于总体的理论值和样本呢的实验值可能存在偏差，误差永远存在，无法避免。那么是否可以认为么3.47“等于”3.5？这时候就需要要界定一个\textbf{显著水平（$\alpha$，significant level）}，相当于设定一个等于的阈值范围。即多小概率的事情发生，是$10\%$还是$5\%$的概率，使我们认为举出了一个反例，值得去怀疑原命题的正确性。当我们知道随机变量的分布时候，根据所进行的检验，我们可以根据计算出的\textbf{统计量（test statistic）}，由于分布已知，统计量对应了一个\textbf{p值（p-value）}，即小概率（极端）事件发生的概率，因此在图形上表示为统计量向两侧延申的线下区域。如果这个概率足够低，如小于$\alpha=5\%$，那么就有理由拒绝原假设。
+在需要评估总体数据的时候，由于经常无法统计全部数据，需要从总体中抽出一部分样本进行评估。假设掷骰子一个骰子，其期望为3.5，但假设掷骰子了100次，计算均值为3.47，由于总体的理论值和样本呢的实验值可能存在偏差，误差永远存在，无法避免。那么是否可以认为么3.47“等于”3.5？这时候就需要要界定一个\textbf{显著水平}（Significant level，$\alpha$），相当于设定一个等于的阈值范围。即多小概率的事情发生，是$10\%$还是$5\%$的概率，使我们认为举出了一个反例，值得去怀疑原命题的正确性。当我们知道随机变量的分布时候，根据所进行的检验，我们可以根据计算出的\textbf{统计量}（Test statistic），由于分布已知，统计量对应了一个\textbf{p值}（p-value），即小概率（极端）事件发生的概率，因此在图形上表示为统计量向两侧延申的线下区域。如果这个概率足够低，如小于$\alpha=5\%$，那么就有理由拒绝原假设。
 
-用1-显著水平（$1-\alpha$），得到值称为\textbf{置信水平（confidence level）}（概率大小）。置信水平越大，对应的置信区间也越大（随机变量范围）。此时有置信水平为$1-\alpha$，假设置信区间为$(a,b)$，那么有$P(a<\text{随机变量}<b)=1-\alpha$。对于双侧检验，有置信水平为$1-\alpha$（概率大小），两侧拒绝域分别为$\alpha/2$。对于单侧检验，则有单侧拒绝域大小为$\alpha$。
+用1-显著水平（$1-\alpha$），得到值称为\textbf{置信水平}（Confidence level）（概率大小）。置信水平越大，对应的置信区间也越大（随机变量范围）。此时有置信水平为$1-\alpha$，假设置信区间为$(a,b)$，对于随机变量$x$有$P(a<x<b)=1-\alpha$。对于双侧检验，有置信水平为$1-\alpha$（概率大小），两侧拒绝域分别为$\alpha/2$。对于单侧检验，则有单侧拒绝域大小为$\alpha$。
+
+\subsection{参数与非参数检验}
+
+\textbf{参数检验}（Parametric test）指总体分布服从正态分布或总体分布已知的情况下的统计检验，如t检验（配对或非配对），方差分析（ANOVA）。单因素方差分析（One-way ANOVA）是检验由单一因素影响的两组样本均值是否存在显著差异，同时有双因素方差分析（Two-way ANOVA）或多因素方差分析（Multi-way ANOVA），单因素与多因素是对于自变量（或称为因子）而言的，两者都是检验对于单因变量或单变量（Univariate）的影响。如上所述，若因变量只有一个，称为单变量方差分析。而多变量方差分析（Multivariate analysis of variance，MANOVA），指当因变量为两个或两个以上的情形。
+
+\textbf{非参数检验}(Nonparametric test)指总体分布不要求服从正态分布或总体分布情况不明时（未知分布、样本太少），用来检验数据是否来自同一个总体的统计检验方法。如卡方检验（Chi-squared test，$\chi^2$ test），其中最著名的为皮尔逊卡方检验（Pearson's $\chi^2$），其他的卡方检验还有如费希尔精确检验（Fisher's exact test）二项检验（Binomial test）。其他的非参数检验还有曼-惠特尼U检验（Mann–Whitney U-test）、K-S检验（Kolmogorov-Smirnov test）、K-W检验（Kruskal–Wallis test）等等。
+
+\subsection{回归模型分类}
+
+\subsubsection*{线性回归模型}
+线性回归模型（Linear regression）包含有：
+\begin{itemize}
+    \item 最小二乘法（Ordinary least squares）
+    \item 广义最小二乘法（Generalized least squares）
+    \item 加权最小二乘法（Weighted least squares）
+    \item 广义线性模型（General linear model）
+\end{itemize}
+
+\subsubsection*{参数回归与半参数非参数回归}
+
+参数回归或参数模型（Parametric regression），如各类线性回归，其回归函数形式为已知，参数待定，外延容易，但形式呆板。而对于半参或非参回归（Semi/Non-parametric regression），为非线性回归，其回归函数不确定，外延困难，但拟合效果却较好。其中非参数回归基本方法如：
+\begin{itemize}
+    \item 最近邻函数法（Nearest-neighbor或K-nearest neighbors）
+    \item 核函数回归（Kernel regression）
+    \item 神经网络（Neural networks）
+    \item 支持向量机（Support vector regression）
+    \item 光滑样条（Smoothing spline）
+\end{itemize}
 
 \section{矩}
 
@@ -714,6 +739,13 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \Lambda(\theta_1,\theta_2 \given x) = \frac{\mcl(\theta_1 \given x)}{\mcl(\theta_2 \given x)}
 \end{equation*}
 
+\begin{remark}
+    在Python中有如下模块：
+    \begin{itemize}
+        \item \href{https://www.mathworks.com/help/econ/lratiotest.html}{Matlab: lratiotest}（Likelihood ratio检验）
+    \end{itemize}
+\end{remark}
+
 \subsection{最大似然估计}
     
 最大似然估计（Maximum likelihood estimation，MLE）
@@ -736,8 +768,7 @@ Pearson's chi-squared test
     \item $E_i$ the expected(theoretical) number of type i
 \end{list}
 
-
-\section{Time series}
+\section{时间序列}
 
 Autoregressive (AR) model
 
@@ -815,9 +846,67 @@ Test statistics: (negative, more negatvie -> reject H0)
 
 -  $DF_{\delta} = \frac{\hat{\delta}}{SE(\hat{\delta})}$
 
-\section{Time Series}
-
 ADF-Test: 检验结果为负，越负越拒绝原假设，即有单位根。单位根存在，即$y_t = a + b y_{t-1} + e_t$，$\abs{b} =1$，为随机。
+
+\subsection{ARCH效应检验}
+
+若将$a_t = r_t - \mu_t$为均值方程的残差，则可以用平方序列$a_t^2$来检验\textbf{条件异方差性}，即所谓的ARCH效应。第一种方式，可以使用Ljung-Box统计量$\{Q(m)\}$应用于序列$\{a_t^2\}$，参见Mcleod和Li（1983）。该检验的原假设是$\{a_t^2\}$序列的前$m$个间隔的ACF值都为零。第二种方式，可以使用Engle（1982）中的拉格朗日乘子检验。
+
+对于拉格朗日乘子检验（Lagrange Multiplier Test），等价于对如下线性回归中用F统计量检验$\alpha_i=0(i=1,\dots,m)$，即原假设有：
+\begin{equation*}
+    H_0: \alpha_1 = \dots = \alpha_m = 0
+\end{equation*}
+
+线性回归为：
+\begin{equation*}
+    a^2_t = \alpha_0 + \alpha_1 a^{2}_{t-1} + \dots + \alpha_m a^{2}_{t-m} + e_t \qquad t=m+1,\dots,T
+\end{equation*}
+
+$m$为正整数，$T$为样本容量，其中$e_t$为误差项，$\hat{e}_t$为上述线性回归最小二乘法估计的残差，$\bar{\omega}$为$a_t^2$的样本平均值。令：
+\begin{gather*}
+    SSR_0 = \sum_{t=m+1}^{T} (a_t^2 - \bar{\omega})^2 \qquad
+    \bar{\omega} = \frac{1}{T} \sum_{t=1}^{T} a_t^2 \\
+    SSR_1 = \sum_{t=m+1}^{T} \hat{e}_t^2
+\end{gather*}
+
+F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F的p值小于$\alpha$则拒绝原假设，其中$\chi_m^2(\alpha)$为$\chi_m^2$上的$100(1-\alpha)$点：
+\begin{equation*}
+    F = \frac{(SSR_0-SSR_1)/m}{SSR_1/(T-2m-1)}
+\end{equation*}
+
+Ljung-Box Q-test
+residual autocorrelation
+
+Breusch–Godfrey test
+
+test for autocorrelation in the errors in a regression model
+
+Breusch–Pagan test
+
+used to test for heteroskedasticity in a linear regression model
+
+\begin{remark}
+    ARCH效应检验或称为Engle's ARCH test，如上所述应平方序列检验异方差性，详情见Engle（1982），与其他检验如Ljung-box检验，拉格朗日检验，在Python与Matlab中有如下模块可进行计算：
+    \begin{itemize}
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_lm.html}{Python: acorr\_lm}（拉格朗日乘子序列相关检验）
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr\_ljungbox.html}{Python: acorr\_ljungbox}（Ljung-Box序列相关检验）
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het\_arch.html}{Python: het\_arch}（Engle异方差检验）
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het\_breuschpagan.html}{Python: het\_breuschpagan}（Breusch-Pagan拉格朗日乘子异方差检验）
+        \item \href{https://www.mathworks.com/help/econ/lbqtest.html}{Matlab: lbqtest}（Ljung-Box序列相关检验）
+        \item \href{https://www.mathworks.com/help/econ/archtest.html}{Matlab: archtest}（Engle异方差检验）
+    \end{itemize}
+\end{remark}
+
+得分检验（Score test），score（informant） is the gradient of the log-likelihood function with respect to the parameter vetor.
+\begin{equation*}
+    s(\theta) = \frac{\partial \log \mcl(\theta)}{\partial \theta}
+\end{equation*}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/W-L-S-test.png}
+    \caption{Likelihood/Wald/Score Test}
+\end{figure}
 
 \section{卡尔曼滤波}
 

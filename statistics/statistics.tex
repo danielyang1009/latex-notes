@@ -109,6 +109,58 @@
 
 用1-显著水平（$1-\alpha$），得到值称为\textbf{置信水平}（Confidence level）（概率大小）。置信水平越大，对应的置信区间也越大（随机变量范围）。此时有置信水平为$1-\alpha$，假设置信区间为$(a,b)$，对于随机变量$x$有$P(a<x<b)=1-\alpha$。对于双侧检验，有置信水平为$1-\alpha$（概率大小），两侧拒绝域分别为$\alpha/2$。对于单侧检验，则有单侧拒绝域大小为$\alpha$。
 
+\subsection{t检验}
+
+t检验（或称Student's t test），有如下常见的四个用途：
+\begin{itemize}
+    \item 单样本均值检验（One-sample t-test）:用于检验总体方差未知、正态或近似正态的\uline{单样本的均值}是否与\uline{已知的总体均值}相等
+    \item 两独立样本均值检验（Independent two-sample t-test）:用于检验\uline{两对独立}的正态或近似正态的\uline{样本的均值}是否相等，这里可根据总体方差是否相等分类讨论
+    \item 配对样本均值检验（Dependent t-test for paired samples）:用于检验\uline{一对配对样本均值的差}是否等于某一个值
+    \item 回归系数的显著性检验（t-test for regression coefficient significance）:用于检验\uline{回归模型的解释变量对被解释变量是否有显著影响}
+\end{itemize}
+
+z检验（z-test）检验，检验样本与总体均值是否有差异，z统计量（z-statistic）服从z-分布或标准正态分布（查表用z-table），用于总体均值与标准差已知，或样本量大于30时。此时的样本标准差$\hat{\sigma}$将接近总体标准差$\sigma$，因此有：
+\begin{equation*}
+    z\text{-statistic} = \frac{\bar{X}-\mu}{s.e.(\bar{X})} = \frac{\bar{X} - \mu}{\hat{\sigma}/\sqrt{n}}
+\end{equation*}
+
+同样以单样本检验样本均值与总体均值是否有差异为例，t统计量（t-statistics）服从t-分布（查表用t-table，自由度为$n-1$，$n$为样本数量），基于样本标准差，用于样本较小（样本量小于30）或总体标准差未知。t-分布描述了的是标准化（Standardized）的样本均值$\bar{X}$与总体均值$\mu$的距离，即t统计量描述了此时\uline{样本均值距离总体均值多少个标准差}。其中分母为样本标准误（Standard error）为$\sigma/\sqrt{n}$，$\hat{\sigma}$为样本标准差。
+\begin{equation*}
+    t\text{-statistic} = \frac{\bar{X}-\mu}{s.e.(\bar{X})} = \frac{\bar{X}-\mu}{\hat{\sigma}/\sqrt{n}}
+\end{equation*}
+
+如下所示为t-分布的概率密度函数（PDF），其中$\nu=n-1$为自由度，$\Gamma$为gamma函数（gamma function）：
+\begin{equation*}
+    f(t) = \frac{\Gamma\left( \frac{\nu+1}{2} \right)}{\sqrt{\nu\pi} \Gamma\left( \frac{\nu}{2} \right)} \left( 1+\frac{t^2}{\nu} \right)^{-\frac{\nu+1}{2}}
+\end{equation*}
+
+而z分布与t分布的差异可见图\ref{fig:z-and-t-dist}，并且根据自由度不同而不同，以下图为例，可以看到当自由度变大，当样本量变大时t分布不断接近标准正态分布。z分布与t分布两者都有均值为$0$。
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/z-dist-and-t-dist.png}
+    \caption{z分布与t分布的差异}
+    \label{fig:z-and-t-dist}
+\end{figure}
+
+\begin{remark}
+    关于标准误，当统计量为样本均值时，也称为均值标准误（Standard error of the mean，SEM）。假设$x_1,x_2,\dots,x_n$为n个独立观察值，并且有总体均值为$\mu$，总体标准差为$\sigma$，并令$T = x_1 + x_2 + \dots + x_n$，样本均值为$\bar{x} = T/n$，此时有：
+    \begin{equation*}
+        \Var(T) = \Var(x_1) + \Var(x_2) + \dots + \Var(x_n) = n \sigma^2
+    \end{equation*}
+    
+    对于样本均值的方差有：
+    \begin{equation*}
+        \Var(\bar{x}) = \Var(\frac{T}{n}) = \frac{1}{n*2} \Var(T) = \frac{1}{n^2} n\sigma^2 = \frac{\sigma^2}{n}
+    \end{equation*}
+
+    即样本均值服从$\bar{x}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布。此时标准误，即样本均值的标准差为：
+    \begin{equation*}
+        \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
+    \end{equation*}
+    
+    此时有t-统计量：
+\end{remark}
+
 \subsection{参数与非参数检验}
 
 \textbf{参数检验}（Parametric test）指总体分布服从正态分布或总体分布已知的情况下的统计检验，如t检验（配对或非配对），方差分析（ANOVA）。单因素方差分析（One-way ANOVA）是检验由单一因素影响的两组样本均值是否存在显著差异，同时有双因素方差分析（Two-way ANOVA）或多因素方差分析（Multi-way ANOVA），单因素与多因素是对于自变量（或称为因子）而言的，两者都是检验对于单因变量或单变量（Univariate）的影响。如上所述，若因变量只有一个，称为单变量方差分析。而多变量方差分析（Multivariate analysis of variance，MANOVA），指当因变量为两个或两个以上的情形。
@@ -770,32 +822,89 @@ Pearson's chi-squared test
 
 \section{时间序列}
 
-Autoregressive (AR) model
+\subsection{平稳性}
 
-vector autoregressive model (VAR) (more than one random variable)
+对于时间序列$\{r_t\}$，强平稳（Strongly stationary）或严格平稳（Strictly stationary），是指对于任意$t$和任意正整数$k$，资产收益率时间序列$(r_{t_1},\dots,r_{t_K})$与$(r_{t_1+t},\dots,r_{t_k+t})$的联合分布相同，即将$(t_1,\dots,t_k)$平移$t$个单位之后，分布不变。而弱平稳（Weakly stationary）指对于时间序列$\{r_t\}$，当$r_t$的均值与$r_{t-l}$的协方差不随时间改变，即：
+\begin{gather*}
+    \E [r_t] = \mu \\
+    \Cov (r_t, r_{t-1}) = \gamma_l
+\end{gather*}
 
-Moving-average (MA) model
+$\mu$为常数，不随时间改变，而$\gamma_l$指依赖时间间距$l$的大小。平稳性的强弱区别，在于弱平稳只要求期望方差不变，即前两阶矩不变，而强平稳要求各阶距都不变。由于正态分布只需要两阶矩确认，因此时间序列$\{r_t\}$若是正态分布的，那么此时弱平稳与强平稳等价。
 
-ARMA / ARIMA
+协方差$\gamma_l = \Cov(r_t,r_{t-l})$称为$r_t$的间隔为$l$的自协方差（Autocovariance）,其中有两个性质：
+\begin{gather*}
+    \gamma_0 = \Var(r_t) \\
+    \gamma_{-l} = \gamma_{l}
+\end{gather*}
 
-autoregressive–moving-average (ARMA) / autoregressive integrated moving average (ARIMA)
+\begin{proof}
+    性质二：
+    \begin{equation*}
+        \gamma_{-l} = \Cov(r_{t},r_{t-(-l)}) = \Cov(r_{t-(-l)},r_{t}) 
+        = \Cov(r_{t+l)},r_{t}) = \Cov(r_{t)},r_{t-l}) = \gamma_{l}
+    \end{equation*}
+\end{proof}
 
-TODO: Autocorrelation (serial correlation)
-- $cov(u_i,u_j) \neq 0$, for $i \neq j$ 
-- some other estimator will have a lower variance, no longer best estimate
-- Unit root processes, autoregressive processes, and moving average processes are specific forms of processes with autocorrelation.
+\subsection{自相关函数}
 
-Autocorrelation and Partial Autocorrelation
+\subsubsection{相关系数}
+
+根据定义，两个随机变量$X$与$Y$的相关系数定义为：
+\begin{equation*}
+    \rho_{X,Y} = \frac{\Cov(X,Y)}{\sqrt{\Var(X)\Var(Y)}}
+    = \frac{\E\left[(X-\mu_x)(Y-\mu_y)\right]}{\sqrt{\E(X-\mu_x)^2 \E(Y-\mu_y)^2}}
+\end{equation*}
+
+对于样本$\{(x_t,y_t)\}_{t=1}^{T}$，其中样本均值为$\bar{x}=\sum_{t=1}^{T}x_t/T$与$\bar{y}=\sum_{t=1}^{T}y_t/T$：
+\begin{equation*}
+    \hat{\rho}_{x_t,y_t} = \frac{\sum_{t=1}^{T}(x_t-\bar{x})(y_t-\bar{y})}{\sqrt{\sum_{t=1}^{T}(x_t-\bar{x})^2 \sum_{t=1}^{T}(y_t-\bar{y})^2}}
+\end{equation*}
+
+\subsubsection{自相关函数}
+
+假设$\{r_t\}$为若平稳收益率时间序列，使用相关系数的概念推广至$r_t$与其过去值$r_{t-l}$，那么$r_t$与$r_{t}$的相关系数称为$r_t$间隔为$l$的自回归系数：
+\begin{equation*}
+    \rho_l = \frac{\Cov(r_t,r_{t-l})}{\sqrt{\Var(r_t)\Var(r_{t-l})}} 
+    = \frac{\Cov(r_t,r_{t-l})}{\Var(r_t)}
+    = \frac{\gamma_l}{\gamma_0}
+\end{equation*}
+
+由于$\{r_t\}$为弱平稳收益率时间序列，应有$\Var(r_t) = \Var(r_{t-l})$。根据定义，$\rho_0=1$且有$-1 \leq \rho_l \leq 1$。一个弱平稳序列，当且仅当对所有$l>0$都有$\rho_l=0$时，其为序列不相关。
+
+对于$\{r_t\}$，其样本均值为$\bar{r}=\sum_{t=1}^{T}r_t/T$,间隔为l的样本自相关系数为：
+\begin{equation*}
+    \hat{\rho}_l = \frac{\sum_{t=l+1}^{T}(r_t-\bar{r})(r_{t-l}-\bar{r})}{\sum_{t=1}^{T}(r_t-\bar{r})^2} \qquad 0 \leq l < T-1
+\end{equation*}
+
+若$\{r_t\}$为\textbf{独立同分布}（i.i.d.）序列，满足$\E(r_t^2)<\infty$，那么对于任意正整数$l$，有$\hat{p}_l$渐进的服从均值为$0$、方差为$1/T$的$N\sim(0,\frac{1}{T})$的正态分布。
+
+若$\{r_t\}$为\textbf{弱平稳}序列，满足$r_t = \mu \sum_{i=0}^{q}\phi_i a_{t-i}$，其中$\phi_0=1$，$\{a_i\}$为均值为0的独立同分布任意变量序列，对于$l>q$，则有$\hat{p}_l$渐进的服从如下正态分布，称为Bartlett公式：
+\begin{equation*}
+    \hat{p}_l \sim N\left(0,\frac{\left( 1+2\sum_{i=1}^{q}\rho_i^2 \right)}{T} \right)    
+\end{equation*}
+
+\subsubsection*{检验单个ACF}
+
+对于正整数$l$，可以使用t检验（t-statistics）$t_{\hat{\beta}} = \frac{\hat{\beta}-\beta_0}{s.e.(\hat{\beta})}$来检验$H_0: \rho_l =0$与$H_a: \rho_l \neq 0$检验统计量为：
+\begin{equation*}
+    t_{\hat{\rho}} = \frac{\hat{\rho}_l}{\sqrt{\left( 1+2\sum_{i=1}^{q}\hat{\rho}_i^2 \right)/T}}
+\end{equation*}
+
+如果$\{r_t\}$为平稳的高斯序列并满足当$j>l$时，$\rho_j=0$，则有他检验渐进的服从标准正态分布。当$\abs{t_{\hat{\rho}}}>Z_{\alpha/2}$时拒绝$H_0$，其中$Z_{\alpha/2}$为标准正态分布的。
+
+
+\divider
+
+自相关（Autocorrelation）或称序列相关（Serial correlation）
+
+
+自相关函数（Autocorrelation function，ACF）
 
 The coefficient of correlation between two values in a time series is called the autocorrelation function (ACF), $Corr(x_t, x_{t-k}), k=1,2,3,\dotsc$
 
-$$
-\begin{aligned}
-\rho_k &= \frac{cov(x_t,x_{t-k})}{\sigma_{x_t} \sigma_{x_{t-k}}} = \frac{\gamma_k}{\gamma_0} \\
-\gamma_k &= \sum^{T-k}_{t=1} (x_t-\bar{x})(x_{t+k}-\bar{x}) / T\\
-\gamma_0 &= \sum^{T}_{t=1} (x_t-\bar{x})^2 / T
-\end{aligned}
-$$
+
+
 
 Durbin-Watson test
 
@@ -805,7 +914,6 @@ Durbin-Watson test
 Test statistic
 - resitual at lag 1, $\epsilon_t = \rho \epsilon_{t-1} + u_t$
 - $DW = \frac{\sum_{t=2}^{T} (\epsilon_t - \epsilon_{t-1})^2}{\sum_{t=1}^{T} \epsilon^2_t}$
-
 
 2 -> no autocorrelation
 0-2 -> positive autocorrelation
@@ -825,6 +933,36 @@ Q = T(T+2) \sum^L_{k=1} \frac{\rho(k)^2}{T-k} > \chi^2_L
 $$
 
 - Q is chi-square with L degrees of freedom
+
+
+\subsection{自回归模型}
+
+自回归模型（Autoregressive model，AR）
+
+向量自回归模型（Vector autoregressive model，VAR）
+    
+more than one random variable
+
+
+\subsection{移动平均模型}
+Moving-average (MA) model
+
+
+\subsection{自回归移动平均模型}
+
+自回归移动平均模型（Autoregressive moving-average model，ARMA）
+
+\subsection{差分自回归移动平均模型}
+
+差分自回归移动平均模型（Autoregressive integrated moving average，ARIMA）
+
+
+\subsection{格兰杰因果关系}
+
+格兰杰因果关系检验（Granger causality test）是一种假设检验的统计方法，检验一组时间序列x是否为另一组时间序列y的原因。它的基础是回归分析当中的自回归模型。
+
+
+\subsection{单位根}
 
 Dickey-Fuller test
 H0: there is unit root, $\delta = \rho - 1 =0$, no stationary, random walk
@@ -847,6 +985,8 @@ Test statistics: (negative, more negatvie -> reject H0)
 -  $DF_{\delta} = \frac{\hat{\delta}}{SE(\hat{\delta})}$
 
 ADF-Test: 检验结果为负，越负越拒绝原假设，即有单位根。单位根存在，即$y_t = a + b y_{t-1} + e_t$，$\abs{b} =1$，为随机。
+
+\section{条件异方差模型}
 
 \subsection{ARCH效应检验}
 

@@ -134,7 +134,7 @@ z检验（z-test）检验，检验样本与总体均值是否有差异，z统计
     f(t) = \frac{\Gamma\left( \frac{\nu+1}{2} \right)}{\sqrt{\nu\pi} \Gamma\left( \frac{\nu}{2} \right)} \left( 1+\frac{t^2}{\nu} \right)^{-\frac{\nu+1}{2}}
 \end{equation*}
 
-而z分布与t分布的差异可见图\ref{fig:z-and-t-dist}，并且根据自由度不同而不同，以下图为例，可以看到当自由度变大，当样本量变大时t分布不断接近标准正态分布。z分布与t分布两者都有均值为$0$。
+而z分布与t分布的差异可见图\ref{fig:z-and-t-dist}，并且根据自由度不同而不同，以下图为例，可以看到当自由度变大，当样本量$n$变大时t分布不断接近标准正态分布。z分布与t分布两者都有均值为$0$。
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.6\textwidth]{fig/z-dist-and-t-dist.png}
@@ -157,8 +157,6 @@ z检验（z-test）检验，检验样本与总体均值是否有差异，z统计
     \begin{equation*}
         \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
     \end{equation*}
-    
-    此时有t-统计量：
 \end{remark}
 
 \subsection{参数与非参数检验}
@@ -891,7 +889,7 @@ $\mu$为常数，不随时间改变，而$\gamma_l$指依赖时间间距$l$的�
     t_{\hat{\rho}} = \frac{\hat{\rho}_l}{\sqrt{\left( 1+2\sum_{i=1}^{q}\hat{\rho}_i^2 \right)/T}}
 \end{equation*}
 
-如果$\{r_t\}$为平稳的高斯序列并满足当$j>l$时，$\rho_j=0$，则有他检验渐进的服从标准正态分布。当$\abs{t_{\hat{\rho}}}>Z_{\alpha/2}$时拒绝$H_0$，其中$Z_{\alpha/2}$为标准正态分布的。
+如果$\{r_t\}$为平稳的高斯序列并满足当$j>l$时，$\rho_j=0$，则有他检验渐进的服从标准正态分布。当$\abs{t_{\hat{\rho}}}>Z_{\alpha/2}$时拒绝$H_0$，其中$Z_{\alpha/2}$为临界值（Critical value），具体为标准正态分布的$100(1-\alpha/2)$分位点。
 
 
 \divider

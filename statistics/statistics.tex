@@ -375,7 +375,11 @@ T检验（或称Student's t test）是一种参数检验，即假设样本服从
 \end{figure}
 
 \begin{remark}
-    关于标准误，当统计量为样本均值时，也称为均值标准误（Standard error of the mean，SEM）。假设$x_1,x_2,\dots,x_n$为n个独立观察值，并且有总体均值为$\mu$，总体标准差为$\sigma$，并令$T = x_1 + x_2 + \dots + x_n$，样本均值为$\bar{x} = T/n$，此时有：
+    关于标准差与标准误
+
+    \uline{标准差}与\uline{标准误}都衡量的是离散程度。标准差的对象为一次抽样里样本个体（样本量为$n$）间的离散程度。而标准误的对象，为从同一总体多次抽样得到的多个样本（每个样本量为$n$）,每个的样本的某种统计量（均值、标准差、中位数，分位数等等），为该统计量的标准差。因此当统计量为样本均值时，此时样本均值标准误（Standard error of the mean，SEM）衡量的为样本均值的离散程度。
+    
+    假设$x_1,x_2,\dots,x_n$为n个独立观察值，并且有总体均值为$\mu$，总体标准差为$\sigma$，并令$T = x_1 + x_2 + \dots + x_n$，样本均值为$\bar{x} = T/n$，此时有：
     \begin{equation*}
         \Var(T) = \Var(x_1) + \Var(x_2) + \dots + \Var(x_n) = n \sigma^2
     \end{equation*}
@@ -385,10 +389,12 @@ T检验（或称Student's t test）是一种参数检验，即假设样本服从
         \Var(\bar{x}) = \Var(\frac{T}{n}) = \frac{1}{n*2} \Var(T) = \frac{1}{n^2} n\sigma^2 = \frac{\sigma^2}{n}
     \end{equation*}
 
-    即样本均值服从$\bar{x}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布。此时标准误，即样本均值的标准差为：
+    即样本均值服从$\bar{x}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布。此时样本均值标准误，具体而言即样本均值的标准差（Standard deviation of the sample means）为：
     \begin{equation*}
         \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
     \end{equation*}
+
+    对于样本均值的标准误可以用如上简单公式计算得到，当样本量太小、正态分布假设不满足，或没有简单公式可以计算标准误时，可以采用\uline{Bootstrapping重抽样}的方法模拟出一个抽样分布。具体而言，对于一个样本量为$N$的样本，重复进行多次有放回的随机抽样，每次抽样时，样本量也均为$N$。注意此时为有放回的抽样，因此样本中的个体可能被抽样多次。对每次抽样都计算所关注的统计量（如均值），从而可以直接获得一个关于该统计量的抽样分布。
 \end{remark}
 
 \subsubsection{两独立样本}

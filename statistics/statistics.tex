@@ -12,6 +12,7 @@
 
 \section{TODO}
 \begin{itemize}
+    \item exact test
     \item likelihood, log-likelihood, goodness-of-fit, quasi-maximum likelihood, ratio test
     \item Newey West 1987
 \end{itemize}
@@ -321,7 +322,7 @@
 
 \section{假设检验}
 
-\subsection{思想}
+\subsection{整体思想}
 
 在假设检验（Statistical hypothesis testing）中，\textbf{原假设}（Null hypothesis，$H_0$），也称为零假设或虚无假设。而与原假设相反的假设称为\textbf{备择假设}（Althernative hypothesis，$H_a$）。假设检验的核心为\textbf{反证法}。在数学中，由于不能穷举所有可能性，因此无法通过举例的方式证明一个命题的正确性。但是可以通过举一个反例，来证明命题的错误。在掷骰子的例子中，在每次掷的过程相当于一次举例，假设进行了上万次的实验，即便实验结果均值为3.5，也无法证明总体的均值为3.5，因为无法穷举。
 
@@ -336,6 +337,27 @@
 \textbf{参数检验}（Parametric test）指总体分布服从正态分布或总体分布已知的情况下的统计检验，如z检验、t检验、方差分析（ANOVA）等。单因素方差分析（One-way ANOVA）是检验由单一因素影响的两组样本均值是否存在显著差异，同时有双因素方差分析（Two-way ANOVA）或多因素方差分析（Multi-way ANOVA），单因素与多因素是对于自变量（或称为因子）而言的，两者都是检验对于单因变量或单变量（Univariate）的影响。如上所述，若因变量只有一个，称为单变量方差分析。而多变量方差分析（Multivariate analysis of variance，MANOVA），指当因变量为两个或两个以上的情形。
 
 \textbf{非参数检验}(Nonparametric test)指总体分布不要求服从正态分布或总体分布情况不明时（未知分布、样本太少），用来检验数据是否来自同一个总体的统计检验方法。如卡方检验（Chi-squared test，$\chi^2$ test），其中最著名的为皮尔逊卡方检验（Pearson's $\chi^2$），其他的卡方检验还有如费希尔精确检验（Fisher's exact test）二项检验（Binomial test）。其他的非参数检验还有曼-惠特尼U检验（Mann–Whitney U-test）、K-S检验（Kolmogorov-Smirnov test）、K-W检验（Kruskal–Wallis test）等等。
+
+\subsection{标准差与标准误}
+    
+\uline{标准差}与\uline{标准误}都衡量的是离散程度。标准差的对象为一次抽样里样本个体（样本量为$n$）间的离散程度。而标准误的对象，为从同一总体多次抽样得到的多个样本（每个样本量为$n$）,每个的样本的某种统计量（均值、标准差、中位数，分位数等等），为该统计量的标准差。因此当统计量为样本均值时，此时样本均值标准误（Standard error of the mean，SEM）衡量的为样本均值的离散程度。
+    
+假设$x_1,x_2,\dots,x_n$为n个独立观察值，并且有总体均值为$\mu$，总体标准差为$\sigma$，并令$T = x_1 + x_2 + \dots + x_n$，样本均值为$\bar{x} = T/n$，此时有：
+\begin{equation*}
+    \Var(T) = \Var(x_1) + \Var(x_2) + \dots + \Var(x_n) = n \sigma^2
+\end{equation*}
+    
+对于样本均值的方差有：
+\begin{equation*}
+    \Var(\bar{x}) = \Var(\frac{T}{n}) = \frac{1}{n*2} \Var(T) = \frac{1}{n^2} n\sigma^2 = \frac{\sigma^2}{n}
+\end{equation*}
+
+即样本均值服从$\bar{x}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布。此时样本均值标准误，具体而言即样本均值的标准差（Standard deviation of the sample means）为：
+\begin{equation*}
+    \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
+\end{equation*}
+
+对于样本均值的标准误可以用如上简单公式计算得到，当样本量太小、正态分布假设不满足，或没有简单公式可以计算标准误时，可以采用\uline{自助法}（Bootstrapping）重抽样的方法模拟出一个抽样分布。具体而言，对于一个样本量为$N$的样本，重复进行多次有放回的随机抽样，每次抽样时，样本量也均为$N$。注意此时为有放回的抽样，因此样本中的个体可能被抽样多次。对每次抽样都计算所关注的统计量（如均值），从而可以直接获得一个关于该统计量的抽样分布。
 
 \subsection{Z检验}
 
@@ -373,29 +395,6 @@ T检验（或称Student's t test）是一种参数检验，即假设样本服从
     \caption{z分布与t分布的差异}
     \label{fig:z-and-t-dist}
 \end{figure}
-
-\begin{remark}
-    关于标准差与标准误
-
-    \uline{标准差}与\uline{标准误}都衡量的是离散程度。标准差的对象为一次抽样里样本个体（样本量为$n$）间的离散程度。而标准误的对象，为从同一总体多次抽样得到的多个样本（每个样本量为$n$）,每个的样本的某种统计量（均值、标准差、中位数，分位数等等），为该统计量的标准差。因此当统计量为样本均值时，此时样本均值标准误（Standard error of the mean，SEM）衡量的为样本均值的离散程度。
-    
-    假设$x_1,x_2,\dots,x_n$为n个独立观察值，并且有总体均值为$\mu$，总体标准差为$\sigma$，并令$T = x_1 + x_2 + \dots + x_n$，样本均值为$\bar{x} = T/n$，此时有：
-    \begin{equation*}
-        \Var(T) = \Var(x_1) + \Var(x_2) + \dots + \Var(x_n) = n \sigma^2
-    \end{equation*}
-    
-    对于样本均值的方差有：
-    \begin{equation*}
-        \Var(\bar{x}) = \Var(\frac{T}{n}) = \frac{1}{n*2} \Var(T) = \frac{1}{n^2} n\sigma^2 = \frac{\sigma^2}{n}
-    \end{equation*}
-
-    即样本均值服从$\bar{x}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布。此时样本均值标准误，具体而言即样本均值的标准差（Standard deviation of the sample means）为：
-    \begin{equation*}
-        \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
-    \end{equation*}
-
-    对于样本均值的标准误可以用如上简单公式计算得到，当样本量太小、正态分布假设不满足，或没有简单公式可以计算标准误时，可以采用\uline{Bootstrapping重抽样}的方法模拟出一个抽样分布。具体而言，对于一个样本量为$N$的样本，重复进行多次有放回的随机抽样，每次抽样时，样本量也均为$N$。注意此时为有放回的抽样，因此样本中的个体可能被抽样多次。对每次抽样都计算所关注的统计量（如均值），从而可以直接获得一个关于该统计量的抽样分布。
-\end{remark}
 
 \subsubsection{两独立样本}
 
@@ -482,7 +481,23 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 
 \subsection{\tops{$\chi^2$}检验}
 
-卡方检验（Chi-squared test）最初由统计天王Karl Pearson于1900年提出，是三大抽样（T检验、F检验与卡方检验）分布的检验里历史最悠久的。常见的卡方检验有：
+卡方检验（Chi-squared test）为非参数检验，不存在具体参数和总体正态分布的假设。最初由统计天王Karl Pearson于1900年提出，是三大抽样（T检验、F检验与卡方检验）分布的检验里历史最悠久的。
+
+卡方检验是比较数据的实测（实际观测值）分布与数的预期（理论预期值）分布的假设检验，检验两者之间的偏离程度，实际观测值与理论预期值之间的偏离程度就决定卡方的大小。如果卡方越大，二者偏差程度越大。相反，二者偏差越小。若两个值完全相等时，卡方值就为0，表明理论值完全符合。有多种类型的卡方检验：
+\begin{itemize}
+    \item 卡方拟合优度检验
+    \begin{itemize}
+        \item 使用此分析检验分类数据样本与总体理论分布的拟合程度
+        \item 例如，通过多次掷骰子并使用卡方拟合优度检验来确定结果是否服从均匀分布，可以检验骰子是否公平。
+    \end{itemize}
+    \item 相关性和独立性卡方检验
+    \begin{itemize}
+        \item 相关性检验：可以使用相关性检验确定一个变量是否与另一个变量关联。例如，确定不同颜色的汽车的销量是否取决于汽车售出的城市
+        \item 独立性检验：可以使用独立性检验确定一个变量的观测值是否取决于另一个变量的观测值。例如，确定某人投票的候选人是否与投票人的性别无关。
+    \end{itemize}
+\end{itemize}
+
+常见的卡方检验有：
 \begin{itemize}
     \item 皮尔逊卡方检验（Pearson's chi squared test）
     \item 耶茨的连续性修正（Yates's correction for continuity）
@@ -490,12 +505,18 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
     \item Fisher确切概率法（Fisher's exact test）
 \end{itemize}
 
+
+假设有随机变量$x_1,x_2,\dots,x_k$为独立随机变量，服从$N(0,1)$的标准正态分布。其令平方和为$Q$。则有$Q$服从自由度为$K$的卡方分布，即：
+\begin{equation*}
+    Q = \sum_{i=1}^{k} x_i^2 \qquad Q \sim \chi^2(k) \quad\text{or}\quad Q \sim \chi_k^2
+\end{equation*}
+
 对于自由度为$k$的卡方分布的概率密度函数（PDF）有：
 \begin{equation*}
     f(x) = \frac{1}{2^{\frac{k}{2}}\Gamma\left(\frac{k}{2}\right)} x^{\frac{k}{2}-1} e^{-\frac{x}{2}}
 \end{equation*}
 
-对于卡方分布自由度$k<2$时，曲线呈现倒L形，当$k>2$时趋向于对称，而当$k\rightarrow \infty$时，则趋向于正态分布。
+卡方检验为单尾检验，拒绝域在右尾。当卡方分布的自由度$k<2$时，曲线呈现倒L形，当$k>2$时趋向于对称，而当$k\rightarrow \infty$时，则趋向于正态分布。
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/chi-squared.png}
@@ -504,21 +525,33 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 \end{figure}
 
 
-统计样本的实际观测值与理论推断值之间的偏离程度，实际观测值与理论推断值之间的偏离程度就决定卡方值的大小，如果卡方值越大，二者偏差程度越大；反之，二者偏差越小；若两个值完全相等时，卡方值就为0，表明理论值完全符合。
+
+\subsubsection{卡方拟合优度检验}
+    
+卡方拟合优度检验（Chi-square goodness of fit）或称拟合度的卡方检验、最佳拟合度卡方检验，用于检验实际数据是否符合理论分布，即度量实际分布与理论分布的拟合优度（Goodness of fit），
 
 
-假设有随机变量$x_1,x_2,\dots,x_k$为独立随机变量，服从$N(0,1)$的标准正态分布。其令平方和为$Q$。则有$Q$服从自由度为$K$的卡方分布，即：
+对于离散情形下，假设随机抽样的总样本量为$n$，分为互斥的$k$类，每一类的个体数为$x_i,\; i=1,2,\dots,k$为实际频数，同时有$k$理论概率为，原假设为：
 \begin{equation*}
-    Q = \sum_{i=1}^{k} x_i^2 \qquad Q \sim \chi^2(k) \quad\text{or}\quad Q \sim \chi_k^2
+    H_0: \text{第k类的占比为} p_i \quad i=1,2,\dots,k
 \end{equation*}
 
-卡方检验也可以用来检验样本方差与总体方差是否相等，假设总体服从正态分布。
+此时有卡方统计量，服从自由度为$k-1$的卡方分布：
+\begin{equation*}
+    \chi^2 = \sum_{i=1}^{k} \frac{(x_i-np_i)^2}{np_i} \sim \chi^2(k-1)
+\end{equation*}
 
- The test statistic T in this instance could be set to be the sum of squares about the sample mean, divided by the nominal value for the variance (i.e. the value to be tested as holding). Then T has a chi-squared distribution with n − 1 degrees of freedom. 
+
+皮尔逊卡方检验（Pearson's chi squared test）
+与pearson's chi-squared test相同？？？
+A为实际频数（Actual frequency）
+T为理论频数（Theoretical frequency）
 
 
-\subsubsection{Goodness of fit}
+关于总体比例
 
+
+\subsubsection{皮尔逊卡方检验}
 Pearson's chi-squared test
 \begin{equation*}
     \chi^2 = \sum_i^n \frac{(O_i - E_i)^2}{E_i}
@@ -528,6 +561,31 @@ Pearson's chi-squared test
     \item $O_i$ the number of observations of type i
     \item $E_i$ the expected(theoretical) number of type i
 \end{itemize}
+
+
+
+
+
+
+
+
+
+
+\subsubsection{确切概率法}
+
+确切概率法（Excat Test）最常见的为Fisher确切概率法或称为四格表概率直接计算法
+为2x2卡方独立性（independence）检验 
+
+同时还有二项检验（Binomial test），为2x1卡方（goodness of fit）检验
+
+\subsubsection{方差检验}
+
+卡方检验也可以用来检验样本方差与总体方差是否相等，假设总体服从正态分布。
+
+ The test statistic T in this instance could be set to be the sum of squares about the sample mean, divided by the nominal value for the variance (i.e. the value to be tested as holding). Then T has a chi-squared distribution with n − 1 degrees of freedom. 
+
+但由于总体方差一般未知，因此较少使用
+
 
 【待补充】
 

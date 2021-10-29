@@ -483,30 +483,14 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 
 卡方检验（Chi-squared test）为非参数检验，不存在具体参数和总体正态分布的假设。最初由统计天王Karl Pearson于1900年提出，是三大抽样（T检验、F检验与卡方检验）分布的检验里历史最悠久的。
 
-卡方检验是比较数据的实测（实际观测值）分布与数的预期（理论预期值）分布的假设检验，检验两者之间的偏离程度，实际观测值与理论预期值之间的偏离程度就决定卡方的大小。如果卡方越大，二者偏差程度越大。相反，二者偏差越小。若两个值完全相等时，卡方值就为0，表明理论值完全符合。有多种类型的卡方检验：
-\begin{itemize}
-    \item 卡方拟合优度检验
-    \begin{itemize}
-        \item 使用此分析检验分类数据样本与总体理论分布的拟合程度
-        \item 例如，通过多次掷骰子并使用卡方拟合优度检验来确定结果是否服从均匀分布，可以检验骰子是否公平。
-    \end{itemize}
-    \item 相关性和独立性卡方检验
-    \begin{itemize}
-        \item 相关性检验：可以使用相关性检验确定一个变量是否与另一个变量关联。例如，确定不同颜色的汽车的销量是否取决于汽车售出的城市
-        \item 独立性检验：可以使用独立性检验确定一个变量的观测值是否取决于另一个变量的观测值。例如，确定某人投票的候选人是否与投票人的性别无关。
-    \end{itemize}
-\end{itemize}
-
-常见的卡方检验有：
+卡方检验是比较数据的实测（实际观测值）分布与数的预期（理论预期值）分布的假设检验，检验两者之间的偏离程度，实际观测值与理论预期值之间的偏离程度就决定卡方的大小。如果卡方越大，二者偏差程度越大。相反，二者偏差越小。若两个值完全相等时，卡方值就为0，表明理论值完全符合。常见的卡方检验有：
 \begin{itemize}
     \item 皮尔逊卡方检验（Pearson's chi squared test）
     \item 耶茨的连续性修正（Yates's correction for continuity）
-    \item 卡方拟合优度检验（Chi-square goodness of fit test）
     \item Fisher确切概率法（Fisher's exact test）
 \end{itemize}
 
-
-假设有随机变量$x_1,x_2,\dots,x_k$为独立随机变量，服从$N(0,1)$的标准正态分布。其令平方和为$Q$。则有$Q$服从自由度为$K$的卡方分布，即：
+假设有随机变量$x_1,x_2,\dots,x_k$为独立随机变量，服从$N(0,1)$的标准正态分布。其令平方和为$Q$。则有$Q$服从自由度为$k>0$的卡方分布，即：
 \begin{equation*}
     Q = \sum_{i=1}^{k} x_i^2 \qquad Q \sim \chi^2(k) \quad\text{or}\quad Q \sim \chi_k^2
 \end{equation*}
@@ -524,52 +508,96 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
     \label{fig:chi-squared}
 \end{figure}
 
-
-
-\subsubsection{卡方拟合优度检验}
-    
-卡方拟合优度检验（Chi-square goodness of fit）或称拟合度的卡方检验、最佳拟合度卡方检验，用于检验实际数据是否符合理论分布，即度量实际分布与理论分布的拟合优度（Goodness of fit），
-
-
-对于离散情形下，假设随机抽样的总样本量为$n$，分为互斥的$k$类，每一类的个体数为$x_i,\; i=1,2,\dots,k$为实际频数，同时有$k$理论概率为，原假设为：
-\begin{equation*}
-    H_0: \text{第k类的占比为} p_i \quad i=1,2,\dots,k
-\end{equation*}
-
-此时有卡方统计量，服从自由度为$k-1$的卡方分布：
-\begin{equation*}
-    \chi^2 = \sum_{i=1}^{k} \frac{(x_i-np_i)^2}{np_i} \sim \chi^2(k-1)
-\end{equation*}
-
-
-皮尔逊卡方检验（Pearson's chi squared test）
-与pearson's chi-squared test相同？？？
-A为实际频数（Actual frequency）
-T为理论频数（Theoretical frequency）
-
-
-关于总体比例
-
-
 \subsubsection{皮尔逊卡方检验}
-Pearson's chi-squared test
+
+皮尔逊卡方检验（Pearson's chi-squared test），当提及卡方检验，通常即指皮尔逊卡方检验。其中$O_i$指实际观察频数，$E_i$指理论预期频数：
 \begin{equation*}
     \chi^2 = \sum_i^n \frac{(O_i - E_i)^2}{E_i}
 \end{equation*}
 
+皮尔逊卡方检验有多种用途：
 \begin{itemize}
-    \item $O_i$ the number of observations of type i
-    \item $E_i$ the expected(theoretical) number of type i
+    \item 卡方拟合优度检验
+    \begin{itemize}
+        \item 使用此分析检验分类数据样本与总体理论分布的拟合程度
+        \item 例如，通过多次掷骰子并使用卡方拟合优度检验来确定结果是否服从均匀分布，可以检验骰子是否公平。
+    \end{itemize}
+    \item 独立性和卡方检验
+    \begin{itemize}
+        \item 独立性检验：可以使用独立性检验确定一个变量的观测值是否取决于另一个变量的观测值。例如，确定某人投票的候选人是否与投票人的性别无关。
+        \item 相关性检验：可以使用相关性检验确定一个变量是否与另一个变量关联。例如，确定不同颜色的汽车的销量是否取决于汽车售出的城市
+    \end{itemize}
 \end{itemize}
 
+\subsubsection*{卡方拟合优度检验}
+    
+卡方拟合优度检验（Chi-square goodness of fit）或称拟合度的卡方检验、最佳拟合度卡方检验，用于检验实际数据是否符合理论分布，即度量实际分布与理论分布的拟合优度（Goodness of fit）。对于离散情形下，假设随机抽样的总样本量为$n$，分为互斥的$k$类，每一类的个体数为$x_i,\; i=1,2,\dots,k$为实际频数（个数），同时有$k$理论频数为，原假设为：
+\begin{equation*}
+    H_0: \text{第k类的占比为} p_i \quad i=1,2,\dots,k
+\end{equation*}
 
+此时有卡方统计量，分子为实际频数与理论频数的平方。服从自由度为$k-1$的卡方分布：
+\begin{equation*}
+    \chi^2 = \sum_{i=1}^{k} \frac{(x_i-np_i)^2}{np_i} \sim \chi^2(k-1)
+\end{equation*}
 
+\begin{example}
+    孟德尔提出遗传第二定律，他发现有四种不同种类的豌豆种子：黄色圆形的、黄色褶皱的、绿色圆形的、绿色褶皱的。这些表现型类别(由可观察到的特征定义的类别)以大约9:3:3:1的比例出现。假设实际频数为315:108:101:32，总频数为556。那对于理论频数应有：
+    \begin{equation*}
+        556 \frac{9}{16} : 556 \frac{3}{16} : 556 \frac{3}{16} : 556 \frac{1}{16} = 312.75:104.25:104.25:34.75
+    \end{equation*}
 
+    因此计算卡方统计量有：
+    \begin{equation*}
+        \chi^2 = \frac{(315-312.75)^2}{312.75} + \frac{(108-104.25)^2}{104.25} + \frac{(101-104.25)^2}{104.25} + \frac{(32-34.75)^2}{34.75} = 0.47
+    \end{equation*}
 
+    对于显著性水平$alpha=0.05$，$\chi_(0.05,3)^2 = 7.815 > 0.47$，因此无法拒绝原假设，实验结果符合理论预期。
+\end{example}
 
+\subsubsection*{卡方独立性检验}
 
+卡方独立性检验可用于判断两种因素是否独立，原假设为两种因素之间独立，而备择假设为两种因素之间非独立。
 
+\begin{example}
+    假设在赌场中，老板认为以为负责二十一点的庄家赔付的金额高于平均值，三位庄家观察的数据如下：
+    \begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+    \toprule
+    & \textbf{庄家甲} & \textbf{庄家乙} & \textbf{庄家丙} & \textbf{合计} \\ \midrule
+    \textbf{胜}  & 43 & 49 & 22 & 114 \\
+    \textbf{平}  & 8 & 2 & 5 & 15 \\
+    \textbf{负}  & 47 & 44 & 30 & 121 \\
+    \textbf{合计} & 98 & 95 & 57 & 250 \\ \bottomrule
+    \end{tabular}
+    \end{table}
 
+    此时原假设为庄家和赌局结果没有关系，而备择假设为有关系。对于庄家甲胜场的情况下，假设庄家与独具相互独立，应有理论频率为：
+    \begin{align*}
+        P(\text{庄家甲胜场}) &= \text{总场数} \times P(\text{庄家甲参加比例}) \times P(\text{胜场比例}) \\
+        &= 250 \times \frac{114}{250} \times \frac{98}{250}
+    \end{align*}
+
+    计算所有理论频数为：
+    \begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}cccc@{}}
+    \toprule
+    & \textbf{庄家A}& \textbf{庄家B} & \textbf{庄家C} \\ \midrule
+    \textbf{胜} & $(114\times 98)/250$ & $(114\times 95)/250$ & $(114\times 57)/250$ \\
+    \textbf{平} & $(15\times 98)/250$  & $(15\times 95)/250$  & $(15\times 57)/250$  \\
+    \textbf{负} & $(121\times 98)/250$ & $(121\times 95)250$  & $(121\times 57)/250$ \\ \bottomrule
+    \end{tabular}
+    \end{table}
+
+    计算卡方统计量：
+    \begin{equation*}
+        \chi^2 = \sum_i^n \frac{(O_i - E_i)^2}{E_i} = 5.62
+    \end{equation*}
+
+    对于显著性水平$alpha=0.05$，$\chi_(0.05,4)^2 = 9.488 > 5.62 $，因此无法拒绝原假设，赌局的胜负与庄家没有关系。
+\end{example}
 
 \subsubsection{确切概率法}
 
@@ -585,7 +613,6 @@ Pearson's chi-squared test
  The test statistic T in this instance could be set to be the sum of squares about the sample mean, divided by the nominal value for the variance (i.e. the value to be tested as holding). Then T has a chi-squared distribution with n − 1 degrees of freedom. 
 
 但由于总体方差一般未知，因此较少使用
-
 
 【待补充】
 

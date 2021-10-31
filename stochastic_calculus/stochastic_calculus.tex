@@ -399,7 +399,7 @@
 \end{tabular}
 \end{table}
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{fig/lognormal-distribution.png}
     \caption{两者相互转换}
@@ -505,7 +505,7 @@
 
 \begin{example}
     当名义利率为$12\%$时，有年化实际利率（Effective annual interest rate或Annual equivalent rate，AER）为：
-    \begin{table}[ht!]
+    \begin{table}[H]
     \centering
     \begin{tabular}{@{}lll@{}}
     \toprule
@@ -660,7 +660,7 @@ $n$期几何平均收益率有：
 
 已知正态分布有如下性质：$X_1$与$X_2$为两个独立的正态分布的随机变量（均值为$\mu_1$与$\mu_2$，标准差为$\sigma_1$与$\sigma_2$），则有随机变量$Y=X_1+X_2$服从均值为$\mu_1+\mu_2$，方差为$\sigma_1^2+\sigma_2^2$的正态分布。\textbf{注意}:为随机变量相加（Sum of normally distributed random variables），而非正态分布相叠加（Sum of normal distribution）。如图
 \ref{fig:mix-dist}所示，正态分布相叠加将产生混合分布（Mixture distribution）。
-\begin{figure}[ht!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{fig/gaussian-mixture-distribution.png}
     \caption{混合分布}
@@ -1899,7 +1899,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
 
 对于远期（期货）而言，\textbf{升水}（contango）指当期货价格高于现货价格，此时有负基差。也称为正向市场（Normal market），即期限较短的合约（Near-maturity contract）价格低于期限较远的合约（Far-maturity contract）。相反而言，如期货价格低于现货价格，则称期货\textbf{贴水}（Backwardation），此时为现货溢价，有正基差。或称为逆向市场（Inverted market），即期限较短合约的价格高于期限较远的合约。
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \centering
     \begin{tikzpicture}
         \draw[->,thick] (0,0) node[below]{$t$} -- (4,0) node[below]{时间} -- (9,0);
@@ -1923,10 +1923,10 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
 
 从现货角度出发，在现实测度下设$\mu$为到期收益率，则应有$\E_t[S_T]=S_t e^{\mu(T-t)}$，此时$\mu$为无风险收益率与风险溢酬之和。如果标的资产$S$\textbf{系统性风险为正}，则要求有\textbf{正的风险溢酬}。在T时刻，假设期货价格$S_T = F_{T,T}$为2000，标的资产的系统风险为正，对持有者不利，则要求500元的正的风险溢价为承担风险的补偿，此时$S_t$为1500元。则有到期收益率大于无风险收益率$\mu>r$，因为承担额外的风险需要额外的风险溢酬作为回报。
 
-\begin{figure}[ht!]  
+\begin{figure}[H]  
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-    \begin{tikzpicture}[scale=0.88]
+    \begin{subfigure}[b]{0.5\textwidth}
+    \begin{tikzpicture}[scale=0.9]
         \draw[->,thick] (0,0) node[below] {$t$} -- (6,0) node[below] {时间};  
         \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
         \draw (4.5,0) node[below] {$T$} -- (4.5,4);
@@ -1940,9 +1940,9 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \end{tikzpicture}
     \subcaption{正系统性风险} 
     \label{fig:M1}  
-    \end{subfigure}
-    \begin{subfigure}[b]{0.45\textwidth}
-    \begin{tikzpicture}[scale=0.88]
+    \end{subfigure}%
+    \begin{subfigure}[b]{0.5\textwidth}
+    \begin{tikzpicture}[scale=0.9]
         \draw[->,thick] (0,0) node[below] {$t$} -- (6,0) node[below] {时间};  
         \draw[->,thick] (0,0) -- (0,4) node[above] {价格};  
         \draw (4.5,0) node[below] {$T$} -- (4.5,4);
@@ -1964,7 +1964,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
 
 从期货角度出发，同样在现实测度下，因为购买期货无需占用资金（假设保证金可获得无风险收益），所以不要求无风险收益。仅要求对其承担的未来不确定性风险，有对应的风险补偿，收益率为$\mu-r$，可以得到$\E_t[F_{T,T}] = F_{t,T} e^{(\mu-r)(T-t)}$。期货到期日T时刻，有期货价格等于现货价格$F_{T,T} = S_T$，即在t时刻下也应有两者期望$\E_t[F_{T,T}] = \E_t[S_T]$。另外虽然现货价格可以从市场交易信息中得到，但由于期货市场交易成本较低，反应较为灵敏迅速，价格变化一般都由期货市场传递至现货市场。在t时刻，期货与现货以及其现实测度期望关系如下图所示：
 
-\begin{figure}[ht!]  
+\begin{figure}[H]  
     \centering
     \begin{tikzpicture}
         \draw [<->,thick] (1,0) node [left,xshift=-0.4em]{$S_t$} -- (6,0) node [right]{$\E_t[S_T]$} node [midway,below,yshift=-0.4em]{\small $\E_t[S_T] = S_t e^{\mu(T-t)}$};
@@ -1998,7 +1998,7 @@ PCP平价可以直接从BS公式中推导；
 \end{itemize}
 
 在T时刻，投资组合A与B有：
-\begin{table}[ht!]
+\begin{table}[H]
 \centering
 \begin{tabular}{ccc}
 \toprule
@@ -2060,7 +2060,7 @@ $S_T < K$ & $0$ & $(K - S_T) + (S_T-K)$ \\
 \end{equation*}
 
 目前中国市场中所拥有的金融衍生品与其标的资产如下：
-\begin{table}[ht!]
+\begin{table}[H]
 \centering
 \begin{tabular}{@{}cccc@{}}
 \toprule

@@ -12,7 +12,7 @@
 
 \section{TODO}
 \begin{itemize}
-    \item exact test
+    \item degree of freedom
     \item likelihood, log-likelihood, goodness-of-fit, quasi-maximum likelihood, ratio test
     \item Newey West 1987
 \end{itemize}
@@ -108,7 +108,7 @@
 
 而物理中的矩与数学中的矩概念相通，而在概率论上，如一端秤砣重量为中奖金额$500$元，中奖概率为百分之一，即离中心点距离为$0.01$，那么其期望应为为$5$元。可以理解为了使得秤保持平衡，则另一端，在距离中心距离为$1$，对应其秤砣重量中奖金额应为$5$元。
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{fig/moment-matching.png}
     \caption{矩匹配}
@@ -138,7 +138,7 @@
 \subsection{分类}
 
 根据如上定义，从零阶至四阶的原始矩与中心矩有如下定义，其中定义$\sigma = \left(\E[(X-\mu)^2]\right)^{\frac{1}{2}}$。正态分布由它的前两阶矩决定，而对于其他的分布，需要了解更高阶矩。同时注意到三阶矩以上都称标准矩，如同方差要去除均值的影响，偏度和峰度也要去除方差的影响。
-\begin{table}[ht!]
+\begin{table}[H]
 \centering
 \begin{tabular}{@{}clll@{}}
 \toprule
@@ -389,7 +389,7 @@ T检验（或称Student's t test）是一种参数检验，即假设样本服从
 \end{equation*}
 
 而z分布与t分布的差异可见图\ref{fig:z-and-t-dist}，并且根据自由度不同而不同，以下图为例，可以看到当自由度变大，当样本量$n$变大时t分布不断接近标准正态分布。z分布与t分布两者都有均值为$0$。
-\begin{figure}[ht!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{fig/z-dist-and-t-dist.png}
     \caption{z分布与t分布的差异}
@@ -437,47 +437,198 @@ T检验（或称Student's t test）是一种参数检验，即假设样本服从
     H_0: \beta_i = 0, \quad i=1,2,\dots,m
 \end{equation*}
 
+【待补充】
+
 \subsection{F检验}
 
-F检验（F-test）检验两个正态总体之间的方差是否相等，两个样本服从正态分布。
+F检验（F-test），即检验统计量（Test statistic）在原假设下服从F分布（F-distribution）
 
-判断两组数据是否存在显著差异
+主要的作用有如下三大类，而方差分析有可以分为许多类，如按照因素区分可分为单因素和多因素：
+\begin{itemize}
+    \item 方差齐性F检验（F-test of equality of variances）
+    \item 方差分析（Analysis of Variance, ANOVA）
+    \item 线性回归整体显著性检验（F-test of overall significance in regression）
+\end{itemize}
 
-F统计量为两个方差的比率：
-\begin{gather*}
-    F = \frac{\text{explained variance}}{\text{unexplained variance}} \\
-    F = \frac{\text{between-group variability}}{\text{within-group variability}} 
-\end{gather*}
-
-具体而言，$S_1$与$S_2$为独立随机变量，且服从$\chi^2$分布，那么自由度为$\nu_1$与$\nu_2$的服从F分布的随机变量$F$为：
+具体而言，$S_1$与$S_2$为独立随机变量，且服从$\chi^2$分布（多个独立服从标准正态分布随机变量的平方和），那么自由度为$\nu_1$与$\nu_2$的服从F分布的随机变量$F$为：
 \begin{equation*}
     F = \frac{S_1/\nu_1}{S_2/\nu_2}
 \end{equation*}
 
 F分布的概率密度函数为，注意有$x\geq 0$，因为其为两个方差的比率：
 \begin{equation*}
-    f(x) = \frac{\Gamma\left(\frac{\nu_1+\nu_2}{2}\right)\left(\frac{\nu_1}{\nu_2}\right)^{\frac{\nu_1}{2}} x^{\frac{\nu_1}{2}-1}}{\Gamma\left(\frac{\nu_1}{2}\right)\Gamma\left(\frac{\nu_2}{2}\right)\left(1+\frac{\nu_1}{\nu_2}x\right)^{\frac{\nu_1+\nu_2}{2}}} \quad \text{for}\; x\geq 0
+    F\text{-distribution} = \frac{\Gamma\left(\frac{\nu_1+\nu_2}{2}\right)\left(\frac{\nu_1}{\nu_2}\right)^{\frac{\nu_1}{2}} x^{\frac{\nu_1}{2}-1}}{\Gamma\left(\frac{\nu_1}{2}\right)\Gamma\left(\frac{\nu_2}{2}\right)\left(1+\frac{\nu_1}{\nu_2}x\right)^{\frac{\nu_1+\nu_2}{2}}} \quad \text{for}\; x\geq 0
+\end{equation*}
+
+$n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1$与$\nu_2$的F分布（查表用F-table）：
+\begin{equation*}
+    F\text{-statistic} \sim F_{\nu_1,\nu_2}
 \end{equation*}
 
 F分布概率密度函数（PDF）如下图所述，为右偏（Right skew）或正偏（Postive skew）。当$\nu_2>2$时，期望有$\frac{\nu_2}{\nu_2 -2}$。
-\begin{figure}[ht!]
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/f-dist.png}
-    \caption{F分布PDF}
-    \label{fig:f-dist}
+    \includegraphics[width=\linewidth]{fig/f-dist-1.png}
+    \caption{$\nu_1=20$}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig/f-dist-2.png}
+    \caption{$\nu_2=20$}
+\end{subfigure}
+\caption{F分布PDF}
+\label{fig:f-dist}
 \end{figure}
 
-检验变量$y$与$x_1,x_2,\dots,x_m$是否存在线性关系：
+\subsubsection{方差齐次F检验}
+
+检验两个正态总体之间的方差是否相等，原假设为两个正态分布总体的方差相等。假设$X$与$Y$来自两个独立的服从正态分布的整体，即有$X\sim N(\mu_X^2,\sigma_X^2)$和$Y\sim N(\mu_Y^2,\sigma_Y^2)$，从中抽取$m$与$n$个样本，即$X_1,X_2,\dots,X_m$和$Y_1,Y_2,\dots,Y_n$。
+
+因此两者均值和标准差为：
+\begin{gather*}
+    \bar{X} = \frac{1}{m} \sum_{i=1}^{m} X_i \qquad 
+    S_X^2 = \frac{1}{m-1} \sum_{i=1}^{m} \left(X_i -\bar{X}\right)^2 \\
+    \bar{Y} = \frac{1}{n} \sum_{i=1}^{n} Y_i \qquad
+    S_Y^2 = \frac{1}{n-1} \sum_{i=1}^{n} \left(Y_i -\bar{Y}\right)^2
+\end{gather*}
+
+此时双侧的原假设为假设两总体方差相等，备择假设为假设两总体方差不等：
+\begin{align*}
+    H_0: \sigma_X^2 = \sigma_Y^2 \\
+    H_a: \sigma_Y^2 \neq \sigma_Y^2
+\end{align*}
+
+此时F统计量应有，一般约定以较大的方差作为分子，较小的方差作为分母，使得计算出来的$F>1$方便进行查表。假设显著性水平为$\alpha$，此时临界值为$F_{\alpha,(m-1,n-1)}$，当$F>F_{\alpha,(m-1,n-1)}$时，拒绝原假设：
 \begin{equation*}
-    H_0: \beta_1 = \beta_2 = \dots = \beta_m = 0
+    F = \frac{S_X^2}{S_Y^2} \sim F(m-1,n-1)
 \end{equation*}
 
-$n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1$与$\nu_2=N-K$的F分布（查表用F-table）。
+\subsubsection{方差分析}
+
+方差分析（Analysis of variance，ANOVA），可以用于一次性检验多个（两个或两个以上）总体的均值是否相等，而T检验弱面对多个总体，只能两两进行比较。以单因素方差分析（One-way ANOVA）为例，比较不同组之间的均值是否相同。例如研究不同的猪饲料对猪的增重效果是否不同，此时猪饲料为（单）因素，即不同的配方为不同组（水平），随机取样，观察猪增重效果是否相同。又或研究客户满意程度在不同航空公司之间是否不同，此时航空公司为（单）因素，即不同的航空公司为不同组（水平），随机抽样，观察不同航空公司客户满意度的均值是否相同。
+\begin{example}
+    航空公司客户满意度（0-10分）例子
+
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{@{}cccc@{}}
+    \toprule
+    \textbf{甲航空} & \textbf{乙航空} & \textbf{丙航空} & \textbf{丁航空} \\ \midrule
+    8 & 3 & 7 & 8 \\
+    6 & 7 & 8 & 9 \\
+    7 & 5 & 9 & 6 \\
+    5 & 9 &   & 7 \\
+    9 &   &   &   \\ \bottomrule
+    \end{tabular}
+    \end{table}
+\end{example}
+
+注意虽然ANOVA叫做方差分析，但是他的目的是检验每个组的均值是否相同。ANOVA的原假设为$K$个总体的均值相等，$H_0: \mu_1 = \mu_2 = \dots = \mu_K$。可以换个角度考虑这个问题，如果几家公司的客户满意度没有显著的差别，那么可以认为是一个总体的四次随机抽样。相反，若有一家航空公司表现与众不同，那么这家航空公司不是来自同一个总体。ANOVA有主要有以下3个假设：
+\begin{itemize}
+    \item 方差的同质性，可以理解为每组样本背后的总体的的方差相同
+    \item 总体遵循正态分布
+    \item 每一次抽样都是独立的
+\end{itemize}
+
+\textbf{组间}偏差平方和（Sum of square between groups，SSB或SSA）与\textbf{组内}偏差平方和（Sum of square error，SSE）都是偏差的平方和，而两者计算的偏差个数不一样，无法直接相除，因此除以各自的自由度，使得两者在平均的意义下可比。因此有有$MSB = SSB/df_1$和$MSE = SSE/df_2$，其中$df_1=K-1$和$df_2=N-K$为两者自由度。
 \begin{equation*}
-    F-\text{statistic} \sim F_{K-1,N-K}
+    F = \frac{SSB/df_1}{SSE/df_2}= \frac{MSB}{MSE} \sim F(K-1,N-K)
 \end{equation*}
 
-【待补充】
+可以从图\ref{fig:mse-msb}中看到，组内均方（Mean squared error, MSE）对应着为每个样本分布自身的方差。组间均方（Mean squared between，MSB）对应着相当于样本对于总体的方差。可以想象，当两者之间相差越大时，不是来自同一总体（假设）的概率就越大
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/mse-msb.jpg}
+    \caption{MSE和MSB}
+    \label{fig:mse-msb}
+\end{figure}
+
+方差分析表如下，假设显著性水平为$\alpha$，那么有当$F > F_{\alpha,(K-1,N-K)}$时，可以认为这一次抽样几乎不可能，从而拒绝原假设，认为该因素显著：
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+\textbf{偏差来源} & \textbf{偏差平方和} & \textbf{自由度} & \textbf{均方} & \textbf{F值} \\ \midrule
+组间 & SSB & $K-1$ & $MSB=\frac{SSB}{K-1}$ & $\frac{MSA}{MSE}$ \\
+组内 & SSE & $N-K$ & $MSE=\frac{SSE}{N-K}$ &                   \\
+总计 & SST & $N-1$ &                       &                   \\ \bottomrule
+\end{tabular}
+\end{table}
+
+具体而言，假设实验共有$K$个分类（水平），总样本量为$N$，每个分类下有$N_i$个体，并有$N=\sum_{i=1}^{K}N_i$，令$x_{i,j}$为第$i$个分类第$j$个样本。
+
+第$i$组的组内均值为：
+\begin{equation*}
+    \bar{x}_{i,\cdot} = \frac{1}{N_i} \sum_{j=1}^{N_i} x_{i,j}
+\end{equation*}
+
+总体均值为：
+\begin{equation*}
+    \bar{x} = \frac{1}{N} \sum_{i=1}^{K} \sum_{j=1}^{N_i} x_{i,j}
+\end{equation*}
+
+因此，组间偏差平方和应为，组均值与总体均值偏差的平方和。一共有$K$组，均值确定后，只有$K-1$可自由变化，因此SSB的自由度为$K-1$：
+\begin{equation*}
+    SSB = \sum_{i=1}^{K}\sum_{j=1}^{N_i} (\bar{x}_{i,\cdot} - \bar{x})^2 = 
+    \sum_{i=1}^{K} N_i ( \bar{x}_{i,\cdot} - \bar{x})^2
+\end{equation*}
+
+组内偏差平方和应有，即个体与组内均值偏差的平方和。$N$个个体，每个组的平均值$\bar{x}_{i,\cdot}$确定后，只有$N-K$可自由变动，因此SSE的自由度为$N-K$：
+\begin{equation*}
+    SSE = \sum_{i=1}^{K}\sum_{j=1}^{N_i} (x_{i,j} - \bar{x}_{i,\cdot})^2
+\end{equation*}
+
+那么总偏差平方和（Sum of square total，SST）为个体与总体平均值偏差的平方和。当$\bar{x}$确定后，有$N-1$可自由变换，因此SST自由度为$N-1$：
+\begin{equation*}
+    SST = \sum_{i=1}^{K}\sum_{j=1}^{N_i} (x_{i,j} - \bar{x})^2 = SSB + SSE
+\end{equation*}
+
+\begin{proof}
+    对于SST的分解有：
+    \begin{align*}
+        SST &= \sum_{i=1}^{K}\sum_{j=1}^{N_i} (x_{i,j} - \bar{x})^2 \\
+        &= \sum_{i=1}^{K}\sum_{j=1}^{N_i} \left[(x_{i,j} - \bar{x}_{i,\cdot}) + (\bar{x}_{i,\cdot} - \bar{x})\right]^2 \\
+        &= \sum_{i=1}^{K}\sum_{j=1}^{N_i} (x_{i,j} - \bar{x}_{i,\cdot})^2 + \sum_{i=1}^{K}\sum_{j=1}^{N_i} (\bar{x}_{i,\cdot} - \bar{x})^2 + 2\sum_{i=1}^{K}\sum_{j=1}^{N_i} (\bar{x}_{i,\cdot} - \bar{x})(x_{i,j} - \bar{x}_{i,\cdot}) \\
+        &= \sum_{i=1}^{K}\sum_{j=1}^{N_i} (x_{i,j} - \bar{x}_{i,\cdot})^2 + \sum_{i=1}^{K}\sum_{j=1}^{N_i} (\bar{x}_{i,\cdot} - \bar{x})^2 + 2\sum_{i=1}^{K} \left[ (\bar{x}_{i,\cdot} - \bar{x}) \sum_{j=1}^{N_i} (x_{i,j} - \bar{x}_{i,\cdot}) \right]
+    \end{align*}
+
+    由于：
+    \begin{equation*}
+        \sum_{j=1}^{N_i} (x_{i,j} - \bar{x}_{i,\cdot}) = \sum_{j=1}^{N_i} x_{i,j} - N_i \bar{x}_{i,\cdot} = 0
+    \end{equation*}
+
+    因此SST推导中最后一项为0，可以消去，得到最终结果：
+    \begin{equation*}
+        SST = SSB + SSE
+    \end{equation*}
+\end{proof}
+
+\subsubsection{线性回归整体显著性检验}
+
+F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dots,x_k$，两者之间的整体线性关系是否显著，检验的是线性方程整体的显著性。假设有如下回归方程：
+\begin{equation*}
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_k x_k
+\end{equation*}
+
+若各回归系数$\beta_i \;(i =1,2,\dots,k)$均为0，则被解释变量$y$与解释变量$x_i\;(i=1,2,\dots,k)$没有任何关系，回归模型变为$y=\beta_0$，只有截距项。反之，若各回归系数$\beta_i$中仅有部分为$0$，则对于这部分回归系数不为0的$x_i$而言，该回归模型还是有意义的。因此原假设与备择假设如下：
+\begin{gather*}
+    H_0: \beta_1 = \beta_2 = \dots = \beta_k = 0 \\
+    H_a: \beta_i (i=1,2,\dots,k) \text{不全为0}
+\end{gather*}
+
+方差分析表如下，假设显著性水平为$\alpha$，那么有当$F > F_{\alpha,(p,n-p-1)}$时，可以认为这一次抽样几乎不可能，从而拒绝原假设，认为该因素显著：
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+\textbf{偏差来源} & \textbf{偏差平方和} & \textbf{自由度} & \textbf{均方} & \textbf{F值} \\ \midrule
+回归 & SSR & $p$ & $MSR=\frac{SSR}{k}$ & $\frac{MSA}{MSE}$ \\
+误差 & SSE & $n-p-1$ & $MSE=\frac{SSE}{n-k-1}$ &                   \\
+总计 & SST & $n-1$ &                       &                   \\ \bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{\tops{$\chi^2$}检验}
 
@@ -490,7 +641,7 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
     \item Fisher确切概率法（Fisher's exact test）
 \end{itemize}
 
-假设有随机变量$x_1,x_2,\dots,x_k$为独立随机变量，服从$N(0,1)$的标准正态分布。其令平方和为$Q$。则有$Q$服从自由度为$k>0$的卡方分布，即：
+假设有随机变量$x_1,x_2,\dots,x_k$为独立随机变量，服从$N(0,1)$的标准正态分布。其令平方和为$Q$，注意此为随机变量的平方和，并非分布的平方和。则有$Q$服从自由度为$k>0$的卡方分布，即：
 \begin{equation*}
     Q = \sum_{i=1}^{k} x_i^2 \qquad Q \sim \chi^2(k) \quad\text{or}\quad Q \sim \chi_k^2
 \end{equation*}
@@ -501,7 +652,7 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 \end{equation*}
 
 卡方检验为单尾检验，拒绝域在右尾。当卡方分布的自由度$k<2$时，曲线呈现倒L形，当$k>2$时趋向于对称，而当$k\rightarrow \infty$时，则趋向于正态分布。
-\begin{figure}[ht!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/chi-squared.png}
     \caption{卡方分布PDF}
@@ -517,21 +668,21 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 
 皮尔逊卡方检验有多种用途：
 \begin{itemize}
-    \item 卡方拟合优度检验
+    \item 卡方拟合优度检验（Chi-square goodness-of-fit tests）
     \begin{itemize}
         \item 使用此分析检验分类数据样本与总体理论分布的拟合程度
         \item 例如，通过多次掷骰子并使用卡方拟合优度检验来确定结果是否服从均匀分布，可以检验骰子是否公平。
     \end{itemize}
-    \item 独立性和卡方检验
+    \item 卡方关系检验（Chi-square tests for relationships）
     \begin{itemize}
-        \item 独立性检验：可以使用独立性检验确定一个变量的观测值是否取决于另一个变量的观测值。例如，确定某人投票的候选人是否与投票人的性别无关。
-        \item 相关性检验：可以使用相关性检验确定一个变量是否与另一个变量关联。例如，确定不同颜色的汽车的销量是否取决于汽车售出的城市
+        \item 独立性检验（Test of independence）：可以使用独立性检验确定一个变量的观测值是否取决于另一个变量的观测值。例如，确定总统候选人党派是否与投票人的性别无关（同一人群样本，两个分类变量，性别与党派）。
+        \item 同质性检验（Test of homogeneity）：可以使用同质性检验不同样本中同一个变量的分布是否相同。例如，确定不同颜色的汽车的销量是否取决于汽车售出的城市（随机选择城市不同样本，汽车颜色为单一变量）
     \end{itemize}
 \end{itemize}
 
 \subsubsection*{卡方拟合优度检验}
     
-卡方拟合优度检验（Chi-square goodness of fit）或称拟合度的卡方检验、最佳拟合度卡方检验，用于检验实际数据是否符合理论分布，即度量实际分布与理论分布的拟合优度（Goodness of fit）。对于离散情形下，假设随机抽样的总样本量为$n$，分为互斥的$k$类，每一类的个体数为$x_i,\; i=1,2,\dots,k$为实际频数（个数），同时有$k$理论频数为，原假设为：
+卡方拟合优度检验或称拟合度的卡方检验、最佳拟合度卡方检验，用于检验实际数据是否符合理论分布，即度量实际分布与理论分布的拟合优度（Goodness of fit）。对于离散情形下，假设随机抽样的总样本量为$n$，分为互斥的$k$类，每一类的个体数为$x_i,\; i=1,2,\dots,k$为实际频数（个数），同时有$k$理论频数为，原假设为：
 \begin{equation*}
     H_0: \text{第k类的占比为} p_i \quad i=1,2,\dots,k
 \end{equation*}
@@ -552,16 +703,25 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
         \chi^2 = \frac{(315-312.75)^2}{312.75} + \frac{(108-104.25)^2}{104.25} + \frac{(101-104.25)^2}{104.25} + \frac{(32-34.75)^2}{34.75} = 0.47
     \end{equation*}
 
-    对于显著性水平$alpha=0.05$，$\chi_(0.05,3)^2 = 7.815 > 0.47$，因此无法拒绝原假设，实验结果符合理论预期。
+    对于显著性水平$\alpha=0.05$，$\chi_{0.05,3}^2 = 7.815 > 0.47$，因此无法拒绝原假设，实验结果符合理论预期。
 \end{example}
 
-\subsubsection*{卡方独立性检验}
+\subsubsection*{卡方独立性与同质性检验}
 
-卡方独立性检验可用于判断两种因素是否独立，原假设为两种因素之间独立，而备择假设为两种因素之间非独立。
+卡方相关性与独立性的检验，检验的方式并无不同，主要差异在于实验的设计和如何解读实验结果。若将不同样本理解为分类变量，也可认为是独立性检验，可以理解为同质性检验为独立性检验的延伸，用于一些特殊情形，例如检验待检测产品的特性、小白鼠的体重等，产品和小白鼠并无实质的差异，当然可以设置为待测产品或小白鼠以不同批次划分，为随机抽取的结果，而非本质上的划分。具体而言，在独立检测中有两个根据其本质划分的分类变量，而在同质性检验中，其中一个变量是随机产生的（随机选取批次），不能视为一个分类变量，因此只能进行同质性检验。
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\toprule
+& \textbf{研究对象} & \textbf{研究目的} \\ \midrule
+\textbf{独立性} & 单一样本下的两个分类变量 & 同一个样本下，两个分类变量是否独立 \\
+\textbf{同质性} & 多个样本下度量同一分类变量 & 不同的样本是否同质，即分类变量的分布是否相同 \\ \bottomrule
+\end{tabular}
+\end{table}
 
 \begin{example}
     假设在赌场中，老板认为以为负责二十一点的庄家赔付的金额高于平均值，三位庄家观察的数据如下：
-    \begin{table}[ht!]
+    \begin{table}[H]
     \centering
     \begin{tabular}{@{}ccccc@{}}
     \toprule
@@ -573,14 +733,14 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
     \end{tabular}
     \end{table}
 
-    此时原假设为庄家和赌局结果没有关系，而备择假设为有关系。对于庄家甲胜场的情况下，假设庄家与独具相互独立，应有理论频率为：
+    此时原假设为庄家和赌局结果没有关系，即两者独立，而备择假设为有关系，两者不独立。对于庄家甲胜场的情况下，假设庄家与独具相互独立，应有理论频率为：
     \begin{align*}
         P(\text{庄家甲胜场}) &= \text{总场数} \times P(\text{庄家甲参加比例}) \times P(\text{胜场比例}) \\
         &= 250 \times \frac{114}{250} \times \frac{98}{250}
     \end{align*}
 
     计算所有理论频数为：
-    \begin{table}[ht!]
+    \begin{table}[H]
     \centering
     \begin{tabular}{@{}cccc@{}}
     \toprule
@@ -596,29 +756,22 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
         \chi^2 = \sum_i^n \frac{(O_i - E_i)^2}{E_i} = 5.62
     \end{equation*}
 
-    对于显著性水平$alpha=0.05$，$\chi_(0.05,4)^2 = 9.488 > 5.62 $，因此无法拒绝原假设，赌局的胜负与庄家没有关系。
+    对于显著性水平$\alpha=0.05$，$\chi^2_{0.05,4} = 9.488 > 5.62$，因此无法拒绝原假设，赌局的胜负与庄家没有关系。
 \end{example}
 
-\subsubsection{确切概率法}
-
-确切概率法（Excat Test）最常见的为Fisher确切概率法或称为四格表概率直接计算法
-为2x2卡方独立性（independence）检验 
-
-同时还有二项检验（Binomial test），为2x1卡方（goodness of fit）检验
-
-\subsubsection{方差检验}
-
-卡方检验也可以用来检验样本方差与总体方差是否相等，假设总体服从正态分布。
-
- The test statistic T in this instance could be set to be the sum of squares about the sample mean, divided by the nominal value for the variance (i.e. the value to be tested as holding). Then T has a chi-squared distribution with n − 1 degrees of freedom. 
-
-但由于总体方差一般未知，因此较少使用
-
-【待补充】
-
-\subsection{方差分析}
-
-方差分析（Analysis of variance，ANOVA），可以用于一次性检验多个（两个或两个以上）总体的均值是否相等，而T检验弱面对多个总体，只能两两进行比较。
+\begin{example}
+    以泰坦尼克号的生还者与遇难者的数据为例，计算可计算出生还的概率约为$32\%$，因此头等舱乘客的生还的理论概率为$32\%\times 325 \approx 104$，继续计算所有理论频数。得到$\chi^2 = 192.2$，此时自由度有$df=(4-1)(2-1)=3$，因此在显著水平$\alpha=0.05$下临界值$\chi^2_{0.05,3} = 7.815 < 192.2$，因此拒绝四个类别的乘客生还率相同的原假设。
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    & \textbf{头等舱} & \textbf{二等舱} & \textbf{三等舱} & \textbf{船员} & \textbf{合计} \\ \midrule
+    \textbf{生还} & 202 & 118 & 178 & 215 & 713 \\
+    \textbf{遇难} & 123 & 167 & 528 & 698 & 1516 \\
+    \textbf{合计} & 325 & 285 & 796 & 913 & 2229 \\ \bottomrule
+    \end{tabular}
+    \end{table}
+\end{example}
 
 \section{条件概率}
 
@@ -635,7 +788,7 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 
 \begin{example}
     假设有两个小碗，分别为甲碗与乙碗，每个小碗中有若干小球，共有蓝色与黄色两种颜色，具体数量如下。
-    \begin{table}[ht!]
+    \begin{table}[H]
     \centering
     \begin{tabular}{cccc}\toprule
     & \textbf{蓝色} & \textbf{黄色} \\ \midrule
@@ -651,7 +804,7 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 
 \begin{example}
     假设某病患被检测出了某癌症阳性，该癌症在人群中的患病率（Prevalence）为$0.1\%$，并且该诊断的正确率为$99\%$。
-    \begin{figure}[ht!]
+    \begin{figure}[H]
     \centering
     \begin{tikzpicture}[
     grow = right, 
@@ -683,7 +836,7 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
     \end{align*}
 
     或使用表格表示：
-    \begin{table}[ht!]
+    \begin{table}[H]
     \centering
     \begin{tabular}{@{}lcc@{}} \toprule
     & 患有癌症（0.001） & 不患癌症（0.999） \\ \midrule
@@ -713,7 +866,7 @@ $n$为样本数，$K$为变量数目，F统计量服从以自由度为$\nu_1=K-1
 
 \begin{example}
     有一个骰子，假设当掷出来的数字为偶数（如：$2,4,6$）时$X=1$，而奇数时$X=0$。同时假设当掷出来的数字为质数（如：$2,3,5$）时$Y=1$，其他情况下$Y=0$。
-    \begin{table}[ht!]
+    \begin{table}[H]
     \centering
     \begin{tabular}{@{}ccccccc@{}}
     \toprule
@@ -844,7 +997,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 \begin{example}
     继续使用小球的例子，并计算相应概率有：
-    \begin{table}[ht!]
+    \begin{table}[H]
     \centering
     \begin{tabular}{cccc}\toprule
     & \text{蓝色（0.4）} & \text{黄色（0.6）} \\ \midrule
@@ -890,7 +1043,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \end{equation*}
     
     贝叶斯定理可以通过图形进行理解与记忆，假设如下为边长为1的正方形，此时正方形面积为1代表整体概率为1。
-    \begin{figure}[ht!]
+    \begin{figure}[H]
     \centering
         \begin{tikzpicture}
             \draw (0, 0) rectangle (4, 4);
@@ -1259,7 +1412,7 @@ used to test for heteroskedasticity in a linear regression model
     s(\theta) = \frac{\partial \log \mcl(\theta)}{\partial \theta}
 \end{equation*}
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/W-L-S-test.png}
     \caption{Likelihood/Wald/Score Test}

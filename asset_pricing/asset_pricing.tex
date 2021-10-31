@@ -1,15 +1,25 @@
 \documentclass[11pt]{article}
-\usepackage{amsmath}
-\usepackage{bm}
-\usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
-\usepackage[UTF8]{ctex}
-\title{资产定价}
-\author{杨弘毅}
-\date{\today}
+
+\def\articlename{资产定价}
+\def\authorname{杨弘毅}
+\def\startdate{2021年6月10日}
+
+\input{../header.tex}
+
 \begin{document}
 \maketitle
+\tableofcontents
 
-\section{CAPM}
+\section{TODO}
+\begin{itemize}
+    \item campbell-shiller分解
+\end{itemize}
+
+
+\section{传统资产定价模型}
+
+\subsection{CAPM}
+
 根据CAPM模型：
 \begin{equation*}
     E[R_i] - R_f = \beta_i(E[R_M]-R_f)
@@ -19,13 +29,15 @@ $R_i$为某资产i的收益率，$R_f$为无风险收益率，$R_M$为市场组�
 
 系统性风险（Systematic risk），又称市场风险或不可分散风险，是影响所有资产的、不能通过资产组合而消除的风险。这部分风险是由那些影响整个市场的风险所引起的，无论怎样分散投资，也不可能消除系统性风险。避免集中投资于单一市场可减少系统性风险。单项资产、证券资产组合或不同公司受系统性风险影响不一样，系统性风险的大小通常用beta系数（$\beta$系数）来衡量。
 
+\subsection{APT}
 
-\section{APT}
 Ross（1976）提出了著名的套利定价理论（Arbitrage Pricing Theory，APT），为多元线性模型:
 \begin{equation*}
     E[\bm{R_i^e}] = \bm{\beta' \lambda}
 \end{equation*}
-同CAPM模型一样，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。
+
+同CAPM模型一样，$\mathbb{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。
+
 
 
 \end{document}

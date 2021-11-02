@@ -1,6 +1,7 @@
-# Xetex
+# Setup
 
 ## Preparation
+
 - Tex Live
 - Visual Studio Code
 - Latex Workshop
@@ -15,6 +16,7 @@ Download
 [Latex Workshop](https://github.com/James-Yu/LaTeX-Workshop/wiki/Install)
 
 ## VSCode setting
+
 ```json
     "latex-workshop.latex.tools": [
         {
@@ -108,8 +110,8 @@ Download
       ],
 ```
 
-
 ## SumatraPDF setting
+
 ```
-C:\Users\dyang\AppData\Local\Programs\Microsoft VS Code\Code.exe "C:\Users\dyang\AppData\Local\Programs\Microsoft VS Code\resources\app\out\cli.js" -r -g "%f:%l"
+"C:\Users\dyang\AppData\Local\Programs\Microsoft VS Code\code.exe" "C:\Users\dyang\AppData\Local\Programs\Microsoft VS Code\resources\app\out\cli.js" -r -g "%f:%l"
 ```

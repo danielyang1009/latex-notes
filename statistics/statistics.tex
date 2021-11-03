@@ -1273,7 +1273,7 @@ $\mu$为常数，不随时间改变，而$\gamma_l$指依赖时间间距$l$的�
     Q^{*}(m) = T\sum_{i=1}^{m} \hat{\rho}_{l}^{2}
 \end{equation*}
 
-$Q^{*}(m)$渐进地服从自由度为$m$的$\chi^2$分布，检验原假设为无显著序列相关（自相关），而备择假设为有显著的序列相关性。当拒绝原假设$H_0$时，则代表该时间序列有显著的序列相关性：
+$Q^{*}(m)$渐进地服从自由度为$m$的$\chi^2$分布，\uline{检验原假设为无显著序列相关（自相关）}，而备择假设为有显著的序列相关性。即当\uline{拒绝原假设}$H_0$时，则代表该时间序列有显著的序列相关性：
 \begin{align*}
     H_0&: \rho_1=\dots=\rho_{m}=0 \\
     H_1&: \text{对于某}\; i \in \{1,\dots,m\},\rho_i \neq 0
@@ -1322,8 +1322,6 @@ $\sigma_{\varepsilon}^{2}$为$\varepsilon_t$的方差，由于方差有限，应
 \end{equation*}
 
 \subsection{自回归模型}
-
-\subsubsection{AR(1)模型}
 
 假设收益率$r_t$具有统计显著的间隔为$1$的自相关系数，说明在预测$r_t$时，$r_{t-1}$也发挥了较大的作用，因此可以建立简单的线性回归模型：
 \begin{equation*}
@@ -1408,7 +1406,7 @@ $\sigma_{\varepsilon}^{2}$为$\varepsilon_t$的方差，由于方差有限，应
     \rho_l = \frac{\Cov(r_t,r_{t-l})}{\Var(r_t)} = \phi_1^l
 \end{equation*}
 
-\subsubsection{AR(2)模型}
+\subsubsection*{AR(2)模型}
 
 AR(2)模型，如同AR(1)模型，为$r_t$自身与其滞后一阶与滞后两阶的函数：
 \begin{equation*}
@@ -1420,12 +1418,133 @@ AR(2)模型，如同AR(1)模型，为$r_t$自身与其滞后一阶与滞后两�
     \E(r_t) = \mu = \frac{\phi_0}{1-\phi_1-\phi_2}
 \end{equation*}
 
+将$\phi_0 = (1-\phi_1-\phi_2)\mu$代回AR(2)模型中，可得：
+\begin{equation*}
+    r_t - \mu = \phi_1(r_{t-1}-\mu) + \phi_2(r_{t-2}-\mu) + \varepsilon_t
+\end{equation*}
 
-\subsubsection{AR(p)模型}
+两边同乘以$(r_{t-l}-\mu)$，得到：
+\begin{align*}
+    (r_{t-l} - \mu)(r_t - \mu) = \phi_1 (r_{t-l}-\mu)(r_{t-1} - \mu)
+    + \phi_2 (r_{t-l}-\mu)(r_{t-2} - \mu) + (r_{t-l}-\mu) \varepsilon_t
+\end{align*}
 
+由于$\E\left[(r_{t-l} - \mu)\varepsilon_t\right]$，对等式两边取期望则有：
+\begin{equation*}
+    \gamma_l = \phi_1 \gamma_{l-1} + \phi_2 \gamma_{l-2} \qquad l>0
+\end{equation*}
 
+对上式同除$\gamma_0$可得$r_t$的ACF性质有：
+\begin{equation*}
+    \rho_l = \phi_1 \rho_{l-1} + \phi_2 \rho_{l-2} \qquad l>0
+\end{equation*}
+
+并且有$\rho_1 = \phi_1 \rho_{0} + \phi_2 \rho_{-1} = \phi_1 \rho_{0} + \phi_2 \rho_{1} $，因此对于平稳的AR(2)序列$r_t$应有：
+\begin{align*}
+    \rho_0 &= 1 \\
+    \rho_1 &= \frac{\rho_1}{1-\rho_2} \\
+    \rho_l &= \phi_1 \rho_{l-1} + \phi_2 \rho_{l-2} \qquad l \geq 2
+\end{align*}
+
+令$B$为向后推移算子（back-shift operator），即有$B \times \rho_l = \rho_{l-1}$，有时也用$L$表示（Lag operator，滞后算子）。可以写成如下形式：
+\begin{equation*}
+    (1-\phi_1 B - \phi_2 B^2)\rho_l = 0
+\end{equation*}
+
+该方程对应二次多项式，或称为\uline{逆特征方程}，并且方程的解，称为\uline{逆特征解}：
+\begin{gather*}
+    1 - \phi_1 x - \phi_2 x^2 = 0 \\
+    x = \frac{\phi_1 \pm \sqrt{\phi_{1}^{2} + 4\phi_2}}{-2\phi_2}
+\end{gather*}
+
+假设方程的解（逆特征解）为$\omega_1$和$\omega_2$，在时间序列文献中，称这两个解的倒数即$1/\omega_1$与$1/\omega_2$为AR(2)模型的\textbf{特征根}（Characteristic roots），即逆特征解与特征解为互为倒数。AR(2)序列平稳的条件就是两个特征根的模都小于$1$，或逆特征根大于$1$，保证模型的自相关函数随着滞后$l$长度的增加，而趋向于$0$，即历史冲击的影响越来越小,为序列平稳的必要条件。
+
+\subsubsection*{AR(p)模型}
+
+同样将AR(1)与AR(2)的结果推广至AR(p)模型，对于平稳的AR(p)序列，其均值为：
+\begin{equation*}
+    \E(r_t) = \mu = \frac{\phi_0}{1 - \phi_1 - \dots - \phi_p}
+\end{equation*}
+
+对应的逆特征方程有：
+\begin{equation*}
+    1 - \phi_1 x - \phi_2 x^2 - \dots - \phi_p x^p= 0
+\end{equation*}
+
+该方程的所有解得模都大于1，则有序列$\{r_t\}$是平稳的。或换言之，解得倒数为该模型的\uline{特征根}，平稳性要求所有特征根的模都小于1。对于AR(p)的平稳性有如下充分必要条件：
+\begin{figure}[H]
+\centering
+    \begin{tikzpicture}
+        \node (x) at (0,0) {AP(p)为弱平稳};
+        \node (y) at (4,0) {所有特征根的模小于1};
+        \path[->]
+            (x) edge[bend left=30] node[pos=0.5,above] {充分条件} (y)
+            (y) edge[bend left=30] node[pos=0.5,below] {必要条件} (x);
+        \end{tikzpicture}
+\caption{AR(p)为弱平稳的充分必要条件}
+\end{figure}
+
+\subsubsection*{特征方程与特征根}
+
+\begin{example}
+    斐波拉契（Fibonacci）数列
+
+    斐波拉契数列满足$a_1=1$，$a_2=1$，且有$a_{n+2} = a_{n+1} + a_{n},\;,n=1,2,\dots$。试图将$a_n$改写为函数形式$f(n)$，则有$a_{n+2} = a_{n+1} + a_{n}$改写为$f(n+2) = f(n+1) + f(n)$。假设已求得该方程的两个特解$f_1$与$f_2$，对于任何实数$c_1$与$c_2$，$f= c_1 f_1 + c_2 f_2$也是方程的解：
+    \begin{gather*}
+        f_1(n+2) = f_1(n+1) + f_1(n) \\
+        f_2(n+2) = f_2(n+1) + f_2(n) \\
+        c_1 f_1(n+2) + c_2 f_2(n+2) = 
+    \end{gather*}
+
+    两式相加，可以看到$f = c_1 f_1 + c_2 f_2$满足原式$f(n+2) = f(n+1) + f(n)$：
+    \begin{equation*}
+        \left( c_1 f_1(n+1) + c_2 f_2(n+1) \right) + \left( c_1 f_1(n)  + c_2 f_2(n) \right) \\
+    \end{equation*}
+
+    代入初始条件$a_1=a_2=1$，即$f(1)=f(2)=1$可以确定两个待定系数。将原式同除$f(n)$得到：
+    \begin{equation*}
+        \frac{f(n+2)}{f(n+1)} \cdot \frac{f(n+1)}{f(n)} - \frac{f(n+1)}{f(n)} - 1 = 0
+    \end{equation*}
+
+    若$\abs{f(n)}$为等比数列，则有上式变为$x^2-x-1=0$为特征方程，其解为$x_{1,2} = \frac{1\pm \sqrt{5}}{2}$，两个特征特解应为：
+    \begin{equation*}
+        f_1(n) = \left(\frac{1+\sqrt{5}}{2}\right)^{n-1} \quad
+        f_2(n) = \left(\frac{1-\sqrt{5}}{2}\right)^{n-1}
+    \end{equation*}
+   
+    该方程的通解应有：
+    \begin{equation*}
+        a_n = f(n) = c_1 f_1(n) + c_2 f_2(n) = 
+        c_1 \left(\frac{1+\sqrt{5}}{2} \right)^{n-1} + c_2 \left( \frac{1-\sqrt{5}}{2} \right)^{n-1}
+    \end{equation*}
+    
+    由初始条件$f(1)=f(2)=1$可得：
+    \begin{gather*}
+        c_1 + c_2 = 1 \\
+        c_1 \left(\frac{1+\sqrt{5}}{2} \right) + c_2 \left( \frac{1-\sqrt{5}}{2} \right) = 1
+    \end{gather*}
+    
+    联立求解可得：
+    \begin{equation*}
+        c_1 = \frac{1}{\sqrt{5}} \left(\frac{1+\sqrt{5}}{2} \right) \qquad
+        c_2 = - \frac{1}{\sqrt{5}} \left(\frac{1-\sqrt{5}}{2} \right)
+    \end{equation*}
+    
+    最终得证：
+    \begin{equation*}
+        a_n = \frac{1}{\sqrt{5}} \left[ \left(\frac{1+\sqrt{5}}{2} \right)^n - B\left( \frac{1-\sqrt{5}}{2} \right)^n \right]
+    \end{equation*}
+\end{example}
 
 \divider
+
+
+偏自相关系数
+
+
+\subsection{残差自相关检验}
+
+To check the serial correlations of residuals, we recommend that the Ljung–Box statistics be used instead of the Durbin–Watson (DW) statistic because the latter only considers the lag-1 serial correlation. There are cases in which serial dependence in residuals appears at higher order lags. This is particularly so when the time series involved exhibits some seasonal behavior.
 
 Durbin-Watson test
 

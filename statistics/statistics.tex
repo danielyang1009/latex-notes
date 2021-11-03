@@ -1561,45 +1561,86 @@ Test statistic
 
 \subsection{移动平均模型}
 
-Moving-average (MA) model
+移动平均模型（Moving-average，MA）
+\begin{equation*}
+    r_t = \phi_0 (1-\theta_1) + a_t - \theta_1 \varepsilon_{t-1}
+\end{equation*}
+
+$r_t$为两个扰动项$a_t$与$a_{t-1}$的加权平均，因此模型称为1阶MA模型，简称MA(1)。其中$\{\varepsilon_t\}$为白噪声序列，且$c_0$为常数：
+\begin{equation*}
+    r_t = c_0 + \varepsilon_{t} - \theta_1 \varepsilon_{t-1}
+\end{equation*}
+
+类似的有MA(2)为：
+\begin{equation*}
+    r_t = c_0 + \varepsilon_{t} - \theta_1 \varepsilon_{t-1} - \theta_2 \varepsilon_{t-2}
+\end{equation*}
+
+MA(q)模型为：
+\begin{equation*}
+    r_t = c_0 + \varepsilon_{t} - \theta_1 \varepsilon_{t-1} - \dots - \theta_q \varepsilon_{t-q}
+\end{equation*}
+
+\subsection{自回归移动平均模型}
+
+自回归移动平均模型（Autoregressive moving-average model，ARMA）。ARMA(1,1)模型有（$\phi_1 \neq \theta_1$）：
+\begin{equation*}
+    r_t - \phi_1 r_{t-1} = \phi_0 + \varepsilon_t - \phi_1 \varepsilon_{t-1}
+\end{equation*}
+
+对于一般的ARMA(p,q)模型而言，有：
+\begin{equation*}
+    r_t = \phi_0 + \sum_{i=1}^{p} \phi_i r_{t-i} + \varepsilon_t - \sum_{i=1}^{q} \theta_i \varepsilon_{t-i}
+\end{equation*}
 
 
 \subsection{自回归移动平均模型}
 
-自回归移动平均模型（Autoregressive moving-average model，ARMA）
+将ARMA推广至允许其AR多项式以1作为它的特征根，则该模型变成了自回归求和移动平均模型（Autoregressive integrated moving average，ARIMA）。因为A多项式有单位根1，因此ARIMA模型称为是单位根非平稳的。
 
-\subsection{差分自回归移动平均模型}
+\subsection{单位根检验}
 
-差分自回归移动平均模型（Autoregressive integrated moving average，ARIMA）
+假设模型有：
+\begin{gather*}
+    p_t = \phi_1 p_{t-1} + \varepsilon_t \\
+    p_t = \phi_0 + \phi_1 p_{t-1} + \varepsilon_t
+\end{gather*}
 
+\begin{equation*}
+    p_t = \phi_1 p_{t-1} + \varepsilon_t
+\end{equation*}
+
+著名的单位单位根检验Dickey和Fuller（1979）的原假设为存在单位根，非平稳。而备择假设为该序列为平稳的，有：
+\begin{gather*}
+    H_0: \phi_1 = 1 \\
+    H_a: \phi_1 < 1
+\end{gather*}
+
+使用最小二乘法估计T检验：
+\begin{gather*}
+    \hat{\phi}_1 = \frac{\sum_{t=1}^{T} p_{t-1}p_t}{\sum_{t=1}^{T} p_{t-1}^{2}} \\
+    \hat{\sigma}_{\varepsilon}^{2} = \frac{\sum_{t=1}^{T} \left(p_t - \hat{\phi}_1 p_{t-1} \right)^2}{T-1}
+\end{gather*}
+
+假设$p_0=0$，T为样本容量，此时\textbf{Dickey-Fuller检验}的统计量为：
+\begin{equation*}
+    DF = \frac{\hat{\phi}_1 - 1}{s.d.(\hat{\phi}_1)}
+    = \frac{\sum_{t=1}^{T} p_{t-1} e_t}{\hat{\sigma}_{\varepsilon} \sqrt{\sum_{t=1}^{T} p_{t-1}^{2}}} 
+\end{equation*}
+
+对于计量常用的AR(p)模型而言，为了检验AR(p)模型是否存在单位根，可以使用\textbf{扩展的Dickey-Fuller检验}（Augmented Dickey-Fuller）。其中原假设为$H_0: \beta=1$，而备择假设为$H_a: \beta<1$，模型有：
+\begin{equation*}
+    x_t = c_t + \beta x_{t-1} + \sum_{i=1}^{p-1}\phi_i \Delta x_{t-i} + \varepsilon_t
+\end{equation*}
+
+$\Delta x_{i}= x_i -x_{i-1}$为$x_t$的差分数列，且$c_t$可以使零或者常数，或$c_t=\omega_0 + \omega_1 t$。ADF检验的统计量如下，其中$\hat{beta}$为$\beta$的最小二乘估计：
+\begin{equation*}
+    ADF = \frac{\hat{\beta}-1}{s.e.(\hat{\beta})}
+\end{equation*}
 
 \subsection{格兰杰因果关系}
 
 格兰杰因果关系检验（Granger causality test）是一种假设检验的统计方法，检验一组时间序列x是否为另一组时间序列y的原因。它的基础是回归分析当中的自回归模型。
-
-\subsection{单位根}
-
-Dickey-Fuller test
-H0: there is unit root, $\delta = \rho - 1 =0$, no stationary, random walk
-H1: stationay, mean and variance do not change over time
-
-A simple AR(1) model $y_t = \alpha + \rho y_{t-1} + u_t$, then we have $\Delta y_t = \alpha + (\rho -1) y_{t-1} + u_t = \alpha + \delta y_{t-1} + u_t$, 
-
-Augmented Dickey-Fuller 
-
-H0: there is unit root, $\delta = 0$
-H1: stationary, $\delta < 0$
-
-ADF test: $\Delta y_t = \alpha + \delta y_{t-1} + \beta_1 \Delta y_{t-1} + \cdots + \beta_{p} \Delta y_{t-p} + u_t$
-
-AR(1) model: $\Delta y_t = \alpha + \delta y_{t-1} + u_t$
-AR(2) model: $\Delta y_t = \alpha + \delta y_{t-1} + \beta \Delta y_{t-1} + u_t$
-
-Test statistics: (negative, more negatvie -> reject H0)
-
--  $DF_{\delta} = \frac{\hat{\delta}}{SE(\hat{\delta})}$
-
-ADF-Test: 检验结果为负，越负越拒绝原假设，即有单位根。单位根存在，即$y_t = a + b y_{t-1} + e_t$，$\abs{b} =1$，为随机。
 
 \section{条件异方差模型}
 

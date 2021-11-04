@@ -1829,6 +1829,15 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
         = \sigma_{t}^{2} \\
         &= \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
     \end{align*}
+
+    同时其$a_t$的无条件方差为：
+    \begin{align*}
+        \Var(a_t) &= \E\left[(a_t - E[a_t])^2\right] \\
+        &= \E(a_t^2) = \E\left[ \E(a_t^2 \given F_{t-1}) \right]
+        = \E\left[ \E(\sigma_t^2 \varepsilon_t^2 \given F_{t-1}) \right] \\
+        &= \E\left[ \sigma_t^2 \E( \varepsilon_t^2 \given F_{t-1}) \right] = \E\left[ \sigma_t^2 \right] \\
+        &= \E\left[ \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2 \right]
+    \end{align*}
 \end{proof}
 
 \subsubsection{ARCH模型的性质}

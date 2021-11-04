@@ -13,6 +13,7 @@
 \section{TODO}
 \begin{itemize}
     \item degree of freedom
+    \item 最大似然法（条件似然法），精确似然法
     \item likelihood, log-likelihood, goodness-of-fit, quasi-maximum likelihood, ratio test
     \item Newey West 1987
 \end{itemize}
@@ -34,7 +35,7 @@
 
 其性质有：
 \begin{align*}
-    \E[X+Y] &= \E[X] + \E[Y] \\
+    \E[X \pm Y] &= \E[X] \pm \E[Y] \\
     \E[aX] &= a \E[X] \\
     \E[XY] &= \E[X]\E[Y] \quad \text{(X,Y are independent)}
 \end{align*}
@@ -1166,6 +1167,17 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 测量了数只老鼠的重量，尝试找到其分布，miximizes the likelihood 找到最大化所有观察重量likelihood的分布，找到mean 和standard deviation
 
+得分检验（Score test），score（informant） is the gradient of the log-likelihood function with respect to the parameter vetor.
+\begin{equation*}
+    s(\theta) = \frac{\partial \log \mcl(\theta)}{\partial \theta}
+\end{equation*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/W-L-S-test.png}
+    \caption{Likelihood/Wald/Score Test}
+\end{figure}
+
 \section{回归模型}
 
 \subsection{回归模型分类}
@@ -1189,6 +1201,38 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \item 支持向量机（Support vector regression）
     \item 光滑样条（Smoothing spline）
 \end{itemize}
+
+\subsection{最小二乘估计}
+
+有n个观察值$\{x_i,y_i\}_{i=1}^{n}$，其线性回归模型有如下形式：
+\begin{equation*}
+    y_i = \beta_0 + x_{i,0} + \beta_1 x_{i,1} + \beta_2 x_{i2} + \dots + \beta_{p-1} x_{i,p-1} + \varepsilon_{i}
+\end{equation*}
+
+或改写为向量形式为如下所示，其中$\bm{x}_i = [x_{i,0},x_{i,2},\dots,x_{i,p-1}]^{T}$为$p\times 1$的列向量，$\bm{\beta}$也是$p \times 1$的列向量：
+\begin{equation*}
+    y_i = \bm{x}_{i}^{'} \bm{\beta} + \varepsilon_i
+\end{equation*}
+
+若写成矩阵形式，则有$\bm{Y}=[y_1,\dots,y_n]^{T}$、$\bm{\beta}=[\beta_1,\dots,\beta_n]^{T}$与$\bm{\varepsilon}=[\varepsilon_1,\dots,\varepsilon_n]^{T}$都为$n\times 1$的列向量，$\bm{X}$为$n\times p$，即$n$行$p$列的矩阵（$x_{\cdot,0}=1$）：
+\begin{equation*}
+    \bm{X} =
+    \begin{bmatrix}
+        1 & x_{1,1} & x_{1,2} & \cdots & x_{1,p-1} \\
+        1 & x_{2,1} & x_{2,2} & \cdots & x_{2,p-1} \\
+        1 & \vdots  & \vdots  & \ddots & \vdots    \\
+        1 & x_{n,1} & x_{n,2} & \cdots & x_{n,p-1} \\
+    \end{bmatrix}
+\end{equation*}
+
+此时矩阵形式有：
+\begin{equation*}
+    \bm{Y} = \bm{X} \bm{\beta} + \bm{\varepsilon}
+\end{equation*}
+
+
+【待补充】时间序列的估计，使用OLS，也需要满足OLS的假设，否则估计有偏
+
 
 \section{时间序列}
 
@@ -1249,7 +1293,7 @@ $\mu$为常数，不随时间改变，而$\gamma_l$指依赖时间间距$l$的�
 
 此时$\hat{\rho}_1,\hat{\rho}_2,\dots$称为\textbf{样本自相关函数}（Autocorrelation Function，ACF）。若$\{r_t\}$为\textbf{独立同分布}（i.i.d.）序列，满足$\E(r_t^2)<\infty$，那么对于任意正整数$l$，有$\hat{p}_l$渐进的服从均值为$0$、方差为$1/T$的$N\sim(0,\frac{1}{T})$的正态分布。
 
-若$\{r_t\}$为\textbf{弱平稳}序列，满足$r_t = \mu + \sum_{i=0}^{q}\psi_i \varepsilon_{t-i}$，其中$\phi_0=1$，$\{\varepsilon_t\}$为均值为0的独立同分布变量序列，对于$l>q$，则有$\hat{p}_l$渐进的服从如下正态分布，称为Bartlett公式：
+若$\{r_t\}$为\textbf{弱平稳}序列，满足$r_t = \mu + \sum_{i=0}^{q}\psi_i a_{t-i}$，其中$\phi_0=1$，$\{a_t\}$为均值为0的独立同分布变量序列，对于$l>q$，则有$\hat{p}_l$渐进的服从如下正态分布，称为Bartlett公式：
 \begin{equation*}
     \hat{p}_l \sim N\left(0,\frac{\left( 1+2\sum_{i=1}^{q}\rho_i^2 \right)}{T} \right)    
 \end{equation*}
@@ -1295,23 +1339,23 @@ Ljung和Box（1978）提高有限样本时的检验功效，修改后的统计�
 
 如下时间序列称为线性时间序列（Linear time series），则有：
 \begin{equation*}
-    r_t = \mu + \sum_{i=0}^{\infty} \psi_i \varepsilon_{t-i} = \mu + \psi_0 \varepsilon_{t} + \psi_1 \varepsilon_{t-1} + \psi_2 \varepsilon_{t-2} + \dots
+    r_t = \mu + \sum_{i=0}^{\infty} \psi_i a_{t-i} = \mu + \psi_0 a_{t} + \psi_1 a_{t-1} + \psi_2 a_{t-2} + \dots
 \end{equation*}
 
-其中$\mu$为$r_t$的均值，$\pi_0=1$，并且$\{\varepsilon_t\}$为均值为零的独立同分布随机变量序列，即$\{\varepsilon_t\}$为白噪声序列。可以认为$\varepsilon_t$表示该时间序列$t$时刻出现的新息（Innovation）或扰动（Shock）。其中$r_t$系数被称为$\psi$-权重，若$r_t$为弱平稳，则可以利用$\{\varepsilon_t\}$的独立性得到：
+其中$\mu$为$r_t$的均值，$\pi_0=1$，并且$\{a_t\}$为均值为零的独立同分布随机变量序列，即$\{a_t\}$为白噪声序列。可以认为$a_t$表示该时间序列$t$时刻出现的新息（Innovation）或扰动（Shock）。其中$r_t$系数被称为$\psi$-权重，若$r_t$为弱平稳，则可以利用$\{a_t\}$的独立性得到：
 \begin{equation*}
-    \E(r_t) = \mu \qquad \Var(r_t) = \sigma_{\varepsilon}^{2}\sum_{i=0}^{\infty} \psi_{i}^{2}
+    \E(r_t) = \mu \qquad \Var(r_t) = \sigma_{a}^{2}\sum_{i=0}^{\infty} \psi_{i}^{2}
 \end{equation*}
 
-$\sigma_{\varepsilon}^{2}$为$\varepsilon_t$的方差，由于方差有限，应有$\Var(r_t)<+\infty$，所以$\{\psi_{i}^{2}\}$必须是收敛序列，当$i\rightarrow\infty$时，$\psi_{i}^{2}\rightarrow 0$，即随着$i$的增大，越早的历史扰动对当前时点的$r_t$影响越小，直至消失。$r_t$与间隔$l$的自协方差为：
+$\sigma_{a}^{2}$为$a_t$的方差，由于方差有限，应有$\Var(r_t)<+\infty$，所以$\{\psi_{i}^{2}\}$必须是收敛序列，当$i\rightarrow\infty$时，$\psi_{i}^{2}\rightarrow 0$，即随着$i$的增大，越早的历史扰动对当前时点的$r_t$影响越小，直至消失。$r_t$与间隔$l$的自协方差为：
 \begin{align*}
     \gamma_l &= \Cov(r_t,r_{t-l})
     = \E\left[\left(r_t - \mu \right) \left(r_{t-l} - \mu \right) \right] \\
-    &= \E\left[\left( \sum_{i=0}^{\infty} \psi_i \varepsilon_{t-i} \right) \left( \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-l-j} \right) \right] \\
-    &= \E \left[ \left( \psi_0 \varepsilon_{t} + \psi_1 \varepsilon_{t-1}  + \dots + \psi_l \varepsilon_{t-l} + \psi_{l+1} \varepsilon_{t-l-1}  + \dots \right) \left( \psi_0 \varepsilon_{t-l} + \psi_1 \varepsilon_{t-l-1} + \dots \right) \right] \\
-    &= \E \left( \psi_l \phi_0 \varepsilon_{t-l} \varepsilon_{t-l} + \psi_{l+1} \phi_1 \varepsilon_{t-l-1} \varepsilon_{t-l-1}  + \dots \right)\\
-    &= \sum_{i=0}^{\infty} \psi_{i+l} \psi_{i} \E(\varepsilon_{t-l-i}^{2}) 
-    = \sigma_{\varepsilon}^{2} \sum_{i=0}^{\infty} \psi_i \psi_{i+l} 
+    &= \E\left[\left( \sum_{i=0}^{\infty} \psi_i a_{t-i} \right) \left( \sum_{j=0}^{\infty} \psi_j a_{t-l-j} \right) \right] \\
+    &= \E \left[ \left( \psi_0 a_{t} + \psi_1 a_{t-1}  + \dots + \psi_l a_{t-l} + \psi_{l+1} a_{t-l-1}  + \dots \right) \left( \psi_0 a_{t-l} + \psi_1 a_{t-l-1} + \dots \right) \right] \\
+    &= \E \left( \psi_l \phi_0 a_{t-l} a_{t-l} + \psi_{l+1} \phi_1 a_{t-l-1} a_{t-l-1}  + \dots \right)\\
+    &= \sum_{i=0}^{\infty} \psi_{i+l} \psi_{i} \E(a_{t-l-i}^{2}) 
+    = \sigma_{a}^{2} \sum_{i=0}^{\infty} \psi_i \psi_{i+l} 
 \end{align*}
 
 此时$\psi$-权重与$r_t$自相关系数有如下关系：
@@ -1321,23 +1365,23 @@ $\sigma_{\varepsilon}^{2}$为$\varepsilon_t$的方差，由于方差有限，应
     = \frac{\sum_{i=0}^{\infty} \psi_i \psi_{i+l}}{1+ \sum_{i=0}^{\infty} \psi_i^2} \qquad l \geq 0
 \end{equation*}
 
-\subsection{自回归模型}
+\subsection{自回归模型（AR）}
 
 假设收益率$r_t$具有统计显著的间隔为$1$的自相关系数，说明在预测$r_t$时，$r_{t-1}$也发挥了较大的作用，因此可以建立简单的线性回归模型：
 \begin{equation*}
-    r_t = \phi_0 + \phi_1 r_{t-1} + \varepsilon_t
+    r_t = \phi_0 + \phi_1 r_{t-1} + a_t
 \end{equation*}
 
-其中$\{\varepsilon_t\}$为均值为0，方差为$\sigma_{\varepsilon}^2$的白噪音，此时由于$r_t$为因变量，$r_{t-1}$为自变量，因此如上模型也被称为自回归模型（Autoregressive model，AR），由于与自身滞后一阶自回归，因此称为一阶自回归模型或AR(1)模型。在过去收益率$r_{t-1}$已知条件下。有其均值与方差（波动来源于白噪声）有：
+其中$\{a_t\}$为均值为0，方差为$\sigma_{a}^2$的白噪音，此时由于$r_t$为因变量，$r_{t-1}$为自变量，因此如上模型也被称为自回归模型（Autoregressive model，AR），由于与自身滞后一阶自回归，因此称为一阶自回归模型或AR(1)模型。在过去收益率$r_{t-1}$已知条件下。有其均值与方差（波动来源于白噪声）有：
 \begin{align*}
     \E(r_t \given r_{t-l}) &= \phi_0 + \phi_1 r_{t-1} \\
     \Var(r_t \given r_{t-l}) &= \E\left[\left(r_t - \E(r_t) \right)^2\right] \\
-    & = \E \left(\varepsilon_t^2\right) = \Var(\varepsilon_t) = \sigma_{\varepsilon}^{2}
+    & = \E \left(a_t^2\right) = \Var(a_t) = \sigma_{a}^{2}
 \end{align*}
 
 对AR(1)模型进行推广，因此p阶的AR模型表示在给定过去数据时，那么滞后1阶至p阶联合决定了$r_t$的条件期望：
 \begin{equation*}
-    r_t = \phi_0 + \phi_1 r_{t-1} +  \phi_2 r_{t-2} + \dots +  \phi_p r_{t-p}  + \varepsilon_t
+    r_t = \phi_0 + \phi_1 r_{t-1} +  \phi_2 r_{t-2} + \dots +  \phi_p r_{t-p}  + a_t
 \end{equation*}
 
 假设AR(1)是弱平稳的，则有$\E(r_t)=\mu$为常数，$\Var(r_t)=\gamma_0$为常数，$\Cov(r_t,r-l) = \gamma_l$是$l$的函数与$t$无关。对AR(1)模型两边取均值，得到：
@@ -1352,35 +1396,35 @@ $\sigma_{\varepsilon}^{2}$为$\varepsilon_t$的方差，由于方差有限，应
 
 改写上式，利用$\phi_0 = \mu(1-\phi_1)$，代入AR(1)中有：
 \begin{equation*}
-    r_t = \mu(1-\phi_1) + \phi_1 r_{t-1} + \varepsilon_t = \mu + \phi_1 (r_{t-1}-\mu)+ \varepsilon_t 
+    r_t = \mu(1-\phi_1) + \phi_1 r_{t-1} + a_t = \mu + \phi_1 (r_{t-1}-\mu)+ a_t 
 \end{equation*}
 
-将$r_{t-1} - \mu = \phi_1 (r_{t-2}-\mu)+ \varepsilon_{t-1}$代入上式，得：
+将$r_{t-1} - \mu = \phi_1 (r_{t-2}-\mu)+ a_{t-1}$代入上式，得：
 \begin{align*}
-    r_t - \mu &= \phi_1 \left(\phi_1 (r_{t-2}-\mu)+ \varepsilon_{t-1} \right) \\
-    &= \phi_1^2 (r_{t-2}-\mu)+ \phi_1 \varepsilon_{t-1} + \varepsilon_t
+    r_t - \mu &= \phi_1 \left(\phi_1 (r_{t-2}-\mu)+ a_{t-1} \right) \\
+    &= \phi_1^2 (r_{t-2}-\mu)+ \phi_1 a_{t-1} + a_t
 \end{align*}
 
 重复上述流程，重复代入，可以得到：
 \begin{equation*}
-    r_t - \mu = \varepsilon_t + \phi_1 \varepsilon_{t-1} + \phi_2 \varepsilon_{t-2} + \dots = \sum_{i=0}^{\infty} \phi_{1}^{i} \varepsilon_{t-i}
+    r_t - \mu = a_t + \phi_1 a_{t-1} + \phi_2 a_{t-2} + \dots = \sum_{i=0}^{\infty} \phi_{1}^{i} a_{t-i}
 \end{equation*}
 
-可以看到，AR(1)模型为一般线性时间序列$r_t = \mu + \sum_{i=0}^{\infty} \psi_i \varepsilon_{t-i}$，当$\psi_i = \phi_{1}^{i}$时的特殊形式。由上式可知，$r_t-\mu$为$\varepsilon_t$的线性组合，且$\varepsilon_t$互相独立，那么应有$\E\left((r_{t}-\mu)\varepsilon_{t+1}\right)=0$，因此有：
+可以看到，AR(1)模型为一般线性时间序列$r_t = \mu + \sum_{i=0}^{\infty} \psi_i a_{t-i}$，当$\psi_i = \phi_{1}^{i}$时的特殊形式。由上式可知，$r_t-\mu$为$a_t$的线性组合，且$a_t$互相独立，那么应有$\E\left((r_{t}-\mu)a_{t+1}\right)=0$，因此有：
 \begin{equation*}
-    \Cov(r_{t-1},\varepsilon_t) = \E\left[(r_{t-1} - \mu)(\varepsilon_{t} - 0) \right] = 0
+    \Cov(r_{t-1},a_t) = \E\left[(r_{t-1} - \mu)(a_{t} - 0) \right] = 0
 \end{equation*}
 
 对AR(1)模型的两边取方差，常数的方差为零，注意包含协方差项，则有：
 \begin{align*}
-    \Var(r_t) &= \Var(\phi r_{t-1} + \varepsilon_t) \\
-    &= \phi_{1}^{2} \Var(r_{t-1}) + \sigma_{\varepsilon}^{2} + \phi_1 \cancel{\Cov (r_{t-1},\varepsilon_t)} \\
-    &= \phi_{1}^{2} \Var(r_{t-1}) + \sigma_{\varepsilon}^{2}
+    \Var(r_t) &= \Var(\phi r_{t-1} + a_t) \\
+    &= \phi_{1}^{2} \Var(r_{t-1}) + \sigma_{a}^{2} + \phi_1 \cancel{\Cov (r_{t-1},a_t)} \\
+    &= \phi_{1}^{2} \Var(r_{t-1}) + \sigma_{a}^{2}
 \end{align*}
 
 此时由于平稳性，则有方差相等，即$\Var(r_{t}) = \Var(r_{t-1})$，因此：
 \begin{equation*}
-    \Var(r_{t}) = \frac{\sigma_{\varepsilon}^{2}}{1-\phi_{1}^{2}}
+    \Var(r_{t}) = \frac{\sigma_{a}^{2}}{1-\phi_{1}^{2}}
 \end{equation*}
 
 此时由于方差是非负且有限的，那么则应有$\phi_{1}^{2}<1$。这样由AR(1)模型的弱平稳性可推得$-1<\phi_1<1$，为充分条件。反之，由$\phi_1<1$可推出AR(1)是弱平稳的，为必要条件。综上所述，AR(1)模型是弱平稳的\textbf{充分必要条件}是$\abs{\phi_1}<1$。
@@ -1389,16 +1433,16 @@ $\sigma_{\varepsilon}^{2}$为$\varepsilon_t$的方差，由于方差有限，应
 
 已知当AR(1)时，有$\psi_i = \phi_1^i$，则$r_t$的方差应有：
 \begin{equation*}
-    \gamma_0 = \Var(r_t) = \sigma_{\varepsilon}^{2}\sum_{i=0}^{\infty} \psi_{i}^{2}
-    = \sigma_{\varepsilon}^{2}\sum_{i=0}^{\infty} \left( \phi_1^{i}\right)^{2}
+    \gamma_0 = \Var(r_t) = \sigma_{a}^{2}\sum_{i=0}^{\infty} \psi_{i}^{2}
+    = \sigma_{a}^{2}\sum_{i=0}^{\infty} \left( \phi_1^{i}\right)^{2}
 \end{equation*}
 
 将$\phi_1^{i+l}$分解为$\phi_1^{i}\phi_1^{l}$，同时有自协方差$\gamma_l$：
 \begin{equation*}
-    \gamma_l = \sigma_{\varepsilon}^{2} \sum_{i=0}^{\infty} \psi_i \psi_{i+l} 
-    = \sigma_{\varepsilon}^{2} \sum_{i=0}^{\infty} \phi_1^i \phi_1^{i+l} 
-    = \sigma_{\varepsilon}^{2} \phi_1^{l} \sum_{i=0}^{\infty} \phi_1^i \phi_1^{i} 
-    = \sigma_{\varepsilon}^{2} \phi_1^{l} \sum_{i=0}^{\infty} \left( \phi_1^i \right)^2
+    \gamma_l = \sigma_{a}^{2} \sum_{i=0}^{\infty} \psi_i \psi_{i+l} 
+    = \sigma_{a}^{2} \sum_{i=0}^{\infty} \phi_1^i \phi_1^{i+l} 
+    = \sigma_{a}^{2} \phi_1^{l} \sum_{i=0}^{\infty} \phi_1^i \phi_1^{i} 
+    = \sigma_{a}^{2} \phi_1^{l} \sum_{i=0}^{\infty} \left( \phi_1^i \right)^2
 \end{equation*}
 
 因此有当$l>0$时，有$\gamma_l=\phi_1 \gamma_{l-1}$或$\gamma_l=\phi_1^l \gamma_{0}$.同时AR(1)模型的自相关系数为（$\rho_0=1$）：
@@ -1410,7 +1454,7 @@ $\sigma_{\varepsilon}^{2}$为$\varepsilon_t$的方差，由于方差有限，应
 
 AR(2)模型，如同AR(1)模型，为$r_t$自身与其滞后一阶与滞后两阶的函数：
 \begin{equation*}
-    r_t = \phi_0 + \phi_1 r_{t-1} + \phi_2 r_{t-2} + \varepsilon_t
+    r_t = \phi_0 + \phi_1 r_{t-1} + \phi_2 r_{t-2} + a_t
 \end{equation*}
 
 同理可以得到其期望：
@@ -1420,16 +1464,16 @@ AR(2)模型，如同AR(1)模型，为$r_t$自身与其滞后一阶与滞后两�
 
 将$\phi_0 = (1-\phi_1-\phi_2)\mu$代回AR(2)模型中，可得：
 \begin{equation*}
-    r_t - \mu = \phi_1(r_{t-1}-\mu) + \phi_2(r_{t-2}-\mu) + \varepsilon_t
+    r_t - \mu = \phi_1(r_{t-1}-\mu) + \phi_2(r_{t-2}-\mu) + a_t
 \end{equation*}
 
 两边同乘以$(r_{t-l}-\mu)$，得到：
 \begin{align*}
     (r_{t-l} - \mu)(r_t - \mu) = \phi_1 (r_{t-l}-\mu)(r_{t-1} - \mu)
-    + \phi_2 (r_{t-l}-\mu)(r_{t-2} - \mu) + (r_{t-l}-\mu) \varepsilon_t
+    + \phi_2 (r_{t-l}-\mu)(r_{t-2} - \mu) + (r_{t-l}-\mu) a_t
 \end{align*}
 
-由于$\E\left[(r_{t-l} - \mu)\varepsilon_t\right]$，对等式两边取期望则有：
+由于$\E\left[(r_{t-l} - \mu)a_t\right]$，对等式两边取期望则有：
 \begin{equation*}
     \gamma_l = \phi_1 \gamma_{l-1} + \phi_2 \gamma_{l-2} \qquad l>0
 \end{equation*}
@@ -1536,11 +1580,7 @@ AR(2)模型，如同AR(1)模型，为$r_t$自身与其滞后一阶与滞后两�
     \end{equation*}
 \end{example}
 
-\divider
-
-
-偏自相关系数
-
+【待补充】偏自相关系数（PACF）
 
 \subsection{残差自相关检验}
 
@@ -1559,42 +1599,48 @@ Test statistic
 0-2 -> positive autocorrelation
 2-4 -> negative autocorrelation
 
-\subsection{移动平均模型}
+【待补充】
+
+\subsection{移动平均模型（MA）}
 
 移动平均模型（Moving-average，MA）
 \begin{equation*}
-    r_t = \phi_0 (1-\theta_1) + a_t - \theta_1 \varepsilon_{t-1}
+    r_t = \phi_0 (1-\theta_1) + a_t - \theta_1 a_{t-1}
 \end{equation*}
 
-$r_t$为两个扰动项$a_t$与$a_{t-1}$的加权平均，因此模型称为1阶MA模型，简称MA(1)。其中$\{\varepsilon_t\}$为白噪声序列，且$c_0$为常数：
+$r_t$为两个扰动项$a_t$与$a_{t-1}$的加权平均，因此模型称为1阶MA模型，简称MA(1)。其中$\{a_t\}$为白噪声序列，且$c_0$为常数：
 \begin{equation*}
-    r_t = c_0 + \varepsilon_{t} - \theta_1 \varepsilon_{t-1}
+    r_t = c_0 + a_{t} - \theta_1 a_{t-1}
 \end{equation*}
 
 类似的有MA(2)为：
 \begin{equation*}
-    r_t = c_0 + \varepsilon_{t} - \theta_1 \varepsilon_{t-1} - \theta_2 \varepsilon_{t-2}
+    r_t = c_0 + a_{t} - \theta_1 a_{t-1} - \theta_2 a_{t-2}
 \end{equation*}
 
 MA(q)模型为：
 \begin{equation*}
-    r_t = c_0 + \varepsilon_{t} - \theta_1 \varepsilon_{t-1} - \dots - \theta_q \varepsilon_{t-q}
+    r_t = c_0 + a_{t} - \theta_1 a_{t-1} - \dots - \theta_q a_{t-q}
 \end{equation*}
 
-\subsection{自回归移动平均模型}
+\subsection{自回归移动平均模型（ARMA）}
 
 自回归移动平均模型（Autoregressive moving-average model，ARMA）。ARMA(1,1)模型有（$\phi_1 \neq \theta_1$）：
 \begin{equation*}
-    r_t - \phi_1 r_{t-1} = \phi_0 + \varepsilon_t - \phi_1 \varepsilon_{t-1}
+    r_t - \phi_1 r_{t-1} = \phi_0 + a_t - \phi_1 a_{t-1}
 \end{equation*}
 
-对于一般的ARMA(p,q)模型而言，有：
+对于一般的ARMA(p,q)模型而言，即该模型有$p$阶滞后自回归项，与$q$阶滞后残差项：
 \begin{equation*}
-    r_t = \phi_0 + \sum_{i=1}^{p} \phi_i r_{t-i} + \varepsilon_t - \sum_{i=1}^{q} \theta_i \varepsilon_{t-i}
+    r_t = \phi_0 + \sum_{i=1}^{p} \phi_i r_{t-i} + a_t - \sum_{i=1}^{q} \theta_i a_{t-i}
 \end{equation*}
 
+平稳时有均值为：
+\begin{equation*}
+    \E(r_t) = \frac{\phi_0}{1-\phi_1-\dots-\phi_p}
+\end{equation*}
 
-\subsection{自回归移动平均模型}
+\subsection{自回归移动平均模型（ARIMA）}
 
 将ARMA推广至允许其AR多项式以1作为它的特征根，则该模型变成了自回归求和移动平均模型（Autoregressive integrated moving average，ARIMA）。因为A多项式有单位根1，因此ARIMA模型称为是单位根非平稳的。
 
@@ -1602,12 +1648,12 @@ MA(q)模型为：
 
 假设模型有：
 \begin{gather*}
-    p_t = \phi_1 p_{t-1} + \varepsilon_t \\
-    p_t = \phi_0 + \phi_1 p_{t-1} + \varepsilon_t
+    p_t = \phi_1 p_{t-1} + e_t \\
+    p_t = \phi_0 + \phi_1 p_{t-1} + e_t
 \end{gather*}
 
 \begin{equation*}
-    p_t = \phi_1 p_{t-1} + \varepsilon_t
+    p_t = \phi_1 p_{t-1} + e_t
 \end{equation*}
 
 著名的单位单位根检验Dickey和Fuller（1979）的原假设为存在单位根，非平稳。而备择假设为该序列为平稳的，有：
@@ -1619,23 +1665,67 @@ MA(q)模型为：
 使用最小二乘法估计T检验：
 \begin{gather*}
     \hat{\phi}_1 = \frac{\sum_{t=1}^{T} p_{t-1}p_t}{\sum_{t=1}^{T} p_{t-1}^{2}} \\
-    \hat{\sigma}_{\varepsilon}^{2} = \frac{\sum_{t=1}^{T} \left(p_t - \hat{\phi}_1 p_{t-1} \right)^2}{T-1}
+    \hat{\sigma}_{e}^{2} = \frac{\sum_{t=1}^{T} \left(p_t - \hat{\phi}_1 p_{t-1} \right)^2}{T-1}
 \end{gather*}
 
 假设$p_0=0$，T为样本容量，此时\textbf{Dickey-Fuller检验}的统计量为：
 \begin{equation*}
     DF = \frac{\hat{\phi}_1 - 1}{s.d.(\hat{\phi}_1)}
-    = \frac{\sum_{t=1}^{T} p_{t-1} e_t}{\hat{\sigma}_{\varepsilon} \sqrt{\sum_{t=1}^{T} p_{t-1}^{2}}} 
+    = \frac{\sum_{t=1}^{T} p_{t-1} e_t}{\hat{\sigma}_{a} \sqrt{\sum_{t=1}^{T} p_{t-1}^{2}}} 
 \end{equation*}
 
 对于计量常用的AR(p)模型而言，为了检验AR(p)模型是否存在单位根，可以使用\textbf{扩展的Dickey-Fuller检验}（Augmented Dickey-Fuller）。其中原假设为$H_0: \beta=1$，而备择假设为$H_a: \beta<1$，模型有：
 \begin{equation*}
-    x_t = c_t + \beta x_{t-1} + \sum_{i=1}^{p-1}\phi_i \Delta x_{t-i} + \varepsilon_t
+    x_t = c_t + \beta x_{t-1} + \sum_{i=1}^{p-1}\phi_i \Delta x_{t-i} + e_t
 \end{equation*}
 
-$\Delta x_{i}= x_i -x_{i-1}$为$x_t$的差分数列，且$c_t$可以使零或者常数，或$c_t=\omega_0 + \omega_1 t$。ADF检验的统计量如下，其中$\hat{beta}$为$\beta$的最小二乘估计：
+$\Delta x_{i}= x_i -x_{i-1}$为$x_t$的差分数列，且$c_t$可以使零或者常数，或$c_t=\omega_0 + \omega_1 t$。ADF检验的统计量如下，其中$\hat{\beta}$为$\beta$的最小二乘估计：
 \begin{equation*}
     ADF = \frac{\hat{\beta}-1}{s.e.(\hat{\beta})}
+\end{equation*}
+
+\subsection{一致的协方差矩阵估计}
+
+对于同时同时研究两个时间序列$y_t$与$x_t$的关系，考虑如下线性回归：
+\begin{equation*}
+    y_t = \alpha + \beta x_t + e_t
+\end{equation*}
+
+误差项存在着序列相关或者条件异方差性，而分析的目标为回归系数$\alpha$与$\beta$做推断。在系数的最小二乘估计依然满足一致性的情况下，比较广泛的有两种方法能给出系数协方差的一致性估计（Consistent Covariance Matrix Estimation），有Eicker（1967）和White（1980）提出的异方差一致估计（HC），与\uline{Newey和West（1987）}提出的异方差及自相关一致估计（HAC）。使用向量将回归模型改写：
+\begin{equation*}
+    y_t = \bm{x}_{t}^{'} \bm{\beta} + e_t \qquad t=1,2,\dots,T
+\end{equation*}
+
+其中$y_t$为因变量，$\bm{x}_{t} = (x_{1t},\dots,x_{kt})'$为包含常数项在内的$k$维向量，$\bm{\beta}_{t} = (\beta_{1t},\dots,\beta_{kt})'$为参数向量，$\bm{\beta}$那么最小二乘估计与协方差矩阵为：
+\begin{equation*}
+    \bm{\beta} = \left[ \sum_{t=1}^{T} \bm{x}_t \bm{x}_{t}^{'} \right]^{-1} \sum_{t=1}^{T} \bm{x}_t y_t \qquad 
+    \Cov(\hat{\bm{\beta}}) = \sigma_{e}^{2} \left[ \sum_{t=1}^{T} \bm{x}_t \bm{x}_{t}^{'} \right]^{-1} 
+\end{equation*}
+
+当存在序列相关或条件异方差时，上述的协方差矩阵估计就不再是一致的，使得$\bm{\hat{\beta}}$的T统计量偏大。使用White（1980）的方法调整之后有，其中$\hat{e}_t = y_t - \bm{x}_{t}^{'} \bm{\hat{\beta}}$为$t$时刻的残差：
+\begin{equation*}
+    \Cov(\hat{\bm{\beta}})_{HC} = 
+    \left[ \sum_{t=1}^{T} \bm{x}_t \bm{x}_{t}^{'} \right]^{-1} 
+    \left[ \sum_{t=1}^{T} \hat{e}_{t}^{2} \bm{x}_t \bm{x}_{t}^{'} \right]
+    \left[ \sum_{t=1}^{T} \bm{x}_t \bm{x}_{t}^{'} \right]^{-1} 
+\end{equation*}
+
+而Newey和West（1987）本质上是使用非参数的方法估计了$\left\{\sum_{t=1}^{T} \hat{e}_t \bm{x}_t \right\}$的协方差矩阵，有：
+\begin{equation*}
+    \Cov(\hat{\bm{\beta}})_{HAC} = 
+    \left[ \sum_{t=1}^{T} \bm{x}_t \bm{x}_{t}^{'} \right]^{-1} 
+    \hat{\mathbf{C}}_{HAC}
+    \left[ \sum_{t=1}^{T} \bm{x}_t \bm{x}_{t}^{'} \right]^{-1} 
+\end{equation*}
+
+其中：
+\begin{equation*}
+    \hat{\mathbf{C}}_{HAC} = \sum_{t=1}^{T}\hat{e}_{t}^{2} \bm{x}_t \bm{x}_{t}^{'} + \sum_{j=1}^{l} \omega_j \sum_{t=j+1}^{T}\left( \bm{x}_t \hat{e}_t \hat{e}_{t-j} \bm{x}_{t-j}^{'} + \bm{x}_{t-j} \hat{e}_{t-j} \hat{e}_t \bm{x}_{t}^{'} \right)
+\end{equation*}
+
+$\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
+\begin{equation*}
+    \omega_j = 1 - \frac{j}{l+1}
 \end{equation*}
 
 \subsection{格兰杰因果关系}
@@ -1644,11 +1734,36 @@ $\Delta x_{i}= x_i -x_{i-1}$为$x_t$的差分数列，且$c_t$可以使零或者
 
 \section{条件异方差模型}
 
+假设$r_t$服从平稳的ARMA(p,q)模型，即：
+\begin{equation*}
+    r_t = \phi_0 + \sum_{i=1}^{p} \phi_i r_{t-i} + a_t - \sum_{i=1}^{q} \theta_i a_{t-i}
+\end{equation*}
+
+对于增加了解释变量（外生变量）$x_{i,t}$的模型，其中$y_t$只是记号，表示去除解释变量影响后的调整收益率序列。
+\begin{gather*}
+    r_t=\mu_t + a_t \\
+    \mu_t = \sum_{i=1}^{p} \phi_i y_{t-i} - \sum_{i=1}^{q} \theta_i a_{t-i} \\
+    y_t = r_t - \phi_0 - \sum_{i=1}^{k} \beta_i x_{it}
+\end{gather*}
+
+对于给定$t-1$时刻，已知信息集合$F_{t-1}$时，$r_t$的条件均值与条件方差为：
+\begin{align*}
+    \mu_t &= \E(r_t \given F_{t-1}) \\
+    \sigma_{t}^{2} &= \Var(r_t \given F_{t-1}) \\
+    &= \E \left[ (r_t - \mu_t)^2 \given F_{t-1} \right] \\
+    &= \E \left[ a_{t}^{2} \given F_{t-1} \right] \\
+    &= \Var(a_t \given F_{t-1})
+\end{align*}
+
+% 或写成通俗易懂的形式，如上所述$y_{t-j}$为提出解释变量影响后的$r_{t-j}$值：
+% \begin{gather*}
+%     r_t = \mu_t + a_t \\
+%     \mu_t = \phi_0 + \sum_{i=1}^{k} \beta_i x_{it} + \sum_{i=1}^{p} \phi_i y_{t-i} - \sum_{i=1}^{q} \theta_i a_{t-i}
+% \end{gather*}
+
 \subsection{ARCH效应检验}
 
-若将$a_t = r_t - \mu_t$为均值方程的残差，则可以用平方序列$a_t^2$来检验\textbf{条件异方差性}，即所谓的ARCH效应。第一种方式，可以使用Ljung-Box统计量$\{Q(m)\}$应用于序列$\{a_t^2\}$，参见Mcleod和Li（1983）。该检验的原假设是$\{a_t^2\}$序列的前$m$个间隔的ACF值都为零。第二种方式，可以使用Engle（1982）中的拉格朗日乘子检验。
-
-对于拉格朗日乘子检验（Lagrange Multiplier Test），等价于对如下线性回归中用F统计量检验$\alpha_i=0(i=1,\dots,m)$，即原假设有：
+$a_t = r_t - \mu_t$为均值方程的残差，则可以用平方序列$a_t^2$来检验\textbf{条件异方差性}，即所谓的\textbf{ARCH效应}，即为残差平方的序列相关性，或白噪声检测。第一种方式，可以使用Ljung-Box统计量$\{Q(m)\}$应用于序列$\{a_t^2\}$，参见Mcleod和Li（1983）。该检验的原假设是$\{a_t^2\}$序列的前$m$个间隔的ACF值都为零。第二种方式，可以使用Engle（1982）中的拉格朗日乘子检验。对于拉格朗日乘子检验（Lagrange Multiplier Test），等价于对如下线性回归中用F统计量检验$\alpha_i=0\;(i=1,\dots,m)$，即原假设有：
 \begin{equation*}
     H_0: \alpha_1 = \dots = \alpha_m = 0
 \end{equation*}
@@ -1670,17 +1785,6 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
     F = \frac{(SSR_0-SSR_1)/m}{SSR_1/(T-2m-1)}
 \end{equation*}
 
-Ljung-Box Q-test
-residual autocorrelation
-
-Breusch–Godfrey test
-
-test for autocorrelation in the errors in a regression model
-
-Breusch–Pagan test
-
-used to test for heteroskedasticity in a linear regression model
-
 \begin{remark}
     ARCH效应检验或称为Engle's ARCH test，如上所述应平方序列检验异方差性，详情见Engle（1982），与其他检验如Ljung-box检验，拉格朗日检验，在Python与Matlab中有如下模块可进行计算：
     \begin{itemize}
@@ -1693,16 +1797,46 @@ used to test for heteroskedasticity in a linear regression model
     \end{itemize}
 \end{remark}
 
-得分检验（Score test），score（informant） is the gradient of the log-likelihood function with respect to the parameter vetor.
-\begin{equation*}
-    s(\theta) = \frac{\partial \log \mcl(\theta)}{\partial \theta}
-\end{equation*}
+\subsection{ARCH模型}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{fig/W-L-S-test.png}
-    \caption{Likelihood/Wald/Score Test}
-\end{figure}
+第一个尝试给波动率（$\sigma_t$，收益率的条件标准差）建模并提供系统框架的是由Engle（1982）提出的ARCH模型。基本思想为：
+\begin{itemize}
+    \item 资产收益率的扰动项$a_t = r_t - \E(r_t \given F_{t-1})$是序列不相关的，但不是独立的，若独立则不需要建模条件方差模型
+    \item $a_t$的不独立性，描述为$\Var(r_t \given F_{t-1}) = \Var(a_t \given F_{t-1})$，即可以用$a_{t}^{2}$的滞后项的线性组合表示
+\end{itemize}
+
+具体而言，ARCH(m)模型如下所示。其中$\{\varepsilon_t\}$为均值为$0$，方差为$1$的独立同分布随机变量序列：
+\begin{gather*}
+    a_t = \sigma_t \varepsilon_t \\
+    \sigma_t^2 = \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
+\end{gather*}
+
+\begin{proof}
+    由于$a_t = r_t - \E(r_t \given F_{t-1})$，因此$\E(a_t) = \E(r_t) - \E[\E(r_t \given F_{t-1})] = \E(r_t) - \E(r_t) = 0$。并且有$\E(a_t \given F_{t-1}) = \E(\sigma_t \varepsilon_t \given F_{t-1}) = \varepsilon_t \E(\sigma_t \given F_{t-1}) = 0$。
+    
+    由于$\varepsilon_t$独立，因此有$\Var(\varepsilon_t) = \Var(\varepsilon_t \given F_{t-1}) = \E(\varepsilon_{t}^{2} | F_{t-1}) = 1$。
+    对于条件方差有性质\uline{提取已知量}，即对于已知量，可以直接从条件期望中提出。具体而言，若$X$是$\mathcal{H}$可测的，应有：
+    \begin{equation*}
+        \E[X Y\given \mathcal{H}] = X \E[Y \given \mathcal{H}] 
+    \end{equation*}
+
+    由于$\sigma_t$是可以通过$F_{t-1}$信息集获得，为已知量。因此可以证明：
+    \begin{align*}
+        \Var(r_t \given F_{t-1}) &= \E\left[ \left( r_t - \E[r_t \given F_{t-1}] \right)^2 \given F_{t-1} \right] \\
+        &= \E(a_{t}^{2} \given F_{t-1})
+        = \E(\sigma_{t}^{2} \varepsilon_{t}^{2} \given F_{t-1}) \\
+        &= \sigma_{t}^{2} \E(\varepsilon_{t}^{2} \given F_{t-1})
+        = \sigma_{t}^{2} \\
+        &= \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
+    \end{align*}
+\end{proof}
+
+\subsubsection{ARCH模型的性质}
+
+
+
+\subsection{GARCH模型}
+
 
 \section{卡尔曼滤波}
 

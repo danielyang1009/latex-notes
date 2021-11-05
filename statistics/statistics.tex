@@ -1143,6 +1143,15 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 似然函数（Likelihood function）
 
+
+条件似然函数（相乘），最大化条件似然函数，等同于最大化对数，因此可以将其写为对数似然函数（相加）
+
+对数似然函数
+
+最大化估计
+
+\url{https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1}
+
 \begin{equation*}
     \mcl(\theta \given X) = \prod_{i=1}^{n} f(x_i \given \theta)
 \end{equation*}
@@ -1749,10 +1758,10 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
 对于给定$t-1$时刻，已知信息集合$F_{t-1}$时，$r_t$的条件均值与条件方差为：
 \begin{align*}
     \mu_t &= \E(r_t \given F_{t-1}) \\
-    \sigma_{t}^{2} &= \Var(r_t \given F_{t-1}) \\
-    &= \E \left[ (r_t - \mu_t)^2 \given F_{t-1} \right] \\
-    &= \E \left[ a_{t}^{2} \given F_{t-1} \right] \\
-    &= \Var(a_t \given F_{t-1})
+    \sigma_{t}^{2} &= \Var(r_t \given F_{t-1})
+    = \E \left[ (r_t - \mu_t)^2 \given F_{t-1} \right] \\
+    &= \E \left[ a_{t}^{2} \given F_{t-1} \right]
+    = \Var(a_t \given F_{t-1})
 \end{align*}
 
 % 或写成通俗易懂的形式，如上所述$y_{t-j}$为提出解释变量影响后的$r_{t-j}$值：
@@ -1763,7 +1772,7 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
 
 \subsection{ARCH效应检验}
 
-$a_t = r_t - \mu_t$为均值方程的残差，则可以用平方序列$a_t^2$来检验\textbf{条件异方差性}，即所谓的\textbf{ARCH效应}，即为残差平方的序列相关性，或白噪声检测。第一种方式，可以使用Ljung-Box统计量$\{Q(m)\}$应用于序列$\{a_t^2\}$，参见Mcleod和Li（1983）。该检验的原假设是$\{a_t^2\}$序列的前$m$个间隔的ACF值都为零。第二种方式，可以使用Engle（1982）中的拉格朗日乘子检验。对于拉格朗日乘子检验（Lagrange Multiplier Test），等价于对如下线性回归中用F统计量检验$\alpha_i=0\;(i=1,\dots,m)$，即原假设有：
+$a_t = r_t - \mu_t$为均值方程的残差，则可以用平方序列$a_t^2$来检验\textbf{条件异方差性}，即所谓的\textbf{ARCH效应}，即为残差平方之间的序列相关性，或白噪声检测。第一种方式，可以使用Ljung-Box统计量$\{Q(m)\}$应用于序列$\{a_t^2\}$，参见Mcleod和Li（1983）。该检验的原假设是$\{a_t^2\}$序列的前$m$个间隔的ACF值都为零。第二种方式，可以使用Engle（1982）中的拉格朗日乘子检验。对于拉格朗日乘子检验（Lagrange Multiplier Test），等价于对如下线性回归中用F统计量检验$\alpha_i=0\;(i=1,\dots,m)$，即原假设有：
 \begin{equation*}
     H_0: \alpha_1 = \dots = \alpha_m = 0
 \end{equation*}
@@ -1811,41 +1820,121 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
     \sigma_t^2 = \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
 \end{gather*}
 
-\begin{proof}
-    由于$a_t = r_t - \E(r_t \given F_{t-1})$，因此$\E(a_t) = \E(r_t) - \E[\E(r_t \given F_{t-1})] = \E(r_t) - \E(r_t) = 0$。并且有$\E(a_t \given F_{t-1}) = \E(\sigma_t \varepsilon_t \given F_{t-1}) = \varepsilon_t \E(\sigma_t \given F_{t-1}) = 0$。
+由于$a_t = r_t - \E(r_t \given F_{t-1})$，因此$\E(a_t) = \E(r_t) - \E[\E(r_t \given F_{t-1})] = \E(r_t) - \E(r_t) = 0$。并且有$\E(a_t \given F_{t-1}) = \E(\sigma_t \varepsilon_t \given F_{t-1}) = \varepsilon_t \E(\sigma_t \given F_{t-1}) = 0$。
     
-    由于$\varepsilon_t$独立，因此有$\Var(\varepsilon_t) = \Var(\varepsilon_t \given F_{t-1}) = \E(\varepsilon_{t}^{2} | F_{t-1}) = 1$。
-    对于条件方差有性质\uline{提取已知量}，即对于已知量，可以直接从条件期望中提出。具体而言，若$X$是$\mathcal{H}$可测的，应有：
-    \begin{equation*}
-        \E[X Y\given \mathcal{H}] = X \E[Y \given \mathcal{H}] 
-    \end{equation*}
+由于$\varepsilon_t$独立，因此有$\Var(\varepsilon_t) = \Var(\varepsilon_t \given F_{t-1}) = \E(\varepsilon_{t}^{2} | F_{t-1}) = 1$。对于条件方差有性质\uline{提取已知量}，即对于已知量，可以直接从条件期望中提出。具体而言，若$X$是$\mathcal{H}$可测的，应有：
+\begin{equation*}
+    \E[X Y\given \mathcal{H}] = X \E[Y \given \mathcal{H}] 
+\end{equation*}
 
-    由于$\sigma_t$是可以通过$F_{t-1}$信息集获得，为已知量。因此可以证明：
-    \begin{align*}
-        \Var(r_t \given F_{t-1}) &= \E\left[ \left( r_t - \E[r_t \given F_{t-1}] \right)^2 \given F_{t-1} \right] \\
-        &= \E(a_{t}^{2} \given F_{t-1})
-        = \E(\sigma_{t}^{2} \varepsilon_{t}^{2} \given F_{t-1}) \\
-        &= \sigma_{t}^{2} \E(\varepsilon_{t}^{2} \given F_{t-1})
-        = \sigma_{t}^{2} \\
-        &= \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
-    \end{align*}
+由于$\sigma_t$是可以通过$F_{t-1}$信息集获得，为已知量。因此可以证明：
+\begin{align*}
+    \Var(r_t \given F_{t-1}) &= \E\left[ \left( r_t - \E[r_t \given F_{t-1}] \right)^2 \given F_{t-1} \right] \\
+    &= \E(a_{t}^{2} \given F_{t-1})
+    = \E(\sigma_{t}^{2} \varepsilon_{t}^{2} \given F_{t-1}) \\
+    &= \sigma_{t}^{2} \E(\varepsilon_{t}^{2} \given F_{t-1})
+    = \sigma_{t}^{2} \\
+    &= \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
+\end{align*}
 
-    同时其$a_t$的无条件方差为：
-    \begin{align*}
-        \Var(a_t) &= \E\left[(a_t - E[a_t])^2\right] \\
-        &= \E(a_t^2) = \E\left[ \E(a_t^2 \given F_{t-1}) \right]
-        = \E\left[ \E(\sigma_t^2 \varepsilon_t^2 \given F_{t-1}) \right] \\
-        &= \E\left[ \sigma_t^2 \E( \varepsilon_t^2 \given F_{t-1}) \right] = \E\left[ \sigma_t^2 \right] \\
-        &= \E\left[ \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2 \right]
-    \end{align*}
-\end{proof}
+同时其$a_t$的无条件方差为：
+\begin{align*}
+    \Var(a_t) &= \E\left[(a_t - E[a_t])^2\right] \\
+    &= \E\left[ a_t^2 \right] = \E\left[ \E(a_t^2 \given F_{t-1}) \right]
+    = \E\left[ \E(\sigma_t^2 \varepsilon_t^2 \given F_{t-1}) \right] \\
+    &= \E\left[ \sigma_t^2 \E( \varepsilon_t^2 \given F_{t-1}) \right] = \E\left[ \sigma_t^2 \right] \\
+    &= \E\left[ \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2 \right]
+\end{align*}
 
 \subsubsection{ARCH模型的性质}
 
+对于ARCH(1)模型而言有，即只有一阶滞后项时：
+\begin{gather*}
+    a_t = \sigma_t \varepsilon_t \\
+    \sigma_{t}^{2} = \alpha_0 + \alpha_1 a_{t-1}^{2}
+\end{gather*}
 
+由如上证明可知：
+\begin{equation*}
+    \Var(a_t) = \E\left[\sigma_{t}^{2}\right]
+    = \E\left[ \alpha_0 + \alpha_1 \sigma_{t-1}^{2} \right]
+    = \alpha_0 + \alpha_1 \E\left[\sigma_{t-1}^{2}\right]
+\end{equation*}
+
+$a_t$是平稳过程，并有$\E(a_t) = 0$，因此$\Var(a_t) = \Var(a_{t-1}) = \E(a_{t-1}^{2})$。因此有如下关系，并且由于方差为正，因此$0 \leq\alpha <1$：
+\begin{equation*}
+    \Var(a_t) = \frac{\alpha_0}{1-\alpha_1}
+\end{equation*}
+
+\subsubsection{建立ARCH模型}
+
+
+【待添加】
+
+\subsubsection{估计ARCH模型}
+
+假设$\varepsilon_t$服从上述正态分布。对于条件概率分布$f(a_t \given F_{t-1})$，有：
+\begin{gather*}
+    \E(a_t \given F_{t-1}) = 0 \\
+    \Var(a_t \given F_{t-1}) = \E(a_{t}^{2} \given F_{t-1}) = \sigma_{t}^{2} \E(\varepsilon_{t}^{2} \given F_{t-1}) = \sigma_{t}^{2}
+\end{gather*}
+
+因此条件概率分布函数有：
+\begin{align*}
+    f(a_t \given F_{t-1}) 
+    &= \frac{1}{\sqrt{2\pi\sigma_{t}^{2}}} \exp\left[ - \frac{1}{2} \frac{(a_t - 0)^2}{\sigma_{t}^{2}} \right]\\
+    &= \frac{1}{\sqrt{2\pi\sigma_{t}^{2}}} \exp \left[ -\frac{a_{t}^{2}}{2\sigma_{t}^{2}} \right]
+\end{align*}
+
+ARCH(m)的似然函数如下所示：
+\begin{align*}
+    f(a_1,\dots,a_T \given \bm{\alpha}) &= f(a_{T} \given F_{t-1}) f(a_{T-1} \given F_{t-2}) \dots f(a_{m+1} \given F_{m}) f(a_1,\dots,a_m \given \bm{\alpha}) \\
+    &= \prod_{t=m+1}^{T} \frac{1}{\sqrt{2\pi\sigma_{t}^{2}}} \exp \left[ -\frac{a_{t}^{2}}{2\sigma_{t}^{2}} \right] \times f(a_1,\dots,a_m \given \bm{\alpha})
+\end{align*}
+
+其中$\bm{\alpha} = (\alpha_0,\alpha_1,\dots,\alpha_m)^{'}$。对于条件期望，应有如下性质：
+\begin{equation*}
+    \frac{f (a_1,\dots,a_m \cap a_{m+1},\dots,a_T \given \bm{\alpha})}{f(a_1,\dots,a_m \given \bm{\alpha})}
+    = f(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m)
+\end{equation*}
+
+\begin{proof}
+    令$a_1,\dots,a_m$为事件$X$，令$a_{m+1},\dots,a_T$为事件$Y$。因此原式为：
+    \begin{align*}
+        \frac{f( X \cap Y \given \bm{\alpha})}{f(X \given \bm{\alpha})} 
+        &= \frac{f( X \cap Y \cap \bm{\alpha}) / f(\bm{\alpha}) }{f(X \cap \bm{\alpha}) / f(\bm{\alpha})} \\
+        &= \frac{f( Y \cap X \cap \bm{\alpha})}{f(X \cap \bm{\alpha})} \\
+        &= f(Y \given X \cap \bm{\alpha})
+    \end{align*}
+\end{proof}
+
+因此得到条件似然函数：
+\begin{equation*}
+    f(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m) =
+    \prod_{t=m+1}^{T} \frac{1}{\sqrt{2\pi\sigma_{t}^{2}}} \exp \left[ -\frac{a_{t}^{2}}{2\sigma_{t}^{2}} \right]
+\end{equation*}
+
+最大化上式得到的估计称之为\uline{条件最大似然估计}（MLE），同时最大化条件似然函数\uline{等价于}最大化其对数，将条件似然函数（相乘），改写为对数似然函数（相加）:
+\begin{equation*}
+    \mcl(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m) =
+    \sum_{i=m+1}^{T} \left[ -\frac{1}{2}\ln(2\pi) - \frac{1}{2} \ln(\sigma_{t}^{2}) - \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
+\end{equation*}
+
+由于第一项为常数，因此对数似然函数可写为：
+\begin{equation*}
+    \mcl(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m) =
+    \bm{-} \sum_{i=m+1}^{T} \left[\frac{1}{2} \ln(\sigma_{t}^{2}) + \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
+\end{equation*}
 
 \subsection{GARCH模型}
 
+Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\textbf{广义ARCH模型}（Generalized Autoregressive Conditional Heteroskedasticity，GARCH）。对于对数收益率序列$r_t$，令$a_t = r_t - \mu_t$为$t$时刻的新息或扰动，则称$a_t$服从GARCH(m,s)模型，若$a_t$满足下式：
+\begin{gather*}
+    a_t = \sigma_t \varepsilon_t \\
+    \sigma_{t}^{2} = \alpha_0 + \sum_{i=1}^{m} \alpha_i a_{t-i}^2 + \sum_{i=1}^{s} \beta_j \sigma_{t-j}^{2}
+\end{gather*}
+
+当$s=0$时，该模型就简化为ARCH(m)模型，同时将$\alpha_i$与$\beta_j$称为\uline{ARCH参数}与\uline{GARCH参数}。
 
 \section{卡尔曼滤波}
 

@@ -1384,7 +1384,7 @@ $\sigma_{a}^{2}$为$a_t$的方差，由于方差有限，应有$\Var(r_t)<+\inft
 其中$\{a_t\}$为均值为0，方差为$\sigma_{a}^2$的白噪音，此时由于$r_t$为因变量，$r_{t-1}$为自变量，因此如上模型也被称为自回归模型（Autoregressive model，AR），由于与自身滞后一阶自回归，因此称为一阶自回归模型或AR(1)模型。在过去收益率$r_{t-1}$已知条件下。有其均值与方差（波动来源于白噪声）有：
 \begin{align*}
     \E(r_t \given r_{t-l}) &= \phi_0 + \phi_1 r_{t-1} \\
-    \Var(r_t \given r_{t-l}) &= \E\left[\left(r_t - \E(r_t) \right)^2\right] \\
+    \Var(r_t \given r_{t-l}) &= \E\left[\left(r_t - \E(r_t \given r_{t-1}) \right)^2\right] \\
     & = \E \left(a_t^2\right) = \Var(a_t) = \sigma_{a}^{2}
 \end{align*}
 

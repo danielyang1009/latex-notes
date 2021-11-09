@@ -1817,9 +1817,8 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
 对于\textbf{远期合约}，其持有人在到期日T必须支付签订合约时约定的交割价格K，购买一份标的资产股票现货，此时远期合约的价值为$S_T-K$。在风险中性条件下，t时刻一份远期（期货）合约的价值$f_t(t,S_t)$应为:
 \begin{align*}
     f(t,S_t) &= e^{-r(T-t)} \rnE[S_T - K] \\
-    &= e^{-r(T-t)} [\rnE(S_T) - K] \\
-    &= e^{-r(T-t)} \rnE(S_t) - Ke^{-r(T-t)} \\
-    &= S_t - Ke^{-r(T-t)}
+    &= e^{-r(T-t)} \rnE(S_T) - e^{-r(T-t)} K \\
+    &= S_t - e^{-r(T-t)} K
 \end{align*}
 
 在签订之时基于双方公平的原则,应有合约在签订$t=0$之时，远期合约的价值应为0。因此可以确定合理的交割价格$K_{\text{fair}}$，即为合理的远期价格$F_{0,T}$：
@@ -1899,7 +1898,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \textbf{基差} = \text{现货价格} - \text{期货价格}
 \end{equation*}
 
-对于远期（期货）而言，\textbf{升水}（contango）指当期货价格高于现货价格，此时有负基差。也称为正向市场（Normal market），即期限较短的合约（Near-maturity contract）价格低于期限较远的合约（Far-maturity contract）。相反而言，如期货价格低于现货价格，则称期货\textbf{贴水}（Backwardation），此时为现货溢价，有正基差。或称为逆向市场（Inverted market），即期限较短合约的价格高于期限较远的合约。
+对于远期（期货）而言，\textbf{升水}（contango）指当期货价格高于现货价格（或未来预期即期价格），此时为期货溢价，此时有负基差。也称为正向市场（Normal market），即期限较短的合约（Near-maturity contract）价格低于期限较远的合约（Far-maturity contract）。相反而言，如期货价格低于现货价格，则称期货\textbf{贴水}（Backwardation），此时为现货溢价，有正基差。或称为逆向市场（Inverted market），即期限较短合约的价格高于期限较远的合约。
 
 \begin{figure}[H]
     \centering
@@ -1976,6 +1975,168 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     \end{tikzpicture}
     \caption{现货期货以及现实测度期望关系}
 \end{figure}
+
+\section{远期（期货）套期保值}
+
+完美套期保值
+\begin{itemize}
+    \item 远期（期货）的到期日、标的资产和交易金额等条件的设定使得远期（期货）与现货正好匹配
+    \item 完全消除价格风险
+\end{itemize}
+
+不完美套期保值
+\begin{itemize}
+    \item 常态
+    \item 无法完全消除价格风险
+\end{itemize}
+
+\subsection{基差风险}
+
+如前文定义，基差为现货价格$H$（被套期保值对象）与期货价格$G$（套期保值工具）的价差，即$b = H - G$，未来基差的不确定性导致了\textbf{基差风险}。由于标的资产规模与期货合约标准数量之间的差异，导致了\textbf{数量风险}。基差风险、数量风险都可能使得套期保值策略无法对冲所有风险，即不完美的套期保值。
+
+\uline{多头套期保值策略}持有现货空头，担心未来价格上涨，买入期货锁定未来价格（期货多头）。由于价格上涨，期货多头获利，即称之为多头策略。相反，\uline{空头套期保值策略}持有现货多头，担心未来价格下跌，卖出期货锁定未来卖出价格（期货空头）。以下表\ref{tab:basis-risk}为例，收益分为现货收益与期货收益两部分：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+\multicolumn{1}{l}{}           
+& \multicolumn{1}{c}{\textbf{多头套期保值}} & \multicolumn{1}{c}{\textbf{空头套期保值}} \\
+& 1单位现货空头，1单位期货多头 & 1单位现货多头，1单位期货空头 \\
+\midrule
+\textbf{收益} &$\quad(H_0 - H_1) + (G_1 - G_0)$ & $\quad(H_1 - H_0) + (G_0 - G_1)$ \\
+& $=(H_0 - G_0) - (H_1 - G_1)$ & $=(H_1 - G_1) - (H_0 - G_0)$ \\
+& $=b_0 - b_1$ & $=b_1 - b_0$ \\
+\textbf{收益来源} & 基差变小 $b_0>b_1$ & 基差变大 $b_0<b_1$\\
+\multirow{3}{*}{\textbf{收益条件}} & 1. 现货涨幅小于期货涨幅 & 1. 现货涨幅大于期货涨幅 \\
+& 2. 现货跌幅大于期货跌幅 & 2. 现货跌幅小于期货跌幅 \\ 
+& 3. 现货价格下跌而期货价格上涨 & 3. 现货价格上涨而期货价格下跌 \\
+\bottomrule
+\end{tabular}
+\caption{多头与空头套期保值}
+\label{tab:basis-risk}
+\end{table}
+
+$b_0$已知，由此可知未来时刻基差$b_1$决定了是否能完美套期保值。当现货价格小于期货价格时，期货升水，基差为负。假设$b_0=-10$，多头套保策略要有正收益要求基差变小，即$b_0>b_1$，$b_0=-10$，则有$b_1< -10$。\uline{注意此时虽然基差变小，但基差的绝对值在增大。}
+
+若期货标的与现货标的不同，假设期货标的的价格为$S$，那么可以将如上未来时刻基差$b_1$进行分解：
+\begin{equation*}
+    b_1 = H_1 - G_1 = (S_1 - G_1) + (H_1 - S_1)
+\end{equation*}
+
+可以看到等式右边第一项为未来时刻期货与其标的现货的基差$S_1 - G_1$，由于日期不一致，可能导致两者不同。第二项为由于期货标的与现货不同$H_1 - S_1$，即出现在交叉套期保值的情况下，现货价格的差异，这两者原因都可能造成无法实现完美的套期保值。
+
+\subsection*{逼仓}
+
+对于进行交割的期货而言，期货多方容易进行逼仓，由于期货为合约，且多方为动用资金，资金容易筹集，用于购买现货。若有大量未平仓合约，即空方要交割大量现货，大多时候现货数量有限，且有各种运输储存成本，难以筹集，因此造成没有足够的现货供应，造成了\uline{逼空}的产生。
+
+同样\uline{逼多}也有可能发生，即虽然资金容易筹集，但也需要有进行实务交割的能力，若多方完全不具备接收实物的能力，只能进行平仓，使得原油价格快速下跌（原油宝事件）。
+
+【待考证】
+
+\subsection{套保（金额）比率}
+
+套期保值比率（Hedge Ratio），指现有头寸（金额）中，已有多少被套期保值（对冲）。假设当前有1000元的现货头寸，其中600元已使用期货进行套期保值，表示当前套期保值比率为0.6或60\%，同时表示还留有风险敞口40\%。
+\begin{equation*}
+   \text{套期保值（金额）比率} = \frac{\text{套期保值资产头寸}}{\text{被套期保值资产头寸}}
+\end{equation*}
+
+\subsection{套保（数量）比率}
+
+在已知了目前风险暴露情况，即套保（金额）比率之后，还希望了解在现有的现货头寸（被套保资产）之下，需要多少数量的期货进行对冲。希望在期货到期时，最大化消除被套保资产价格变动所带来风险。
+
+此时要求被套保资产价格的变动对整个组合价值影响最小，进而转化为求解最小值问题。即对$\Delta H$求偏导，并使一阶条件$\partial\Delta\Pi / \partial \Delta H = 0$，求得\textbf{最优套期保值（数量）比率n}（价格无法控制，只能控制数量）。因只关注最终期货到期时刻的套保比率，而不关注过程中的套保比率，所以此处使用的是$\Delta H$而非$\partial H$。
+
+对于多头套期保值组合，有：
+\begin{align*}
+    &\Delta \Pi = n\Delta G - \Delta H \\
+    &\Rightarrow\quad\frac{\partial (\Delta \Pi)}{\partial (\Delta H)}  = n\times \frac{\partial (\Delta G)}{\partial (\Delta H)} - 1 = 0 \\ 
+    &\Rightarrow \quad n = \frac{\partial(\Delta H)}{\partial(\Delta G)} = \frac{\partial r_H \times H_0}{\partial r_G \times G_0} 
+\end{align*}
+
+对于空头套期保值组合，同样有：
+\begin{align*}
+    &\Delta \Pi = \Delta H - n \Delta G \\
+    &\Rightarrow\quad\frac{\partial (\Delta \Pi)}{\partial (\Delta H)}  =  1 - n\times \frac{\partial (\Delta G)}{\partial (\Delta H)} = 0 \\ 
+    &\Rightarrow \quad n = \frac{\partial(\Delta H)}{\partial(\Delta G)} = \frac{\partial r_H \times H_0}{\partial r_G \times G_0} 
+\end{align*}
+
+对多头套期保值或空头套期保值均有最优套保比率$n=\partial(\Delta H)/\partial(\Delta G)$，$r_H$和$r_G$为H与G在套期保值期间的收益率。n代表期货价格变动一个单位，现货价格变化多少，同时代表\textbf{每单位数量现货需要n单位数量期货进行对冲}。因现货与期货为线性关系，即套期保值后不需要随时间调整两者之间比率n，此为\textbf{静态套保（Static Hedge）}。与之相反的为\textbf{动态套保（Dynamic Hedge）}，需要不断随时间调整两者之间比率。
+
+得知每单位数量现货需要n单位期货进行对冲之后，根据持有现货H头寸数量$Q_H$，可计算出需要多少份（手）的期货G合约进行对冲。即可求得最优套期保值（期货）合约份数N，使得期货总价值变动等于持有现货总价值变动。
+\begin{align*}
+    N = n \times \frac{Q_H}{Q_G} = \frac{\partial(\Delta H)\times Q_H}{\partial(\Delta G)\times Q_G} = \frac{\partial(r_H \times H_0 \times Q_H)}{\partial(r_G \times G_0 \times Q_G)} = \frac{\partial r_H \times V_H}{\partial r_G \times V_G}
+\end{align*}
+
+由$n \times Q_H$计算得到，对于现有头寸$Q_H$单位数量的现货，需要多少单位数量的期货进行对冲。再除以$Q_G$期货合约规模（乘数），计算得到需要N份（手）期货合约进行对冲。此时$V_H$为被套期保值的所持有现货资产总价值，而$V_G$则为每份期货合约价值（单位价格$\times$合约乘数）。\textbf{注意：n代表的是单位数量，而N为份数（手），为最小买卖单位。如螺纹钢期货报价单位为元/每吨，一份合约（手）包含10单位数量（吨）期货，即合约规模（乘数）为10。}
+
+\subsection{最小方差套保（数量）比率}
+
+当将风险定义为方差时，最优的套保比率可定义为，使套期保值组合收益$\Delta\Pi$方差最小的套期保值（数量）比例n，即为\textbf{最小方差套保比率}。$\sigma_\Pi^2$为套期保值组合收益的方差，对$n$求导，使一阶条件为零，二阶条件$d^2(\sigma_H^2)/dn^2=2\sigma_G^2>0$，有最小值。对于多头套保组合或空头套保组合，其最小方差套期保值比一般公式为：
+\begin{align*}
+    \sigma_{\Pi}^2 &= \sigma_H^2 + n^2\sigma_G^2 - 2n\sigma_{HG}\\
+    &\Rightarrow \quad \frac{d\sigma_\Pi^2}{dn} = 2n\sigma_G^2 - 2\sigma_{HG} = 0 \\
+    &\Rightarrow \quad n = \frac{\sigma_{HG}}{\sigma_G^2} =\rho_{HG} \frac{\sigma_H}{\sigma_G}
+\end{align*}
+
+其中$\sigma_H = \sigma_{\Delta H}$，$\sigma_G = \sigma_{\Delta G}$，$\sigma_{HG}$为$\Delta H$与$\Delta G$的协方差，$\rho_{HG}$为$\Delta H$与$\Delta G$的相关系数（$\rho_{XY} = Cov(X,Y)/\sigma_X\sigma_Y$）。我们可以进而推导出基于收益率的最小方差套期保值比率，首先：
+\begin{align*}
+    \rho_{HG} &= \frac{Cov(\Delta H,\Delta G)}{\sqrt{Var(\Delta H)} \sqrt{Var(\Delta G)}} \\
+    &= \frac{Cov(r_H \times H_0,r_G \times G_0)}{\sqrt{Var(r_H \times H_0)} \sqrt{Var(r_G \times G_0)}}\\
+    &= \frac{H_0 G_0 Cov(r_H,r_G))}{H_0 \sqrt{Var(r_H)} \times G_0 \sqrt{Var(r_G)}} \\
+    &= \frac{Cov(r_H,r_G)}{\sqrt{Var(r_H)} \sqrt{Var(r_G)}} = \rho_{r_H r_G}
+\end{align*}
+
+其次：
+\begin{equation*}
+    \frac{\sigma_H}{\sigma_G} =  \frac{\sqrt{Var(r_H \times H_0)}}{\sqrt{Var(r_G \times G_0)}} = \frac{H_0 \sqrt{r_H}}{G_0 \sqrt{r_G}} = \frac{\sigma_{r_H} H_0}{\sigma_{r_G} G_0}
+\end{equation*}
+
+因此有：
+\begin{equation*}
+    n = \rho_{r_H r_G}\frac{\sigma_{r_H} H_0}{\sigma_{r_G} G_0}
+\end{equation*}
+
+\subsection{OLS估计}
+可以观察$n = Cov(\Delta H,\Delta G)/Var(\Delta G)，$即为OLS回归中的系数$b$。则可用OLS回归，估计$b$：
+\begin{equation*}
+    \Delta H = a + b\Delta G + \varepsilon
+\end{equation*}
+
+需注意套保期限与回归中使用的$\Delta H$和$\Delta G$的期限应相同，即如果要锁定未来一个月的现货价格，需使用现货和期货的月价格变化进行回归。且调整后得到实际需要套期保值（期货）合约份数N为：
+\begin{equation*}
+    N =  b \frac{Q_H}{Q_G}
+\end{equation*}
+
+也可使用收益率进行OLS回归估计，且在时间极短时，百分比收益率$\Delta P/P$与对数收益率可视为相等。且对数收益率更符合平稳序列和正态分布的假设，在平稳假设的下对每日现货和期货的对数收益率进行回归：
+\begin{equation*}
+    r_H = a + b'r_G + \varepsilon
+\end{equation*}
+
+此时：
+\begin{align*}
+    b &= \frac{Cov(\Delta H,\Delta G)}{Var(\Delta G)} \\ 
+    &= \frac{Cov(r_H \times H_0,r_G \times G_0)}{Var(r_g \times G_0)} \\
+    &= \frac{H_0G_0 Cov(r_H,r_G)}{G_0^2 Var(r_G)} \\
+    &= b'\frac{H_0}{G_0}
+\end{align*}
+
+对应需套期保值合约份数N（手）：
+\begin{equation*}
+    N =  b\frac{Q_H}{Q_G} = b'\frac{H_0 \times Q_H}{G_0 \times Q_G} = b'\frac{V_H}{V_G}
+\end{equation*}
+
+\subsection{风险降低百分比}
+
+通过检验风险降低百分比，可以检验使用最小方差套期保值比率的套期保值效果。将最小方差套期保值比率$n = \rho_{HG}\frac{\sigma_{H}}{\sigma_{G}}$，带回套期保值组合方差$\sigma_{\Pi}^2 = \sigma_H^2 + n^2\sigma_G^2 - 2n\sigma_{HG}$中。可以得到：
+\begin{equation*}
+    e^* = \frac{\sigma_{H}^2 - \sigma_{\Delta \Pi}^2}{\sigma_{\Delta H}^2} = \rho_{HG}^2
+    =\frac{Cov^2(\Delta H, \Delta G)}{Var(\Delta H)Var(\Delta G)}
+    =\frac{Cov^2(r_H H_0, r_G G_0)}{Var(r_H H_0)Var(r_G G_0)}
+    =\rho_{r_Hr_G}^2
+\end{equation*}
+
+而在一元线性回归中判别系数$R^2=\rho$，即回归效果越好，$R^2$越接近1，套期保值的效果也越好。
 
 \section{看跌-看涨平价关系（欧式期权）}
 

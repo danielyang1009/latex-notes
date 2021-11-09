@@ -1234,14 +1234,19 @@ Long put, long delta stock/ short put, short delta stock
 
 波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（Backward looking），一类为前瞻波动率（Forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
 
-波动率的数学定义为：假设$r_t$为一个资产的收益率（一般使用对数收益率）时间序列，有$t=1,2,3,\dots,T$，则有样本方差为：
-\begin{equation*}
-    \sigma^2 = \frac{1}{T-1} \sum^T_{t=1} (r_t - \bar{r})^2 
-\end{equation*}
+波动率的数学定义为：假设$r_t$为一个资产的收益率，一般使用对数收益率（连续复利收益率）时间序列，令$t=1,2,3,\dots,T$，则有样本方差为：
+\begin{align*}
+    \sigma^2 &= \frac{1}{T-1} \sum^T_{t=1} (r_t - \bar{r})^2 \\
+    &= \frac{1}{T-1} \left( \sum^T_{t=1} r_t^2 - 2\bar{r} \sum^T_{t=1} r_t + \sum^T_{t=1} \bar{r}^2 \right) \\
+    &= \frac{1}{T-1} \left( \sum^T_{t=1} r_t^2 - 2T\bar{r}\left(\frac{1}{T} \sum^T_{t=1} r_t \right) + T \bar{r}^2 \right) \\
+    &= \frac{1}{T-1} \left( \sum^T_{t=1} r_t^2 - T \bar{r}^2 \right) \\
+    &= \frac{1}{T-1} \sum^T_{t=1} r_t^2 - \frac{T}{T-1} \left( \frac{1}{T}  \sum^T_{t=1} r_t \right)^2 \\
+    &= \frac{1}{T-1} \sum^T_{t=1} r_t^2 - \frac{1}{T(T-1)} \left( \sum^T_{t=1} r_t \right)^2
+\end{align*}
 
-其中样本均值应有：
+其中对数收益率与样本均值为：
 \begin{equation*}
-    \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
+    r_t = \ln \left( \frac{S_t}{S_{t-1}} \right) \qquad \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
 \end{equation*}
 
 \subsection{波动率特征}

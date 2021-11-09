@@ -33,6 +33,11 @@
     \E[X] &= \int x f(x) dx
 \end{align*}
 
+对于样本均值：
+\begin{equation*}
+    \bar{X} = \frac{1}{n} \sum_{i=1}^{n} X_i
+\end{equation*}
+
 其性质有：
 \begin{align*}
     \E[X \pm Y] &= \E[X] \pm \E[Y] \\
@@ -42,7 +47,7 @@
 
 \subsection{方差}
 
-对于方差（Variance）或$\sigma^2$，定义有：
+对于总体方差（Variance）或$\sigma^2$，定义有：
 \begin{align*}
     \Var(X) &= \E\left[ (X-\mu)^2 \right]\\
     &= \E[(X-\E[X])^2] \\
@@ -57,6 +62,11 @@
     \Var(X) &= \int (X-\mu)^2 f(x) dx \\
     &= \int x^2 f(x) dx - 2\mu \int xf(x)dx + \mu^2 \int f(x)dx \\
     &= \int x^2 f(x) dx - \mu^2
+\end{align*}
+
+对于无偏的样本方差；
+\begin{align*}
+    S^2 = \frac{1}{n-1} \sum_{i=1}^{n} \left(X_i - \bar{X} \right)^2
 \end{align*}
 
 其性质有：
@@ -80,6 +90,11 @@
     &= \E[XY] - \E[X]\E[Y]
 \end{align*}
 
+对于样本协方差有：
+\begin{equation*}
+    \frac{1}{n-1} \sum_{i=1}^{n} \left(X_i - \bar{X} \right) \left(Y_i - \bar{Y} \right)
+\end{equation*}
+
 性质有：
 \begin{align*}
     \Cov(X,a) &= 0 \\
@@ -97,6 +112,11 @@
 \begin{equation*}
     \rho_{X,Y} = \frac{\Cov(X,Y)}{\sigma_X\sigma_Y}
     = \frac{\E[(X-\E[X])(Y-\E[Y])]}{\sigma_X\sigma_Y}
+\end{equation*}
+
+样本相关系数有：
+\begin{equation*}
+    \hat{\rho}_{X,Y} = \frac{\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum_{i=1}^{n}(X_i - \bar{X})^2 \sum_{i=1}^{n}(Y_i - \bar{Y})^2}}
 \end{equation*}
 
 \section{矩}
@@ -485,7 +505,7 @@ F分布概率密度函数（PDF）如下图所述，为右偏（Right skew）或
 
 \subsubsection{方差齐次F检验}
 
-检验两个正态总体之间的方差是否相等，原假设为两个正态分布总体的方差相等。假设$X$与$Y$来自两个独立的服从正态分布的整体，即有$X\sim N(\mu_X^2,\sigma_X^2)$和$Y\sim N(\mu_Y^2,\sigma_Y^2)$，从中抽取$m$与$n$个样本，即$X_1,X_2,\dots,X_m$和$Y_1,Y_2,\dots,Y_n$。
+检验两个正态总体之间的方差是否相等，原假设为两个正态分布总体的方差相等。假设$X$与$Y$来自两个独立的服从正态分布的总体，即有$X\sim N(\mu_X^2,\sigma_X^2)$和$Y\sim N(\mu_Y^2,\sigma_Y^2)$，从中抽取$m$与$n$个样本，即$X_1,X_2,\dots,X_m$和$Y_1,Y_2,\dots,Y_n$。
 
 因此两者均值和标准差为：
 \begin{gather*}
@@ -1043,7 +1063,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         P(\text{假设}\given \text{事实}) = \frac{P(\text{假设})P(\text{事实}\given \text{假设})}{P(\text{假设})P(\text{事实}\given \text{假设}) + P(\lnot \text{假设})P(\text{事实}\given \lnot \text{假设})}
     \end{equation*}
     
-    贝叶斯定理可以通过图形进行理解与记忆，假设如下为边长为1的正方形，此时正方形面积为1代表整体概率为1。
+    贝叶斯定理可以通过图形进行理解与记忆，假设如下为边长为1的正方形，此时正方形面积为1代表总体概率为1。
     \begin{figure}[H]
     \centering
         \begin{tikzpicture}
@@ -1239,35 +1259,31 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \bm{Y} = \bm{X} \bm{\beta} + \bm{\varepsilon}
 \end{equation*}
 
-
 【待补充】时间序列的估计，使用OLS，也需要满足OLS的假设，否则估计有偏
-
 
 \section{时间序列}
 
 \subsection{平稳性}
 
-对于时间序列$\{r_t\}$，\textbf{强平稳}（Strongly stationary）或严格平稳（Strictly stationary），是指对于任意$t$和任意正整数$k$，资产收益率时间序列$(r_{t_1},\dots,r_{t_K})$与$(r_{t_1+t},\dots,r_{t_k+t})$的联合分布相同，即将$(t_1,\dots,t_k)$平移$t$个单位之后，分布不变。而\textbf{弱平稳}（Weakly stationary）指对于时间序列$\{r_t\}$，当$r_t$的均值与$r_{t-l}$的协方差不随时间改变，即：
+对于时间序列$\{r_t\}$，\textbf{强平稳}（Strongly stationary）或严格平稳（Strictly stationary），是指对于任意$t$和任意正整数$k$，$(t_1,\dots,t_k)$与资产收益率时间序列$(r_{t_1},\dots,r_{t_k})$，$(t_1+t,\dots,t_k+t)$与$(r_{t_1+t},\dots,r_{t_k+t})$有\uline{相同的联合分布}。即将时间$(t_1,\dots,t_k)$平移$t$个单位之后，收益率的分布保持不变。
+
+\textbf{弱平稳}（Weakly stationary）指对于时间序列$\{r_t\}$，$r_t$的均值平稳（Stationary in mean）与自身与滞后$l$阶的协方差平稳（Secondary order stationary），即：
 \begin{gather*}
     \E [r_t] = \mu \\
     \Cov (r_t, r_{t-1}) = \gamma_l
 \end{gather*}
 
-$\mu$为常数，不随时间改变，而$\gamma_l$指依赖时间间距$l$的大小。平稳性的强弱区别，在于弱平稳只要求期望与方差不变，即\uline{前两阶矩不变}，而强平稳要求各阶距都不变。由于正态分布只需要两阶矩确认，因此时间序列$\{r_t\}$若是正态分布的，那么此时弱平稳与强平稳等价。
+当时间序列$\{r_t\}$满足弱平稳时有，其均值$\mu$为常数，不随时间改变，而$\gamma_l$指依赖时间间距$l$的大小。同时当$l=0$时有，其方差$\Cov(r_t,r_t) = \Var(r_t) = \gamma_0$为与时间无关的常数，称为方差平稳性（Stationary in variance）。平稳性的强弱区别，在于弱平稳只要求期望与方差不变，即\uline{前两阶矩不变}，而强平稳要求各阶距都不变。由于正态分布只需要两阶矩确认，因此时间序列$\{r_t\}$若是正态分布的，那么此时弱平稳与强平稳等价。
 
-协方差$\gamma_l = \Cov(r_t,r_{t-l})$称为$r_t$的间隔为的$l$\textbf{自协方差}（Autocovariance），其中有两个性质：
-\begin{gather*}
-    \gamma_0 = \Var(r_t) \\
-    \gamma_{-l} = \gamma_{l}
-\end{gather*}
+对于未知的概率分布，只需要进行大量重复实验，就可以有足够多的观测值来进行统计推断，即可以计算均值和方差等。但对于类似收益率的时间序列而言，某一天的收益率仅发生一次，不会重复发生。因此假设收益率序列满足\uline{弱平稳}，此时其均值为常数$\E[r_t] = \mu$与时间$t$无关，因此可以利用一段时间的历史数据计算日收益率的均值。但需要注意，许多时候金融数据并不满足若平稳的条件。
 
-\begin{proof}
-    性质二：
-    \begin{equation*}
-        \gamma_{-l} = \Cov(r_{t},r_{t-(-l)}) = \Cov(r_{t-(-l)},r_{t}) 
-        = \Cov(r_{t+l)},r_{t}) = \Cov(r_{t)},r_{t-l}) = \gamma_{l}
-    \end{equation*}
-\end{proof}
+协方差$\gamma_l = \Cov(r_t,r_{t-l})$称为$r_t$与滞后$l$阶的\textbf{自协方差}（Autocovariance）。按照定义可以得到当$l=0$时，自协方差等于方差，并利用弱平稳条件可以得到对称性：
+\begin{align*}
+    \gamma_0 &= \Var(r_t) \\
+    \gamma_{-l} &= \Cov(r_{t},r_{t-(-l)}) = \Cov(r_{t-(-l)},r_{t}) \\
+    &= \Cov(r_{t+l},r_{t}) = \Cov(r_{t},r_{t-l}) \\
+    &= \gamma_{l}
+\end{align*}
 
 \subsection{自相关函数}
 
@@ -1286,28 +1302,53 @@ $\mu$为常数，不随时间改变，而$\gamma_l$指依赖时间间距$l$的�
 
 \subsubsection{自相关函数}
 
-假设$\{r_t\}$为若平稳收益率时间序列，使用相关系数的概念推广至$r_t$与其过去值$r_{t-l}$，那么$r_t$与$r_{t-l}$的相关系数称为$r_{t}$间隔为$l$的\textbf{自相关系数}（Autoregressive coefficient），即一个时间序列中当前节点，与其自身在不同时间节点的相关关系（相关系数）：
+假设$\{r_t\}$为若平稳收益率时间序列，使用相关系数的概念推广至$r_t$与其过去值$r_{t-l}$，那么$r_t$与$r_{t-l}$的相关系数称为$r_{t}$间隔为$l$的总体\textbf{自相关系数}（Autoregressive coefficient），即一个时间序列中当前节点，与其自身在不同时间节点的相关关系（相关系数）：
 \begin{equation*}
     \rho_l = \frac{\Cov(r_t,r_{t-l})}{\sqrt{\Var(r_t)\Var(r_{t-l})}} 
     = \frac{\Cov(r_t,r_{t-l})}{\Var(r_t)}
     = \frac{\gamma_l}{\gamma_0}
 \end{equation*}
 
-由于$\{r_t\}$为弱平稳收益率时间序列，应有$\Var(r_t) = \Var(r_{t-l})$。根据定义，$\rho_0=1$且有$-1 \leq \rho_l \leq 1$。一个弱平稳序列，当且仅当对所有$l>0$都有$\rho_l=0$时，其为序列不相关。
+由于$\{r_t\}$为弱平稳收益率时间序列，应有$\Var(r_t) = \Var(r_{t-l})$。根据定义，$\rho_0=1$，根据自协方差的对称性，同样可得$\rho_{-l}=\rho_l$，并且值域为$-1 \leq \rho_l \leq 1$。一个弱平稳序列，当且仅当对所有$l>0$都有$\rho_l=0$时，其为序列不相关。
 
-对于$\{r_t\}$，其样本均值为$\bar{r}=\sum_{t=1}^{T}r_t/T$，间隔为l的样本自相关系数为：
+对于$\{r_t\}$，其样本均值为$\bar{r}=\frac{1}{T} \sum_{t=1}^{T} r_t$，\textbf{样本自协方差}（Sample autocovariance）为：
 \begin{equation*}
-    \hat{\rho}_l = \frac{\sum_{t=l+1}^{T}(r_t-\bar{r})(r_{t-l}-\bar{r})}{\sum_{t=1}^{T}(r_t-\bar{r})^2} \qquad 0 \leq l < T-1
+    c_l = \frac{1}{n} \sum_{t=l+1}^{n} (r_t-\bar{r})(r_{t-l}-\bar{r})
 \end{equation*}
 
-此时$\hat{\rho}_1,\hat{\rho}_2,\dots$称为\textbf{样本自相关函数}（Autocorrelation Function，ACF）。若$\{r_t\}$为\textbf{独立同分布}（i.i.d.）序列，满足$\E(r_t^2)<\infty$，那么对于任意正整数$l$，有$\hat{p}_l$渐进的服从均值为$0$、方差为$1/T$的$N\sim(0,\frac{1}{T})$的正态分布。
+\textbf{样本自相关系数}（Sample autocorrelation）为：
+\begin{equation*}
+    \hat{\rho}_l = \frac{c_l}{c_0} = \frac{\sum_{t=l+1}^{T}(r_t-\bar{r})(r_{t-l}-\bar{r})}{\sum_{t=1}^{T}(r_t-\bar{r})^2} \qquad 0 \leq l < T-1
+\end{equation*}
 
-若$\{r_t\}$为\textbf{弱平稳}序列，满足$r_t = \mu + \sum_{i=0}^{q}\psi_i a_{t-i}$，其中$\phi_0=1$，$\{a_t\}$为均值为0的独立同分布变量序列，对于$l>q$，则有$\hat{p}_l$渐进的服从如下正态分布，称为Bartlett公式：
+若将$\hat{\rho}_l$视为$l$的方程，则称为\textbf{样本自相关函数}（sample Auto-Correlation Function，ACF），$\rho_l$为总体自相关函数。如下为存在明显趋势的时间序列，与存在明显周期性的时间序列的时间序列相关图（Correlogram）。通过相关图，可以清晰的看到ACF是如何随着$l$变化的：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{fig/ts-trend.png}
+    \caption{存在趋势的时间序列与存在周期的时间序列}
+    \label{fig:ts-trend}
+\end{figure}
+
+\subsubsection{如何对金融时间序列建模}
+
+对于金融时间序列的建模，最重要的就是挖掘序列中不同间隔$l$的自相关性，透过相关图可以判断模型是否合适。\uline{由于金融时间序列中包含了相关性与随机噪声，因此如果模型很好的捕捉了相关性，那么原始时间序列与拟合之后的时间序列之间的残差应该等于随机噪声}。对残差画出相关图，那么应该有其$\rho_0=1$，当$l\neq 0$时，$\rho_l=0$，随机噪声的自相关性均为0。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/white-noise-acf.jpg}
+    \caption{随机噪声的相关图}
+    \label{fig:white-noise-acf}
+\end{figure}
+
+因此，在衡量对金融时间序列模型是否合适时，需先得到原时间序列与拟合序列之间的残差序列。然后依据残差序列的相关图，发现其是否含有未考虑的额外自相关性。若残差的相关图与上图类似，则可以认为该残差序列为一个随机噪声，即模型已经很好的捕捉了原时间序列中的自相关性。若残差的相关图体现了额外的自相关性，其将为改进已有的模型提供依据。
+
+\subsubsection*{检验单个ACF}
+
+若$\{r_t\}$为\textbf{独立同分布}（i.i.d.）序列，满足$\E(r_t^2)<\infty$，那么对于任意正整数$l$，有$\hat{p}_l$渐进的服从均值为$0$、方差为$1/T$的$N\sim(0,\frac{1}{T})$的正态分布。在更加一般的条件下，若$\{r_t\}$为\textbf{弱平稳}序列，满足$r_t = \mu + \sum_{i=0}^{q}\psi_i a_{t-i}$，其中$\phi_0=1$，$\{a_t\}$为均值为0的独立同分布变量序列，对于$l>q$，则有$\hat{p}_l$渐进的服从如下正态分布，称为Bartlett公式：
 \begin{equation*}
     \hat{p}_l \sim N\left(0,\frac{\left( 1+2\sum_{i=1}^{q}\rho_i^2 \right)}{T} \right)    
 \end{equation*}
-
-\subsubsection*{检验单个ACF}
 
 对于正整数$l$，可以使用t检验（t-statistics）来检验$H_0: \rho_l =0$与$H_a: \rho_l \neq 0$检验统计量为：
 \begin{equation*}
@@ -1376,16 +1417,17 @@ $\sigma_{a}^{2}$为$a_t$的方差，由于方差有限，应有$\Var(r_t)<+\inft
 
 \subsection{自回归模型（AR）}
 
-假设收益率$r_t$具有统计显著的间隔为$1$的自相关系数，说明在预测$r_t$时，$r_{t-1}$也发挥了较大的作用，因此可以建立简单的线性回归模型：
+假设收益率$r_t$具有统计显著的，滞后一阶的自相关系数，说明在预测$r_t$时，$r_{t-1}$也发挥了较大的作用，因此可以建立简单的线性回归模型：
 \begin{equation*}
     r_t = \phi_0 + \phi_1 r_{t-1} + a_t
 \end{equation*}
 
-其中$\{a_t\}$为均值为0，方差为$\sigma_{a}^2$的白噪音，此时由于$r_t$为因变量，$r_{t-1}$为自变量，因此如上模型也被称为自回归模型（Autoregressive model，AR），由于与自身滞后一阶自回归，因此称为一阶自回归模型或AR(1)模型。在过去收益率$r_{t-1}$已知条件下。有其均值与方差（波动来源于白噪声）有：
+其中$\{a_t\}$为均值为0，方差为$\sigma_{a}^2$的白噪音。此时由于$r_{t-1}$为自变量，$r_t$为因变量，与自身的滞后项进行回归，因此称为自回归模型（Autoregressive model，AR）。由于与自身滞后一阶自回归，因此称为一阶自回归模型或AR(1)模型。在过去收益率$r_{t-1}$已知条件下。有其均值与方差（波动来源于白噪声）有：
 \begin{align*}
     \E(r_t \given r_{t-l}) &= \phi_0 + \phi_1 r_{t-1} \\
-    \Var(r_t \given r_{t-l}) &= \E\left[\left(r_t - \E(r_t \given r_{t-1}) \right)^2\right] \\
-    & = \E \left(a_t^2\right) = \Var(a_t) = \sigma_{a}^{2}
+    \Var(r_t \given r_{t-l}) &= \E\left[\left(r_t - \E(r_t \given r_{t-1}) \right)^2 \given r_{t-l} \right] \\
+    &= \E \left(a_t^2 \given r_{t-l} \right) = \E \left(a_t^2\right) \\
+    &= \Var(a_t) = \sigma_{a}^{2}
 \end{align*}
 
 对AR(1)模型进行推广，因此p阶的AR模型表示在给定过去数据时，那么滞后1阶至p阶联合决定了$r_t$的条件期望：
@@ -1404,9 +1446,10 @@ $\sigma_{a}^{2}$为$a_t$的方差，由于方差有限，应有$\Var(r_t)<+\inft
 \end{equation*}
 
 改写上式，利用$\phi_0 = \mu(1-\phi_1)$，代入AR(1)中有：
-\begin{equation*}
-    r_t = \mu(1-\phi_1) + \phi_1 r_{t-1} + a_t = \mu + \phi_1 (r_{t-1}-\mu)+ a_t 
-\end{equation*}
+\begin{align*}
+    r_t &= \mu(1-\phi_1) + \phi_1 r_{t-1} + a_t \\
+    &= \mu + \phi_1 (r_{t-1}-\mu)+ a_t 
+\end{align*}
 
 将$r_{t-1} - \mu = \phi_1 (r_{t-2}-\mu)+ a_{t-1}$代入上式，得：
 \begin{align*}
@@ -1593,22 +1636,23 @@ AR(2)模型，如同AR(1)模型，为$r_t$自身与其滞后一阶与滞后两�
 
 \subsection{残差自相关检验}
 
-To check the serial correlations of residuals, we recommend that the Ljung–Box statistics be used instead of the Durbin–Watson (DW) statistic because the latter only considers the lag-1 serial correlation. There are cases in which serial dependence in residuals appears at higher order lags. This is particularly so when the time series involved exhibits some seasonal behavior.
+在检验残差中的自相关时，一般使用如上提到的Ljung-Box检验，而非Durbin-Watson检验。这是由于DW检验只检验了滞后一阶的自回归，而很多时候自回归出现在更高阶的滞后项中，因此使用LB检验是更好的选择。对于Durbin-Watson检验而言，其原假设为残差中不存在自相关，而备择假设为残差中存在自相关，且为AR(1)过程：
+\begin{align*}
+    \text{H}_0: \ & \rho = 0 \\
+    \text{H}_1: \ & \rho \neq 0
+\end{align*}
 
-Durbin-Watson test
+若残差中存在自回归AR(1)，即$\varepsilon_t = \rho \varepsilon_{t-1} + \mu_t$，则DW统计量有：
+\begin{equation*}
+    d = \frac{\sum_{t=2}^{T} (\varepsilon_t - \varepsilon_{t-1})^2}{\sum_{t=1}^{T} \varepsilon^2_t}
+\end{equation*}
 
-- H0: $\rho = 0$, no autocorrelation / serial correlation in residual
-- H1: $\rho \neq 0$, autocorrelation in residual, follow first order autoregressive process
-
-Test statistic
-- resitual at lag 1, $\epsilon_t = \rho \epsilon_{t-1} + u_t$
-- $DW = \frac{\sum_{t=2}^{T} (\epsilon_t - \epsilon_{t-1})^2}{\sum_{t=1}^{T} \epsilon^2_t}$
-
-2 -> no autocorrelation
-0-2 -> positive autocorrelation
-2-4 -> negative autocorrelation
-
-【待补充】
+由于DW统计量近似于$d \approx 2(1-\hat{\rho})$，因此取值范围在$[0,4]$之间。当统计量：
+\begin{itemize}
+    \item 显著小于2时：有正的自相关
+    \item 等于于2：无自相关
+    \item 显著小于2：有负的自相关
+\end{itemize}
 
 \subsection{移动平均模型（MA）}
 
@@ -1736,10 +1780,6 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
 \begin{equation*}
     \omega_j = 1 - \frac{j}{l+1}
 \end{equation*}
-
-\subsection{格兰杰因果关系}
-
-格兰杰因果关系检验（Granger causality test）是一种假设检验的统计方法，检验一组时间序列x是否为另一组时间序列y的原因。它的基础是回归分析当中的自回归模型。
 
 \section{条件异方差模型}
 
@@ -1934,7 +1974,14 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
     \sigma_{t}^{2} = \alpha_0 + \sum_{i=1}^{m} \alpha_i a_{t-i}^2 + \sum_{i=1}^{s} \beta_j \sigma_{t-j}^{2}
 \end{gather*}
 
-当$s=0$时，该模型就简化为ARCH(m)模型，同时将$\alpha_i$与$\beta_j$称为\uline{ARCH参数}与\uline{GARCH参数}。
+当$s=0$时，该模型就简化为ARCH(m)模型，同时将$\alpha_i$与$\beta_j$称为ARCH参数与GARCH参数。
+
+对于GARCH(1,1)模型有：
+\begin{gather*}
+    a_t = \sigma_t \varepsilon_t \\
+    \sigma_{t}^{2} = \alpha_0 + \alpha_1 a_{t-1}^2 + \beta_1 \sigma_{t-1}^{2}
+\end{gather*}
+
 
 \section{卡尔曼滤波}
 

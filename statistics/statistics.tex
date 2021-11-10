@@ -10,14 +10,6 @@
 \maketitle
 \tableofcontents
 
-\section{TODO}
-\begin{itemize}
-    \item degree of freedom
-    \item 最大似然法（条件似然法），精确似然法
-    \item likelihood, log-likelihood, goodness-of-fit, quasi-maximum likelihood, ratio test
-    \item Newey West 1987
-\end{itemize}
-
 \section{基础定义}
 
 \subsection{期望}
@@ -2057,7 +2049,7 @@ ARCH(m)的似然函数如下所示：
     \prod_{t=m+1}^{T} \frac{1}{\sqrt{2\pi\sigma_{t}^{2}}} \exp \left[ -\frac{a_{t}^{2}}{2\sigma_{t}^{2}} \right]
 \end{equation*}
 
-最大化上式得到的估计称之为\uline{条件最大似然估计}（MLE），同时最大化条件似然函数\uline{等价于}最大化其对数，将条件似然函数（相乘），改写为对数似然函数（相加）:
+最大化上式得到的估计称之为\uline{条件最大似然估计（MLE）}，同时最大化条件似然函数\uline{等价于}最大化其对数，将条件似然函数（相乘），改写为对数似然函数（相加）:
 \begin{equation*}
     \mcl(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m) =
     \sum_{i=m+1}^{T} \left[ -\frac{1}{2}\ln(2\pi) - \frac{1}{2} \ln(\sigma_{t}^{2}) - \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
@@ -2066,7 +2058,7 @@ ARCH(m)的似然函数如下所示：
 由于第一项为常数，因此对数似然函数可写为：
 \begin{equation*}
     \mcl(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m) =
-    \bm{-} \sum_{i=m+1}^{T} \left[\frac{1}{2} \ln(\sigma_{t}^{2}) + \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
+    \sum_{i=m+1}^{T} \left[ - \frac{1}{2} \ln(\sigma_{t}^{2}) - \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
 \end{equation*}
 
 \subsection{GARCH模型}
@@ -2099,6 +2091,34 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
 由上述分析可知ARMA(p,q)的阶数，与GARCH(m,s)的阶数含义完全不同。ARMA是对于均值建模，而GARCH模型为$r_t$额波动率建模。
 
 将均值模型与波动率模型拆开估计，与两者联合估计并不相同。若将其拆开估计，即先使用ARMA(p,q)对$r_t$建模，确定最优参数p和q，而后使用ARMA模型残差对其进行GARCH建模。由于此时因变量或被解释变量为残差，因此相当于使用均值为0的均值模型，与GARCH模型进行联合估计。即抛弃了联合估计中异方差对收益率序列的影响。
+
+\subsection{(G)ARCH估计}
+
+假设ARCH(1)模型：
+\begin{align*}
+    r_t &= \mu + a_t \\
+    a_t &= \sigma_t \varepsilon_t \\
+    \sigma^2 &= \alpha_0 + \alpha_1 a_{t-1}^{2}
+\end{align*}
+
+均值$\mu$为常数，且有$\varepsilon_t$服从均值为$0$方差为$1$的高斯分布，即高斯白噪声。此时待估参数为$\theta = (\mu,\alpha_0,\alpha_1)$，此时高斯似然函数有：
+\begin{align*}
+    \mcl( \theta \given r_t,F_{t-1})
+    &= \frac{1}{\sqrt{2\pi\sigma_{t}^{2}(\theta)}} \exp \left[ -\frac{1}{2} \frac{a_{t}^{2}(\theta)}{\sigma_{t}^{2}(\theta)} \right] \\
+    &= \frac{1}{\sqrt{2\pi\left(\alpha_0 + \alpha_1(r_{t-1}-\mu)^2\right)}} \exp \left[ -\frac{1}{2} \frac{(r_t - \mu)^2}{\alpha_0 + \alpha_1(r_{t-1}-\mu)^2} \right]
+\end{align*}
+
+对于更一般的情形，即$\mu$不再为常数，此时有：
+\begin{align*}
+    r_t &= \mu_t + a_t \\
+    a_t &= \sigma_t \varepsilon_t
+\end{align*}
+
+假设$\varepsilon_t$为独立同分布，且满足$\E(\varepsilon_t)=0$和$\Var(\varepsilon_t)=1$，那么此时的高斯对数似然函数为如下所示。当$\varepsilon_t$不是高斯分布，那么此时称为\uline{准对数似然函数}（Quasi-log-likelihood）
+\begin{align*}
+    \sum_{t=1}^{T} \ln \mcl_t(\theta)
+    &= \sum_{t=1}^{T} \ln \left[ \frac{1}{\sqrt{2\pi\sigma_{t}^{2}(\theta)}} \exp \left( -\frac{1}{2} \frac{(r_t - \mu_t(\theta))^2}{\sigma_{t}^{2}(\theta)} \right) \right]
+\end{align*}
 
 \section{卡尔曼滤波}
 

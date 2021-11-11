@@ -1151,22 +1151,71 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     在调整了分布的$\mu$之后，似然变大。显然对于单次的检验，单一数据，使得抽取一只小白鼠体重为$34g$的概率最大的分布，为$\mu=34$的正态分布。
 \end{example}
 
+【待修改】
+
+例子
+\url{https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1}
+
 \subsection{似然函数}
 
 似然函数（Likelihood function）
 
-
-条件似然函数（相乘），最大化条件似然函数，等同于最大化对数，因此可以将其写为对数似然函数（相加）
-
-对数似然函数
-
-最大化估计
-
-\url{https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1}
-
 \begin{equation*}
     \mcl(\theta \given X) = \prod_{i=1}^{n} f(x_i \given \theta)
 \end{equation*}
+
+得分检验（Score test），score（informant） is the gradient of the log-likelihood function with respect to the parameter vetor.
+\begin{equation*}
+    s(\theta) = \frac{\partial \log \mcl(\theta)}{\partial \theta}
+\end{equation*}
+
+\subsection{最大似然估计}
+
+对于最大似然估计（Maximum likelihood estimation，MLE），一般有如下步骤：
+\begin{itemize}
+    \item 假设时间序列$\{X_1,X_2,\dots,X_T\}$的联合分布为$f(X_1,X_2,\dots,X_T \given \theta)$，其中参数$\theta$为联合分布的参数向量，如均值方差等
+    \item 观察现实中发生的样本$x_t$
+    \item 对联合分布做出一定的假设
+    \item 对于参数$\theta$的最大似然估计，就是在该参数下，样本发生的概率最大。换言之，$\hat{\theta}_{\text{MLE}}$最大化联合分布$f(X_1,X_2,\dots,X_T \given \theta)$
+\end{itemize}
+
+假设$X_t$独立，那么可以对其联合分布进行分解，有：
+\begin{equation*}
+    f_{X_T,\dots,X_1}(\theta)
+    = f_{X_T}(\theta_T) f_{X_{T-1}}(\theta_{T-1})\dots f_{X_1}(\theta_1)
+    = \prod_{t=1}^{T} f_{X_t}(\theta_t)
+\end{equation*}
+
+同时可以两边去对数，得到对数似然函数。此时最大化如上似然函数，等于最大化对数似然函数：
+\begin{equation*}
+    \mcl(\theta) = \ln f_{X_T,\dots,X_1}(\theta)
+    = \sum_{t=1}^{T} \ln f_{X_t}(\theta_t)
+\end{equation*}
+
+而大部分情况下，时间序列中并不独立，已知联合概率分布与条件概率分布有如下关系：
+\begin{equation*}
+    f_{X_2,X_1} = f_{X_2 \given X_1} f_{X_1}
+\end{equation*}
+
+因此可以得到：
+\begin{equation*}
+    f_{X_T,\dots,X_1}(\theta) =
+    f_{X_{T} \given X_{T-1},\dots,X_1}(\theta_T)
+    f_{X_{T-1} \given X_{T-2},\dots,X_1}(\theta_T)
+    f_{X_{2} \given X_1}(\theta) f_{X_1}(\theta_1)
+\end{equation*}
+
+此时其对数似然函数为：
+\begin{equation*}
+    \mcl(\theta) = \ln f_{X_T,\dots,X_1}(\theta)
+    = \sum_{t=1}^{T} \ln f_{X_t \given X_{t-1},\dots,X_1}(\theta_t)
+\end{equation*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/W-L-S-test.png}
+    \caption{Likelihood/Wald/Score Test}
+\end{figure}
 
 \subsection{似然比}
 
@@ -1181,23 +1230,6 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         \item \href{https://www.mathworks.com/help/econ/lratiotest.html}{Matlab: lratiotest}（Likelihood ratio检验）
     \end{itemize}
 \end{remark}
-
-\subsection{最大似然估计}
-    
-最大似然估计（Maximum likelihood estimation，MLE）
-
-测量了数只老鼠的重量，尝试找到其分布，miximizes the likelihood 找到最大化所有观察重量likelihood的分布，找到mean 和standard deviation
-
-得分检验（Score test），score（informant） is the gradient of the log-likelihood function with respect to the parameter vetor.
-\begin{equation*}
-    s(\theta) = \frac{\partial \log \mcl(\theta)}{\partial \theta}
-\end{equation*}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{fig/W-L-S-test.png}
-    \caption{Likelihood/Wald/Score Test}
-\end{figure}
 
 \section{回归模型}
 
@@ -1322,6 +1354,10 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \label{fig:ts-trend}
 \end{figure}
 
+\subsubsection{偏自相关系数（PACF）}
+
+【待补充】
+
 \subsubsection{如何对金融时间序列建模}
 
 对于金融时间序列的建模，最重要的就是挖掘序列中不同间隔$l$的自相关性，透过相关图可以判断模型是否合适。\uline{由于金融时间序列中包含了相关性与随机噪声，因此如果模型很好的捕捉了相关性，那么原始时间序列与拟合之后的时间序列之间的残差应该等于随机噪声}。金融时间序列模型为解释时间序列相关性的数学模型，如上所述，其建模的核心为两点：
@@ -1365,7 +1401,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     Q^{*}(m) = T\sum_{i=1}^{m} \hat{\rho}_{l}^{2}
 \end{equation*}
 
-$Q^{*}(m)$渐进地服从自由度为$m$的$\chi^2$分布，\uline{检验原假设为无显著序列相关（自相关）}，而备择假设为有显著的序列相关性。即当\uline{拒绝原假设}$H_0$时，则代表该时间序列有显著的序列相关性：
+$Q^{*}(m)$渐进地服从自由度为$m$的$\chi^2$分布，\uline{检验原假设为无显著序列相关（自相关）}，而备择假设为有显著的序列相关性。即当\textbf{接受原假设}$H_0$时，则代表该时间序列有没有显著的序列相关性：
 \begin{align*}
     H_0&: \rho_1=\dots=\rho_{m}=0 \\
     H_1&: \text{对于某}\; i \in \{1,\dots,m\},\rho_i \neq 0
@@ -1657,10 +1693,6 @@ AR(2)模型，如同AR(1)模型，为$r_t$自身与其滞后一阶与滞后两�
     \end{equation*}
 \end{example}
 
-\subsection{偏自相关系数（PACF）}
-
-【待补充】
-
 \subsection{移动平均模型（MA）}
 
 移动平均（Moving average，MA）模型是另一个常见的线性时间序列模型。在自回归模型中，收益率$r_t$看作是给定阶数$p$下历史收益率序列的线性组合。而与自回归模型不同，移动平均模型将收益率$r_t$看作是历史白噪声的线性组合。可以认为移动平均模型是对漂移率之外的“随机噪声”建模，这些噪声可理解为不同时刻出现的影响收益率的新息或者冲击。通过对“噪声”建模来预测当前时刻$t$的“噪声”，再和漂移率结合，作为$t$时刻的收益率预测。
@@ -1886,7 +1918,9 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
 
 \subsection{ARCH效应检验}
 
-$a_t = r_t - \mu_t$为均值方程的残差，则可以用平方序列$a_t^2$来检验\textbf{条件异方差性}，即所谓的\textbf{ARCH效应}，即为残差平方之间的序列相关性，或白噪声检测。第一种方式，可以使用\textbf{Ljung-Box}统计量$\{Q(m)\}$应用于序列$\{a_t^2\}$，参见Mcleod和Li（1983）。该检验的原假设是$\{a_t^2\}$序列的前$m$个间隔的ACF值都为零。第二种方式，可以使用Engle（1982）中的拉格朗日乘子检验。对于\textbf{拉格朗日乘子检验}（Lagrange Multiplier Test，LM检验），等价于对如下线性回归中用F统计量检验$\alpha_i=0\;(i=1,\dots,m)$，即原假设有：
+$a_t = r_t - \mu_t$为均值方程的残差，则可以用平方序列$a_t^2$来检验\textbf{条件异方差性}，即所谓的\textbf{ARCH效应}，即为残差平方$a_t^2$之间的序列相关性，或白噪声检测。第一种方式，可以使用\textbf{Ljung-Box}统计量$\{Q(m)\}$应用于序列$\{a_t^2\}$，参见Mcleod和Li（1983）。该检验的原假设是$\{a_t^2\}$序列的前$m$个间隔的ACF值都为零。
+
+第二种方式，可以使用Engle（1982）中的拉格朗日乘子检验。对于\textbf{拉格朗日乘子检验}（Lagrange Multiplier Test，LM检验），等价于对如下线性回归中用F统计量检验$\alpha_i=0\;(i=1,\dots,m)$，即原假设有：
 \begin{equation*}
     H_0: \alpha_1 = \dots = \alpha_m = 0
 \end{equation*}
@@ -1948,8 +1982,7 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
     &= \E\left[ a_t^2 \right] = \E\left[ \E(a_t^2 \given F_{t-1}) \right]
     = \E\left[ \E(\sigma_t^2 \varepsilon_t^2 \given F_{t-1}) \right] \\
     &= \E\left[ \sigma_t^2 \E( \varepsilon_t^2 \given F_{t-1}) \right] \\
-    &= \E\left[ \sigma_t^2 \right] \\
-    &= \E\left[ \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2 \right]
+    &= \E\left[ \sigma_t^2 \right]
 \end{align*}
 
 由于$\varepsilon_t$独立，显然有：
@@ -1964,12 +1997,17 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
 
 由于$\sigma_t$可以通过$F_{t-1}$信息集获得，为已知量。因此可以证明：
 \begin{align*}
-    \Var(r_t \given F_{t-1}) &= \E\left[ \left( r_t - \E[r_t \given F_{t-1}] \right)^2 \given F_{t-1} \right] \\
+    \Var(a_t \given F_{t-1})
     &= \E(a_{t}^{2} \given F_{t-1})
     = \E(\sigma_{t}^{2} \varepsilon_{t}^{2} \given F_{t-1}) \\
     &= \sigma_{t}^{2} \E(\varepsilon_{t}^{2} \given F_{t-1})
-    = \sigma_{t}^{2} \\
-    &= \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
+    = \sigma_{t}^{2}
+\end{align*}
+
+同理可得：
+\begin{align*}
+    \Var(r_t \given F_{t-1}) &= \E\left[ \left( r_t - \E[r_t \given F_{t-1}] \right)^2 \given F_{t-1} \right] \\
+    &= \E(a_{t}^{2} \given F_{t-1}) = \sigma_{t}^{2}
 \end{align*}
 
 \subsubsection{ARCH(1)模型}
@@ -2049,16 +2087,22 @@ ARCH(m)的似然函数如下所示：
     \prod_{t=m+1}^{T} \frac{1}{\sqrt{2\pi\sigma_{t}^{2}}} \exp \left[ -\frac{a_{t}^{2}}{2\sigma_{t}^{2}} \right]
 \end{equation*}
 
-最大化上式得到的估计称之为\uline{条件最大似然估计（MLE）}，同时最大化条件似然函数\uline{等价于}最大化其对数，将条件似然函数（相乘），改写为对数似然函数（相加）:
+最大化如上联合分布，得到的估计称之为\uline{条件最大似然估计（MLE）}，同时最大化条件似然函数\uline{等价于}最大化其对数，将条件似然函数（相乘），改写为对数似然函数（相加）:
 \begin{equation*}
-    \mcl(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m) =
-    \sum_{i=m+1}^{T} \left[ -\frac{1}{2}\ln(2\pi) - \frac{1}{2} \ln(\sigma_{t}^{2}) - \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
+    \mcl(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m)
+    = \sum_{i=m+1}^{T} \left[ -\frac{1}{2}\ln(2\pi) - \frac{1}{2} \ln(\sigma_{t}^{2}) - \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
 \end{equation*}
 
 由于第一项为常数，因此对数似然函数可写为：
 \begin{equation*}
     \mcl(a_{m+1},\dots,a_T \given \bm{\alpha},a_1,\dots,a_m) =
     \sum_{i=m+1}^{T} \left[ - \frac{1}{2} \ln(\sigma_{t}^{2}) - \frac{1}{2} \frac{a_{t}^{2}}{\sigma_{t}^{2}} \right]
+\end{equation*}
+
+或简单写成：
+\begin{equation*}
+    \mcl(\theta \given F_{t-1})
+    = -\frac{T}{2}\ln(2\pi) - \frac{1}{2} \sum_{t=1}^{T} \ln(\sigma_{t}^{2}) - \frac{1}{2} \sum_{t=1}^{T} \frac{a_{t}^{2}}{\sigma_{t}^{2}}
 \end{equation*}
 
 \subsection{GARCH模型}
@@ -2086,13 +2130,13 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
     \item 仔细检验第四步中拟合出的模型，如有必要则对其进行修改
 \end{itemize}
 
-\subsubsection*{错误做法}
+\subsubsection*{注意}
 
 由上述分析可知ARMA(p,q)的阶数，与GARCH(m,s)的阶数含义完全不同。ARMA是对于均值建模，而GARCH模型为$r_t$额波动率建模。
 
-将均值模型与波动率模型拆开估计，与两者联合估计并不相同。若将其拆开估计，即先使用ARMA(p,q)对$r_t$建模，确定最优参数p和q，而后使用ARMA模型残差对其进行GARCH建模。由于此时因变量或被解释变量为残差，因此相当于使用均值为0的均值模型，与GARCH模型进行联合估计。即抛弃了联合估计中异方差对收益率序列的影响。
+将均值模型与波动率模型拆开估计，与两者联合估计并不相同。若将其拆开估计，即先使用ARMA(p,q)对$r_t$建模，确定最优参数p和q，得到残差序列。而后使用GARCH模型对残差进行建模。由于此时因变量或被解释变量为残差，因此相当于使用均值为0的均值模型，与GARCH模型进行联合估计。即抛弃了联合估计中异方差对收益率序列的影响。在Tuey的3.5.4章节中也提到了两步估计的方法，认为是真是参数的一种近似，统计性质并没有得到很好的研究。
 
-\subsection{(G)ARCH估计}
+\subsubsection{(G)ARCH估计}
 
 假设ARCH(1)模型：
 \begin{align*}
@@ -2101,7 +2145,7 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
     \sigma^2 &= \alpha_0 + \alpha_1 a_{t-1}^{2}
 \end{align*}
 
-均值$\mu$为常数，且有$\varepsilon_t$服从均值为$0$方差为$1$的高斯分布，即高斯白噪声。此时待估参数为$\theta = (\mu,\alpha_0,\alpha_1)$，此时高斯似然函数有：
+均值$\mu$为常数，且有$\varepsilon_t$服从均值为$0$方差为$1$的高斯分布，即高斯白噪声。此时待估参数为$\theta = (\mu,\alpha_0,\alpha_1)^{'}$，此时高斯似然函数有：
 \begin{align*}
     \mcl( \theta \given r_t,F_{t-1})
     &= \frac{1}{\sqrt{2\pi\sigma_{t}^{2}(\theta)}} \exp \left[ -\frac{1}{2} \frac{a_{t}^{2}(\theta)}{\sigma_{t}^{2}(\theta)} \right] \\
@@ -2114,11 +2158,67 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
     a_t &= \sigma_t \varepsilon_t
 \end{align*}
 
-假设$\varepsilon_t$为独立同分布，且满足$\E(\varepsilon_t)=0$和$\Var(\varepsilon_t)=1$，那么此时的高斯对数似然函数为如下所示。当$\varepsilon_t$不是高斯分布，那么此时称为\uline{准对数似然函数}（Quasi-log-likelihood）
+假设$\varepsilon_t$为独立同分布，且满足$\E(\varepsilon_t)=0$和$\Var(\varepsilon_t)=1$，那么此时的高斯对数似然函数为如下所示。当$\varepsilon_t$不是高斯分布，那么此时称为\uline{准对数似然函数}（Quasi-log-likelihood）。
 \begin{align*}
     \sum_{t=1}^{T} \ln \mcl_t(\theta)
     &= \sum_{t=1}^{T} \ln \left[ \frac{1}{\sqrt{2\pi\sigma_{t}^{2}(\theta)}} \exp \left( -\frac{1}{2} \frac{(r_t - \mu_t(\theta))^2}{\sigma_{t}^{2}(\theta)} \right) \right]
 \end{align*}
+
+在特定条件下，$\hat{\theta}_{\text{GQML}} = \arg \max \sum_{t=1}^{T} \ln \mcl_t{\theta}$满足：
+\begin{gather*}
+    \hat{\theta}_{\text{GQML}} \xrightarrow{P} \theta_0 \qquad \text{[consistency]}\\
+    \sqrt{T}(\hat{\theta}_{\text{GQML}}-\theta_0) \xrightarrow{d} N(0,J^{-1}\Sigma J^{-1}) \qquad\text{[asympototic normality]} \\
+    J = -\E\left[ \frac{\partial^2 \ln \mcl_t(\theta_0)}{\partial \theta \partial \theta^{'}} \right] \qquad
+    \Sigma = \E\left[ \frac{\partial \ln \mcl_t(\theta_0)}{\partial \theta} \frac{\partial \ln \mcl_t(\theta_0)}{\partial \theta^{'}} \right] \qquad
+\end{gather*}
+
+\subsubsection{AR(1)+GARCH(1,1)}
+
+对于使用AR(1)作为均值模型，GARCH(1,1)作为波动率模型进行联合估计，其中$\varepsilon_t$均值为$0$方差为$1$：
+\begin{align*}
+    r_t &= \phi_0 + \phi_1 r_{t-1} + a_t \\
+    a_t &= \sigma_t \varepsilon_t \\
+    \sigma_t^2 &= \alpha_0 + \alpha_1 a_{t-1}^{2} + \beta_1 \sigma_{t-1}^{2}
+\end{align*}
+
+对于AR(1)模型，其均值方差分别有：
+\begin{gather*}
+    \E(r_t) = \frac{\phi_0}{1-\phi_1} \\
+    \Var(r_t) = \frac{\sigma_{a}^2}{1-\phi_1^2}\\
+\end{gather*}
+
+由于$r_t$是$\varepsilon_t$的线性组合，因此其为正态分布。由于$r_t$与$r_{t-1}$联合正态分布，那么其边缘（Marginal）分布也为正态分布，因此可以得到：
+\begin{equation*}
+    f_{r_2 \given r_1} \sim N(\phi_0 + \phi_1 r_1,\sigma_{2}^{2})
+\end{equation*}
+
+此时对于GARCH(1,1)模型，有其边缘分布PDF为：
+\begin{equation*}
+    f_{r_2 \given r_1} = \frac{1}{\sqrt{2\pi(\alpha_0 + \alpha_1 a_{1}^{2} + \beta_1 \sigma_{1}^{2})}} \exp \left[ -\frac{1}{2} \frac{(r_2 - \phi_0 -\phi_1 r_1)^2}{(\alpha_0 + \alpha_1 a_{1}^{2} + \beta_1 \sigma_{1}^{2})} \right]
+\end{equation*}
+
+同理$f_{r_3 \given r_2}$分布如下：
+\begin{equation*}
+    f_{r_3 \given r_2} \sim N(\phi_0 + \phi_1 r_2,\sigma_{3}^{2})
+\end{equation*}
+
+同理$f_{r_3 \given r_2}$的边缘分布PDF具体：
+\begin{equation*}
+    f_{r_3 \given r_2} = \frac{1}{\sqrt{2\pi(\alpha_0 + \alpha_1 a_{2}^{2} + \beta_1 \sigma_{2}^{2})}} \exp \left[ -\frac{1}{2} \frac{(r_3 - \phi_0 -\phi_1 r_1)^2}{(\alpha_0 + \alpha_1 a_{2}^{2} + \beta_1 \sigma_{2}^{2})} \right]
+\end{equation*}
+
+那么$f_{r_{t} \given r_{t-1}}$有
+\begin{equation*}
+    f_{r_{t} \given r_{t-1}} = \frac{1}{\sqrt{2\pi(\alpha_0 + \alpha_1 a_{t-1}^{2} + \beta_1 \sigma_{t-1}^{2})}} \exp \left[ -\frac{1}{2} \frac{(r_{t} - \phi_0 -\phi_1 r_{t-1})^2}{(\alpha_0 + \alpha_1 a_{t-1}^{2} + \beta_1 \sigma_{t-1}^{2})} \right]
+\end{equation*}
+
+则有对数似然函数为：
+\begin{align*}
+    \mcl_T(\theta \given r_1) &= \sum_{t=2}^{T} \ln f_{r_{t} \given r_{t-1}} \\
+    &= -\frac{T}{2}\ln(2\pi) - \frac{1}{2} \sum_{t=1}^{T} \ln(\sigma_{t}^{2}) - \frac{1}{2} \sum_{t=1}^{T} \frac{(r_{t} - \phi_0 -\phi_1 r_{t-1})^2}{\sigma_{t}^{2}}
+\end{align*}
+
+其中有$\sigma_t^2 = \alpha_0 + \alpha_1 a_{t-1}^{2} + \beta_1 \sigma_{t-1}^{2}$
 
 \section{卡尔曼滤波}
 
@@ -2141,8 +2241,8 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
 
 计算步骤
 \begin{gather*}
-    \hat{\xi}_{1\given 0} = E(\xi_1) \\
-    P_{1\given 0} = E\{[\xi_1 - E(\xi_1)][\xi_1 - E(\xi_1)]'\}
+    \hat{\xi}_{1\given 0} = \E(\xi_1) \\
+    P_{1\given 0} = \E \left\{[\xi_1 - \E(\xi_1)][\xi_1 - \E(\xi_1)]'\right\}
 \end{gather*}
 
 迭代
@@ -2156,7 +2256,7 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
 平滑
 \begin{gather*}
     \mathbf{J_t} \equiv \mathbf{P_{t\given t}F'P^{-1}_{t+1\given t}} \\
-    \hat{\mathbf{\xi}_{t\given T}} = \hat{\mathbf{\xi}}_{t\given t} + J(\hat{\xi}_{t+1\given T} - \hat{\xi}_{t+1\given t})
+    \hat{\mathbf{\xi}}_{t \given T} = \hat{\mathbf{\xi}}_{t \given t} + J(\hat{\xi}_{t+1 \given T} - \hat{\xi}_{t+1 \given t})
 \end{gather*}
 
 \end{document}

@@ -1976,39 +1976,52 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
     \E(a_t \given F_{t-1}) &= \E(\sigma_t \varepsilon_t \given F_{t-1}) = \varepsilon_t \E(\sigma_t \given F_{t-1}) = 0
 \end{align*}
 
-同时新息$a_t$的无条件方差为：
+对于条件方差有性质\uline{提取已知量}，即对于已知量，可以直接从条件期望中提出。具体而言，若$X$是$\mathcal{H}$可测的，应有：
+\begin{equation*}
+    \E[X Y\given \mathcal{H}] = X \E[Y \given \mathcal{H}] 
+\end{equation*}
+
+同时新息$a_t$的无条件方差，根据总期望定律与上述提取已知量（$\sigma_{t}^{2}$为$F_{t-1}$可测）有：
 \begin{align*}
-    \Var(a_t) &= \E\left[(a_t - E[a_t])^2\right] \\
-    &= \E\left[ a_t^2 \right] = \E\left[ \E(a_t^2 \given F_{t-1}) \right]
+    \Var(a_t) &= \E\left[\left(a_t - \E(a_t)\right)^2\right]
+    = \E\left[ a_t^2 \right] \\
+    &= \E\left[ \E(a_t^2 \given F_{t-1}) \right]
     = \E\left[ \E(\sigma_t^2 \varepsilon_t^2 \given F_{t-1}) \right] \\
     &= \E\left[ \sigma_t^2 \E( \varepsilon_t^2 \given F_{t-1}) \right] \\
-    &= \E\left[ \sigma_t^2 \right]
+    &= \E\left[ \sigma_t^2 \right] = \E \left[ \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^{2} \right] \\
+    &= \alpha_0 + \alpha_1 \E(a_{t-1}^{2}) + \dots + \alpha_m \E(a_{t-m}^{2}) \\
+    &= \alpha_0 + \alpha_1 \Var(a_{t-1}) + \dots + \alpha_m \Var(a_{t-m})
 \end{align*}
+
+由于$a_t$是平稳过程，$\Var(a_{t}) = \Var(a_{t-1})$，且为正，因此系数有如下限制条件：
+\begin{equation*}
+    \Var(a_t) = \frac{\alpha_0}{1-\alpha_1 - \dots - \alpha_m}
+\end{equation*}
 
 由于$\varepsilon_t$独立，显然有：
 \begin{equation*}
     \Var(\varepsilon_t) = \Var(\varepsilon_t \given F_{t-1}) = \E(\varepsilon_{t}^{2} | F_{t-1}) = 1
 \end{equation*}
 
-对于条件方差有性质\uline{提取已知量}，即对于已知量，可以直接从条件期望中提出。具体而言，若$X$是$\mathcal{H}$可测的，应有：
-\begin{equation*}
-    \E[X Y\given \mathcal{H}] = X \E[Y \given \mathcal{H}] 
-\end{equation*}
-
-由于$\sigma_t$可以通过$F_{t-1}$信息集获得，为已知量。因此可以证明：
+对于新息的方差有如下关系，可以证明$\sigma_{t}^{2}$即为\uline{新息的条件方差}，可以看到其与滞后项有关，较大的历史冲击会导致较大的方差：
 \begin{align*}
     \Var(a_t \given F_{t-1})
     &= \E(a_{t}^{2} \given F_{t-1})
     = \E(\sigma_{t}^{2} \varepsilon_{t}^{2} \given F_{t-1}) \\
-    &= \sigma_{t}^{2} \E(\varepsilon_{t}^{2} \given F_{t-1})
-    = \sigma_{t}^{2}
+    &= \sigma_{t}^{2} \E(\varepsilon_{t}^{2} \given F_{t-1}) \\
+    &= \sigma_{t}^{2} = \alpha_0 + \alpha_1 a_{t-1}^2 + \dots + \alpha_m a_{t-m}^2
 \end{align*}
 
-同理可得：
+同理可得收益率的条件方差也为$\sigma_{t}^{2}$：
 \begin{align*}
     \Var(r_t \given F_{t-1}) &= \E\left[ \left( r_t - \E[r_t \given F_{t-1}] \right)^2 \given F_{t-1} \right] \\
     &= \E(a_{t}^{2} \given F_{t-1}) = \sigma_{t}^{2}
 \end{align*}
+
+同时有收益率的条件均值：
+\begin{equation*}
+    \E(r_t \given F_{t-1}) = \mu_t
+\end{equation*}
 
 \subsubsection{ARCH(1)模型}
 

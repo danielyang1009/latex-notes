@@ -1993,7 +1993,7 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
     &= \alpha_0 + \alpha_1 \Var(a_{t-1}) + \dots + \alpha_m \Var(a_{t-m})
 \end{align*}
 
-由于$a_t$是平稳过程，$\Var(a_{t}) = \Var(a_{t-1})$，且为正，因此系数有如下限制条件：
+由于$a_t$是平稳过程，$\Var(a_{t}) = \Var(a_{t-1})$，且为正，因此系数有如下限制条件$\alpha_0 \geq 0$，$\alpha_1+\dots+\alpha_m<1$，在GARCH模型中即$\alpha$与$\beta$系数之和应小于$1$：
 \begin{equation*}
     \Var(a_t) = \frac{\alpha_0}{1-\alpha_1 - \dots - \alpha_m}
 \end{equation*}
@@ -2118,6 +2118,8 @@ ARCH(m)的似然函数如下所示：
     = -\frac{T}{2}\ln(2\pi) - \frac{1}{2} \sum_{t=1}^{T} \ln(\sigma_{t}^{2}) - \frac{1}{2} \sum_{t=1}^{T} \frac{a_{t}^{2}}{\sigma_{t}^{2}}
 \end{equation*}
 
+在Python中可使用\verb|scipy.optimize.minimize|进行求解，最大化似然函数，即最小化负的对数似然函数（Neg Log-Likelihood）。
+
 \subsection{GARCH模型}
 
 Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\textbf{广义ARCH模型}（Generalized Autoregressive Conditional Heteroskedasticity，GARCH）。对于对数收益率序列$r_t$，令$a_t = r_t - \mu_t$为$t$时刻的新息或冲击，则称$a_t$服从GARCH(m,s)模型，若$a_t$满足下式：
@@ -2197,7 +2199,7 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
 对于AR(1)模型，其均值方差分别有：
 \begin{gather*}
     \E(r_t) = \frac{\phi_0}{1-\phi_1} \\
-    \Var(r_t) = \frac{\sigma_{a}^2}{1-\phi_1^2}\\
+    \Var(r_t) = \frac{\sigma_{a}^2}{1-\phi_1^2}
 \end{gather*}
 
 由于$r_t$是$\varepsilon_t$的线性组合，因此其为正态分布。由于$r_t$与$r_{t-1}$联合正态分布，那么其边缘（Marginal）分布也为正态分布，因此可以得到：

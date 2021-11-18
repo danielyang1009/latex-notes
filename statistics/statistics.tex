@@ -1211,23 +1211,98 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     = \sum_{t=1}^{T} \ln f_{X_t \given X_{t-1},\dots,X_1}(\theta_t)
 \end{equation*}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{fig/W-L-S-test.png}
-    \caption{Likelihood/Wald/Score Test}
-\end{figure}
+\section{三大检验}
 
-\subsection{似然比}
+如下图所示，$\mcl(\theta_A^{MLE})$为无约束的最大似然，$\mcl(\theta_O^{MLE})$为约束条件（原假设$H_0$）下的最大似然。三种检验方式是渐进等价的，只是检验方式不同，其统计检验量都服从卡方分布$\chi^2(m)$,其中$m$为约束条件数量。
 
-似然比（Likelihood ratio）
-\begin{equation*}
-    \Lambda(\theta_1,\theta_2 \given x) = \frac{\mcl(\theta_1 \given x)}{\mcl(\theta_2 \given x)}
-\end{equation*}
+\begin{itemize}
+    \item 进行LR检验，需要同时估计约束模型，以及无约束模型
+    \item 进行LM检验，只需要估计约束模型，但需要估计方差协方差矩阵
+    \item 进行W检验，只需要估计无约束模型，但需要估计方差-协方差矩阵
+\end{itemize}
 
 \begin{remark}
-    在Python中有如下模块：
+    参考
     \begin{itemize}
-        \item \href{https://www.mathworks.com/help/econ/lratiotest.html}{Matlab: lratiotest}（Likelihood ratio检验）
+        \item 在Python中，可使用如下模块\href{https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html}{RegressionResults}进行检验
+        \item 在Matlab中可参考\href{https://www.mathworks.com/help/econ/model-comparison-tests.html}{Model Comparison Tests}
+    \end{itemize}
+\end{remark}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/lr-Lm-w-test.png}
+    \caption{LR/LM/W Test}
+\end{figure}
+
+\subsection{F检验}
+
+可以使用F检验，检验\uline{线性约束条件}是否成立。假设约束模型$\theta_{k+1}=\theta_{k+2}=\dots=\theta_{k+m}=0$，即有$m$个约束条件，形式如下：
+\begin{equation*}
+    y_t = \theta_0 + \theta_1 x_{t,1} + \dots + \theta_{k} x_{t,k} + \varepsilon_t
+\end{equation*}
+
+无约束模型有如下形式：
+\begin{equation*}
+    y_t = \theta_0 + \theta_1 x_{t,1} + \dots + \theta_{k} x_{t,k} + \theta_{k+1} x_{t,k+1} + \dots + \theta_{k+m} x_{t,k+m} + \varepsilon_t
+\end{equation*}
+
+此时原假设$H_0: \theta_{k+1}=\theta_{k+2}=\dots=\theta_{k+m}=0$，其统计量为如下所示，此时$N$为样本容量，$m$为约束条件个数，其中$k+m+1$为无约束模型中回归参数的个数（包含常数$\theta_0$）
+\begin{equation*}
+    F = \frac{(SSE_{r} - SSE_{ur})/m}{SSE_{ur}/(N-(k+m+1))} \sim F(m,N-(k+m+1))
+\end{equation*}
+
+当$F > F_{\alpha}(m,N-(k+m+1))$时，拒绝原假设，即约束条件不成立。反之，当$F \leq F_{\alpha}(m,N-(k+m+1))$时，约束条件成立。
+
+\begin{remark}
+    在Python与Matlab中有如下模块：
+    \begin{itemize}
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.compare_f_test.html}{Python: compare\_f\_test}
+    \end{itemize}
+\end{remark}
+
+\subsection{似然比检验（LR）}
+
+似然比（Likelihood ratio）检验认为，如果约束条件成立，可理解为约束前后没有变化，那么两个模型估计出的似然函数值应该近似相等。若$\theta_{r}$为约束模型（Restricted）的系数，其中$\theta_{r} = (\theta_1,\dots,\theta_k,\theta_{k+1}=0,\dots,\theta_{k+m}=0)$，共有$m$个系数被为0，即有$m$个约束条件。而$\theta_{ur} = (\theta_1,\dots,\theta_{k+m})$为无约束模型（Un-restricted）系数，可计算似然比为：
+\begin{equation*}
+    LR = -2\ln \frac{L(\theta_{r})}{L(\theta_{ur})}
+    = 2\left(\ln L(\theta_{ur}) - \ln L(\theta_{r})\right)
+    \sim \chi^2(m)
+\end{equation*}
+
+原假设（$H_0$）为约束模型$\theta_r$（小模型）对于数据的拟合与非约束模型（大模型）没有差别，$\theta_{k+1}=\theta_{k+2}=\dots=\theta_{k+m}=0$，即约束条件成立。拒绝原假设，约束条件不成立，即非约束模型（大模型）优于约束模型（小模型）。具体而言，当$LR \geq \chi_{\alpha}^2(m)$时，拒接原假设，非约束模型$\theta_{ur}$优于约束模型$\theta_{r}$。
+
+\begin{remark}
+    在Python与Matlab中有如下模块：
+    \begin{itemize}
+        \item \href{https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.OLSResults.compare_lr_test.html}{Python: compare\_lr\_test}
+        \item \href{https://www.mathworks.com/help/econ/lratiotest.html}{Matlab: lratiotest}
+    \end{itemize}
+\end{remark}
+
+\subsection{拉格朗日乘子检验（LM）}
+
+拉格朗日乘子检验（Lagrange multiplier test）或称得分检验（Score test），其中ARCH检验中的LM检验，为特例。
+
+\begin{remark}
+    在Python与Matlab中有如下模块：
+    \begin{itemize}
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.compare_lm_test.html}{Python: compare\_lm\_test}
+        \item \href{https://www.mathworks.com/help/econ/lmtest.html}{Matlab: lmtest}
+    \end{itemize}
+\end{remark}
+
+\subsection{沃尔德检验（Wald）}
+
+沃尔德检验的优点是只需要估计无约束模型，即当约束模型估计困难时，尤为适用。并且F检验和LR检验只适用于检验线性约束条件，而沃尔德检验\uline{适用于线性与非线性约束条件}的检验。其原理如上图所示，测量无约束估计量（参数）与约束估计量（参数）之间的距离。
+
+原假设$H_0$同样为$\theta_{k+1}=\theta_{k+2}=\dots=\theta_{k+m}=0$，即约束条件成立，约束模型与无约束模型没有差别。
+
+\begin{remark}
+    在Python与Matlab中有如下模块：
+    \begin{itemize}
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.wald_test.html}{Python: wald\_test}
+        \item \href{https://www.mathworks.com/help/econ/waldtest.html}{Matlab: waldtest}
     \end{itemize}
 \end{remark}
 

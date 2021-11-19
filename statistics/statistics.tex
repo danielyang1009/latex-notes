@@ -1211,6 +1211,20 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     = \sum_{t=1}^{T} \ln f_{X_t \given X_{t-1},\dots,X_1}(\theta_t)
 \end{equation*}
 
+\subsection{准最大似然估计}
+
+准最大似然估计（Quasi-maximum likelihood estimate），与最大似然估计相同，但标准误需要调整。在MLE中：
+\begin{equation*}
+    Avar(\theta) = [I(\theta)]^{-1} =  [-\E(H(\theta))]^{-1} = \left(-\E \left[ \frac{\partial^2 \ln L(\theta)}{\partial \theta \partial \theta^{'}}\right] \right)^{-1}
+\end{equation*}
+
+在QMLE中 robust standard errors为MLE版本的White's consistent standard errors，或称为Huber/White/sandwich estimator。其中Score为gradient of the likelihood
+\begin{equation*}
+    Avar(\theta) = I^{-1} \frac{\partial L}{\partial \theta}\frac{\partial L'}{\partial \theta} I^{-1}
+\end{equation*}
+
+即中间项，即得分函数的方差，或有$H^{-1} \Var(s) H^{-1}$
+
 \section{三大检验}
 
 如下图所示，$\mcl(\theta_A^{MLE})$为无约束的最大似然，$\mcl(\theta_O^{MLE})$为约束条件（原假设$H_0$）下的最大似然。三种检验方式是渐进等价的，只是检验方式不同，其统计检验量都服从卡方分布$\chi^2(m)$,其中$m$为约束条件数量。
@@ -1265,8 +1279,8 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 似然比（Likelihood ratio）检验认为，如果约束条件成立，可理解为约束前后没有变化，那么两个模型估计出的似然函数值应该近似相等。若$\theta_{r}$为约束模型（Restricted）的系数，其中$\theta_{r} = (\theta_1,\dots,\theta_k,\theta_{k+1}=0,\dots,\theta_{k+m}=0)$，共有$m$个系数被为0，即有$m$个约束条件。而$\theta_{ur} = (\theta_1,\dots,\theta_{k+m})$为无约束模型（Un-restricted）系数，可计算似然比为：
 \begin{equation*}
-    LR = -2\ln \frac{L(\theta_{r})}{L(\theta_{ur})}
-    = 2\left(\ln L(\theta_{ur}) - \ln L(\theta_{r})\right)
+    LR = -2\ln \left[ \frac{L(\theta_{r})}{L(\theta_{ur})} \right]
+    = 2\left[ \ln L(\theta_{ur}) - \ln L(\theta_{r}) \right]
     \sim \chi^2(m)
 \end{equation*}
 
@@ -1914,7 +1928,7 @@ $\Delta x_{i}= x_i -x_{i-1}$为$x_t$的差分数列，且$c_t$可以使零或者
     ADF = \frac{\hat{\beta}-1}{s.e.(\hat{\beta})}
 \end{equation*}
 
-\subsection{一致的协方差矩阵估计}
+\subsection{一致的协方差矩阵估计（HC/HAC）}
 
 对于同时同时研究两个时间序列$y_t$与$x_t$的关系，考虑如下线性回归：
 \begin{equation*}
@@ -1957,6 +1971,14 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
 \begin{equation*}
     \omega_j = 1 - \frac{j}{l+1}
 \end{equation*}
+
+\begin{remark}
+    在python中的\verb|statsmodels|进行回归时选择HAC选项即为Newey-West调整，即：
+    \begin{verbatim}
+        ols().fit(cov_type='HAC')
+        some_reg_model.get_robustcov_results(cov_type='HAC')
+    \end{verbatim}
+\end{remark}
 
 \section{条件异方差模型}
 
@@ -2021,6 +2043,7 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
     ARCH效应检验或称为Engle's ARCH test，如上所述应平方序列检验异方差性，详情见Engle（1982），与其他检验如Ljung-box检验，拉格朗日检验，在Python与Matlab中有如下模块可进行计算：
     \begin{itemize}
         \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_lm.html}{Python: acorr\_lm}（拉格朗日乘子序列相关检验）
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.q_stat.html#statsmodels.tsa.stattools.q_stat}{Python: q\_stat}
         \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr\_ljungbox.html}{Python: acorr\_ljungbox}（Ljung-Box序列相关检验）
         \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het\_arch.html}{Python: het\_arch}（Engle异方差检验）
         \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het\_breuschpagan.html}{Python: het\_breuschpagan}（Breusch-Pagan拉格朗日乘子异方差检验）
@@ -2348,5 +2371,184 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
     \mathbf{J_t} \equiv \mathbf{P_{t\given t}F'P^{-1}_{t+1\given t}} \\
     \hat{\mathbf{\xi}}_{t \given T} = \hat{\mathbf{\xi}}_{t \given t} + J(\hat{\xi}_{t+1 \given T} - \hat{\xi}_{t+1 \given t})
 \end{gather*}
+
+\appendix
+
+\begin{appendices}
+
+\section{黑塞矩阵}
+
+对于一元函数$f(x)$，其在$x=x_0$处的泰勒展开为如下，其中$\Delta x = x - x_0$：
+\begin{equation*}
+    f(x) = f(x_)) + f'(x_0) \Delta x + \frac{f''(x)}{2!}\Delta x^2 + \dots
+\end{equation*}
+
+对于二元函数$f(x_1,x_2)$在$x_0=(x_{10},x_{20})$处的泰勒展开为：
+\begin{align*}
+    f(x_1,x_2) &= f(x_{10},x_{20}) + f_{x_1}(x_{10},x_{20})\Delta x_1 + f_{x_2}(x_{10},x_{20})\Delta x_2 \\
+    &\quad + \frac{1}{2} \left[ f_{x_1 x_1} (x_{10},x_{20})\Delta x_1^2 + 2 f_{x_1 x_2} (x_{10},x_{20})\Delta x_1 \Delta x_2 + \frac{1}{2} f_{x_2 x_2} (x_{10},x_{20}) \Delta x_2^2 \right] + \dots
+\end{align*}
+
+此时有$\Delta x_1 = x_1 - x_{10}$，$\Delta x_2 = x_2 - x_{20}$，$f_{x_1} = \frac{\partial f}{\partial x_1}$，$f_{x_2} = \frac{\partial f}{\partial x_2}$，$f_{x_1 x1} = \frac{\partial^2 f}{\partial x_1^2}$
+$f_{x_1 x_2} = \frac{\partial^2 f}{\partial x_1 \partial x_2}$，$f_{x_2 x2} = \frac{\partial^2 f}{\partial x_2^2}$。若将泰勒展开式，改写为矩阵形式则应有：
+\begin{equation*}
+    f(x) = f(x_0) + \nabla f(x_0)^{T}\Delta x + \frac{1}{2}\Delta x^{T} G(x_0) \Delta x + \dots
+\end{equation*}
+
+此时$\Delta x = \begin{bmatrix} \Delta x_1\\ \Delta x_2 \end{bmatrix}$，为$\Delta x^{T}$为其转置。$\nabla f(x_0) = \begin{bmatrix} \frac{\partial f}{\partial x_1} \\ \frac{\partial f}{\partial x_2} \end{bmatrix}_{x_0}$为函数$f(x_1,x_2)$在$x_0(x_{10},x_{20})$的\textbf{梯度}（Gradient）。假设$f:\R^n \rightarrow \R$为标量函数，或标量场（Scalar filed），其梯度$\nabla f:\R^n \rightarrow \R^n$为向量函数，产生一个向量场（Vector field）。即在每一点，其梯度为向量。同时有：
+\begin{equation*}
+    G(x_0) =
+    \begin{bmatrix}
+        \frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} \\
+        \frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2} \\
+    \end{bmatrix}_{x_0}
+\end{equation*}
+
+此时$G(x_0)$为函数$f(x_1,x_2)$在$x_0=(x_{10},x_{20})$处，$2\times 2$的\textbf{黑塞矩阵}（Hessian matrix），或用$\hess$表示。其中：
+\begin{equation*}
+    \hess_{i,j} = \frac{\partial^2 f}{\partial x_i \partial_j}
+\end{equation*}
+
+假设方程$f:\R^n \rightarrow \R$，其输入为向量$\mathbf{x}\in \R^n$，输出为$f(\bm{x})$为标量，其二阶导存在且连续，则黑塞矩阵为该函数$f$所有二阶偏导数组成的矩阵。并由于
+\begin{equation*}
+    \frac{\partial^2 f}{\partial x_1 \partial x_2}
+    = \frac{\partial^2 f}{\partial x_2 \partial x_1}
+\end{equation*}
+
+因此黑塞矩阵为对称矩阵（Symmetric matrix），即为方形矩阵，其转置矩阵与自身相等，有$\hess = \hess^{T}$。
+
+同理对于多元函数$f(x_1,x_2,\dots,x_n)$在$x_0(x_1,x_2,\dots,x_n)$处泰勒展开的矩阵形式与二元时相同，即：
+\begin{equation*}
+    f(x) = f(x_0) + \nabla f(x_0)^{T}\Delta x + \frac{1}{2}\Delta x^{T} G(x_0) \Delta x + \dots
+\end{equation*}
+
+其中梯度$\nabla f(x_0)$有：
+\begin{equation*}
+    \nabla f(x_0) = 
+    \begin{bmatrix}
+        \frac{\partial f}{\partial x_1} \\
+        \frac{\partial f}{\partial x_2} \\
+        \vdots \\
+        \frac{\partial f}{\partial x_n} \\
+    \end{bmatrix}_{x_0}
+\end{equation*}
+
+其黑塞矩阵为：
+\begin{equation*}
+    G(x_0) =
+    \begin{bmatrix}
+        \frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} & \cdots & \frac{\partial^2 f}{\partial x_1 \partial x_n} \\
+        \frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2} & \cdots & \frac{\partial^2 f}{\partial x_2 \partial x_n} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        \frac{\partial^2 f}{\partial x_n \partial x_1} & \frac{\partial^2 f}{\partial x_n \partial x_2} & \cdots & \frac{\partial^2 f}{\partial x_n^2} \\
+    \end{bmatrix}_{x_0}
+\end{equation*}
+
+假设函数$\mathbf{f}:R^n \rightarrow \R^m$为向量场，或向量函数，即该方程的输入为$\mathbf{x} \in \R^n$为$(x_1,x_2,\dots,x_n)$，输出为$\mathbf{f}(\mathbf{x}) \in \R^m$为$(f_1(\mathbf{x}),f_2(\mathbf{x}),\dots,f_m(\mathbf{x}))$。此时\textbf{雅可比矩阵}（Jacobian matrix）或用$\jaco$表示，为$m \times n$的矩阵，为$\jaco_{i,j} = \frac{\partial f_i}{\partial x_j}$。具体而言：
+\begin{equation*}
+    \jaco =
+    \begin{bmatrix}
+        \frac{\partial \mathbf{f}}{\partial x_1} & \dots & \frac{\partial \mathbf{f}}{\partial x_n} \\
+    \end{bmatrix}
+    = \begin{bmatrix}
+        \nabla^{T} f_1 \\
+        \vdots \\
+        \nabla^{T} f_m \\
+    \end{bmatrix}
+    = \begin{bmatrix}
+        \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\
+        \vdots & \ddots & \vdots \\
+        \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n} \\
+    \end{bmatrix}
+\end{equation*}
+
+其中$\frac{\partial \mathbf{f}}{\partial x_n}$为列向量，而$\nabla^T f_m$为$f_m$梯度向量的转置，转置后为行向量。
+
+\begin{example}
+    雅可比矩阵
+
+    对于向量方程$\mathbf{f}:\R^2 \rightarrow \R^2$，即对于$(x_1,x_2) \mapsto (f_1(x_1,x_2),f_1(x_1,x_2))$有：
+    \begin{equation*}
+        \mathbf{f}\left(
+            \begin{bmatrix}
+                x_1 \\
+                x_2 \\
+            \end{bmatrix}
+        \right)
+        = \begin{bmatrix}
+            f_1(x_1,x_2) \\
+            f_2(x_1,x_2) \\
+        \end{bmatrix}
+        = \begin{bmatrix}
+            x_1^2 x_2 \\
+            5x_1 + \sin x_2 \\
+        \end{bmatrix}
+    \end{equation*}
+
+    那么此时向量函数$\mathbf{f}$的雅可比矩阵应为：
+    \begin{equation*}
+       \jaco = \begin{bmatrix}
+            \frac{\partial f_1}{\partial x_1} & \frac{\partial f_1}{\partial x_2} \\
+            \frac{\partial f_2}{\partial x_1} & \frac{\partial f_2}{\partial x_2} \\
+        \end{bmatrix}
+        = \begin{bmatrix}
+            2 x_1 x_2 & x_1^2 \\
+            5 & \cos x_2 \\
+        \end{bmatrix}
+    \end{equation*}
+    
+\end{example}
+
+对于梯度、黑塞矩阵与雅可比矩阵，需要注意区分：
+\begin{itemize}
+    \item 梯度：在标量函数$f:R^n \rightarrow \R$，一阶导数（列）的向量
+    \item 黑塞：在标量函数$f:R^n \rightarrow \R$，二阶导数（对称）的矩阵
+    \item 雅可比：在向量函数$\mathbf{f}:R^n \rightarrow \R^m$，一阶导数（行）的矩阵
+\end{itemize}
+
+\begin{property}
+函数$f$黑塞矩阵和雅可比矩阵有如下关系：
+\begin{equation*}
+    \hess(f) = \jaco(\nabla{f})
+\end{equation*}
+\end{property}
+
+\begin{proof}
+    如上所述$\nabla f: \R^n \rightarrow \R^n$为向量函数，其为$\mathbf{f}$，即有：
+    \begin{equation*}
+        \mathbf{f} \left(
+        \begin{bmatrix}
+            x_1 \\
+            x_2 \\
+            \vdots \\
+            x_n \\
+        \end{bmatrix}
+        \right)
+        = \begin{bmatrix}
+            \frac{\partial f}{\partial x_1} \\
+            \frac{\partial f}{\partial x_2} \\
+            \vdots \\
+            \frac{\partial f}{\partial x_n} \\
+        \end{bmatrix}
+    \end{equation*}
+
+    那么此时函数$f$梯度的雅可比矩阵为：
+    \begin{equation*}
+       \jaco(\nabla f) = \begin{bmatrix}
+            \frac{\partial \left(\frac{\partial f}{\partial x_1}\right)}{\partial x_1} & 
+            \frac{\partial \left(\frac{\partial f}{\partial x_1}\right)}{\partial x_2} & \cdots &
+            \frac{\partial \left(\frac{\partial f}{\partial x_1}\right)}{\partial x_n} \\
+            \frac{\partial \left(\frac{\partial f}{\partial x_2}\right)}{\partial x_1} & 
+            \frac{\partial \left(\frac{\partial f}{\partial x_2}\right)}{\partial x_2} & \cdots &
+            \frac{\partial \left(\frac{\partial f}{\partial x_2}\right)}{\partial x_n} \\
+            \vdots & \vdots & \ddots & \vdots \\
+            \frac{\partial \left(\frac{\partial f}{\partial x_n}\right)}{\partial x_1} &
+            \frac{\partial \left(\frac{\partial f}{\partial x_n}\right)}{\partial x_2} & \cdots &
+            \frac{\partial \left(\frac{\partial f}{\partial x_n}\right)}{\partial x_n} \\
+        \end{bmatrix} = \hess(f)
+    \end{equation*}
+\end{proof}
+
+\end{appendices}
 
 \end{document}

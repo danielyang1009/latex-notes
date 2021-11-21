@@ -1391,11 +1391,24 @@ BSIV与MFIV为风险中性下的波动率
 
 对期权进行定价往往采用风险中性定价法，在风险中性的世界里，所有资产的预期收益率都等于无风险利率。同样对于未来一段时间内的波动率平均值的估计也可以认为是一种广义的“定价”，因此广义波动率被定义为风险中性的世界里从0时刻到T时刻期间的方差序列的平均值的平方根。
 
+\subsubsection*{二次变差与波动率}
+
+对数收益率或连续收益率的平方应有：
+\begin{align*}
+    ( d\ln S_t )^2 &= \left[ \left(\mu - \frac{1}{2} \sigma^2 \right)dt + \sigma_t dW_t\right]^2 \\
+    & = \sigma_t^2 dW_t dW_t = \sigma_t^2 dt
+\end{align*}
+
+对其积分，有二次变差为：
+\begin{equation*}
+        QV_{0,T}^{S} = \left[\ln S, \ln S \right](0,T) = \int_{0}^{T} (d\ln S_t)^2 dt = \int_{0}^{T} \sigma_t^2 dt
+\end{equation*}
+
 \subsubsection{方差互换与VIX}
 
 一个方差互换远期合约$f$在$t=0$时刻价值（Payoff）定义如下，其中$V$为\textbf{未来已实现方差}（$\sigma_R^2$），为浮动端，而$K$为交割价格（Delivery price）。应为未来价值在\textbf{风险中性}下期望在当前时点的现值：
 \begin{equation*}
-    f = e^{-rT)} \rnE \left[V - K_{var} \right]
+    f = e^{-rT} \rnE \left[V - K_{var} \right]
 \end{equation*}
 
 其中未来已实现方差的离散形式应有，假设一年有252个交易日：
@@ -1799,6 +1812,65 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
 代回原式：
 \begin{equation*}
     V_{\text{BJN}} = \frac{2}{T} \left[ rT - \frac{S_0 e^{rT} - S_*}{S_*} - \ln \frac{S_*}{S_0} + e^{rT} \int_{0}^{S_*} \frac{P(T,K)}{K^2} dk + e^{rT} \int_{S_*}^{\infty} \frac{C(T,K)}{K^2} dK \right] 
+\end{equation*}
+
+\subsection{自适应无模型波动率（AVIX）}
+
+由Zheng,Jiang,和Chen（2017）中提出，采用自适应（Adaptive）的方法计算无模型方差。
+
+在远期测度下（$\fwm$-forward measure），t时刻，标的资产$S$的二次变差可用如下方法计算：
+\begin{equation*}
+    \E_{t}^{\fwm}\left[ QV_{t,T}^S \right] = 
+    \E_{t}^{\fwm}\left[ QV_{t,T}^F \right] - \E_{t}^{\fwm}\left[ QV_{t,T}^B \right] + 2 \E_{t}^{\fwm}\left[ CV_{t,T}^{B,S} \right]
+\end{equation*}
+
+其中远期得二次变差如下，对于$\varepsilon_t$为跳跃误差项（Jump error）可证明其足够小可以被忽略：
+\begin{gather*}
+    \E_{t}^{\fwm}\left[ QV_{t,T}^F \right] = \frac{2}{B_t} \int_{0}^{\infty} \frac{c_t(T,K) - B_t \max(F_t -K,0)}{K^2} dK - 2\varepsilon_t \\
+    \varepsilon_t = \E_{t}^{T} \left[ \int_{t}^{\fwm} \int_{R^0} \left( e^x - 1 -x - \frac{x^2}{2} \upsilon_{u}^{\fwm}(dx)du \right) \right]
+\end{gather*}
+
+与VIX相同，AVIX计算30天（日历日）的二次变差的期望。因此第一项在实际计算中，需要通过前后插值得到30天值。其中$T_1$应为小于30天，而$T_2$应大于30天，但当$T_1$小于等于3天，应选取接下两组期限最近的期权作进行计算。
+\begin{equation*}
+    \frac{T_2 - 30}{T_2 - T_1} IV_{T_1} + 
+    \frac{30 - T_1}{T_2 - T_1} IV_{T_2}
+\end{equation*}
+
+其中$IV_{T_1}$与$IV_{T_2}$分别为，即为标的资产二次变差第一项进行离散化：
+\begin{gather*}
+    IV_{T_1} = \frac{2}{B(t,T_1)} \sum_{i=1}^{m} \frac{\bar{c}_t(T_1,K_i) - B(t,T_1) \max\left(F^{*}(t,T_1)-K_i,0\right)}{K_{i}^{2}} \Delta K_i \\
+    IV_{T_2} = \frac{2}{B(t,T_2)} \sum_{i=1}^{m} \frac{\bar{c}_t(T_2,K_i) - B(t,T_2) \max\left(F^{*}(t,T_2)-K_i,0\right)}{K_{i}^{2}} \Delta K_i
+\end{gather*}
+
+相比VIX，AVIX为自适应（Adaptive）的，即选择流动性较好的期权数据进行计算$\bar{c}_t$。根据自适应选取的流动性较好的期权价格，再针对截断误差（Truncation errors）与离散误差（Discretization errors），进行插值（Interpolation）与外推（Extrapolation），从而计算第一项的离散积分值。
+
+具体而言，选取实际市场中观察到的一系列的$c(T,K)$与$K$，使用BS公式将其转换为其隐含波动率$\sigma$。随后在$(K_{\min},K_{\max})$中进行三次样条插值（Cubic spline interpolation），根据所需要的$K^{'}$得到插值后的$\sigma^{'}$。对于市场可观测行权价范围之外的，需要插值的$K'$，对于$K'<K_{\min}$则使用$\sigma' = \sigma_{K_{\min}}$。同理，对于$K'>K_{\max}$则使用$\sigma' = \sigma_{K_{\max}}$。最后，将所有插值得到的$K^{'}$与$\sigma^{'}$，通过BS进行计算，得到市场不能观察到的$c'(T,K^{'})$，进行积分最终得到第一项的离散化积分值。
+\begin{equation*}
+    \bar{c}_t(T,K) = \left\{
+    \begin{array}{cl}
+        c_t(T,K) &\quad V_\text{call} > 150\% \cdot V_\text{put} \\
+        \frac{c_t(T,K) + p_t(T,K) + F_{t}^{*} B_t - K B_t}{2} &\quad \frac{1}{150\%} \cdot V_\text{put} \leq V_\text{call} \leq 150\% \cdot V_\text{put} \\
+        p_t(T,K) + F_{t}^{*} B_t - K B_t &\quad V_\text{call} \leq \frac{1}{150\%} \cdot V_\text{put}
+    \end{array}
+    \right.
+\end{equation*}
+
+$F_{t}^{*}$由PCP关系计算获得，即：
+\begin{gather*}
+    c_t + KB_t = p_t + S_t = p_t + F_{t}^{*} B_t \\
+    F_{t}^{*} = \frac{c_t - p_t}{B_t} + K = (c_t - p_t) e^{r(T-t)} + K
+\end{gather*}
+
+综上，对于标的资产$S$的二次变差，加入第二项与第三项，计算结果如下，其中$w=T-t$：
+\begin{align*}
+    \E_{t}^{\fwm}\left[ QV_{t,T}^{S} \right] &\approx
+    \frac{2}{B_t} \sum_{i=1}^{m} \frac{\bar{c}_t(T,K_i) - B_t \max(F_{t}^{*} - K_i,0)}{K_i^2} dK \\
+    &\qquad - \sum_{u=t-w}^{t}d\ln B_u \cdot \ln B_u + 2 \sum_{u=t-w}^{t}d\ln S_u \cdot \ln B_u
+\end{align*}
+
+因此对于AVIX年化后，最终结果为：
+\begin{equation*}
+    \text{AVIX} = 100 \times \sqrt{\E_{t}^{\fwm}\left[ QV_{t,T}^{S} \right] \times \frac{365}{T}}
 \end{equation*}
 
 \section{波动率曲面}
@@ -2282,7 +2354,11 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 
 \divider
 
-以华夏上证50ETF为例，根据510050管理人华夏基金2020年11月11日发布《上证50交易型开放式指数证券投资基金利润分配公告》，2020年11月27日为基金分红的权益登记日，11月30日为基金分红的除息日，分红发放日为12月03日，方案为每十份510050基金分红为0.51元，对象为登记日下午交易结束后所有基金份额持有人。根据交易规则，权益登记日下一交易日，即除息日进行除息除权处理。交易所利用前收盘价，计算除权除息参考价格，作为除息日开盘价（集合竞价产生）的参考。在此例子中27日不复权收盘价3.557，前复权收盘价为3.506，为调整了分红后的收盘价（决定涨跌幅）。
+\begin{example}
+
+华夏上证50ETF
+
+根据510050管理人华夏基金2020年11月11日发布《上证50交易型开放式指数证券投资基金利润分配公告》，2020年11月27日为基金分红的权益登记日，11月30日为基金分红的除息日，分红发放日为12月03日，方案为每十份510050基金分红为0.51元，对象为登记日下午交易结束后所有基金份额持有人。根据交易规则，权益登记日下一交易日，即除息日进行除息除权处理。交易所利用前收盘价，计算除权除息参考价格，作为除息日开盘价（集合竞价产生）的参考。在此例子中27日不复权收盘价3.557，前复权收盘价为3.506，为调整了分红后的收盘价（决定涨跌幅）。
 
 上交所于11月11日同日，发布公告将于2020年11月30日对50ETF期权合约的行权价格、合约单位、合约交易代码和合约简称进行调整，并对除息后的50ETF新挂2020年12月、2021年1月、3月和6月等4个月份的标准化合约。已知510050前一个交易日11月27日周五收盘价为3.557元/份，分红金额为每份分红0.051元，流通股份实际变动比例为0，可计算50ETF期权合约的新合约单位为：
 \begin{equation*}
@@ -2300,6 +2376,8 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 \end{equation*}
 
 可以看到期权合约对于分红的调整有如下几步，先根据ETF27日（除息日30日前一交易日）的收盘价及分红调整合约单位，其实质为缩放比例，为分红调整之后价格与分红之前价格比值的倒数。再根据新合约单位（缩放比例），等比例缩小行权价格与结算价格。合约单位比例放大与价格比例缩小相互抵消，使得合约行权与实际市值保持不变。
+
+\end{example}
 
 \subsubsection*{关于结算价格}
 

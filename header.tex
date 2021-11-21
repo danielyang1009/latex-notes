@@ -26,6 +26,7 @@
 \usepackage{footmisc}
 \usepackage{hyperref}
 \usepackage{tocloft}
+\usepackage{setspace}
 \hypersetup{
     colorlinks=true, %set true if you want colored links
     linkcolor=blue,
@@ -43,7 +44,9 @@
 % Format
 \setlength{\cftbeforesecskip}{6pt}
 \setlength{\parskip}{0.6em}
-\renewcommand{\baselinestretch}{1.4}
+% \renewcommand{\baselinestretch}{1.4}
+\setstretch{1.4} % using setspace
+\renewcommand{\arraystretch}{1.1} % table height
 \setlist{noitemsep,itemindent=1em,topsep=0em,leftmargin=4em,rightmargin=4em}
 \setlist[2]{leftmargin=2em}
 
@@ -79,6 +82,10 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
+
+% T-measure, Q-measure
+\newcommand{\fwm}{\mathbb{T}}
+\newcommand{\rnm}{\mathbb{Q}}
 
 % Matrix
 \newcommand{\jaco}{\mathbf{J}}

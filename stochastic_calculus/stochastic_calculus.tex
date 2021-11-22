@@ -880,7 +880,7 @@ $n$期几何平均收益率有：
     \item 如果到期时间（time to maturity）是根据日历日（calendar day）计算，那么此时的隐含波动率则为每日历日（per calendar day），而VIX计算是根据交易日（trading day），因此进行转换，并根据计算的日历日或交易日进行年化。
 \end{itemize}
 
-\subsection{期权价格边界}
+\subsection{期权价格合理边界}
 
 对于期权价格，有上下边界如下，注意不是BSM偏微分方程中的边界条件：
 \begin{itemize}
@@ -889,8 +889,22 @@ $n$期几何平均收益率有：
     \item 看跌期权的上边界为行权价折现，即$P_t \leq e^{-r(T-t)}K$，与看涨期权最大值同理，看跌期权给予以行权价$K$卖出标的资产的权利，且股票价格最低为0，因此其价值不应超过行权价的现值
     \item 对于期权的下边界，则应有应大于其内在价值。对于有红利资产，则应扣除其红利，再计算其内在价值
     \item 对于完美市场，应有看涨期权下边界为$C_t \geq \max \left[ S_t-Ke^{-r(T-t)} , 0 \right]$
-    \item 同理，对于看跌期权，其下边界为$P_t \geq \max \left[ Ke^{-r(T-t)} - S_t,0 \right]$
+    \item 同理，在完美市场中，看跌期权下边界为$P_t \geq \max \left[ Ke^{-r(T-t)} - S_t,0 \right]$
 \end{itemize}
+
+因此对于看涨期权，其边界应有：
+\begin{equation*}
+    \max\left[ S_t - Ke^{-r(T-t)},0 \right] \leq C_t \leq S_t 
+    \quad \text{或} \quad
+    \max\left[ (F_t - K) B_t,0 \right] \leq C_t \leq F_t B_t
+\end{equation*}
+
+同理对于看跌期权，其边界应用：
+\begin{equation*}
+    \max\left[ Ke^{-r(T-t)} - S_t,0 \right] \leq P_t \leq K e^{-r(T-t)}
+    \quad \text{或} \quad
+    \max\left[ (K - F_t) B_t,0 \right] \leq P_t \leq K B_t
+\end{equation*}
 
 \section{希腊值}
 
@@ -1814,7 +1828,7 @@ VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\te
     V_{\text{BJN}} = \frac{2}{T} \left[ rT - \frac{S_0 e^{rT} - S_*}{S_*} - \ln \frac{S_*}{S_0} + e^{rT} \int_{0}^{S_*} \frac{P(T,K)}{K^2} dk + e^{rT} \int_{S_*}^{\infty} \frac{C(T,K)}{K^2} dK \right] 
 \end{equation*}
 
-\subsection{自适应无模型波动率（AVIX）}
+\subsubsection{自适应无模型波动率（AVIX）}
 
 由Zheng,Jiang,和Chen（2017）中提出，采用自适应（Adaptive）的方法计算无模型方差。
 

@@ -947,36 +947,48 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
 
 \subsection{Black模型}
 
+对于Black期权模型，其公允价值（Fair value）应有：
 \begin{align*}
-    C &= e^{-r\tau}[FN(d_1) - KN(d_2)] \\
-    P &= e^{-r\tau}[KN(-d_2) - FN(-d_1)]
+    C &= e^{-r\tau}\left[FN(d_1) - KN(d_2)\right] \\
+    P &= e^{-r\tau}\left[KN(-d_2) - FN(-d_1)\right]
 \end{align*}
 
 其中有：
 \begin{align*}
     d_1 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
-    d_2 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}} \\
-    d_2 &= d_1 - \sigma \sqrt{\tau}
+    d_2 &= \frac{\ln(F/K) + \sigma^2/2\tau}{\sigma \sqrt{\tau}}
+    = d_1 - \sigma \sqrt{\tau}
 \end{align*}
 
+其中有：
 \begin{equation*}
     \frac{\partial d_1}{\partial F} = \frac{\partial d_2}{\partial F} = \frac{\frac{\partial \ln(F/K)}{\partial F} \sigma \sqrt{\tau}}{(\sigma \sqrt{\tau})^2} = \frac{\partial (\ln F - \ln K)/\partial F}{\sigma\sqrt{\tau}} = \frac{1}{F\sigma\sqrt{\tau}}
 \end{equation*}
 
-\subsubsection{Delta}
+\begin{lemma}
+    \begin{equation*}
+        F N'(d_1) = K N'(d_2)
+    \end{equation*}
+\end{lemma}
 
+\begin{proof}
+    \begin{align*}
+        FN'(d_1) &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
+        KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{\tau}-\sigma^2\tau/2} \\
+        &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\ln(F/K)} 
+        \qquad \left(d_1\sigma\sqrt{\tau} = \ln(F/K)+\sigma^2\tau\right) \\
+        &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} = FN'(d_1)
+    \end{align*}
+\end{proof}
+
+\subsubsection{Delta}
+\noindent
 \begin{align*}
-    FN'(d_1) &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
-    KN'(d_2) &= \frac{K}{\sqrt{2\pi}}e^{-d_2^2/2} = \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+d_1\sigma\sqrt{\tau}-\sigma^2\tau/2} \\
-    &= \frac{K}{\sqrt{2\pi}}e^{-d_1^2/2+\ln(F/K)} 
-    \qquad \left(d_1\sigma\sqrt{\tau} = \ln(F/K)+\sigma^2\tau\right) \\
-    &= \frac{F}{\sqrt{2\pi}}e^{-d_1^2/2} \\
-    &= FN'(d_1) \\
     \text{Delta}_C &= e^{-r\tau}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
     &= e^{-r\tau}N(d_1) \\
     \text{Delta}_P &= e^{-r\tau}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
-    &= e^{-r\tau}(-N(-d_1)) \qquad \left(KN'(-d_2) = KN'(d_2),\, FN'(-d_1)= FN'(d_1)\right) \\
-    &= e^{-r\tau}(N(d_1)-1)
+    &= e^{-r\tau}\left(-N(-d_1)\right) \\
+    &= - e^{-r\tau} N(-d_1)
 \end{align*}
 
 \subsection{BSM模型}
@@ -1053,7 +1065,7 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
     = -N(-d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
 \end{align*}
 
-当已知红利率时，有：
+当已知红利率为$q$时，有：
 \begin{align*}
     \text{Delta}_C &= -e^{-q\tau} N(d_1) \\
     \text{Delta}_P &= -e^{-q\tau} N(-d_1)
@@ -1280,7 +1292,6 @@ Long put, long delta stock/ short put, short delta stock
 
 波动率对价格的大幅上升与价格的大幅下降翻译不同，这一不对称性过去被成为杠杆效应（Leverage effects），因为增加的风险，被认为是来自于负面冲击所引起杠杆的增加。具体而言指，当股票价格下跌时，使得公司股东权益下降，但由于公司负债不变，公司的债务股本比（Debt-to-equity ratio）会增大，公司会有更高的杠杆率。而更高的杠杆也会让公司的信用恶化，促使公司的股票价格进一步下跌。一些波动率模型具体针对已有模型刻画上述这些特征上的落点而提出的，例如EGARC和模型就是为了刻画波动率对资产收益率的不对称性而提出的。
 
-
 \subsection{历史波动率}
 
 历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算：过去30个交易日的标准差。
@@ -1291,8 +1302,6 @@ Long put, long delta stock/ short put, short delta stock
 \end{equation*}
 
 其中$X_t$为股票价格的对数，$t_0,t_1,\dots,t_n$为$[0,T]$区间的一个划分。注意，这个和标准差不一样，这个其实是对数收益率的二阶距。可以证明，用 quadratic variation 得到的估计量是一致估计。???
-
-
 
 \subsection{已实现波动率}
 
@@ -1312,6 +1321,16 @@ Long put, long delta stock/ short put, short delta stock
     \item Hansen和Lunde（2005）
     \item ...
 \end{itemize}
+
+在Jiang和Tian（2005）中，采用了对于时间跨度为$[t,t+\tau]$的年化已实现方差（Annulized ealized variance）的调整，日内高频如五分钟收益率自相关系数较高，以$l=1$进行调整，而30分钟频率以上的数据则不作调整，其中$n$为在此期间内的期数。
+\begin{equation*}
+    V_{t,\tau} = \frac{1}{\tau}\sum_{i=1}^{n} r_i^2 + \frac{2}{\tau}\sum_{i=l}^{h=1}\left( \frac{n}{n-h} \right) \sum_{i=l}^{n-h} r_i r_{i+h}
+\end{equation*}
+
+当$l=1$时：
+\begin{equation*}
+    V_{t,\tau} = \frac{1}{\tau}\sum_{i=1}^{n} r_i^2 + \frac{2}{\tau} \left( \frac{n}{n-1} \right) \sum_{i=1}^{n-1} r_i r_{i+1}
+\end{equation*}
 
 \subsection{条件异方差模型}
 
@@ -2313,7 +2332,7 @@ $S_T < K$ & $0$ & $(K - S_T) + (S_T-K)$ \\
 
 \subsection{中国市场PCP}
 
-在中国市场中，由于标的资产无法自由做多做空，因此现货PCP关系不完全成立。远期可以做多也可以做空，因此远期PCP关系成立：
+在中国市场中，由于标的资产无法自由做多做空，因此现货PCP关系不完全成立。远期可以做多也可以做空，因此远期PCP关系成立，其中远期交割价格等于看涨与看跌期权的行权价，期限相同：
 \begin{equation*}
     C_{t,T} = P_{t,T} + \left( F_{t,T} - K \right) e^{-r(T-t)}
 \end{equation*}
@@ -2602,6 +2621,9 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     & = 2\left[\frac{1}{2} + \frac{1}{\sqrt{2\pi}} \left(\frac{\sigma\sqrt{T-t}}{2} - \frac{(\sigma\sqrt{T-t}/2)^3}{6} + \frac{(\sigma\sqrt{T-t}/2)^5}{40} - \dots + \dots\right) \right] - 1\\
     &\approx \frac{\sigma\sqrt{T-t}}{\sqrt{2\pi}} \approx 0.4\sigma\sqrt{T-t}
 \end{align*}
+
+\section{可转债}
+
 
 \appendix
 

@@ -1935,7 +1935,7 @@ $\Delta x_{i}= x_i -x_{i-1}$为$x_t$的差分数列，且$c_t$可以使零或者
     y_t = \alpha + \beta x_t + e_t
 \end{equation*}
 
-误差项存在着序列相关或者条件异方差性，而分析的目标为回归系数$\alpha$与$\beta$做推断。在系数的最小二乘估计依然满足一致性的情况下，比较广泛的有两种方法能给出系数协方差的一致性估计（Consistent Covariance Matrix Estimation），有Eicker（1967）和White（1980）提出的异方差一致估计（HC），与\uline{Newey和West（1987）}提出的异方差及自相关一致估计（HAC）。使用向量将回归模型改写：
+误差项存在着序列相关或者条件异方差性，而分析的目标为回归系数$\alpha$与$\beta$做推断。在系数的最小二乘估计依然满足一致性的情况下，比较广泛的有两种方法能给出系数协方差的一致性估计（Consistent Covariance Matrix Estimation），有Eicker（1967）和White（1980）提出的异方差一致估计（HC），与\uline{Newey和West（1987）}提出的异方差及自相关一致估计（HAC），即对异方差与自相关都稳健的标准误。使用向量将回归模型改写：
 \begin{equation*}
     y_t = \bm{x}_{t}^{'} \bm{\beta} + e_t \qquad t=1,2,\dots,T
 \end{equation*}

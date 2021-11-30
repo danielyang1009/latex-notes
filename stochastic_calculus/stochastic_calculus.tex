@@ -1261,21 +1261,6 @@ Long put, long delta stock/ short put, short delta stock
 
 波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（Backward looking），一类为前瞻波动率（Forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
 
-波动率的数学定义为：假设$r_t$为一个资产的收益率，一般使用对数收益率（连续复利收益率）时间序列，令$t=1,2,3,\dots,T$，则有样本方差为：
-\begin{align*}
-    \sigma^2 &= \frac{1}{T-1} \sum^T_{t=1} (r_t - \bar{r})^2 \\
-    &= \frac{1}{T-1} \left( \sum^T_{t=1} r_t^2 - 2\bar{r} \sum^T_{t=1} r_t + \sum^T_{t=1} \bar{r}^2 \right) \\
-    &= \frac{1}{T-1} \left( \sum^T_{t=1} r_t^2 - 2T\bar{r}\left(\frac{1}{T} \sum^T_{t=1} r_t \right) + T \bar{r}^2 \right) \\
-    &= \frac{1}{T-1} \left( \sum^T_{t=1} r_t^2 - T \bar{r}^2 \right) \\
-    &= \frac{1}{T-1} \sum^T_{t=1} r_t^2 - \frac{T}{T-1} \left( \frac{1}{T}  \sum^T_{t=1} r_t \right)^2 \\
-    &= \frac{1}{T-1} \sum^T_{t=1} r_t^2 - \frac{1}{T(T-1)} \left( \sum^T_{t=1} r_t \right)^2
-\end{align*}
-
-其中对数收益率与样本均值为：
-\begin{equation*}
-    r_t = \ln \left( \frac{S_t}{S_{t-1}} \right) \qquad \bar{r} = \frac{1}{T} \sum_{t=1}^{T}r_t
-\end{equation*}
-
 \subsection{波动率特征}
 
 波动率虽然不可以直接观测，但其一部分特征能在资产的收益率序列中观察到。
@@ -1294,7 +1279,32 @@ Long put, long delta stock/ short put, short delta stock
 
 \subsection{历史波动率}
 
-历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算：过去30个交易日的标准差。
+历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算过去一个月内交易日的标准差。注意在计算标准差时，即为计算时间频率的波动平均值，如对日频数据计算标准差，得到日频波动率，需要$\times \sqrt{252}$进行年化。
+
+假设$r_i$为一个资产的收益率，对数收益率$r_i = \ln \left( \frac{S_i}{S_{i-1}} \right)$（连续复利收益率）时间序列，令$t=1,2,3,\dots,N$，其样本均值有$\bar{r} = \frac{1}{N} \sum_{i=1}^{N}r_i$，则样本方差为：
+\begin{align*}
+    s^2 &= \frac{1}{N-1} \sum^N_{i=1} (r_i - \bar{r})^2 \\
+    &= \frac{1}{N-1} \left( \sum^N_{i=1} r_i^2 - 2\bar{r} \sum^N_{i=1} r_i + \sum^N_{i=1} \bar{r}^2 \right) \\
+    &= \frac{1}{N-1} \left( \sum^N_{i=1} r_i^2 - 2N\bar{r}\left(\frac{1}{N} \sum^N_{i=1} r_i \right) + N \bar{r}^2 \right) \\
+    &= \frac{1}{N-1} \left( \sum^N_{i=1} r_i^2 - N \bar{r}^2 \right) \\
+    &= \frac{1}{N-1} \sum^N_{i=1} r_i^2 - \frac{N}{N-1} \left( \frac{1}{N}  \sum^N_{i=1} r_i \right)^2 \\
+    &= \frac{1}{N-1} \sum^N_{i=1} r_i^2 - \frac{1}{N(N-1)} \left( \sum^N_{i=1} r_i \right)^2
+\end{align*}
+
+由几何布朗运动可知，在年化波动率为$\sigma$，则样本区间内的对数收益率的波动率应为$\sigma \sqrt{T}$，其中$T$以年为单位：
+\begin{equation*}
+    \ln \frac{S_T}{S_0} \sim N\left[ \left(\mu-\frac{\sigma^2}{2}\right)T ,\sigma^2 T \right]
+\end{equation*}
+
+若估计月波动率或年波动率，如上计算样本标准差$s$即为$\sigma \sqrt{T}$的估计，因此波动率估计值为：
+\begin{equation*}
+    \hat{\sigma} = \frac{s}{\sqrt{T}}
+\end{equation*}
+
+对于在期间内支付了股息$D$的股票，该时间区间内的收益率应为：
+\begin{equation*}
+    r_i = \ln \frac{S_i + D}{S_{i-1}}
+\end{equation*}
 
 【待核实】在 Black Scholes 的框架下，也就是假设股票价格服从 GBM 的时候，historical volatility 可以用 quadratic variation 计算。如下式：
 \begin{equation*}
@@ -1305,22 +1315,18 @@ Long put, long delta stock/ short put, short delta stock
 
 \subsection{已实现波动率}
 
-【待整理】已实现波动率（Realized volatility），顾名思义，为已发生的波动率。
+已实现波动率（Realized volatility），顾名思义，为已发生的波动率，即为对数收益率的标准差，实质上与历史波动率相同，都是已经发生的历史的波动率。在提到高频波动时，一般使用称之为已实现波动率。已实现波动率在文献中主要有几种作用：
 
-一种为特定针对隐含波动率，目的用于对比，对应的已实现波动率。即如在t时点，观察未来30天的隐含波动率，而后在t+30时间，观察已发生的30日之内的历史波动率。
-
-一种为针对频率较高的数据计算的一种波动率，又称为日内波动率或高频波动率。高频数据是指以小时、分钟或秒为采集频率的数据。一般使用日内高频频率为5分钟。为：
-\begin{equation*}
-    \text{RV}_t = \sum^{T}_{i=1} r^2_{t} = \sum^{N}_{i=1} \left( \ln \frac{S_{t}}{S_{t-1}} \right)^2
-\end{equation*}
-
-以上只是最基础的计算日内高频波动率的方法，还有其他的计算日内波动率的方式如：
 \begin{itemize}
-    \item Garman和Klass（1980）
-    \item Andersen和Bollerslev（1998）
-    \item Hansen和Lunde（2005）
-    \item ...
+    \item 已实现波动率即为历史波动率，例如过去一个月交易日波动率的标准差
+    \item 高频日内已实现波动率，也可以作为历史波动率的替代
+    \item 与其他波动率进行对比，在未来时点，可以对过去的波动率预测值如GARCH、VIX等，与对于期限内已实现波动率进行对比
 \end{itemize}
+
+对于高频波动率，当假设$\bar{r} = 0$，并且日内有$n$个等时间区间的对数收益率时，日内已实现高频波动率（日波动率，$\times \sqrt{252}$年化）应有：
+\begin{equation*}
+    \text{RV}_t = \sum^{N}_{i=1} r^2_{t,i} = \sum^{N}_{i=1} \left( \ln \frac{S_{t,i}}{S_{t,i-1}} \right)^2
+\end{equation*}
 
 在Jiang和Tian（2005）中，采用了对于时间跨度为$[t,t+\tau]$的年化已实现方差（Annulized ealized variance）的调整，日内高频如五分钟收益率自相关系数较高，以$l=1$进行调整，而30分钟频率以上的数据则不作调整，其中$n$为在此期间内的期数。
 \begin{equation*}
@@ -1331,6 +1337,14 @@ Long put, long delta stock/ short put, short delta stock
 \begin{equation*}
     V_{t,\tau} = \frac{1}{\tau}\sum_{i=1}^{n} r_i^2 + \frac{2}{\tau} \left( \frac{n}{n-1} \right) \sum_{i=1}^{n-1} r_i r_{i+1}
 \end{equation*}
+
+以上只是最基础的计算日内高频波动率的方法，还有其他的计算日内波动率的方式如：
+\begin{itemize}
+    \item Garman和Klass（1980）
+    \item Andersen和Bollerslev（1998）
+    \item Hansen和Lunde（2005）
+    \item ...
+\end{itemize}
 
 \subsection{条件异方差模型}
 

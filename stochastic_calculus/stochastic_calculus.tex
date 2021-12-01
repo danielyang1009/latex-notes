@@ -1925,9 +1925,30 @@ $F_{t}^{*}$由PCP关系计算获得，即：
     \text{AVIX} = 100 \times \sqrt{\E_{t}^{\fwm}\left[ QV_{t,T}^{S} \right] \times \frac{365}{T}}
 \end{equation*}
 
-\section{波动率曲面}
+\section{波动率微笑、期限结构、曲面}
 
 【待添加】波动率曲面（Volatility surface），期限结构（到期时间与波动率），波动率偏斜曲线Volatility Skew Curve，或波动率微笑（在值程度与波动率）
+
+\subsection{样条插值}
+
+使用最广泛的为样条插值（Spline interpolation），具体而言，为使用称之为\textbf{样条}的特殊分段多项式（Piecewice polynomial）进行插值。使用样条插值可以有效避免龙格现象（Runge's phenomenon），按照多项式次数，可分为线性（一次）样条插值（即数据点用直线进行连接）、二次样条插值、三次样条插值。对于三次样条插值（Cubic spline interpolation）要求函数值，一阶导数，二阶导数都连续（节点左右值相等）。而当使用的三次多项式形式为埃尔米特（Hermite）多项式时，又称之为三次埃尔米特样条插值（Cubic Hermite interpolation），要求节点（knots）值与一阶导数值相等。
+
+假设对于带插值的$n$节点$x_0,x_1,\dots,x_n$，其中端点（End points）为$x_0,x_n$。可分为$n$个区间，假设区间内的样条函数为$S_1,\dots,S_n$。限制端点或数据点导数，或对其他条件进行限制，又可将三次样条插值方法进行如下划分：
+\begin{itemize}
+    \item 钳制三次样条（Clamped cubic spline）：限制端点的一阶导数值为任意值，即$S_{1}^{'}(x_0)=v_0$与$S_{n}^{'}(x_{n})=v_n$
+    \item 自然三次样条（Natural cubic spline）：要求端点的二阶导数为零，即$S_{1}^{''}(x_0)=0$与$S_{n}^{''}(x_{n})=0$
+    \item 曲率调整三次（Curvature-adjusted cubic spline）：端点的二阶导数不为零，为任意选择值，即$S_{0}^{''}(x_0)=v_0$与$S_{n}^{''}(x_{n})=v_n$
+    \item 非扭结三次样条（Not-a-knot cubic spline）：不限制端点的导数，但限制除端点之外的第一个节点$x_1$，与最后一个节点$x_{n-1}$两侧样条函数的三阶导数相等，即$S_{1}^{'''}(x_1) = S_{2}^{'''}(x_{1})$与$S_{n-1}^{'''}(x_{n-1}) = S_{n}^{'''}(x_{n-1})$
+    \item 抛物线终结的三次样条（Parabolically terminated cubic spline）：第一段与最后一段的样条函数，$S_1$与$S_n$的次数被限制在最高二次
+\end{itemize}
+
+另外有贝塞尔曲线（Bezier curves），为使得可以节点的导数值可以控制的样条，但作为牺牲，节点处的一阶与二阶导数的平滑性不再能保证，有线性贝塞尔曲线、二次贝塞尔曲线，三次贝塞尔曲线。B样条（B-spline）或称为基样条（Basis spline），为贝塞尔曲线的一般化，可进一步推广为非均匀有理B样条（Non-Uniform Rational B-Splines，NURBS）
+
+\begin{remark}
+    Python库
+
+    在python中可使用\verb|scipy.interpolate.CubicSpline|进行插值
+\end{remark}
 
 \section{远期（期货）}
 

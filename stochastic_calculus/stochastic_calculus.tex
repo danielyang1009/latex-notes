@@ -945,6 +945,24 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
     \text{Vega} = \frac{\partial V}{\partial\sigma} \quad
 \end{equation*}
 
+\subsubsection{Delta}
+
+对于Delta而言，有看涨期权的Delta值在$(0,1)$之间，看跌期权的Delta值在$(-1,0)$之间。并且对于BSM而言，看涨期权Delta与看跌期权Delta有如下关系$\text{Delta}_C - \text{Delta}_P = 1$。其与股票价格的关系如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/delta-stockprice.png}
+    \caption{Delta与标的价格之间的关系}
+    \label{fig:delta-stockprice}
+\end{figure}
+
+同时，由于简单定义的在值程度为$S/K$，对于看涨期权而言，行权价越低，在值程度越高，越接近实值期权。因此Delta与行权价之间的关系，与Delta与标的资产价格关系在水平上相反，具体关系如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/delta-strike.png}
+    \caption{Detla与行权价之间的关系}
+    \label{fig:delta-strike}
+\end{figure}
+
 \subsection{Black模型}
 
 对于Black期权模型，其公允价值（Fair value）应有：
@@ -982,13 +1000,14 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
 \end{proof}
 
 \subsubsection{Delta}
-\noindent
+
+可以看到对于Black公式而言，有$\text{Delta}_C - \text{Delta}_P = e^{-r\tau}$：
 \begin{align*}
     \text{Delta}_C &= e^{-r\tau}[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}] \\
     &= e^{-r\tau}N(d_1) \\
     \text{Delta}_P &= e^{-r\tau}[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}] \\
-    &= e^{-r\tau}\left(-N(-d_1)\right) \\
-    &= - e^{-r\tau} N(-d_1)
+    &= e^{-r\tau}\left( -N(-d_1) \right) \\
+    &= e^{-r\tau}\left( N(d_1) -1 \right)
 \end{align*}
 
 \subsection{BSM模型}
@@ -1057,7 +1076,7 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
 
 \subsubsection{Delta}
 
-对于无红利，即$q=0$时，Delta（$\Delta$）有：
+对于无红利，即$q=0$时，Delta（$\Delta$），如上所述，此时看涨期权Delta与看跌期权Delta有如下关系$\text{Delta}_C - \text{Delta}_P = 1$：
 \begin{align*}
     \text{Delta}_C &= \frac{\partial C}{\partial S}
     = N(d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
@@ -2605,7 +2624,7 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     & = N(d_1) - N(d_2) = \frac{C}{S}
 \end{align*}
 
-对于$d_1$和$d_2$，此时有：
+也可用期货价格进行改写，即$\frac{C}{Fe^{-r(T-t)}}$与$\frac{P}{Fe^{-r(T-t)}}$。对于$d_1$和$d_2$，此时有：
 \begin{align*}
     d_1 &= \frac{\ln(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = \frac{\sigma}{2}\sqrt{T-t} \\
     d_2 &= \frac{\ln(S/K)+(r-\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}} = d_1 - \sigma\sqrt{T-t}= -\frac{\sigma}{2}\sqrt{T-t}

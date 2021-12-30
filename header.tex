@@ -27,6 +27,7 @@
 \usepackage{hyperref}
 \usepackage{tocloft}
 \usepackage{setspace}
+\usepackage{relsize}
 \hypersetup{
     colorlinks=true, % set true if you want colored links
     urlcolor=blue, % external link
@@ -63,6 +64,9 @@
 \newtheorem{example}[thm]{例子}
 \newtheorem{remark}[thm]{备注}
 \newtheorem{note}[thm]{注释}
+
+% set underscore
+\renewcommand{\_}{\textscale{0.6}{\textunderscore}}
 
 % Symbol
 \newcommand{\E}{\mathbb{E}}

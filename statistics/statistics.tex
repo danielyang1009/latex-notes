@@ -10,7 +10,7 @@
 \maketitle
 \tableofcontents
 
-\section{基础定义}
+\section{基础}
 
 \subsection{期望}
 
@@ -103,13 +103,29 @@
 相关系数（Correlation Coefficient），为研究变量间线性相关程度的量。最早由统计学家卡尔·皮尔逊设计，也称为皮尔逊积矩相关系数（Pearson product-moment correlation coefficient），或皮尔逊相关系数：
 \begin{equation*}
     \rho_{X,Y} = \frac{\Cov(X,Y)}{\sigma_X\sigma_Y}
-    = \frac{\E[(X-\E[X])(Y-\E[Y])]}{\sigma_X\sigma_Y}
+    = \frac{\E\left[\left(X-\E[X]\right)\left(Y-\E[Y]\right)\right]}{\sigma_X\sigma_Y}
 \end{equation*}
 
 样本相关系数有：
 \begin{equation*}
-    \hat{\rho}_{X,Y} = \frac{\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum_{i=1}^{n}(X_i - \bar{X})^2 \sum_{i=1}^{n}(Y_i - \bar{Y})^2}}
+    \hat{\rho}_{X,Y} = \frac{\sum_{i=1}^{n}\left(X_i - \bar{X}\right)\left(Y_i - \bar{Y}\right)}{\sqrt{\sum_{i=1}^{n}\left(X_i - \bar{X}\right)^2 \sum_{i=1}^{n}\left(Y_i - \bar{Y}\right)^2}}
 \end{equation*}
+
+\subsection{自由度}
+
+自由度（Degree of freedom），为有多少条独立的信息。如进行单次抛硬币试验，因为只有正反两种可能，因此其自由度为1，即只需要1条独立的信息即可确定其状态。同理，对于多次抛硬币试验，也只需要1条信息，即有多少正面，即可知有多少反面。
+
+在计算均值时，有$\bar{x} = \tfrac{\sum x_i}{N}$，所有的N条独立信息都会改变均值的计算结果，即需要N条独立信息或此时的自由度为N。而在计算标准差时，$s = \sqrt{\frac{\sum (x_i - \bar{x})^2}{N-1}}$，此时需要已知均值$\bar{x}$才能进行计算其标准差，因此并不需要$N$条独立的信息计算标准差。假设样本数为3，此时若已知均值，则只需要两条独立信息，或$N-1$条独立信息。注意此时时对于样本而言，而对于总体（Population），计算方差时分母为$N$，因为此时没有任何提前已知量，每个观察的改变都会影响最终计算，此时自由度，即为观察数。
+
+当计算检验统计量（Test Statistics）时，往往需要先计算均值、标准差等，此时这些事先已知的条件导致自由度减少。如在单一样本的T检验中（One sample T-test），已知样本均值，则此时自由度为$N-1$。而在两个样本（Two sample T-test）的T检验中，需要已知两个样本的均值，因此此时自由度为$N_1 + N_2 - 2$。当计算P值的时候，同时取决于检验统计量与自由度的大小。即因为在不同的自由度下，对于检验统计量的解读也不同（显著性不同）。
+
+另一种思考方式，当我们使用样本均值（Sample mean）代替总体均值（Population mean）进行方差计算时，此时计算出的样本方差最小。对于相同样本，选取任意值代替样本均值，都会使得样本方差变大。由于总体均值未知，总体方差有极大可能大于样本方差。因此在使用$N$作为分母计算样本方差时，会低估总体方差。而使用$N-1$代替$N$，使得分母变小，样本方差变大，更符合事实。
+
+\subsection{两大学派}
+
+在统计领域有两大经典学派：经典学派（或称频率学派）与贝叶斯学派，两者的区别就是如何看待被估计的未知参数。经典学派认为其为未知的待估计的常量，而贝叶斯学派则将其看成已知分布的随机变量。
+
+具体而言，经典学派认为概率（参数）是一个确定的值，讨论其分布没有意义，虽然其未知，但是其为确定的。而数据是由这个确定的概率产生，因此数据是随机的。贝叶斯学派认为待估计值的概率（参数）是随机变量，而用来估计的观测数据时确定的常数，讨论观测数据的概率分布没有意义。
 
 \section{矩}
 
@@ -150,7 +166,7 @@
 
 \subsection{分类}
 
-根据如上定义，从零阶至四阶的原始矩与中心矩有如下定义，其中定义$\sigma = \left(\E[(X-\mu)^2]\right)^{\frac{1}{2}}$。正态分布由它的前两阶矩决定，而对于其他的分布，需要了解更高阶矩。同时注意到三阶矩以上都称标准矩，如同方差要去除均值的影响，偏度和峰度也要去除方差的影响。
+根据如上定义，从零阶至四阶的原始矩与中心矩有如下定义，其中定义$\sigma = \left(\E\left[(X-\mu)^2\right]\right)^{\frac{1}{2}}$。正态分布由它的前两阶矩决定，而对于其他的分布，需要了解更高阶矩。同时注意到三阶矩以上都称标准矩，如同方差要去除均值的影响，偏度和峰度也要去除方差的影响。
 \begin{table}[H]
 \centering
 \begin{tabular}{@{}clll@{}}
@@ -676,14 +692,14 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
 
 皮尔逊卡方检验（Pearson's chi-squared test），当提及卡方检验，通常即指皮尔逊卡方检验。其中$O_i$指实际观察频数，$E_i$指理论预期频数：
 \begin{equation*}
-    \chi^2 = \sum_i^n \frac{(O_i - E_i)^2}{E_i}
+    \chi^2 = \sum_i \frac{(O_i - E_i)^2}{E_i}
 \end{equation*}
 
 皮尔逊卡方检验有多种用途：
 \begin{itemize}
     \item 卡方拟合优度检验（Chi-square goodness-of-fit tests）
     \begin{itemize}
-        \item 使用此分析检验分类数据样本与总体理论分布的拟合程度
+        \item 用于检验分类数据样本与总体理论分布的拟合程度
         \item 例如，通过多次掷骰子并使用卡方拟合优度检验来确定结果是否服从均匀分布，可以检验骰子是否公平。
     \end{itemize}
     \item 卡方关系检验（Chi-square tests for relationships）
@@ -1119,13 +1135,13 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 \section{似然}
 
-对于似然（Likelihood）的简单理解，若已有数据$X$，想要猜测是来自分布$f$或分布$g$。那么将X的分布作图为直方图（Histogram），并同时对比两个分布，看分布$f$或分布$g$更为接近$X$的直方图，而似然就是对比的定量值。
+对于似然（Likelihood）的直观理解：若已有的观察值$X$，若想要猜测其是来自于分布$f$或分布$g$。那么可将$X$的分布画作为直方图（Histogram），并同时对比分布$f$与$g$，观察哪个分布更为接近$X$的直方图，而似然，就是这样对比的定量值。
 
-对于数据集$X={x_1,x_2,\dots,x_n}$，并假设变量$x_i$均为独立同分布，即取值只与自己有关系，而与别的$x_j,j\neq i$无关。对于分布$f(\cdot \given \theta)$，对于任意$x_i$其概率$f(x_i \given \theta)$若非常低，则说明$x_i$出现在分布$f(\cdot \given \theta)$的概率非常低，而反之则说明概率高。即$x_i$有多大的可能性或概率，是来自分布$f(\cdot \given \theta)$，这其中的可能性或概率，即称之为似然。
+严谨而言，对于数据集$X=\{x_1,x_2,\dots,x_n\}$，并假设变量$x_i$均为独立同分布，即取值只与自身有关，而与$x_j,j\neq i$无关。对于分布$f(\cdot \given \theta)$，若$f(x_i \given \theta)$非常小，则说明$x_i$出现在分布$f(\cdot \given \theta)$的概率非常低，而反之则说明概率高。$x_i$有多大的可能性或概率，是来自分布$f(\cdot \given \theta)$，则称之为似然。为了突出似然函数（Likelihood function）其与PDF函数的区别，一般记作$\mcl(\theta \given y)$
 
-\subsection{似然与概率}
+如上所述，似然和概率，其本质都是可能性。对于由一组参数$\theta$确定的分布，概率是给定参数$\theta$，求某一结果$x_i$的可能性，如概率质量函数（PMF）或概率密度函数（PDF）。而相反而言，似然函数，为给定某一结果$x_i$，求参数$\theta$的可能性。
 
-如上所述，似然和概率，其本质都是可能性。对于由一组参数$\theta$确定的分布，概率是给定参数$\theta$，求某一结果的可能性。而相反而言，似然（Likelihood）是给定某一结果$X$，求参数$\theta$的可能性。具体而言，如对于只需要$\mu$与$\sigma$就能确定的正态分布，对于离散随机变量：
+对于离散随机变量：
 \begin{equation*}
     \mcl(\theta\given x) = P(X=x \given \theta)
 \end{equation*}
@@ -1135,81 +1151,81 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \mcl(\theta\given x) = f(x\given \theta)
 \end{equation*}
 
-\begin{example}
-    对于随机抽取实验室小白鼠，并测量其体重$w$的试验中，假设小白鼠的体重服从正态分布$N\sim(\mu,\sigma)$，此时概率为给定分布参数$\theta$的情况下，求小白鼠体重对应的概率：
-    \begin{gather*}
-        P( 32<w<34 \given \mu= 32,\sigma=2.5) = 0.29 \\
-        P( w=34 \given \mu=34,\sigma=2.5) = 0.16
-    \end{gather*}
+\subsection{极大似然估计}
 
-    而对于似然，则为给定数据，求参数$\theta$对应的概率：
-    \begin{gather*}
-        L( \mu=32,\sigma=2.5 \given w=34) = 0.12 \\
-        L( \mu=34,\sigma=2.5 \given w=34) = 0.21
-    \end{gather*}
-
-    在调整了分布的$\mu$之后，似然变大。显然对于单次的检验，单一数据，使得抽取一只小白鼠体重为$34g$的概率最大的分布，为$\mu=34$的正态分布。
-\end{example}
-
-【待修改】
-
-例子
-\url{https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1}
-
-\subsection{似然函数}
-
-似然函数（Likelihood function）
-
+在极大似然估计中，简而言之，对于随机变量$X$，取得一组样本值$\{x_1,x_2,\dots,x_n\}$的概率大小为似然函数$\mcl(\theta \given x_1,\dots,x_n)$。最大化似然函数，从而得到参数估计$\hat{\theta}$，那么此时由$\hat{\theta}$生成的概率概率模型，理所应当“最有可能”得到目前观测数据，即：
 \begin{equation*}
-    \mcl(\theta \given X) = \prod_{i=1}^{n} f(x_i \given \theta)
+    \hat{\theta} = {\arg \max}_{\theta \in \Theta} \mcl(\theta \given x)
 \end{equation*}
-
-得分检验（Score test），score（informant） is the gradient of the log-likelihood function with respect to the parameter vetor.
-\begin{equation*}
-    s(\theta) = \frac{\partial \log \mcl(\theta)}{\partial \theta}
-\end{equation*}
-
-\subsection{最大似然估计}
 
 对于最大似然估计（Maximum likelihood estimation，MLE），一般有如下步骤：
 \begin{itemize}
-    \item 假设时间序列$\{X_1,X_2,\dots,X_T\}$的联合分布为$f(X_1,X_2,\dots,X_T \given \theta)$，其中参数$\theta$为联合分布的参数向量，如均值方差等
+    \item 假设随机变量$X=\{x_1,x_2,\dots,x_T\}$的联合分布为$f(x_1,x_2,\dots,x_T \given \theta)$，其中参数$\theta$为联合分布的参数向量，如均值方差等
     \item 观察现实中发生的样本$x_t$
     \item 对联合分布做出一定的假设
-    \item 对于参数$\theta$的最大似然估计，就是在该参数下，样本发生的概率最大。换言之，$\hat{\theta}_{\text{MLE}}$最大化联合分布$f(X_1,X_2,\dots,X_T \given \theta)$
+    \item 对于参数$\theta$的最大似然估计，就是在该参数下，样本发生的概率最大。换言之，$\hat{\theta}_{\text{MLE}}$最大化联合分布$f(x_1,x_2,\dots,x_T \given \theta)$
 \end{itemize}
 
-假设$X_t$独立，那么可以对其联合分布进行分解，有：
+假设$x_t$独立，那么可以对其联合分布进行分解，有：
 \begin{equation*}
-    f_{X_T,\dots,X_1}(\theta)
-    = f_{X_T}(\theta_T) f_{X_{T-1}}(\theta_{T-1})\dots f_{X_1}(\theta_1)
-    = \prod_{t=1}^{T} f_{X_t}(\theta_t)
+    f_{x_T,\dots,x_1}(\theta)
+    = f_{x_T}(\theta_T) f_{x_{T-1}}(\theta_{T-1})\dots f_{x_1}(\theta_1)
+    = \prod_{t=1}^{T} f_{x_t}(\theta_t)
 \end{equation*}
 
-同时可以两边去对数，得到对数似然函数。此时最大化如上似然函数，等于最大化对数似然函数：
+同时可以两边去对数，得到对数似然函数。由于自然对数连续且值域内单调递增的，因此此时最大化如上似然函数，等于最大化其对数似然函数：
 \begin{equation*}
-    \mcl(\theta) = \ln f_{X_T,\dots,X_1}(\theta)
-    = \sum_{t=1}^{T} \ln f_{X_t}(\theta_t)
+    \mcl(\theta) = \ln f_{x_T,\dots,x_1}(\theta)
+    = \sum_{t=1}^{T} \ln f_{x_t}(\theta_t)
 \end{equation*}
 
 而大部分情况下，时间序列中并不独立，已知联合概率分布与条件概率分布有如下关系：
 \begin{equation*}
-    f_{X_2,X_1} = f_{X_2 \given X_1} f_{X_1}
+    f_{x_2,x_1} = f_{x_2 \given x_1} f_{x_1}
 \end{equation*}
 
 因此可以得到：
 \begin{equation*}
-    f_{X_T,\dots,X_1}(\theta) =
-    f_{X_{T} \given X_{T-1},\dots,X_1}(\theta_T)
-    f_{X_{T-1} \given X_{T-2},\dots,X_1}(\theta_T)
-    f_{X_{2} \given X_1}(\theta) f_{X_1}(\theta_1)
+    f_{x_T,\dots,x_1}(\theta) =
+    f_{x_{T} \given x_{T-1},\dots,x_1}(\theta_T)
+    f_{x_{T-1} \given x_{T-2},\dots,x_1}(\theta_T)
+    f_{x_{2} \given x_1}(\theta) f_{x_1}(\theta_1)
 \end{equation*}
 
 此时其对数似然函数为：
 \begin{equation*}
-    \mcl(\theta) = \ln f_{X_T,\dots,X_1}(\theta)
-    = \sum_{t=1}^{T} \ln f_{X_t \given X_{t-1},\dots,X_1}(\theta_t)
+    \mcl(\theta) = \ln f_{x_T,\dots,x_1}(\theta)
+    = \sum_{t=1}^{T} \ln f_{x_t \given x_{t-1},\dots,x_1}(\theta_t)
 \end{equation*}
+
+\begin{example}
+    假设一个抛硬币的例子，假设硬币正反两面质量不同，因此概率并非50\%。假设正面概率为$P$，而得到反面的概率为$1-P$。重复进行80次抛硬币试验，在此次试验中，得到了$49$次为正面，而$31$次为反面。
+
+    假设硬币抛出正面的概率的三种可能性分别为$P=1/3$，$P=1/2$和$P=2/3$，根据二项分布的概率质量函数，可以计算出如下三种情形的似然函数：
+    \begin{align*}
+        \mcl(p=1/3 \given H=49, T=31) &= P(H=49, T=31 \given p = 1/3) \\
+        &= \binom{80}{49} \left(1/3\right)^{49} \left(1-1/3\right)^{31} \approx 0.000 \\
+        \mcl(p=1/2 \given H=49, T=31) &= P(H=49, T=31 \given p = 1/2) \\
+        &= \binom{80}{49} \left(1/2\right)^{49} \left(1-1/2\right)^{31} \approx 0.012 \\
+        \mcl(p=2/3 \given H=49, T=31) &= P(H=49, T=31 \given p = 2/3) \\
+        &= \binom{80}{49} \left(1/3\right)^{49} \left(1-2/3\right)^{31} \approx 0.054
+    \end{align*}
+
+    可以看到当$\hat{p} = 2/3$时，此时似然函数取的最大值。以上例子对于离散参数空间而言，对于连续参数空间，应有：
+    \begin{align*}
+        \mcl(p \given X) &= \mcl(p \given H=49,T=31) = P(H=49,T=31 \given p) \\
+        &= f_{x_1,\dots,x_n} (p) = \prod_{i=1}^{80} f_{x_i}(p) = \binom{80}{49}p^{49}(1-p)^{31}
+    \end{align*}
+
+    对求其最大值，舍弃系数并进行求导，则应有：
+    \begin{align*}
+        \frac{\partial}{\partial p} \left( p^{49}(1-p)^{31} \right)
+        &= 49p^{48}(1-p)^{31} - 31p^{49}(1-p)^{30} \\
+        &= p^{48}(1-p)^{30}\left[49(1-p) - 31p\right]
+    \end{align*}
+
+    此时发现其解为$p=0$，$p=1$与$p=49/80$，因此此时最大似然估计值为$\hat{p} = 49/80$
+\end{example}
 
 \subsection{准最大似然估计}
 
@@ -1224,6 +1240,11 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 \end{equation*}
 
 即中间项，即得分函数的方差，或有$H^{-1} \Var(s) H^{-1}$
+
+得分检验（Score test），score（informant） is the gradient of the log-likelihood function with respect to the parameter vetor.
+\begin{equation*}
+    s(\theta) = \frac{\partial \ln \mcl(\theta)}{\partial \theta}
+\end{equation*}
 
 \section{三大检验}
 
@@ -2040,9 +2061,9 @@ F统计量服从自由度为$m$的$\chi^2$分布，若$F>\chi_m^2(\alpha)$或F�
 \end{equation*}
 
 \begin{remark}
-    ARCH效应检验或称为Engle's ARCH test，如上所述应平方序列检验异方差性，详情见Engle（1982），与其他检验如Ljung-box检验，拉格朗日检验，在Python与Matlab中有如下模块可进行计算：
+    ARCH效应检验或称为Engle's ARCH Test，如上所述应平方序列检验异方差性，详情见Engle（1982），与其他检验如Ljung-box Q-Test，拉格朗日乘数检验（Lagrange multiplier test或LM Test）也称为Score Test，在Python与Matlab中有如下模块可进行计算：
     \begin{itemize}
-        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_lm.html}{Python: acorr\_lm}（拉格朗日乘子序列相关检验）
+        \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr\_lm.html}{Python: acorr\_lm}（拉格朗日乘子序列相关检验）
         \item \href{https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.q_stat.html#statsmodels.tsa.stattools.q_stat}{Python: q\_stat}
         \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr\_ljungbox.html}{Python: acorr\_ljungbox}（Ljung-Box序列相关检验）
         \item \href{https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het\_arch.html}{Python: het\_arch}（Engle异方差检验）

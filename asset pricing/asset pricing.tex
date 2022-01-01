@@ -15,27 +15,113 @@
     \item campbell-shiller分解
 \end{itemize}
 
-\section{传统资产定价模型}
+\section{基础}
 
-\subsection{CAPM}
+\subsection{CAPM与APT}
 
-根据CAPM模型：
+资本资产定价模型（Capital Asset Pricing Model，CAPM）的诞生，才首次清晰的描绘出风险与收益率之间的关系。根据CAPM模型，资产的预期超额收益率由如下一元线性方程决定：
 \begin{equation*}
-    E[R_i] - R_f = \beta_i(E[R_M]-R_f)
+    \E[R_i] - R_f = \beta_i \left( \E[R_M]-R_f \right)
 \end{equation*}
 
-$R_i$为某资产i的收益率，$R_f$为无风险收益率，$R_M$为市场组合的收益率。其中有$\beta_i = \text{cov}(R_i,R_M)/\text{var}(R_M)$，$\beta$刻画了资产收益对于市场收益的敏感程度，也被称为资产$i$对市场风险或系统风险（Systematic risk）的暴露程度，即对于市场风险暴露的大小。即资产的预期超额收益率，由市场组合（市场因子）的预期超额收益率与该资产对市场风险的暴露大小决定。或可以理解为，单项资产的$\beta$系数是指资产预期超额收益率与市场组合预期超额收益率之间变动关系的敏感程度。
+其中$R_i$为某资产$i$的收益率，$R_f$为无风险收益率，$\E[R_M]$为市场组合的预期收益率，$\E[R_m]- R_f$为市场风险溢价（Market risk premium），也称为市场因子。其中有$\beta_i = \frac{\Cov(R_i,R_M)}{\Var(R_M)}$，$\beta$刻画了该资产$i$收益对于市场收益的敏感程度，也被称为资产$i$对市场风险的暴露程度。
+
+随后Ross（1976）提出了著名的套利定价理论（Arbitrage Pricing Theory，APT），为多元线性模型:
+\begin{equation*}
+    \E[R_i^e] = \bm{\beta_{i}^{'} \lambda}
+\end{equation*}
+
+同CAPM模型相同，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。由此可见，资产$i$的预期超额收益率$\E[R_i^e]$，为等式右侧一系列因子的预期收益率，以及该资产在这些因子上的暴露决定。同时可以发现，此时研究的是不同资产之间的预期超额收益率的差别，称为（横）截面（Cross-sectional）差异，而非时间序列（Time-series）或时序上的差异。因此，给定因子预期收益率，不同资产预期超额收益率的差别，由其在这些因子上的暴露决定。\uline{那么多因子模型研究的核心问题，是找到一组能够解释股票预期收益率界面差异的因子}。
+
+有几点需要注意，在这里使用$\E[\bm{R_i^e}]$为代表资产的预期超额收益率，而非如CAPM中表示的$\E[R_i] - R_f$，是因为在实证中，经常采用多空对冲建立投资组合，此时便无需再减去无风险收益率。另外，学界研究的对象始终为资产的预期草娥收益，因此有时将“超额”二字省略。
+
+\subsection{APT推导}
+
+https://zhuanlan.zhihu.com/p/260114845
+
+
+\subsection{异象}
+
+而在实际过程中，等式两侧并不相等，而存在着定价误差$\alpha_i$（Pricing error）：
+\begin{equation*}
+    \E[R_i^e] = \alpha_i + \bm{\beta_{i}^{'} \lambda}
+\end{equation*}
+
+定价误差有可能由两方面产生：
+\begin{itemize}
+    \item 模型设定偏误，即等式右侧遗漏了重要的因子，当被遗漏因子加入后，可消除定价误差
+    \item 模型设定没有问题，但由于资产收益的实际数据只是总体的一个样本，那么误差总是存在的，此时需要通过统计的方法检验误差$\alpha_i$是否显著不为零：
+    \begin{itemize}
+        \item 若$\alpha_i$并非显著偏离于零，则出现只是样本问题
+        \item 若$\alpha_i$\textbf{显著偏离零}，则说明了可以通过套利而获得超额收益的机会，市场对该资产出现错误定价（Mispricing），从而导致了实际预期收益率与多因子模型下的预期收益率出现偏离
+    \end{itemize}
+\end{itemize}
+
+假使我们根据基本面特征或量价指标等特征，挑选出一揽子股票并构建\uline{多空投资组合}。若该组合的收益率无法被多因子模型（如3因子、4因子、5因子模型）解释，则称该特征为一个\textbf{异象}（Anomaly）。即该特征获得了多因子模型无法解释$alpha$收益率，但从有效市场假说出发，市场中不应该存在很多异象。同时在学界不断的挖掘中，获得了400+个异象，且在样本内都获得了很高的t-statistics，这里可能存在两个原因：
+\begin{itemize}
+    \item 数据挖掘，大量的异象在样本内被挖掘出，因此Harvey，Liu和Zhu（2016）提出异象收益率的t-statistic至少要超过3.0，而非传统的5\%显著性对应的2.0，才可能真正有效，而非来源于运气
+    \item 模型相关，若以$CAPM$为定价模型，那么许多异象都能获得CAPM无法解释的$\alpha$收益率，同时随着定价模型中因子个数的增加，更多的异象变得不再显著，而真正的定价模型是未知的
+\end{itemize}
+
+Hou，Xue和Zhang（2017）长达146页对异象的研究中，复现了学术界提出的 447 个异象，涵盖动量（57个）、价值/成长（68个）、投资（38个）、盈利（79个）、无形资产（103个）、以及交易摩擦（102个）六大类。对于这447个异象，在排除了微小市值股票的影响后，其中286个（64\%），在5\%的显著性水平下不再显著（下同）。若按照Harvey，Liu和Zhu（2016）的建议把t-statistic的阈值提升到3.0，其中380个（85\%）异象不再显著。最后，如果使用Hou，Xue和Zhang（2015）提出的4因子模型作为定价模型，那么其中436个（98\%）异象不再显著，仅有 11个异象显著。
+
+对于超额收益，学术界和业界主流的两种解释是错误定价和风险补偿，错误定价意味着投资者可以通过合理的策略获得潜在的超额收益；而风险补偿则意味着投资者获得的收益是以承担额外风险为代价的。
+
+\subsection{因子}
+
+异象有可能能成为优秀的因子，但不是所有异象都是因子。因为作为一个因子（Factor），需要能够解释资产（个股或投资组合）预期收益率截面上的差异，并有增量贡献。具体而言：
+\begin{itemize}
+    \item 异象从方程的左侧，移动到右侧称为一个因子，称为解释变量，需要考察期是否能解释预期收益率截面上的差异
+    \item 由于多个异象之间并不完全独立，需要排除相关性的影响，考察是否有增量贡献
+\end{itemize}
+
+如价值因子，也可以采用$E/P$或$B/P$构建High-Minus-Low组合，若同时使用，两者相关性必然很高，因此若使用其一作为价值因子，另一因子对资产预期收益率截面差异的解释能力的增量贡献将变得很低，无法称为因子。
+
+对于因子模型接下去的问题就是，在构建多因子模型时：选取因子因子的数目；以及选取哪些因子。第一个问题，因遵循简约法则（The Law of Parsimony），或奥卡姆剃刀（Occam's razor）。若从ICAPM（Intertemporal CAPM）的角度理解多因子模型，每个因子应代表某种状态变量（State variable），即为投资者想要对冲的某种风险。因此，因子的个数应该是有限的。目前主流的多因子模型如下：
+\begin{itemize}
+    \item Fama-French 三因子模型（Fama and French 1993）：多因子模型的开山鼻祖，包括MKT、HML以及SMB三因子。其中包含了MKT市场因子，HML价值因子，与SMB规模因子
+    \item Carhart 四因子模型（Carhart 1997）：在 Fama-French三因子模型上加上了动量MOM因子。
+    \item Novy-Marx四因子模型（Novy-Marx 2013）：包含MKT，HML，MOM以及PMU四个因子，其中 PMU 所用的财务指标是Gross Profit-to-Asset，代表Profitability维度
+    \item Fama-French 五因子模型（Fama and French 2015）：Fama和French在其三因子模型的基础上加入了CMA和RMW两个因子，分别代表Investment和Profitability 两个维度。
+    \item Hou-Xue-Zhang 四因子模型（Hou, Xue and Zhang 2015）：包含MKT，SMB，IVA以及ROE。其中IVA是Total assets的年增长率，代表Investment 维度
+    \item Stambaugh-Yuan四因子模型（Stambaugh and Yuan 2016）：包含MKT，SMB，MGMT和PERF四个因子。MGMT和PERF分别使用了6个和5个指标，代表Management以及 Performance相关的两个Mispricing因子。虽然该模型只有四个因子，但它用到的基本面和量价指标多达 12 个。
+    \item Daniel-Hirshleifer-Sun三因子模型（Daniel, Hirshleifer and Sun 2018）：在MKT的基础上，使用PEAD和FIN两个指标作为短期和长期行为因子（Behavioral factors）的代理指标，构建了三因子模型。该模型由于包括了传统的MKT市场因子，又包括行为因子，故称为复合模型。
+\end{itemize}
+
+对于第二个问题，则涉及了不同多因子模型之间的比较。目前学界主要有三种方法：
+\begin{itemize}
+    \item GRS tests
+    \item Mean-Variance Spanning tests
+    \item Bayesian approach
+\end{itemize}
+
+【待整理】
+
+GRS tests（Gibbons，Ross和Shanken 1989）检验n个资产在给定因子模型下的定价错误$\alpha$，是否在统计上联合为零（jointly equal to zero）。在比较两个多因子模型时，使用两个模型的因子互为资产和定价模型进行检验。
+
+Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效前沿能否包含某个新资产（Huberman和Kandel 1987）。在比较两个多因子模型时，使用每个模型的因子构建有效前沿，并逐一检验其能否包含另一个模型中的因子。
+
+在Bayesian approach中，假设比较两个多因子模型$M_1$和$M_2$，数据集使用$D$表示。令 $P(M_1)$和$P(M_2)$为这两个模型的先验概率，且有$P(M_1) + prob(M_2) = 1$（这里假设把多个模型两两比较）。根据贝叶斯定理有：
+\begin{equation*}
+    P(M_i \given D) = \frac{P(M_i)P(D \given M_i)}{P(M_1)P(D\given M_1) + P(M_2)P(D\given M_2)}
+\end{equation*}
+
+其中：
+\begin{equation*}
+    P(D \given M_i) = \int_{\theta_i} P(\theta_i) P(D \given \theta_i) d\theta_i
+\end{equation*}
+
+上式中，$P(\theta_i)$是模型$i$参数的先验分布，$P(D \given \theta_i)$是模型$i$的似然函数。上述贝叶斯方法的核心在于确定$P(\theta_i)$。根据Pastor和Stambaugh（2000） 以及Barillas和Shanken（2018）的理论，它和以两个模型中的全部因子作为资产所构成的投资组合的预期最大夏普率的平方与市场夏普率的比值有关。
+
+\subsection{系统性风险}
+
+除了市场因子以外的风险都是可以被分散的，所以只要是超过市场组合收益的部分都叫做超额收益。
+
+多因子模型的表达式同样强调，只有那些影响众多资产收益率共同运动的风险，而非资产的特质性风险（即可以通过分散化规避掉的风险），才是预期收益率的来源。
+
+系统风险（Systematic risk）的暴露程度，即对于市场风险暴露的大小。即资产的预期超额收益率，由市场组合（市场因子）的预期超额收益率与该资产对市场风险的暴露大小决定。或可以理解为，单项资产的$\beta$系数是指资产预期超额收益率与市场组合预期超额收益率之间变动关系的敏感程度。
 
 系统性风险（Systematic risk），又称市场风险或不可分散风险，是影响所有资产的、不能通过资产组合而消除的风险。这部分风险是由那些影响整个市场的风险所引起的，无论怎样分散投资，也不可能消除系统性风险。避免集中投资于单一市场可减少系统性风险。单项资产、证券资产组合或不同公司受系统性风险影响不一样，系统性风险的大小通常用beta系数（$\beta$系数）来衡量。
-
-\subsection{APT}
-
-Ross（1976）提出了著名的套利定价理论（Arbitrage Pricing Theory，APT），为多元线性模型:
-\begin{equation*}
-    E[\bm{R_i^e}] = \bm{\beta' \lambda}
-\end{equation*}
-
-同CAPM模型一样，$\mathbb{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。
 
 
 \section{方法论}

@@ -37,8 +37,74 @@
 
 \subsection{APT推导}
 
-https://zhuanlan.zhihu.com/p/260114845
+第一步，假设资产的收益率，在单因子情形下，满足如下线性模型：
+\begin{equation*}
+    R_i = \mu_i + \beta_i f + \varepsilon_i \inlinesep i =1,\dots,n
+\end{equation*}
 
+此时$R_i$为资产收益率，$\mu_i$资产$i$的预期收益率，$\beta_i$是资产在因子上的暴露，而$f$是因子取值，而非因子风险溢酬，$\varepsilon_i$为资产$i$收益率的随机扰动或特质性收益率，并满足$\E[f]=\E[\varepsilon_i]=0$，若改写为向量形式，为Ross在APT中使用的收益率模型，有：
+\begin{equation*}
+    \bm{R} = \bm{\mu + f\beta + \varepsilon}
+\end{equation*}
+
+第二步，构建一个arbitrage portfolio，这个投资组合中资产的权重$\omega$满足如下两点特性。首先，该投资组合是零额投资的，即：
+\begin{equation*}
+    \bm{w' 1 = 0}
+\end{equation*}
+
+其中有$\bm{1}$为全为1的向量。其次，并且$\bm{w'\beta}=0$，即该投资组合在该因子上的暴露为零。此时这个投资组合的收益率应为：
+\begin{equation*}
+    R_p = \bm{w'R = w'\mu + w'\beta f + w'\varepsilon}
+\end{equation*}
+
+由上可知，这个投资组合的收益率可化简为：
+\begin{equation*}
+    R_p = \bm{w'R = w'\mu} 
+\end{equation*}
+
+第三步，运用无套利约束，可知根据$\bm{w}$构建的投资组合有如下性质：零额投资；对因子的暴露为零（因此该组合没有系统性风险）；没有特质性风险暴露（因为组合中特质性收益率为零）。换言之，这样一个投资组合，既没有资金投入又没有风险暴露，因此根据无套利约束条件，它的收益率必须为零，即：
+\begin{equation*}
+    R_p = \bm{w'\mu} = 0
+\end{equation*}
+
+根据几何可知，$w' 1 = w' \beta = w'\mu = 0$，说明$\bm{w'}$与$\bm{1}$，$\bm{\beta}$和$\bm{\mu}$，都相互垂直。因此$\bm{\mu}$必然在$\bm{1}$和$\bm{\beta}$构成的平面内。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/apt.jpg}
+    \caption{APT}
+    \label{fig:apt}
+\end{figure}
+
+因此在数学上，资产预期收益率$\bm{\mu}$可以写成$\bm{1}$与$\bm{\beta}$的线性组合，即：
+\begin{equation*}
+    \bm{\mu} = \gamma_1 \bm{1} + \gamma_2 \bm{\beta}
+\end{equation*}
+
+那么此时上式应对任何资产都成立，为了求解$\gamma_1$与$\gamma_2$可代入特殊资产，无风险资产（$R_f$），与市场组合($R_M$)。由于无风险资产的因子暴露为零，代入上式可得：
+\begin{equation*}
+    R_f = \gamma_1
+\end{equation*}
+
+对于市场组合，其$beta=1$，并将$\gamma_1 = R_f$代入，可得：
+\begin{equation*}
+    R_M = R_f + \gamma_2 \times \bm{1}
+\end{equation*}
+
+因此有：
+\begin{equation*}
+    \gamma = R_M - R_f
+\end{equation*}
+
+代入原式，最终可得到CAPM的表达式：
+\begin{equation*}
+    \mu_i = R_f + \beta_i(R_M - R_f)
+\end{equation*}
+
+在此基础上，扩展至多因子，即得到APT模型：
+\begin{equation*}
+    \E[R_{i}^{e}] = \mu_i - R_f = \beta_{i,1} \lambda_1 + \beta_{i,2} \lambda_2 + \dots + \beta_{i,K} \lambda_K
+\end{equation*}
 
 \subsection{异象}
 

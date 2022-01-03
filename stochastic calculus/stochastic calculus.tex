@@ -1227,6 +1227,8 @@ Long call, short delta stock/ short call, long delta stock
 
 Long put, long delta stock/ short put, short delta stock
 
+此时需要注意，Put的Delta为负
+
 \subsection{泰勒级数}
 
 级数为无穷的序列（sequences）（或无穷多项）的和。泰勒级数（Taylor series）使用无限项序列来表示一个函数，每项由该函数在某一点的导数求得。一个函数的有限项的泰勒级数叫做泰勒多项式（Taylor polynomial）。对于一元函数在$x=a$处展开的泰勒级数有：
@@ -2072,6 +2074,8 @@ $F_{t}^{*}$由PCP关系计算获得，即：
 
 对于远期（期货）而言，\textbf{升水}（contango）指当期货价格高于现货价格（或未来预期即期价格），此时为期货溢价，此时有负基差。也称为正向市场（Normal market），即期限较短的合约（Near-maturity contract）价格低于期限较远的合约（Far-maturity contract）。相反而言，如期货价格低于现货价格，则称期货\textbf{贴水}（Backwardation），此时为现货溢价，有正基差。或称为逆向市场（Inverted market），即期限较短合约的价格高于期限较远的合约。
 
+需要注意的是，与商品期货相反，\uline{在金融期货中，一般定义基差为期货价格减去现货价格}。因此，当金融期货贴水，称有负基差，而金融期货，称有正基差。
+
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -2174,9 +2178,9 @@ $F_{t}^{*}$由PCP关系计算获得，即：
 \toprule
 \multicolumn{1}{l}{}           
 & \multicolumn{1}{c}{\textbf{多头套期保值}} & \multicolumn{1}{c}{\textbf{空头套期保值}} \\
-& 1单位现货空头，1单位期货多头 & 1单位现货多头，1单位期货空头 \\
 \midrule
-\textbf{收益} &$\quad(H_0 - H_1) + (G_1 - G_0)$ & $\quad(H_1 - H_0) + (G_0 - G_1)$ \\
+\textbf{初始仓位} & 1单位现货空头，1单位期货多头 & 1单位现货多头，1单位期货空头 \\
+\textbf{基差收益} &$\quad(H_0 - H_1) + (G_1 - G_0)$ & $\quad(H_1 - H_0) + (G_0 - G_1)$ \\
 & $=(H_0 - G_0) - (H_1 - G_1)$ & $=(H_1 - G_1) - (H_0 - G_0)$ \\
 & $=b_0 - b_1$ & $=b_1 - b_0$ \\
 \textbf{收益来源} & 基差变小 $b_0>b_1$ & 基差变大 $b_0<b_1$\\

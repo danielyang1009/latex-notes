@@ -31,80 +31,18 @@
     \E[R_i^e] = \bm{\beta_{i}^{'} \lambda}
 \end{equation*}
 
-同CAPM模型相同，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。由此可见，资产$i$的预期超额收益率$\E[R_i^e]$，为等式右侧一系列因子的预期收益率，以及该资产在这些因子上的暴露决定。同时可以发现，此时研究的是不同资产之间的预期超额收益率的差别，称为（横）截面（Cross-sectional）差异，而非时间序列（Time-series）或时序上的差异。因此，给定因子预期收益率，不同资产预期超额收益率的差别，由其在这些因子上的暴露决定。\uline{那么多因子模型研究的核心问题，是找到一组能够解释股票预期收益率界面差异的因子}。
+同CAPM模型相同，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。由此可见，资产$i$的预期超额收益率$\E[R_i^e]$，为等式右侧一系列因子的预期收益率，以及该资产在这些因子上的暴露决定。
 
-有几点需要注意，在这里使用$\E[\bm{R_i^e}]$为代表资产的预期超额收益率，而非如CAPM中表示的$\E[R_i] - R_f$，是因为在实证中，经常采用多空对冲建立投资组合，此时便无需再减去无风险收益率。另外，学界研究的对象始终为资产的预期草娥收益，因此有时将“超额”二字省略。
-
-\subsection{APT推导}
-
-第一步，假设资产的收益率，在单因子情形下，满足如下线性模型：
-\begin{equation*}
-    R_i = \mu_i + \beta_i f + \varepsilon_i \inlinesep i =1,\dots,n
-\end{equation*}
-
-此时$R_i$为资产收益率，$\mu_i$资产$i$的预期收益率，$\beta_i$是资产在因子上的暴露，而$f$是因子取值，而非因子风险溢酬，$\varepsilon_i$为资产$i$收益率的随机扰动或特质性收益率，并满足$\E[f]=\E[\varepsilon_i]=0$，若改写为向量形式，为Ross在APT中使用的收益率模型，有：
-\begin{equation*}
-    \bm{R} = \bm{\mu + f\beta + \varepsilon}
-\end{equation*}
-
-第二步，构建一个arbitrage portfolio，这个投资组合中资产的权重$\omega$满足如下两点特性。首先，该投资组合是零额投资的，即：
-\begin{equation*}
-    \bm{w' 1 = 0}
-\end{equation*}
-
-其中有$\bm{1}$为全为1的向量。其次，并且$\bm{w'\beta}=0$，即该投资组合在该因子上的暴露为零。此时这个投资组合的收益率应为：
-\begin{equation*}
-    R_p = \bm{w'R = w'\mu + w'\beta f + w'\varepsilon}
-\end{equation*}
-
-由上可知，这个投资组合的收益率可化简为：
-\begin{equation*}
-    R_p = \bm{w'R = w'\mu} 
-\end{equation*}
-
-第三步，运用无套利约束，可知根据$\bm{w}$构建的投资组合有如下性质：零额投资；对因子的暴露为零（因此该组合没有系统性风险）；没有特质性风险暴露（因为组合中特质性收益率为零）。换言之，这样一个投资组合，既没有资金投入又没有风险暴露，因此根据无套利约束条件，它的收益率必须为零，即：
-\begin{equation*}
-    R_p = \bm{w'\mu} = 0
-\end{equation*}
-
-根据几何可知，$w' 1 = w' \beta = w'\mu = 0$，说明$\bm{w'}$与$\bm{1}$，$\bm{\beta}$和$\bm{\mu}$，都相互垂直。因此$\bm{\mu}$必然在$\bm{1}$和$\bm{\beta}$构成的平面内。
+此时研究的是不同资产之间的预期超额收益率的差别，称为（横）截面（Cross-sectional）差异，而非时间序列（Time-series）或时序上的差异。因子代表了收益率的一种结构，给定了结构与因子预期收益率，不同资产预期超额收益率的差别，由其在这些因子上的暴露决定。\uline{那么多因子模型研究的核心问题，是找到一组能够解释股票预期收益率界面差异的因子}。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{fig/apt.jpg}
-    \caption{APT}
-    \label{fig:apt}
+    \includegraphics[width=0.6\textwidth]{fig/capm_sml.jpg}
+    \caption{CAPM：Security Market Line}
+    \label{fig:sml}
 \end{figure}
 
-因此在数学上，资产预期收益率$\bm{\mu}$可以写成$\bm{1}$与$\bm{\beta}$的线性组合，即：
-\begin{equation*}
-    \bm{\mu} = \gamma_1 \bm{1} + \gamma_2 \bm{\beta}
-\end{equation*}
-
-那么此时上式应对任何资产都成立，为了求解$\gamma_1$与$\gamma_2$可代入特殊资产，无风险资产（$R_f$），与市场组合($R_M$)。由于无风险资产的因子暴露为零，代入上式可得：
-\begin{equation*}
-    R_f = \gamma_1
-\end{equation*}
-
-对于市场组合，其$beta=1$，并将$\gamma_1 = R_f$代入，可得：
-\begin{equation*}
-    R_M = R_f + \gamma_2 \times \bm{1}
-\end{equation*}
-
-因此有：
-\begin{equation*}
-    \gamma = R_M - R_f
-\end{equation*}
-
-代入原式，最终可得到CAPM的表达式：
-\begin{equation*}
-    \mu_i = R_f + \beta_i(R_M - R_f)
-\end{equation*}
-
-在此基础上，扩展至多因子，即得到APT模型：
-\begin{equation*}
-    \E[R_{i}^{e}] = \mu_i - R_f = \beta_{i,1} \lambda_1 + \beta_{i,2} \lambda_2 + \dots + \beta_{i,K} \lambda_K
-\end{equation*}
+有几点需要注意，在这里使用$\E[\bm{R_i^e}]$为代表资产的预期超额收益率，而非如CAPM中表示的$\E[R_i] - R_f$，是因为在实证中，经常采用多空对冲建立投资组合，此时便无需再减去无风险收益率。另外，学界研究的对象始终为资产的预期草娥收益，因此有时将“超额”二字省略。
 
 \subsection{异象}
 
@@ -181,6 +119,8 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
 
 \subsection{系统性风险}
 
+【待整理】
+
 除了市场因子以外的风险都是可以被分散的，所以只要是超过市场组合收益的部分都叫做超额收益。
 
 多因子模型的表达式同样强调，只有那些影响众多资产收益率共同运动的风险，而非资产的特质性风险（即可以通过分散化规避掉的风险），才是预期收益率的来源。
@@ -189,12 +129,151 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
 
 系统性风险（Systematic risk），又称市场风险或不可分散风险，是影响所有资产的、不能通过资产组合而消除的风险。这部分风险是由那些影响整个市场的风险所引起的，无论怎样分散投资，也不可能消除系统性风险。避免集中投资于单一市场可减少系统性风险。单项资产、证券资产组合或不同公司受系统性风险影响不一样，系统性风险的大小通常用beta系数（$\beta$系数）来衡量。
 
-
 \section{方法论}
 
-时序回归、截面回归和Fama-MacBeth回归
+\subsection{多因子模型回归检验}
+
+对于多因子截面关系式：
+\begin{equation*}
+    \E[R_i] = \alpha_i + \bm{\beta_{i}^{'} \lambda}
+\end{equation*}
+
+在上述截面关系式中，$\alpha_i$代表股票i的定价错误。如果我们能够在统计上证明所有股票的$\alpha_i$都很接近零，那么这个多因子模型就是很好的模型。因为这些因子能够较好的解释个股截面预期收益率的差别。因此，多因子模型的回归检验中的重中之重，就是所有这些$\alpha_i$联合起来是否在统计上足够接近零。
+
+因此，多因子模型的回归检验可以总结为：
+\begin{itemize}
+    \item 挑选因子，计算个股在这些因子上的暴露$\beta_i$
+    \item 找到个股超额收益率均值$\E[R_i]$和因子暴露$\beta_i$在截面上的关系
+    \item 计算个股的定价误差$\alpha_i$，联合检验这些$\alpha_i$是否在统计上为零
+\end{itemize}
+
+https://zhuanlan.zhihu.com/p/40984029
+
+\subsection{时序回归}
+
+此时的因子为投资组合收益率，如经典的HML，SMB等，那么此时可以通过时序回归，来分析个股超额收益率$\E[R_i]$与因子暴露$\beta_i$之间在截面上的关系。
+
+对于个股i，直接进行时间序列回归，即
+\begin{equation*}
+    R_{i,t} = \alpha_i + \bm{\beta_{i}^{'} f_t} + \varepsilon_{i,t} \inlinesep t=1,2,\dots,T
+\end{equation*}
+
+对$R_{i,t}$与$f_t$在时序上取均值$\E_T(\cdot)$，就得到了个股超额收益率与因子暴露在截面上的关系：
+\begin{equation*}
+    \E_T[R_i] = \alpha_i + \bm{\beta_{i}^{'}} \E_T[\bm{f_t}] \inlinesep t=1,2,\dots,T
+\end{equation*}
+
+此时时序回归得到的截距$\alpha_i$即为个股i的定价误差。Black，Jensen和Scholes（1972） 基于如上的论述给出了时序回归法中求解因子预期收益率的简单方法，因子收益率$f_t$，在时序上的均值就是因子的预期收益率：
+\begin{equation*}
+    \bm{\lambda} = \E_T[\bm{f}]
+\end{equation*}
+
+\subsection{截面回归}
+
+因子可以不是portfolio returns，可以时GDP、CPI、利率等宏观经济指标
+
+先进行时序回归，确定因子暴露，进行回归，得到beta，
+
+
+再通beta（等式右侧），个股预期收益率（T期取均值，等式左侧），进行截面回归，得到因子收益率。此时通过截面回归目的是找到因子预期收益率$\lambda$与股票定价错误的残差$\alpha_i$
+
+个股？
+
+面回归 OLS 将通过原点并最小化所有个股残差$\alpha$的平方和。
+
+因此截面回归称为Two-pass regression estimate
 
 \subsection{Fama-MacBeth回归}
 
+第一步，与CS回归相同，先进行时序回归，得到个股收益率在因子上的暴露$\beta_i$
+
+第二步中，FM回归在每个t时间上进行一次截面回归
+
+这样就很容易求得$\lambda$与$\alpha$的标准误
+
+\subsection{Barra多因子模型}
+
+时间序列回归得到的 [公式] ，它的变化注定是缓慢的，且回归中也有大量的噪声。直接用基本面或者技术面数据作为 [公式] ，可以更快的捕捉公司的变化。
+
+\subsection{GMM}
+
+ GMM，它可以轻松的求出我们需要的各种量（Hansen 功不可没啊）。另外值得一提的是，在截面回归时用到的$\beta_i$并不是已知、真实的，而是从时间序列回归得出的估计值，它们称为 generated regressors，存在误差。Shanken (1992) 给出了解决该问题的修正方法，称为 Shanken correction。利用 Shanken correction 和 GMM，就可以检验$\alpha$是否为零了。
+
+\appendix
+
+\begin{appendices}
+
+\section{APT推导}
+
+第一步，假设资产的收益率，在单因子情形下，满足如下线性模型：
+\begin{equation*}
+    R_i = \mu_i + \beta_i f + \varepsilon_i \inlinesep i =1,\dots,n
+\end{equation*}
+
+此时$R_i$为资产收益率，$\mu_i$资产$i$的预期收益率，$\beta_i$是资产在因子上的暴露，而$f$是因子取值，而非因子风险溢酬，$\varepsilon_i$为资产$i$收益率的随机扰动或特质性收益率，并满足$\E[f]=\E[\varepsilon_i]=0$，若改写为向量形式，为Ross在APT中使用的收益率模型，有：
+\begin{equation*}
+    \bm{R} = \bm{\mu + f\beta + \varepsilon}
+\end{equation*}
+
+第二步，构建一个arbitrage portfolio，这个投资组合中资产的权重$\omega$满足如下两点特性。首先，该投资组合是零额投资的，即：
+\begin{equation*}
+    \bm{w' 1 = 0}
+\end{equation*}
+
+其中有$\bm{1}$为全为1的向量。其次，并且$\bm{w'\beta}=0$，即该投资组合在该因子上的暴露为零。此时这个投资组合的收益率应为：
+\begin{equation*}
+    R_p = \bm{w'R = w'\mu + w'\beta f + w'\varepsilon}
+\end{equation*}
+
+由上可知，这个投资组合的收益率可化简为：
+\begin{equation*}
+    R_p = \bm{w'R = w'\mu} 
+\end{equation*}
+
+第三步，运用无套利约束，可知根据$\bm{w}$构建的投资组合有如下性质：零额投资；对因子的暴露为零（因此该组合没有系统性风险）；没有特质性风险暴露（因为组合中特质性收益率为零）。换言之，这样一个投资组合，既没有资金投入又没有风险暴露，因此根据无套利约束条件，它的收益率必须为零，即：
+\begin{equation*}
+    R_p = \bm{w'\mu} = 0
+\end{equation*}
+
+根据几何可知，$w' 1 = w' \beta = w'\mu = 0$，说明$\bm{w'}$与$\bm{1}$，$\bm{\beta}$和$\bm{\mu}$，都相互垂直。因此$\bm{\mu}$必然在$\bm{1}$和$\bm{\beta}$构成的平面内。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/apt.jpg}
+    \caption{APT}
+    \label{fig:apt}
+\end{figure}
+
+因此在数学上，资产预期收益率$\bm{\mu}$可以写成$\bm{1}$与$\bm{\beta}$的线性组合，即：
+\begin{equation*}
+    \bm{\mu} = \gamma_1 \bm{1} + \gamma_2 \bm{\beta}
+\end{equation*}
+
+那么此时上式应对任何资产都成立，为了求解$\gamma_1$与$\gamma_2$可代入特殊资产，无风险资产（$R_f$），与市场组合($R_M$)。由于无风险资产的因子暴露为零，代入上式可得：
+\begin{equation*}
+    R_f = \gamma_1
+\end{equation*}
+
+对于市场组合，其$beta=1$，并将$\gamma_1 = R_f$代入，可得：
+\begin{equation*}
+    R_M = R_f + \gamma_2 \times \bm{1}
+\end{equation*}
+
+因此有：
+\begin{equation*}
+    \gamma = R_M - R_f
+\end{equation*}
+
+代入原式，最终可得到CAPM的表达式：
+\begin{equation*}
+    \mu_i = R_f + \beta_i(R_M - R_f)
+\end{equation*}
+
+在此基础上，扩展至多因子，即得到APT模型：
+\begin{equation*}
+    \E[R_{i}^{e}] = \mu_i - R_f = \beta_{i,1} \lambda_1 + \beta_{i,2} \lambda_2 + \dots + \beta_{i,K} \lambda_K
+\end{equation*}
+
+\end{appendices}
 
 \end{document}

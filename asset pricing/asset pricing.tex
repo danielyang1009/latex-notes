@@ -168,20 +168,54 @@ https://zhuanlan.zhihu.com/p/40984029
     \bm{\lambda} = \E_T[\bm{f}]
 \end{equation*}
 
+对于N支个股，每支个股i都有一组$(\beta_i,\E[R_i])$，以$\E[R_i] = \bm{\beta'} \E[\bm{f}]$作图，此时斜率为因子收益率$\lambda=\E_T[\bm{f}]$。将当$\bm{\beta_i}=0$时与$\bm{\beta_i}=1$代入，可知该直线过$(0,0)$与$(1,\E[\bm{f}])$两点。即对于因子投资组合，其对自身的因子暴露为1。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/ts_reg.jpg}
+    \caption{时序回归}
+    \label{fig：ts_reg}
+\end{figure}
+
+对于检验$\alpha_i$联合起来是否统计上为零，若残差不相关和同方差，标准误可以由OLS标准公式计算。若残差满足独立同分布且为正态分布，可以使用GRS检验。而当残差之间存在相关性或者异方差，则需要使用GMM。
+
 \subsection{截面回归}
 
-因子可以不是portfolio returns，可以时GDP、CPI、利率等宏观经济指标
+相比于时序回归，使用截面回归的优势是，因子的选择范围更广。可以为GDP、CPI、利率等宏观经济指标，而不仅投资组合收益率。进行截面回归，首先需先进行时序回归，用于确定因子暴露$\bm{\beta}$，即个股收益率对这些因子在时序上的敏感程度。对于个股i，应有:
+\begin{equation*}
+    R_{i,t} = a_i + \bm{\beta_{i}^{'} f_t + \varepsilon_{i,t}} \inlinesep t=1,2,\dots,T
+\end{equation*}
 
-先进行时序回归，确定因子暴露，进行回归，得到beta，
+由于此时的$\bm{f_t}$并非个股收益率，阶矩$a_i$并非个股定价误差。得到了个股因子暴露$\beta$之后，再进行截面回归。此时等式左边为$\E_T[R_i]$为整个T其的收益率均值，或上述$\E_T[R_i]$，而右侧为时序回归得到的$\bm{\beta_i}$。对于n支个股，每支个股都有一组$(\E[R_i],\bm{\beta_i})$，则截面回归的表达式为：
+\begin{equation*}
+    \E[R_i] = \alpha_i + \bm{\beta_{i}^{'} \lambda}
+\end{equation*}
 
+此时的截距即为定价误差，但由于只进行了一次回归，因此只能得到\uline{单个}定价误差$\alpha_i$与\uline{单个}因子预期收益率$\bm{\lambda}$。
 
-再通beta（等式右侧），个股预期收益率（T期取均值，等式左侧），进行截面回归，得到因子收益率。此时通过截面回归目的是找到因子预期收益率$\lambda$与股票定价错误的残差$\alpha_i$
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/cs_reg.jpg}
+    \caption{截面回归}
+    \label{fig：cs_reg}
+\end{figure}
 
-个股？
+因此截面回归，也称为Two-pass regression estimate。即通过时序回归首先得到个股对因子的暴露，以及收益率均值。即将个股转换为一个点$(\beta_i,\E[R_i])$，再对n支个股进行截面回归，最终的到定价误差与因子收益率。
 
-面回归 OLS 将通过原点并最小化所有个股残差$\alpha$的平方和。
+由于截面个股残差的相关性，虽然不会影响OLS估计，但会导致OLS给出的标准误存在较大误差，因此可以使用GLS取代OLS，由于GLS考虑了残差的协方差因此可以得到准确的标准误。但估计残差的协方差矩阵在现实中有较大的障碍。此时则可使用GMM，由于截面回归的$\bm{beta_i}$并不是使用真实的因子收益率回归得到，而是从时间序列上回归出的估计值，称为generated regressors，存在误差。Shanken（1992）给出了修正方法称为Shanken correction。同时利用Shanken correction与GMM，即可检验$\alpha_i$是否联合为0。
 
-因此截面回归称为Two-pass regression estimate
+\subsection{时序回归 vs 截面回归}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/ts_vs_cs.jpg}
+    \caption{时序回归与截面回归}
+    \label{fig:ts_vs_cs}
+\end{figure}
+
+和时序回归得到的最终 [公式] 关系式相比，截面回归利用了所有个股的数据。从某种意义上来说，这更合理。对于时序回归，因子的平均收益率就是该因子组合在 T 期收益率上的均值：$\lambda=\E_T[f]$。而对于截面回归来说，因子收益率通过 OLS 或 GLS 确定，取值和 $\E_T[f]$ 不同。这是二者最大的区别。
+
+这样是最小化随机残差？而非最小化alpha
 
 \subsection{Fama-MacBeth回归}
 
@@ -189,11 +223,20 @@ https://zhuanlan.zhihu.com/p/40984029
 
 第二步中，FM回归在每个t时间上进行一次截面回归
 
+上述方法的巧妙之处在于它把 T 期的回归结果当作 T 个独立的样本。参数的 standard errors 刻画的是样本统计量在不同样本间是如何变化的。即如果有500期数据就进行500次截面回归，即把每一期的回归结果，作为一个独立的样本。
+
+不同于CS回归，只得到$\lambda$和$\alpha$的一个样本估计，在FM回归中得到T个$\lambda$和$\alpha$的样本估计，这样就可以求出两者标准误为：
+\begin{equation*}
+    \sigma^2(\hat{\lambda}) = \frac{1}{T^2} \sum_{t=1}^{T} \left( \hat{\lambda}_t - \hat{\lambda} \right)^2
+\end{equation*}
+
 这样就很容易求得$\lambda$与$\alpha$的标准误
 
 \subsection{Barra多因子模型}
 
 时间序列回归得到的 [公式] ，它的变化注定是缓慢的，且回归中也有大量的噪声。直接用基本面或者技术面数据作为 [公式] ，可以更快的捕捉公司的变化。
+
+\subsection{GRS}
 
 \subsection{GMM}
 

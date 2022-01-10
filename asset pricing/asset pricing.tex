@@ -129,9 +129,7 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
 
 系统性风险（Systematic risk），又称市场风险或不可分散风险，是影响所有资产的、不能通过资产组合而消除的风险。这部分风险是由那些影响整个市场的风险所引起的，无论怎样分散投资，也不可能消除系统性风险。避免集中投资于单一市场可减少系统性风险。单项资产、证券资产组合或不同公司受系统性风险影响不一样，系统性风险的大小通常用beta系数（$\beta$系数）来衡量。
 
-\section{方法论}
-
-\subsection{多因子模型回归检验}
+\section{多因子模型回归检验}
 
 对于多因子截面关系式：
 \begin{equation*}
@@ -206,6 +204,8 @@ https://zhuanlan.zhihu.com/p/40984029
 
 \subsection{时序回归 vs 截面回归}
 
+对于时序回归而言，因子收益率为在时序上的均值，即$\bm{\lambda} = \E_T[\bm{f}]$，来得到隐含的截面关系。因此$\E[R_i] = \bm{\beta_i \lambda}$必然过原点，以及因子收益率的投资组合$(1,\E_T[\bm{f}])$（$\bm{\beta_i}=2$）。而在截面回归中，因子暴露已经通过时序回归确定，而在第二次进行截面回归时，充分使用了个股数据，若使用OLS，以最小化个股定价误差$\alpha_i$的平方和为目标。因子收益率与时序中直接通过计算均值的方式不同，更加合理。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/ts_vs_cs.jpg}
@@ -213,34 +213,57 @@ https://zhuanlan.zhihu.com/p/40984029
     \label{fig:ts_vs_cs}
 \end{figure}
 
-和时序回归得到的最终 [公式] 关系式相比，截面回归利用了所有个股的数据。从某种意义上来说，这更合理。对于时序回归，因子的平均收益率就是该因子组合在 T 期收益率上的均值：$\lambda=\E_T[f]$。而对于截面回归来说，因子收益率通过 OLS 或 GLS 确定，取值和 $\E_T[f]$ 不同。这是二者最大的区别。
-
-这样是最小化随机残差？而非最小化alpha
-
 \subsection{Fama-MacBeth回归}
 
-第一步，与CS回归相同，先进行时序回归，得到个股收益率在因子上的暴露$\beta_i$
-
-第二步中，FM回归在每个t时间上进行一次截面回归
-
-上述方法的巧妙之处在于它把 T 期的回归结果当作 T 个独立的样本。参数的 standard errors 刻画的是样本统计量在不同样本间是如何变化的。即如果有500期数据就进行500次截面回归，即把每一期的回归结果，作为一个独立的样本。
-
-不同于CS回归，只得到$\lambda$和$\alpha$的一个样本估计，在FM回归中得到T个$\lambda$和$\alpha$的样本估计，这样就可以求出两者标准误为：
+在Fama和MacBeth（1973）中，提出了Fama-MacBeth Regression（Fama and MacBeth 1973），目的是为了检验 CAPM。首先，与截面回归相同，也需要先进行时序回归，得到个股收益率在因子收益率上的暴露$\beta_i$。其次，与截面回归不同的是，Fama-MacBeth在每个t时间上进行一次截面回归。在截面回归中，对资产i，在时序$t=1,2,\dots,T$上对$\R_{i,t}$取均值，得到$\E[R_i]$。与该资产i的因子暴露$\bm{beta}_i$进行回归，注意这里只进行了\uline{1次回归}：
 \begin{equation*}
-    \sigma^2(\hat{\lambda}) = \frac{1}{T^2} \sum_{t=1}^{T} \left( \hat{\lambda}_t - \hat{\lambda} \right)^2
+    \E[R_i] = \alpha_i + \bm{\beta_{i}^{'} \lambda_i}
 \end{equation*}
 
-这样就很容易求得$\lambda$与$\alpha$的标准误
+对于Fama-MacBeth回归，具体而言，并不对$R_{i,t}$取均值，而对每个t时刻都进行一次独立的截面回归，一共进行\uline{T次回归}：
+\begin{equation*}
+    R_{i,t} = \alpha_{i,t} + \bm{\beta_{i}^{'} \lambda_t}
+\end{equation*}
+
+那么此时对于$\alpha_{i,t}$与$\lambda_t$都有T次回归结果。对于单个资产i，从$t=1$时刻到$t=T$时刻，有$\left(\bm{\beta_{i,1}},\E[R_{i,1}]\right),\left(\bm{\beta_{i,2}},\E[R_{i,2}]\right),\dots,\left(\bm{\beta_{i,T}},\E[R_{i,T}]\right)$。即可以以此估计定价误差以及因子收益率：
+\begin{align*}
+    \hat{\lambda} &= \frac{1}{T} \sum_{t=1}^{T} \lambda_t \\
+    \hat{\alpha}_i &= \frac{1}{T} \sum_{t=1}^{T} \alpha_{i,t}
+\end{align*}
+
+不同于传统截面回归，只得到$\lambda$和$\alpha$的一个样本估计，在FM截面回归中得到T个$\lambda$和$\alpha$的样本估计，这样就可以求出两者标准误为：
+\begin{align*}
+    \sigma^2(\hat{\lambda}) &= \frac{1}{T^2} \sum_{t=1}^{T} \left( \hat{\lambda}_t - \hat{\lambda} \right)^2 \\
+    \sigma^2(\hat{\alpha}_i) &= \frac{1}{T^2} \sum_{t=1}^{T} \left( \hat{\alpha}_{i,t} - \hat{\alpha}_i \right)^2
+\end{align*}
+
+Fama-MacBeth截面回归和传统截面回归的相同点和区别是：
+\begin{itemize}
+    \item FM回归与截面回归，都需先进行时序回归，以确定个股的因子暴露$\bm{\beta_i}$
+    \item 传统截面回归将$R_{i,t}$在时序上取均值得到$\E[R_i]$，再进行1次截面回归，得到$\alpha_i$和$\lambda$
+    \item 对于FM回归，在各个不同的t时刻使用$R_{i,t}$与$\bm{\beta_{i}}$进行回归，再将回归结果在时序上取均值得到$\alpha_i = \E[\alpha_{i,t}]$与$\lambda=\E[\lambda_t]$
+\end{itemize}
+
+在Fama和MacBeth（1973）中，在时序上采用了滚动窗口的方法估计$\bm{\beta_i}$，因此对于不同的t，$\bm{\beta_i}$发生改变。若使用所有样本一次性估计$\bm{\beta_i}$，那么取值相同。此时由于$\bm{\beta_i}$不变，那么对于传统截面回归的先均值再回归，与FM截面回归的先回归再均值，两种方式在所有T期上得到的估计是相同的，但FM截面回归仍然有一定的优势。
+
+【待整理】
+由上面的介绍可知，Fama-MacBeth 回归的最大优点是它排除了残差截面相关性对标准误的影响。股票的残差收益率在截面上具有很高的相关性，因此该修正对于准确计算标准误至关重要。下面来说说它的不足。首先，Fama-MacBeth 回归对于残差在时序上的相关性无能为力。如果残差在时序上存在相关性，则需要对 Fama-MacBeth 回归得到的标准误进一步修正。Petersen (2009) 分析了不同的回归技术在分析面板数据（panel data）时由于忽略残差的时序或截面相关性而导致不准确的标准误（低估了其真实值）。这篇文章非常值得一读。其次，上文提到，在截面回归中用到的$\bm{\beta_i}$并不是已知的，而是通过时间序列得到的估计值（generated regressors），因此存在误差。Fama-MacBeth 回归对此也无能为力，需要 Shanken correction。
 
 \subsection{Barra多因子模型}
 
-时间序列回归得到的 [公式] ，它的变化注定是缓慢的，且回归中也有大量的噪声。直接用基本面或者技术面数据作为 [公式] ，可以更快的捕捉公司的变化。
+Barra多因子模型也是截面回归模型，其考虑了行业因子和来自基本面和技术面的风格因子。但与传统的截面回归模型不同的是在Barra模型中，因子暴露并非来自时间序列回归，而是直接来自基本面或者技术面数据本身。
+
+例如Book-to-Market ratio，在Fama-French三因子模型中，其被用来构建HML（High-Minus-Low）投资组合，投资组合的收益率作为因子。由时序回归决定个股在这个因子上的暴露，与个股实际的BM无关。但在Barra模型中，BM直接用于确定因子暴露，但需要进行标准化。有了因子暴露，Barra截面模型与传统截面模型相同，都是通过截面回归确定因子收益率。因此，Barra 模型（业界代表）和学术界流行的因子模型最大的不同就是因子暴露$\bm{\beta_i}$的确定。
+
+对于两种确定因子暴露的方法，通过时间序列得到的$\bm{\beta}$，经过平滑，变化更加缓慢。而直接使用基本面数据获得$\bm{\beta}$，可以更快的捕捉公司的变化。需要注意的是，这些因子都需要进行标准化，不能直接使用原始数据。例如，公司市值不经过标准化而作为因子暴露，公司市值差异巨大。假设A公司市值为B公司的100倍，此时显然不能说A公司的超额收益率对于市值因子的暴露为B公司的100倍。所以对于市值因子或其他\uline{风格因子}，常见的是首先取对数，然后再进行标准化。对于其他的风格因子，也需要采用相应的标准化处理。在Barra的文档中对如何标准化因子暴露有详细的说明。对于行业因子，Barra将因子暴露处理为Binary变量或虚拟变量，例如工商银行在银行业的暴露为1，而在其他行业的暴露为0。
 
 \subsection{GRS}
 
 \subsection{GMM}
 
- GMM，它可以轻松的求出我们需要的各种量（Hansen 功不可没啊）。另外值得一提的是，在截面回归时用到的$\beta_i$并不是已知、真实的，而是从时间序列回归得出的估计值，它们称为 generated regressors，存在误差。Shanken (1992) 给出了解决该问题的修正方法，称为 Shanken correction。利用 Shanken correction 和 GMM，就可以检验$\alpha$是否为零了。
+GMM，它可以轻松的求出我们需要的各种量（Hansen 功不可没啊）。另外值得一提的是，在截面回归时用到的$\beta_i$并不是已知、真实的，而是从时间序列回归得出的估计值，它们称为 generated regressors，存在误差。Shanken (1992) 给出了解决该问题的修正方法，称为 Shanken correction。利用 Shanken correction 和 GMM，就可以检验$\alpha$是否为零了。
+
+如今我们有了 GMM 这样的大杀器，能够方便的处理残差的各种相关性。
 
 \appendix
 

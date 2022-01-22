@@ -217,15 +217,34 @@ https://zhuanlan.zhihu.com/p/40984029
 
 \subsection{Fama-MacBeth回归}
 
-在Fama和MacBeth（1973）中，提出了Fama-MacBeth Regression（Fama and MacBeth 1973），目的是为了检验 CAPM。首先，与截面回归相同，也需要先进行时序回归，得到个股收益率在因子收益率上的暴露$\beta_i$。其次，与截面回归不同的是，Fama-MacBeth在每个t时间上进行一次截面回归。在截面回归中，对资产i，在时序$t=1,2,\dots,T$上对$\R_{i,t}$取均值，得到$\E[R_i]$。与该资产i的因子暴露$\bm{beta}_i$进行回归，注意这里只进行了\uline{1次回归}：
+在Fama和MacBeth（1973）中，提出了Fama-MacBeth Regression（Fama and MacBeth 1973），目的是为了检验 CAPM。首先，与截面回归相同，也需要先进行时序回归，得到个股收益率在因子收益率上的暴露$\beta_i$。
+
+具体而言，对于$n$个资产，资产i的超额收益率为$R_{i,t}$，有$m$个因子，通过如下回归得到每个资产对每个因子的风险暴露$\beta$：
+\begin{align*}
+    R_{1,t} &= a_1 + \beta_{1,f_1} f_{1,t} + \beta_{1,f_2} f_{2,t} + \dots + \beta_{1,f_m} f_{m,t} + \varepsilon_{1,t} \\
+    R_{2,t} &= a_1 + \beta_{2,f_1} f_{1,t} + \beta_{2,f_1} f_{1,t} + \dots + \beta_{2,f_m} f_{m,t} + \varepsilon_{2,t} \\
+    &\vdots \\
+    R_{n,t} &= a_1 + \beta_{n,f_1} f_{1,t} + \beta_{n,f_1} f_{1,t} + \dots + \beta_{n,f_m} f_{m,t} + \varepsilon_{n,t}
+\end{align*}
+
+其次，与截面回归不同的是，Fama-MacBeth在每个t时间上进行一次截面回归。在截面回归中，对资产i，在时序$t=1,2,\dots,T$上对$\R_{i,t}$取均值，得到$\E[R_i]$。与该资产i的因子暴露$\bm{beta}_i$进行回归，注意这里只进行了\uline{1次回归}：
 \begin{equation*}
     \E[R_i] = \alpha_i + \bm{\beta_{i}^{'} \lambda_i}
 \end{equation*}
 
-对于Fama-MacBeth回归，具体而言，并不对$R_{i,t}$取均值，而对每个t时刻都进行一次独立的截面回归，一共进行\uline{T次回归}：
+对于Fama-MacBeth回归，并不对$R_{i,t}$取均值，而对每个t时刻都进行一次独立的截面回归，一共进行\uline{T次回归}：
 \begin{equation*}
     R_{i,t} = \alpha_{i,t} + \bm{\beta_{i}^{'} \lambda_t}
 \end{equation*}
+
+具体而言，对于每个资产，进行T次回归，此时$\hat{\beta}$由上一步得到，为估计值：
+\begin{align*}
+    R_{i,1} &= \alpha_{i,1} + \lambda_{f_1,1} \hat{\beta}_{i,f_1} + \lambda_{f_2,1}\hat{\beta}_{i,f_2} + \dots + \lambda_{f_m,1} \hat{\beta}_{i,f_m} + \varepsilon_{i,1} \\
+    R_{i,2} &= \alpha_{i,2} + \lambda_{f_1,2} \hat{\beta}_{i,f_1} + \lambda_{f_2,2}\hat{\beta}_{i,f_2} + \dots + \lambda_{f_m,2} \hat{\beta}_{i,f_m} + \varepsilon_{i,2} \\
+    &\vdots \\
+    R_{i,T} &= \alpha_{i,T} + \lambda_{f_1,T} \hat{\beta}_{i,f_1} + \lambda_{f_2,T}\hat{\beta}_{i,f_2} + \dots + \lambda_{f_m,T} \hat{\beta}_{i,f_m} + \varepsilon_{i,T}
+\end{align*}
+
 
 那么此时对于$\alpha_{i,t}$与$\lambda_t$都有T次回归结果。对于单个资产i，从$t=1$时刻到$t=T$时刻，有$\left(\bm{\beta_{i,1}},\E[R_{i,1}]\right),\left(\bm{\beta_{i,2}},\E[R_{i,2}]\right),\dots,\left(\bm{\beta_{i,T}},\E[R_{i,T}]\right)$。即可以以此估计定价误差以及因子收益率：
 \begin{align*}

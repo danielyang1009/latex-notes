@@ -1080,13 +1080,28 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
     \text{Delta}_C &= \frac{\partial C}{\partial S}
     = N(d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
     \text{Delta}_P &= \frac{\partial P}{\partial S}
-    = -N(-d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1)-1
+    = -N(-d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] \\
+    &= -\left[ 1- N(d_1) \right] = N(d_1)-1
 \end{align*}
+
+也可从看涨看跌平价关系（PCP）中，对等式两侧对S求导得到：
+\begin{gather*}
+    C_{t,T} = P_{t,T} +  S_t - K e^{-r(T-t)} \\
+    \frac{\partial C}{\partial S} = \frac{\partial P}{\partial S} + 1
+\end{gather*}
 
 当已知红利率为$q$时，有：
 \begin{align*}
     \text{Delta}_C &= -e^{-q\tau} N(d_1) \\
     \text{Delta}_P &= -e^{-q\tau} N(-d_1)
+\end{align*}
+
+此时有：
+\begin{align*}
+    \text{Delta}_C - \text{Delta}_P 
+    &= -e^{-q\tau} \left[ N(d_1) + N(-d_1) \right] \\
+    &= -e^{-q\tau} \left[ N(d_1) + 1 - N(d_1) \right] \\
+    &= -e^{-q\tau}
 \end{align*}
 
 \subsubsection{Gamma}

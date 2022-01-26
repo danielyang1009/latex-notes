@@ -67,6 +67,14 @@
 
 % set underscore
 \renewcommand{\_}{\textscale{0.6}{\textunderscore}}
+% set forall
+\let\oldforall\forall
+\renewcommand{\forall}{\oldforall \: }
+% set exist
+\let\oldexist\exists
+\renewcommand{\exists}{\oldexist \: }
+% set existu
+\newcommand\existu{\oldexist! \: }
 
 % Symbol
 \newcommand{\E}{\mathbb{E}}
@@ -78,7 +86,7 @@
 \newcommand{\abs}[1]{\left\lvert #1\right\rvert}
 \newcommand{\norm}[1]{\left\lVert #1\right\rVert}
 \newcommand{\given}{\,\vert\,}
-\newcommand{\inlinesep}{\:,\quad}
+\newcommand{\inlinesep}{\;,\quad}
 % \newcommand{\hyphen}{\hbox{-}}
 
 % Number sets

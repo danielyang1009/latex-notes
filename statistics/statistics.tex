@@ -1365,6 +1365,83 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \item 光滑样条（Smoothing spline）
 \end{itemize}
 
+\subsection{线性模型}
+
+一般对于多个自变量，单一因变量的线性回归模型称为多变量回归模型（Multiple regression或Multivariable regerssion）。对于多个因变量的回归模型称为多元回归模型（Multivariate regression）。
+
+https://brilliant.org/wiki/multivariate-regression/
+
+
+\subsubsection*{多变量回归模型}
+
+对于多变量回归模型，即单一因变量，多个自变量的回归模型应有：
+\begin{equation*}
+    \bm{Y = X \beta + \epsilon}
+\end{equation*}
+
+其中：
+\begin{equation*}
+    \begin{bmatrix}
+        y_1 \\
+        y_2 \\
+        \vdots \\
+        y_N
+    \end{bmatrix} =
+    \begin{bmatrix}
+        1 & x_{1,1} & x_{1,2} & \dots & x_{1,K} \\
+        1 & x_{2,1} & x_{2,2} & \dots & x_{2,K} \\
+        \vdots & \vdots & \vdots & \ddots & \vdots \\
+        1 & x_{N,1} & x_{N,2} & \dots & x_{N,K} \\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \beta_0 \\
+        \beta_1 \\
+        \vdots \\
+        \beta_K
+    \end{bmatrix} + 
+    \begin{bmatrix}
+        \epsilon_1 \\
+        \epsilon_2 \\
+        \vdots \\
+        \epsilon_N
+    \end{bmatrix}
+\end{equation*}
+
+\subsubsection*{多元回归模型}
+
+对于多元回归模型，即多因变量，多个自变量的回归模型应有：
+\begin{equation*}
+    \bm{Y = X \beta + \epsilon}
+\end{equation*}
+
+其中：
+\begin{equation*}
+    \begin{bmatrix}
+        y_1 \\
+        y_2 \\
+        \vdots \\
+        y_N
+    \end{bmatrix} =
+    \begin{bmatrix}
+        1 & x_{1,1} & x_{1,2} & \dots & x_{1,K} \\
+        1 & x_{2,1} & x_{2,2} & \dots & x_{2,K} \\
+        \vdots & \vdots & \vdots & \ddots & \vdots \\
+        1 & x_{N,1} & x_{N,2} & \dots & x_{N,K} \\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \beta_0 \\
+        \beta_1 \\
+        \vdots \\
+        \beta_K
+    \end{bmatrix} + 
+    \begin{bmatrix}
+        \epsilon_1 \\
+        \epsilon_2 \\
+        \vdots \\
+        \epsilon_N
+    \end{bmatrix}
+\end{equation*}
+
 \subsection{最小二乘估计}
 
 有n个观察值$\{x_i,y_i\}_{i=1}^{n}$，其线性回归模型有如下形式：

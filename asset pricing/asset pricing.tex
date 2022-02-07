@@ -28,7 +28,7 @@
 
 随后Ross（1976）提出了著名的套利定价理论（Arbitrage Pricing Theory，APT），为多元线性模型:
 \begin{equation*}
-    \E[R_i^e] = \bm{\beta_{i}^{'} \lambda}
+    \E[R_i^e] = \bm{\beta_{i}' \lambda}
 \end{equation*}
 
 同CAPM模型相同，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），即该目标因子的收益率变化对股票超额收益变化的影响程度（控制其他因子后）。$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。由此可见，资产$i$的预期超额收益率$\E[R_i^e]$，为等式右侧一系列因子的预期收益率，以及该资产在这些因子上的暴露决定。
@@ -48,7 +48,7 @@
 
 而在实际过程中，等式两侧并不相等，而存在着定价误差$\alpha_i$（Pricing error）：
 \begin{equation*}
-    \E[R_i^e] = \alpha_i + \bm{\beta_{i}^{'} \lambda}
+    \E[R_i^e] = \alpha_i + \bm{\beta_{i}' \lambda}
 \end{equation*}
 
 定价误差有可能由两方面产生：
@@ -191,7 +191,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 假设N与K代表资产和因子的个数，对于多因子截面关系式：
 \begin{equation*}
-    \E[R_{i}^{e}] = \alpha_i + \bm{\beta_{i}^{'} \lambda}
+    \E[R_{i}^{e}] = \alpha_i + \bm{\beta_{i}' \lambda}
 \end{equation*}
 
 在上述截面关系式中，$R_{i}^{e}$为资产i的超额收益率（或直接记作$R_{i}$），$\bm{\beta}_i$为资产i在K个因子上的因子暴露向量，$\bm{\lambda}$为K个因子的收益率向量。\uline{多因子模型研究的核心问题是资产预期收益率在截面之间为什么有差异}。由上式可见，其并不关心时序上的波动，只关心超额收益率的期望$\E[R_{i}^{e}]$与$\bm{\beta}_i$之间截面上的关系（收益与风险）。因子代表了收益率的一种结构（线性关关系），结构一旦确定，资产的收益率就由因子暴露决定，暴露高，收益率就高。
@@ -211,7 +211,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
     \underset{\scriptscriptstyle{(N \times 1)}}{\bm{a}}
     = \begin{bmatrix} a_1 \\ a_2 \\ \vdots \\ a_N \end{bmatrix}
     \qquad
-    \underset{\scriptscriptstyle{(1 \times N)}}{\bm{a}^{'}}
+    \underset{\scriptscriptstyle{(1 \times N)}}{\bm{a}'}
     = \begin{bmatrix} a_1 & a_2 & \dots a_N \end{bmatrix}
 \end{equation*}
 
@@ -221,7 +221,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 对于资产i，进行时间序列回归，即：
 \begin{equation*}
-    R_{i,t}^{e} = \alpha_i + \bm{\beta}_{i}^{'} \bm{\lambda}_t + \varepsilon_{i,t} \inlinesep t=1,2,\dots,T
+    R_{i,t}^{e} = \alpha_i + \bm{\beta}_{i}' \bm{\lambda}_t + \varepsilon_{i,t} \inlinesep t=1,2,\dots,T
 \end{equation*}
 
 当有N个资产和K个因子时，在$\bm{\lambda}$前加入单列常数1为截距，矩阵形式有：
@@ -236,11 +236,11 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 \begin{gather*}
     \bm{R} = \begin{bmatrix} \bm{R}_1 & \dots & \bm{R}_N \\ \end{bmatrix}
     = \begin{bmatrix} R_{1,1} & \dots & R_{1,N} \\ \vdots & \vdots & \ddots \\ R_{T,1} & \dots & R_{T,N} \end{bmatrix} \\
-    \bm{\lambda} = \begin{bmatrix} \bm{\lambda}_{1}^{'} \\ \vdots \\ \bm{\lambda}_{T}^{'} \end{bmatrix}
+    \bm{\lambda} = \begin{bmatrix} \bm{\lambda}_{1}' \\ \vdots \\ \bm{\lambda}_{T}' \end{bmatrix}
     = \begin{bmatrix} 1 & \lambda_{1,1} & \dots & \lambda_{1,K} \\ \vdots & \vdots & \ddots & \vdots \\ 1 & \lambda_{T,1} & \dots & \lambda_{T,K} \end{bmatrix} 
     \\
     \hat{\bm{\beta}}
-    = \begin{bmatrix} \bm{\hat{\beta}}_{0}^{'} \\ \bm{\hat{\beta}}_{1}^{'} \\ \vdots \\ \bm{\hat{\beta}}_{K}^{'} \end{bmatrix}
+    = \begin{bmatrix} \hat{\bm{\beta}}_{0}' \\ \hat{\bm{\beta}}_{1}' \\ \vdots \\ \hat{\bm{\beta}}_{K}' \end{bmatrix}
     = \begin{bmatrix} \hat{\beta}_{0,1} & \dots & \hat{\beta}_{0,N} \\ \hat{\beta}_{1,1} & \dots & \hat{\beta}_{1,N} \\ \vdots & \ddots & \vdots \\ \hat{\beta}_{K,1} & \dots & \hat{\beta}_{K,N} \end{bmatrix}
     \\
     \bm{\epsilon} = \begin{bmatrix}
@@ -249,16 +249,16 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
     = \begin{bmatrix} \epsilon_{1,1} & \dots & \epsilon_{1,N} \\ \vdots & \vdots & \ddots \\ \epsilon_{T,1} & \dots & \epsilon_{T,N} \end{bmatrix}
 \end{gather*}
 
-注意在\verb|Python|中，\verb|statsmodel.OLS|对于多因变量回归（Y为多列）一并回归，与对单因变量（Y为单列）逐列回归结果相同。其中$\bm{\beta}_{0}^{'}$为截距，即为$\bm{\alpha}^{'}$，或可以写为：
+注意在\verb|Python|中，\verb|statsmodel.OLS|对于多因变量回归（Y为多列）一并回归，与对单因变量（Y为单列）逐列回归结果相同。其中$\bm{\beta}_{0}'$为截距，即为$\bm{\alpha}'$，或可以写为：
 \begin{gather*}
     \hat{\bm{\beta}}
-    = \begin{bmatrix} \bm{\alpha}^{'} \\ \bm{\beta}_{1}^{'} \\ \vdots \\ \bm{\beta}_{K}^{'} \end{bmatrix}
+    = \begin{bmatrix} \bm{\alpha}' \\ \bm{\beta}_{1}' \\ \vdots \\ \bm{\beta}_{K}' \end{bmatrix}
     = \begin{bmatrix} \alpha_{1} & \dots & \alpha_{N} \\ \beta_{1,1} & \dots & \beta_{1,N} \\ \vdots & \ddots & \vdots \\ \beta_{K,1} & \dots & \beta_{K,N} \end{bmatrix}
 \end{gather*}
 
 这样就获得了全部资产$i=1,\dots,N$在因子上的暴露向量$\hat{\bm{\beta}}_i$，截距$\hat{\alpha}_i$以及残差$\hat{\bm{\epsilon}}_i$。由于对资产i在时序上进行回归，那么对$R_{t,i}$与$\lambda_t$在时序上取均值，得到$\E_T[R_{t,i}]$和$\E_T[\bm{\lambda_t}]$。因此对于每个资产i，都有如下关系：
 \begin{equation*}
-    \E_T[R_i] = \alpha_i + \bm{\beta_{i}^{'}} \E_T[\bm{\lambda_t}] \inlinesep i=1,2,\dots,N
+    \E_T[R_i] = \alpha_i + \bm{\beta_{i}'} \E_T[\bm{\lambda_t}] \inlinesep i=1,2,\dots,N
 \end{equation*}
 
 事实上，当自变量为因子收益率时，仅靠对个资产进行时序回归，就可以获得所有资产在截面上的关系。为方便理解，假设单因子情形进行作图，图中红线为$\E_T[R_i] = \beta_i \E_T[\lambda_t]$，那么对于N个资产，每个资产i都对应图上$(\beta_i,\E[R_i])$一点，此时斜率为因子收益率$\hat{\lambda}=\E_T[\lambda_t]$。将当$\beta_i=0$时，即暴露为0，与$\beta_i=1$代入，暴露为1，为因子投资组合。可知该直线过$(0,0)$与$(1,\hat{\lambda})$两点。而时序回归得到的截距$\alpha_i$即为资产i的定价误差，即为此时各个资产到该直线的距离。Black，Jensen和Scholes（1972） 基于如上的论述给出了时序回归法中求解因子预期收益率的简单方法，因子收益率$\bm{\lambda}_t$，在时序上的均值就是因子的预期收益率$\hat{\bm{\lambda}} = \E_T[\bm{\lambda_t}]$。
@@ -294,7 +294,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 那么此时，对于资产i，进行时序回归应有:
 \begin{equation*}
-    R_{i,t} = a_i + \bm{\hat{\beta}}_{i}^{'} \bm{F}_t + \varepsilon_{i,t} \inlinesep t=1,2,\dots,T
+    R_{i,t} = a_i + \hat{\bm{\beta}}_{i}' \bm{F}_t + \varepsilon_{i,t} \inlinesep t=1,2,\dots,T
 \end{equation*}
 
 由于此时的解释变量$\bm{F_t}$并非因子收益率，因此截距$a_i$并非定价误差。当有N个资产和K个因子时，在$\bm{\lambda}$前加入单列常数1为截距，矩阵形式有：
@@ -309,11 +309,11 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 \begin{gather*}
     \bm{R} = \begin{bmatrix} \bm{R}_1 & \dots & \bm{R}_N \\ \end{bmatrix}
     = \begin{bmatrix} R_{1,1} & \dots & R_{1,N} \\ \vdots & \vdots & \ddots \\ R_{T,1} & \dots & R_{T,N} \end{bmatrix} \\
-    \bm{F} = \begin{bmatrix} 1 & \bm{F}_{1}^{'} \\ \vdots & \vdots \\ 1 & \bm{F}_{T}^{'} \end{bmatrix}
+    \bm{F} = \begin{bmatrix} 1 & \bm{F}_{1}' \\ \vdots & \vdots \\ 1 & \bm{F}_{T}' \end{bmatrix}
     = \begin{bmatrix} 1 & F_{1,1} & \dots & F_{1,K} \\ \vdots & \vdots & \ddots & \vdots \\ 1 & F_{T,1} & \dots & F_{T,K} \end{bmatrix} 
     \\
     \hat{\bm{\beta}}
-    = \begin{bmatrix} \bm{\hat{a}}^{'} \\ \bm{\hat{\beta}}_{1}^{'} \\ \vdots \\ \bm{\hat{\beta}}_{K}^{'} \end{bmatrix}
+    = \begin{bmatrix} \hat{\bm{a}}' \\ \hat{\bm{\beta}}_{1}' \\ \vdots \\ \hat{\bm{\beta}}_{K}' \end{bmatrix}
     = \begin{bmatrix} \hat{a}_{1} & \dots & \hat{a}_{N} \\ \hat{\beta}_{1,1} & \dots & \hat{\beta}_{1,N} \\ \vdots & \ddots & \vdots \\ \hat{\beta}_{K,1} & \dots & \hat{\beta}_{K,N} \end{bmatrix}
     \\
     \bm{\epsilon} = \begin{bmatrix}
@@ -324,13 +324,13 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 得到了个股因子暴露$\beta$之后，就可以进行第二步截面回归。此时等式左边为$\E_T[R_i]$为整个T其的收益率均值，而右侧为时序回归得到的$\bm{\beta_i}$。对于N个资产，每个资产i都对应点$(\bm{\beta_i},\E[R_i])$。此时对所有资产，进行截面回归：
 \begin{equation*}
-    \E_T[R_i] = \bm{\hat{\beta}}_{i}^{'} \bm{\lambda} + \alpha_i \inlinesep \forall i=1,2,\dots,N
+    \E_T[R_i] = \hat{\bm{\beta}}_{i}' \bm{\lambda} + \alpha_i \inlinesep \forall i=1,2,\dots,N
 \end{equation*}
 
 矩阵形式应有：
 \begin{equation*}
     \underset{\scriptscriptstyle{(N \times 1)}}{\E_T\left[\bm{R}\right]}
-    = \underset{\scriptscriptstyle{(N \times K)}}{\hat{\bm{\beta}}^{'}}
+    = \underset{\scriptscriptstyle{(N \times K)}}{\hat{\bm{\beta}}'}
     \underset{\scriptscriptstyle{(K \times 1)}}{\bm{\lambda}}
     + \underset{\scriptscriptstyle{(N \times 1)}}{\bm{\alpha}}
 \end{equation*}
@@ -339,8 +339,8 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 \begin{gather*}
     \E_T\left[\bm{R}\right] = \begin{bmatrix} \E_T[R_1] \\ \vdots \\ \E_T[R_N] \end{bmatrix}
     \qquad
-    \hat{\bm{\beta}}^{'}
-    = \begin{bmatrix} \bm{\hat{\beta}}_{1}^{'} \\ \vdots \\ \bm{\hat{\beta}}_{N}^{'} \end{bmatrix}
+    \hat{\bm{\beta}}'
+    = \begin{bmatrix} \hat{\bm{\beta}}_{1}' \\ \vdots \\ \hat{\bm{\beta}}_{N}' \end{bmatrix}
     = \begin{bmatrix} \hat{\beta}_{1,1} & \dots & \hat{\beta}_{1,K} \\ \vdots & \ddots & \vdots \\ \hat{\beta}_{N,1} & \dots & \hat{\beta}_{N,K} \end{bmatrix}
     \\
     \bm{\lambda} = \begin{bmatrix} \lambda_{1} \\ \vdots \\ \lambda_{K} \end{bmatrix}
@@ -350,7 +350,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 注意，此时截面回归的残差为定价误差$\alpha_i$，但由于只进行了一次回归，因此只能得到\uline{单组}定价误差$\bm{\alpha}$与\uline{单组}因子预期收益率$\bm{\lambda}$。并且在进行截面回归时没有加入截距项的原因为，多因子模型假设不存在模型设定偏误，资产的预期收益率应仅由因子暴露和因子预期收益率决定。但又如Cochrane（2005）中所指出，也可以考虑包含截距项$\bm{\gamma}_t$的回归模型：
 \begin{equation*}
-    \E_T[R_{i}] = \bm{\gamma}_i + \hat{\bm{\beta}}_{i}^{'} \bm{\lambda} + \alpha_{i} \inlinesep \forall i=1,2,\dots,N
+    \E_T[R_{i}] = \bm{\gamma}_i + \hat{\bm{\beta}}_{i}' \bm{\lambda} + \alpha_{i} \inlinesep \forall i=1,2,\dots,N
 \end{equation*}
 
 \begin{figure}[H]
@@ -364,21 +364,46 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 \subsubsection{检验}
 
-【待整理】
-
 对于因子收益率与定价误差，估计量有：
 \begin{align*}
-    \hat{\bm{\lambda}} &= \left( \bm{\hat{\beta}^{'} \hat{\beta}}\right)^{-1} \bm{\hat{\beta}}^{'} \bm{R} \\
-    \hat{\bm{\alpha}} &= \bm{R} - \bm{\hat{\beta} \hat{\lambda}}
+    \hat{\bm{\lambda}} &= \left( \hat{\bm{\beta}}' \hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \E_T[\bm{R}] \\
+    \hat{\bm{\alpha}} &= \E_T[\bm{R}] - \hat{\bm{\beta}} \hat{\bm{\lambda}}
 \end{align*}
 
-为了联合检验，还需要知道各自的标准误
+为了检验每个因子的预期收益率，与联合检验所有资产的定价误差，还需要知道两者的标准误。令$\bm{\epsilon}_t = \begin{bmatrix} \epsilon_{1,t} \\ \vdots \\ \epsilon_{N,t} \end{bmatrix}$为时序回归中的随机扰动，并定义$\bm{\Sigma}_F = \Cov(\bm{F}_t)$与$\bm{\Sigma} = \Cov(\bm{\epsilon}_t)$，利用$\bm{F}_t$与$\bm{\epsilon}_t$之间相互独立，且在各自时序上满足独立同分布，在Cochrane（2005）中给出了$\hat{\bm{\lambda}}$和$\hat{\bm{\alpha}}$的协方差矩阵：
+\begin{align*}
+    \Cov(\hat{\bm{\lambda}}) &= \frac{1}{T} \left[ \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \bm{\Sigma} \hat{\bm{\beta}} \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} + \bm{\Sigma}_{F} \right] \\
+    \Cov(\hat{\bm{\alpha}}) &= \frac{1}{T} \left[ \bm{I} - \hat{\bm{\beta}} \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \right] \bm{\Sigma} \left[ \bm{I} - \hat{\bm{\beta}} \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \right]'
+\end{align*}
 
-由于截面个股残差的相关性，虽然不会影响OLS估计，但会导致OLS给出的标准误存在较大误差，因此可以使用GLS取代OLS，由于GLS考虑了残差的协方差因此可以得到准确的标准误。但估计残差的协方差矩阵在现实中有较大的障碍。此时则可使用GMM，由于截面回归的$\bm{\hat{\beta}}_i$并非使用因子收益率回归得到，而是通过时序回归出的估计值（Generated regressors），存在误差。Shanken（1992）给出了修正方法（Shanken correction）。同时利用Shanken correction与GMM，即可检验$\alpha_i$是否联合为0。
+由于真实的$\bm{\Sigma}$与$\bm{\Sigma}_F$未知，采用残差向量$\hat{\bm{\epsilon}}_t = \begin{bmatrix} \hat{\epsilon}_{1,t} \\ \vdots \\ \hat{\epsilon}_{N,t} \end{bmatrix}$代替$\bm{\epsilon}_t$，用样本协方差矩阵$\hat{\bm{\Sigma}}_F$代替$\bm{\Sigma}_F$，将两者的估计值代入上式协方差矩阵中进行计算，就可以计算标准误并进行检验。
+
+由于截面回归的解释变量因子暴露$\hat{\bm{\beta}}_i$并非使用因子收益率回归得到，而是通过时序回归出的估计值，或称为生成的回归变量（Generated regressors），因此在计算标准误时，需要对生成的回归变量造成的误差进行修正。Shanken（1992）给出了修正方法，称为Shanken修正（Shanken correction），即在上述协方差矩阵中加入系数$\left(1 + \bm{\lambda}' \bm{\Sigma}_{F}^{-1} \bm{\lambda} \right)$，则应有：
+\begin{align*}
+    \Cov(\hat{\bm{\lambda}}) &= \frac{1}{T} \left[ \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \bm{\Sigma} \hat{\bm{\beta}} \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} \underbrace{\left(1 + \bm{\lambda}' \bm{\Sigma}_{F}^{-1} \bm{\lambda} \right)}_{\scriptscriptstyle{\text{Shanken修正}}} + \bm{\Sigma}_{F} \right] \\
+    \Cov(\hat{\bm{\alpha}}) &= \frac{1}{T} \left[ \bm{I} - \hat{\bm{\beta}} \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \right] \bm{\Sigma} \left[ \bm{I} - \hat{\bm{\beta}} \left(\hat{\bm{\beta}}'\hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \right]' \underbrace{\left(1 + \bm{\lambda}' \bm{\Sigma}_{F}^{-1} \bm{\lambda} \right)}_{\scriptscriptstyle{\text{Shanken修正}}}
+\end{align*}
+
+实际计算中使用使用样本$\hat{\bm{\lambda}}$代替$\bm{\lambda}$进行计算。另外除了Shanken修正外，截面OLS回归的另一个问题为，在截面上$\alpha_i$存在相关性，虽然不会影响OLS估计，但将导致使用OLS计算的标准误存在较大误差，低估标准误。因此可以使用广义最小二乘法（Generalized Least Squares，GLS）取代OLS，此时估计量为：
+\begin{align*}
+    \hat{\bm{\lambda}}_{\text{GLS}} &= \left( \hat{\bm{\beta}}' \bm{\Sigma}^{-1} \hat{\bm{\beta}} \right)^{-1} \hat{\bm{\beta}}' \bm{\Sigma}^{-1} \E_T[\bm{R}] \\
+    \hat{\bm{\alpha}}_{\text{GLS}} &= \E_T[\bm{R}] - \hat{\bm{\beta}} \hat{\bm{\lambda}}_{\text{GLS}}
+\end{align*}
+
+当使用了GLS并考虑Shanken修正之后，协方差矩阵应有：
+\begin{align*}
+    \Cov(\hat{\bm{\lambda}}_{\text{GLS}}) &= \frac{1}{T} \left[ \left( \hat{\bm{\beta}}' \bm{\Sigma} \hat{\bm{\beta}} \right)^{-1} \underbrace{\left(1 + \bm{\lambda}_{\text{GLS}}' \bm{\Sigma}_{F}^{-1} \bm{\lambda}_{\text{GLS}} \right)}_{\scriptscriptstyle{\text{Shanken修正}}} + \bm{\Sigma}_{F} \right] \\
+    \Cov(\hat{\bm{\alpha}}_{\text{GLS}}) &= \frac{1}{T} \left( \bm{\Sigma} - \hat{\bm{\beta}} \left(\hat{\bm{\beta}}' \bm{\Sigma}^{-1} \hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \right) \underbrace{\left(1 + \bm{\lambda}_{\text{GLS}}' \bm{\Sigma}_{F}^{-1} \bm{\lambda}_{\text{GLS}} \right)}_{\scriptscriptstyle{\text{Shanken修正}}}
+\end{align*}
+
+
+由于GLS考虑了残差的协方差因此可以得到准确的标准误。但估计残差的协方差矩阵在现实中有较大的障碍。此时则可使用GMM，
+
+同时利用Shanken correction与GMM，即可检验$\alpha_i$是否联合为0。
 
 \subsection{时序回归 vs 截面回归}
 
-对于时序回归而言，通过对因子收益率在时序取均值$\bm{\lambda} = \E_T[\bm{\lambda}_t]$，来得到隐含的截面关系。因此$\E[R_i] = \bm{\beta}_{i}^{'} \bm{\lambda}$必然过原点$(0,0)$，以及因子收益率的投资组合$(1,\bm{\lambda})$（$\bm{\beta_i}=1$）。而在截面回归中，因子暴露已经通过时序回归确定，而在第二次进行截面回归时，充分使用了个股数据。若使用OLS进行截面回归，以最小化个股定价误差$\alpha_i$的平方和为目标。因子收益率通过回归得到，与时序中直接通过计算均值的方式不同，更加合理。
+对于时序回归而言，通过对因子收益率在时序取均值$\bm{\lambda} = \E_T[\bm{\lambda}_t]$，来得到隐含的截面关系。因此$\E[R_i] = \bm{\beta}_{i}' \bm{\lambda}$必然过原点$(0,0)$，以及因子收益率的投资组合$(1,\bm{\lambda})$（$\bm{\beta_i}=1$）。而在截面回归中，因子暴露已经通过时序回归确定，而在第二次进行截面回归时，充分使用了个股数据。若使用OLS进行截面回归，以最小化个股定价误差$\alpha_i$的平方和为目标。因子收益率通过回归得到，与时序中直接通过计算均值的方式不同，更加合理。
 
 \begin{figure}[H]
     \centering
@@ -391,7 +416,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 \subsubsection{方法}
 
-在Fama和MacBeth（1973）中，提出了Fama-MacBeth截面回归，目的是为了检验 CAPM。Fama-MacBeth截面回归也分为两步，但与传统截面回归有所不同。首先，与传统截面回归相同，也需要先进行时序回归，得到资产i超额收益率$R_i$在因子上的暴露$\bm{\beta}_i$。在第一步中，又可分为因子暴露$\bm{\beta}_i$不变与$\bm{\beta}_i$时变两种情形。对于因子暴露不变的情形，对$t=1,\dots,T$整体时序样本，只进行一次时序回归，得到一个不随时间改变的因子暴露。由于$\bm{\beta_i}$不变，那么对于传统截面回归的先均值再回归，与FM截面回归的先回归再均值，两种方式在所有T期上得到的估计是相同的（但FM截面回归在检验上一定的优势）。
+在Fama和MacBeth（1973）中，提出了Fama-MacBeth截面回归，目的是为了检验 CAPM。Fama-MacBeth截面回归也分为两步，但与传统截面回归有所不同。首先，与传统截面回归相同，也需要先进行时序回归，得到资产i超额收益率$R_i$在因子上的暴露$\bm{\beta}_i$。在第一步中，又可分为因子暴露$\bm{\beta}_i$不变与$\bm{\beta}_i$时变两种情形。对于因子暴露不变的情形，对$t=1,\dots,T$整体时序样本，只进行一次时序回归，得到一个不随时间改变的因子暴露。
 
 在Fama和MacBeth（1973）中，采用滚动窗口的方法估计$\bm{\beta_i}$，因此对于不同的t，$\bm{\beta_i}$随时间改变。
 \begin{equation*}
@@ -400,31 +425,52 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 其次，在传统截面回归中，如上节所述，第二步只进行一次截面回归。即对资产i的超额收益率$\bm{R}_i = \begin{bmatrix} R_{1,i} \\ \vdots \\ R_{T,i} \end{bmatrix}$在时序上取均值得到$\E_T[\bm{R}_i]$，与该资产i的因子暴露$\bm{\beta}_i$进行回归，只进行了\uline{1次回归}：
 \begin{equation*}
-    \E_T[\bm{R}_i] = \bm{\beta_{i}^{'} \lambda_i} + \bm{\alpha}_i \inlinesep \forall i=1,2,\dots,N
+    \E_T[\bm{R}_i] = \bm{\beta_{i}' \lambda_i} + \bm{\alpha}_i \inlinesep \forall i=1,2,\dots,N
 \end{equation*}
 
 而在Fama-MacBeth截面回归中，第二步并不对$R_{i,t}$在时序上取均值，需要对在$t=1,\dots,T$期上各进行一次截面回归，一共进行\uline{T次回归}，得到T组因子收益率$\bm{\lambda}_t$与T组定价误差$\bm{\alpha}_t$：
 \begin{equation*}
-    \bm{R}_{i,t} = \bm{\beta}_{i}^{'} \bm{\lambda}_{i,t} + \bm{\alpha}_{i,t} \inlinesep \forall i=1,2,\dots,N
+    \bm{R}_{i,t} = \bm{\beta}_{i}' \bm{\lambda}_{i,t} + \bm{\alpha}_{i,t} \inlinesep \forall i=1,2,\dots,N
 \end{equation*}
 
 因子暴露$\hat{\bm{\beta}}$由上一步得到（可为不变或时变）为估计值，以不变为例，对于第t期而言，写为矩阵形式为：
 \begin{equation*}
-    \underset{\scriptscriptstyle{(N \times 1)}}{\bm{R}_t} = \underset{\scriptscriptstyle{(N \times K)}}{\hat{\bm{\beta}}^{'}} \underset{\scriptscriptstyle{(K \times 1)}}{\bm{\lambda}_t} + \underset{\scriptscriptstyle{(N \times 1)}}{\bm{\alpha}_t}
+    \underset{\scriptscriptstyle{(N \times 1)}}{\bm{R}_t} = \underset{\scriptscriptstyle{(N \times K)}}{\hat{\bm{\beta}}'} \underset{\scriptscriptstyle{(K \times 1)}}{\bm{\lambda}_t} + \underset{\scriptscriptstyle{(N \times 1)}}{\bm{\alpha}_t}
 \end{equation*}
 
 其中：
 \begin{gather*}
     \bm{R}_t = \begin{bmatrix}R_{1,t} \\ \vdots \\ R_{N,t}\end{bmatrix}
     \qquad 
-    \hat{\bm{\beta}}^{'} = 
-    \begin{bmatrix} \bm{\hat{\beta}}_{1}^{'} \\ \vdots \\ \bm{\hat{\beta}}_{N}^{'} \end{bmatrix} =
+    \hat{\bm{\beta}}' = 
+    \begin{bmatrix} \hat{\bm{\beta}}_{1}' \\ \vdots \\ \hat{\bm{\beta}}_{N}' \end{bmatrix} =
     \begin{bmatrix} \hat{\beta}_{1,1} & \dots & \hat{\beta}_{1,K} \\ \vdots & \ddots & \vdots \\ \hat{\beta}_{N,1} & \dots & \hat{\beta}_{N,K} \end{bmatrix}
     \\
     \bm{\lambda}_t = \begin{bmatrix}\lambda_{1,t} \\ \vdots \\ \lambda_{K,t} \end{bmatrix}
     \qquad
     \bm{\alpha}_t = \begin{bmatrix}\alpha_{1,t} \\ \vdots \\ \alpha_{N,t} \end{bmatrix}
 \end{gather*}
+
+进行T次回归后，可以得到K个因子随时间变化的因子收益率$\bm{\lambda}$，与N个资产随时间变化的定价误差$\bm{\alpha}$：
+\begin{gather*}
+    \underset{\scriptscriptstyle{K \times T}}{\bm{\lambda}}
+    = \begin{bmatrix} \bm{\lambda}_{1}' \\ \vdots \\ \bm{\lambda}_{K}' \end{bmatrix}
+    = \begin{bmatrix} \lambda_{1,1} & \dots & \lambda_{1,T} \\ \vdots & \ddots & \vdots \\ \lambda_{K,1} & \dots & \lambda_{K,T} \end{bmatrix}
+    \qquad
+    \underset{\scriptscriptstyle{N \times T}}{\bm{\alpha}}
+    = \begin{bmatrix} \bm{\alpha}_{1}' \\ \vdots \\ \bm{\alpha}_{N}' \end{bmatrix}
+    = \begin{bmatrix} \alpha_{1,1} & \dots & \alpha_{1,T} \\ \vdots & \ddots & \vdots \\ \alpha_{N,1} & \dots & \alpha_{N,T} \end{bmatrix}
+\end{gather*}
+
+注意，如上所述，若使用滚动方法，即$\bm{\beta}$时变。在实际回归过程中，采用Lead-lag回归的方法，即对于$t$期，使用截止$t-1$期的一段给定窗口的历史数据进行第一步的时序回归，得到估计$\hat{\bm{\beta}}_{i,t-1}$。并且使用其作为第二步$t$期截面回归的解释变量，得到因子收益率：
+\begin{equation*}
+    R_{i,t} = \hat{\bm{\beta}}_{i,t-1} \bm{\lambda}_t + \alpha_{i,t} \inlinesep \forall i=1,2,\dots,N
+\end{equation*}
+
+或如Cochrane（2005）中，在截面回归中加入截距项$\gamma_t$：
+\begin{equation*}
+    R_{i,t}^{e} = \gamma_t + \hat{\bm{\beta}}_{i,t-1} \bm{\lambda}_t + \alpha_{i,t} \inlinesep \forall i=1,2,\dots,N
+\end{equation*}
 
 Fama-MacBeth截面回归和传统截面回归的相同点和区别是：
 \begin{itemize}
@@ -434,46 +480,50 @@ Fama-MacBeth截面回归和传统截面回归的相同点和区别是：
     \item 即传统回归为先取均值，后回归。而FM回归为先回归，后取均值
 \end{itemize}
 
-注意，如上所述，若使用滚动方法，即$\bm{\beta}$时变。在实际回归过程中，采用Lead-lag回归的方法，即对于$t$期，使用截止$t-1$期的一段给定窗口的历史数据进行第一步的时序回归，估计$\hat{\bm{\beta}}_{i,t-1}$。并且使用其作为第二步$t$期截面回归的解释变量，得到因子收益率：
-\begin{equation*}
-    \bm{R}_{i,t}^{e} = \hat{\bm{\beta}}_{i,t-1} \bm{\lambda}_t + \bm{\alpha}_{i,t} \inlinesep \forall i=1,2,\dots,N
-\end{equation*}
-
-或如Cochrane（2005）中，在截面回归中加入截距项$\bm{\gamma}_t$：
-\begin{equation*}
-    \bm{R}_{i,t}^{e} = \bm{\gamma}_t + \hat{\bm{\beta}}_{i,t-1} \bm{\lambda}_t + \bm{\alpha}_{i,t} \inlinesep \forall i=1,2,\dots,N
-\end{equation*}
-
 \subsubsection{检验}
 
-进行T次回归后，可以得到K个因子随时间变化的因子收益率$\bm{\lambda}$，与N个资产随时间变化的定价误差$\bm{\alpha}$：
-\begin{gather*}
-    \underset{\scriptscriptstyle{K \times T}}{\bm{\lambda}}
-    = \begin{bmatrix} \bm{\lambda}_{1}^{'} \\ \vdots \\ \bm{\lambda}_{K}^{'} \end{bmatrix}
-    = \begin{bmatrix} \lambda_{1,1} & \dots & \lambda_{1,T} \\ \vdots & \ddots & \vdots \\ \lambda_{K,1} & \dots & \lambda_{K,T} \end{bmatrix}
-    \qquad
-    \underset{\scriptscriptstyle{N \times T}}{\bm{\alpha}}
-    = \begin{bmatrix} \bm{\alpha}_{1}^{'} \\ \vdots \\ \bm{\alpha}_{N}^{'} \end{bmatrix}
-    = \begin{bmatrix} \alpha_{1,1} & \dots & \alpha_{1,T} \\ \vdots & \ddots & \vdots \\ \alpha_{N,1} & \dots & \alpha_{N,T} \end{bmatrix}
-\end{gather*}
-
 对于T期回归之后构成的因子收益率与定价误差的时间序列，在时序上取均值，即可以以此估计定价误差以及因子收益率：
-\begin{align*}
-    \hat{\lambda}_k &= \frac{1}{T} \sum_{t=1}^{T} \lambda_{k,t} \\
-    \hat{\alpha}_i &= \frac{1}{T} \sum_{t=1}^{T} \alpha_{i,t}
-\end{align*}
+\begin{equation*}
+    \hat{\lambda}_k = \frac{1}{T} \sum_{t=1}^{T} \lambda_{k,t}
+    \qquad
+    \hat{\alpha}_i = \frac{1}{T} \sum_{t=1}^{T} \alpha_{i,t}
+\end{equation*}
+
+写为矩阵形式有：
+\begin{equation*}
+    \hat{\bm{\lambda}} 
+    = \begin{bmatrix} \hat{\lambda}_1 \\ \vdots \\ \hat{\lambda}_K \\ \end{bmatrix}
+    = \begin{bmatrix} \frac{1}{T} \sum_{t=1}^{T} \lambda_{1,t} \\ \frac{1}{T} \sum_{t=1}^{T} \lambda_{2,t} \\ \vdots \\ \frac{1}{T} \sum_{t=1}^{T} \lambda_{K,t} \\ \end{bmatrix} 
+    \qquad
+    \hat{\bm{\alpha}} 
+    = \begin{bmatrix} \hat{\alpha}_1 \\ \vdots \\ \hat{\alpha}_N \\ \end{bmatrix}
+    = \begin{bmatrix} \frac{1}{T} \sum_{t=1}^{T} \alpha_{1,t} \\ \frac{1}{T} \sum_{t=1}^{T} \alpha_{2,t} \\ \vdots \\ \frac{1}{T} \sum_{t=1}^{T} \alpha_{N,t} \\ \end{bmatrix}
+\end{equation*}
 
 不同于传统截面回归，只得到$\lambda$和$\alpha$的一个全样本估计，在FM截面回归中得到T个$\lambda$和$\alpha$的样本估计，这样就可以求出两者标准误为：
 \begin{align*}
-    \sigma^2(\hat{\lambda}_k) &= \frac{1}{T^2} \sum_{t=1}^{T} (\hat{\lambda}_{k,t} - \hat{\lambda}_k)^2 \\
-    \sigma^2(\hat{\alpha}_i) &= \frac{1}{T^2} \sum_{t=1}^{T} (\hat{\alpha}_{i,t} - \hat{\alpha}_i)^2
+    s.e.(\hat{\lambda}_k) &= \left[ \frac{1}{T^2} \sum_{t=1}^{T} (\hat{\lambda}_{k,t} - \hat{\lambda}_k)^2 \right]^{\frac{1}{2}} \\
+    s.e.(\hat{\alpha}_i) &= \left[ \frac{1}{T^2} \sum_{t=1}^{T} (\hat{\alpha}_{i,t} - \hat{\alpha}_i)^2 \right]^{\frac{1}{2}}
 \end{align*}
+
+对于$\hat{\bm{\alpha}} = \frac{1}{T} \sum_{t=1}^{T} \hat{\bm{\alpha}}_{t}$与其协方差矩阵有：
+\begin{equation*}
+    \Cov(\hat{\bm{\alpha}})
+    = \frac{1}{T^2} \sum_{t=1}^{T} \left(\hat{\bm{\alpha}}_t - \hat{\bm{\alpha}}\right) \left(\hat{\bm{\alpha}}_t - \hat{\bm{\alpha}}\right)'
+\end{equation*}
+
+在有了$\Cov(\hat{\bm{\alpha}})$矩阵之后，便可以使用$\chi^2-$统计量检验全部N个定价误差是否联合为零：
+\begin{equation*}
+    \hat{\bm{\alpha}}' \Cov(\hat{\bm{\alpha}})^{-1} \hat{\bm{\alpha}} \sim \chi_{N-K}^{2}
+\end{equation*}
+
+若在第一步时序回归中$\bm{\beta_i}$不变，那么对于传统截面回归的先均值再回归，与FM截面回归的先回归再均值，两种方式在所有T期上得到的估计是相同的（但FM截面回归在检验上一定的优势）。
 
 【待整理】
 
-Fama-MacBeth 也是一个两步截面回归检验方法；它非常巧妙排除了残差在截面上的相关性对标准误的影响，
+Fama-MacBeth回归的最大优点是把T期的回归结果作为T个独立的样本，排除了残差截面相关性对标准误的影响。股票的残差收益率在截面上具有很高的相关性，因此该修正对于准确计算标准误至关重要。
 
-由上面的介绍可知，Fama-MacBeth 回归的最大优点是它排除了残差截面相关性对标准误的影响。股票的残差收益率在截面上具有很高的相关性，因此该修正对于准确计算标准误至关重要。下面来说说它的不足。首先，Fama-MacBeth 回归对于残差在时序上的相关性无能为力。如果残差在时序上存在相关性，则需要对 Fama-MacBeth 回归得到的标准误进一步修正。Petersen (2009) 分析了不同的回归技术在分析面板数据（panel data）时由于忽略残差的时序或截面相关性而导致不准确的标准误（低估了其真实值）。这篇文章非常值得一读。其次，上文提到，在截面回归中用到的$\bm{\beta}_i$并不是已知的，而是通过时间序列得到的估计值（generated regressors），因此存在误差。Fama-MacBeth 回归对此也无能为力，需要 Shanken correction。
+下面来说说它的不足。首先，Fama-MacBeth回归对于残差在时序上的相关性无能为力。如果残差在时序上存在相关性，则需要对Fama-MacBeth回归得到的标准误进一步修正。Petersen(2009)分析了不同的回归技术在分析面板数据（panel data）时由于忽略残差的时序或截面相关性而导致不准确的标准误（低估了其真实值）。这篇文章非常值得一读。其次，上文提到，在截面回归中用到的$\bm{\beta}_i$并不是已知的，而是通过时间序列得到的估计值（generated regressors），因此存在误差。Fama-MacBeth 回归对此也无能为力，需要Shanken correction。
 
 \subsection{Barra多因子模型}
 

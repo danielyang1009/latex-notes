@@ -396,10 +396,13 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
     \Cov(\hat{\bm{\alpha}}_{\text{GLS}}) &= \frac{1}{T} \left( \bm{\Sigma} - \hat{\bm{\beta}} \left(\hat{\bm{\beta}}' \bm{\Sigma}^{-1} \hat{\bm{\beta}}\right)^{-1} \hat{\bm{\beta}}' \right) \underbrace{\left(1 + \bm{\lambda}_{\text{GLS}}' \bm{\Sigma}_{F}^{-1} \bm{\lambda}_{\text{GLS}} \right)}_{\scriptscriptstyle{\text{Shanken修正}}}
 \end{align*}
 
+那么可以同时使用OLS或GLS检验全部N个定价误差$\alpha_i$是否联合为零，构建如下自由度为$N-K$的$\chi^2$统计检验量：
+\begin{align*}
+    \text{OLS} \;:\;& \hat{\bm{\alpha}}' \Cov(\hat{\bm{\alpha}})^{-1} \hat{\bm{\alpha}} \sim \chi^2_{N-K} \\
+    \text{GLS} \;:\;& \hat{\bm{\alpha}}_{\text{GLS}}' \Cov(\hat{\bm{\alpha}}_{\text{GLS}})^{-1} \hat{\bm{\alpha}}_{\text{GLS}} \sim \chi^2_{N-K}
+\end{align*}
 
-由于GLS考虑了残差的协方差因此可以得到准确的标准误。但估计残差的协方差矩阵在现实中有较大的障碍。此时则可使用GMM，
-
-同时利用Shanken correction与GMM，即可检验$\alpha_i$是否联合为0。
+检验因子预期收益率$\lambda$，只需要从$\Cov(\hat{\bm{\lambda}})$或$\Cov(\hat{\bm{\lambda}}_\text{GLS})$协方差矩阵中取出对角线元素开放即可，即为K个因子的标准误。对于每个因子k，利用其预期收益率$\hat{\lambda}_k$与其标准误，即可计算出相应的自由度为$T-1$的t-统计量，进行检验。
 
 \subsection{时序回归 vs 截面回归}
 

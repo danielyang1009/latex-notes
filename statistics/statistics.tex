@@ -1346,6 +1346,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 \subsection{回归模型分类}
 
 \subsubsection*{线性回归模型}
+
 线性回归模型（Linear regression）包含有：
 \begin{itemize}
     \item 最小二乘法（Ordinary least squares，OLS）
@@ -1365,13 +1366,228 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \item 光滑样条（Smoothing spline）
 \end{itemize}
 
+\subsection{一元线性回归}
 
-\subsection{线性模型}
+当回归函数$y=f(x_1,\dots,x_p)$，只包含一个自变量，一个因变量的情形，称为一元线性回归，或称为简单线性回归（Simple linear regression）。此时认为实际回归模型如下所示，其中$e$为随机误差，代表众多未加考虑的因素与随机因素的影响：
+\begin{equation*}
+    Y = \beta_0 + \beta_1 X + \varepsilon
+\end{equation*}
+
+同时理论回归模型应有：
+\begin{equation*}
+    \E(Y_i) = \beta_0 + \beta_1 X_i
+\end{equation*}
+
+观察模型中变量$n$次可得样本$(X_i,Y_i)$，假设使用$\hat{\beta}_0$与$\hat{\beta}_1$，估计上述总体$\beta_0$与$\beta_1$，进行样本回归，得到真实值$Y_i$的样本估计值$\hat{Y}_i$：
+\begin{equation*}
+    \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i \inlinesep i =1,\dots,n
+\end{equation*}
+
+对于上述样本回归模型，应有：
+\begin{equation*}
+    Y_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + e_i \inlinesep i =1,\dots,n
+\end{equation*}
+
+由于平方能去掉符号的影响，因此使用平方和作为指标，衡量真实值与估计值偏离的大小，即$Y_i - \hat{Y}_i$，定义如下函数$Q(\hat{\beta}_0, \hat{\beta}_1)$，并希望其最小：
+\begin{equation*}
+    Q(\hat{\beta}_0, \hat{\beta}_1)
+    = \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right)^2
+    = \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right)^2
+\end{equation*}
+
+为了使$Q(\hat{\beta}_0,\hat{\beta}_1)$最小，应有：
+\begin{align*}
+    \frac{\partial Q}{\partial \hat{\beta}_0} &= -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0 \\
+    \frac{\partial Q}{\partial \hat{\beta}_1} &= -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) X_i = 0
+\end{align*}
+
+对于一式对$\hat{\beta}_0$求导，有：
+\begin{gather*}
+    \frac{\partial Q}{\partial \hat{\beta}_0} = -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0 \\
+    \sum_{i=1}^{n} Y_i - \sum_{i=1}^{n} \hat{\beta}_0 - \hat{\beta}_1 \sum_{i=1}^{n} X_i = 0 \\
+    n \bar{Y} - n \hat{\beta}_0  - \hat{\beta}_1 n \bar{X} = 0 \\
+    \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}
+\end{gather*}
+
+将$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$代入二式，推导可得：
+\begin{gather*}
+    \frac{\partial Q}{\partial \hat{\beta}_1} = -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) X_i = 0 \\
+    \sum_{i=1}^{n} \left( Y_i X_i - \hat{\beta}_0 X_i - \hat{\beta}_1 X_i^2 \right) = 0 \\
+    \sum_{i=1}^{n} \left( Y_i X_i - (\bar{Y} - \hat{\beta}_1 \bar{X}) X_i - \hat{\beta}_1 X_i^2 \right) = 0 \\
+    \sum_{i=1}^{n} X_i Y_i - \bar{Y} \sum_{i=1}^{n} X_i + \hat{\beta}_1 \bar{X} \sum_{i=1}^{n} X_i - \hat{\beta}_1 \sum_{i=1}^{n} X_i^2 = 0 \\
+    \sum_{i=1}^{n} X_i Y_i - \bar{Y} \sum_{i=1}^{n} X_i = \hat{\beta}_1 \left( \sum_{i=1}^{n} X_i^2 - \bar{X} \sum_{i=1}^{n} X_i \right) \\
+    \hat{\beta}_1 = \frac{\sum_{i=1}^{n} X_i Y_i - n \bar{X} \bar{Y}}{\sum_{i=1}^{n} X_i^2 - n \bar{X}^2}
+\end{gather*}
+
+对于分子，有：
+\begin{align*}
+    \sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)
+    &= \sum_{i=1}^{n} \left( X_i Y_i - X_i\bar{Y} - \bar{X}Y_i + \bar{X}\bar{Y} \right) \\
+    &=\sum_{i=1}^{n} X_i Y_i - \bar{Y} \sum_{i=1}^{n} X_i - \bar{X} \sum_{i=1}^{n} Y_i + n\bar{X}\bar{Y} \\
+    &=\sum_{i=1}^{n} X_i Y_i - \bar{Y} n \bar{X} - \bar{X} n \bar{Y} + n\bar{X}\bar{Y} \\
+    &=\sum_{i=1}^{n} X_i Y_i - n\bar{X}\bar{Y}
+\end{align*}
+
+对于分母，有：
+\begin{align*}
+    \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2
+    &= \sum_{i=1}^{n} \left( X_i^2 - 2 X_i\bar{X} + \bar{X}^2 \right) \\
+    &= \sum_{i=1}^{n} X_i^2 - 2 \bar{X} \sum_{i=1}^{n} X_i + n\bar{X}^2 \\
+    &= \sum_{i=1}^{n} X_i^2 - 2 n \bar{X}^2 + n\bar{X}^2 \\
+    &= \sum_{i=1}^{n} X_i^2 - n \bar{X}^2 
+\end{align*}
+
+因此，将上述结果代入$\hat{\beta}_1$中，将使得$Q(\hat{\beta}_0,\hat{\beta}_1)$最小时的$\hat{\beta}_0$与$\hat{\beta}_1$应为：
+\begin{align*}
+    \hat{\beta}_0 &= \bar{Y} - \hat{\beta}_1 \bar{X} \\
+    \hat{\beta}_1 &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+    &= \frac{\Cov(X,Y)}{\Var(X)} = \frac{\rho_{XY} \sigma_X \sigma_Y}{\Var(X)} = \rho_{XY} \frac{\sigma_Y}{\sigma_X}
+\end{align*}
+
+根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归系数的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计（其中最佳指比较其他估计量，方差最小），或称为“最小方差线性无偏估计”。对于参数估计量的标准，除了如上所述的有效性（Best），线性性（Linear），无偏性（Unbiased）还有一致性（Consistent）。高斯·马尔科夫对于随机误差$e$有如下假设：
+\begin{itemize}
+    \item $\E(e_i)=0$：零均值
+    \item $\Var(e_i) = \sigma^2 \leq \infty$：同方差（Homoscedastic），若违反需要考虑异方差
+    \item $\Cov(e_i,e_j) = 0,\; \forall i\neq j$：不相关，若违反则需考虑序列相关
+\end{itemize}
+
+对于经典线性模型，一般还有如下假设：
+\begin{itemize}
+    \item $e \sim N(0,\sigma^2)$：正态分布
+    \item $\Cov(X_i,e_i) = 0$：若违反需要考虑动态模型
+\end{itemize}
+
+\begin{property}
+    $\hat{\beta}_0$与$\hat{\beta}_1$为$Y_i$的线性组合
+    \begin{align*}
+        \hat{\beta}_1 &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        &= \frac{1}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \left[ \sum_{i=1}^{n} \left( X_i - \bar{X} \right) Y_i - \bar{Y} \sum_{i=1}^{n} \left( X_i - \bar{X} \right) \right] \\
+        &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) Y_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+    \end{align*}
+
+    令$b_i = \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}$，那么可以将$\hat{\beta}_1$改写为：
+    \begin{equation*}
+        \hat{\beta}_1
+        = \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) Y_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+        = \sum_{i=1}^{n} \frac{ \left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} Y_i
+        = \sum_{i=1}^{n} b_i Y_i
+    \end{equation*}
+
+    可得：
+    \begin{equation*}
+        \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}
+        = \bar{Y} - \bar{X} \sum_{i=1}^{n} b_i Y_i
+    \end{equation*}
+    
+    由于$X_i$为已知，那么此时显然$\hat{\beta}_0$与$\hat{\beta}_1$为$Y_i$的线性组合。
+\end{property}
+
+\begin{property}
+    $\hat{\beta}_0$和$\hat{\beta}_1$为$\beta_0$和$\beta_1$的无偏估计
+
+    $b_i$有如下性质：
+    \begin{align*}
+        \sum_{i=1}^{n} b_i
+        &= \frac{\cancel{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)}}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} = 0 \\
+        \sum_{i=1}^{n} b_i^2 
+        &= \sum_{i=1}^{n} \left[ \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right]^2
+        = \sum_{i=1}^{n} \frac{\left(X_i - \bar{X}\right)^2}{ \left[ \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2 \right]^2} \\
+        &= \frac{ \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}{ \left[ \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2 \right]^2}
+        = \frac{1}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        \sum_{i=1}^{n} b_i X_i
+        &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)X_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+        = \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left( X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} = 1
+    \end{align*}
+
+    此时：
+    \begin{align*}
+        \hat{\beta}_1
+        &= \sum_{i=1}^{n} b_i Y_i 
+        = \sum_{i=1}^{n} b_i \left( \beta_0 + \beta_1 X_i + e_i \right) \\
+        &=  \beta_0 \sum_{i=1}^{n} b_i + \beta_1 \sum_{i=1}^{n} b_i X_i + \sum_{i=1}^{n} b_i e_i \\
+        &= \beta_1 + \sum_{i=1}^{n} b_i e_i
+    \end{align*}
+
+    可得$\hat{\beta}_0$与$\hat{\beta}_1$的期望为：
+    \begin{align*}
+        \E\left( \hat{\beta}_1 \right)
+        &= \beta_1 + \sum_{i=1}^{n} b_i \E(e_i) = \beta_1 \\
+        \E\left(\hat{\beta}_0 \right)
+        &= \bar{Y} - \E\left( \hat{\beta}_1 \right) \bar{X}
+        = \bar{Y} - \beta_1 \bar{X} = \beta_0
+    \end{align*}
+\end{property}
+
+\begin{property}
+    $\hat{\beta}_0$和$\hat{\beta}_1$的方差
+
+    由于$X_i$为已知，可认为其为常数，并非随机变量，其方差为零，可知：
+    \begin{equation*}
+        \Var(Y_i) = \cancel{\Var(\beta_0)} + \beta_1^2 \cancel{\Var(X_i)} + \Var(e_i) = \sigma^2
+    \end{equation*}
+
+    由上可知，令$b_i = \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}$，可以将$\hat{\beta}_1$改写为：
+    \begin{equation*}
+        \hat{\beta}_1 = \sum_{i=1}^{n} b_i Y_i
+    \end{equation*}
+
+    那么：
+    \begin{equation*}
+        \Var(\hat{\beta}_1) = \Var\left( \sum_{i=1}^{n} b_i Y_i \right)
+    \end{equation*}
+
+    由$Cov(e_i,e_j)=0$随机误差不相关（注意，独立一定不相关，不相关不一定独立），可得到$\Cov(Y_i,Y_j)=0$：
+    \begin{equation*}
+        \Var(\hat{\beta}_1) = \sum_{i=1}^{n} b_i^2 \Var(Y_i)
+    \end{equation*}
+
+    由于$\Var(e_i)$为同方差，那么$\Var(Y_i) = \Var(Y_j) = \sigma^2,\; \forall i,j$：
+    \begin{equation*}
+        \Var(\hat{\beta}_1)
+        = \Var(Y_i) \sum_{i=1}^{n} b_i^2
+        = \sigma^2 \sum_{i=1}^{n} b_i^2
+        = \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+    \end{equation*}
+    
+    并且有（在计算协方差时，只有$\Cov(Y_i,Y_i)=\Var(Y_i)=\sigma^2$保留）：
+    \begin{align*}
+        \Cov(\bar{Y},\hat{\beta}_1)
+        &= \Cov \left[ \frac{1}{n} \sum_{i=1}^{n} Y_i, \frac{\sum_{j=1}^{n} \left(X_j - \bar{X}\right) Y_j}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right] \\
+        &= \frac{1}{n} \frac{1}{\sum_{i=1}^{n} \left(X_j - \bar{X}\right)^2} \Cov \left[ \sum_{i=1}^{n} Y_i, \sum_{j=1}^{n} \left(X_i - \bar{X}\right) Y_j \right] \\
+        &= \frac{1}{n} \frac{1}{\sum_{i=1}^{n} \left(X_j - \bar{X}\right)^2} \sum_{i=1}^{n} \left(X_i - \bar{X}\right) \sigma^2 \\
+        &= 0
+    \end{align*}
+
+    综上，$\hat{\beta}_0$方差有：
+    \begin{align*}
+        \Var(\hat{\beta}_0) 
+        &= \Var\left( \bar{Y} - \hat{\beta}_1 \bar{X} \right) \\
+        &= \Var \left(\bar{Y}\right) + \bar{X}^2 \Var\left( \hat{\beta}_1 \right) - 2\bar{X} \cancel{\Cov(\bar{Y},\hat{\beta}_1)} \\
+        &= \Var\left( \frac{1}{n} \sum_{i=1}^{n} Y_i \right) + \bar{X}^2 \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        &= \frac{\sigma^2}{n} + \frac{\sigma^2 \bar{X}^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        &= \frac{\sigma^2 \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+        + \frac{n \sigma^2 \bar{X}^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        &= \frac{\sigma^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \left[ \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2 + n\bar{X}^2 \right]
+    \end{align*}
+
+    由上已知：
+    \begin{equation*}
+        \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2
+        = \sum_{i=1}^{n} X_i^2 - n \bar{X}^2 
+    \end{equation*}
+
+    代入上式，可得：
+    \begin{equation*}
+        \Var(\hat{\beta}_0)
+        = \frac{\sigma^2 \sum_{i=1}^{n} X_i^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+    \end{equation*}
+\end{property}
+
+\subsection{多元线性回归}
 
 一般对于多个自变量，单一因变量的线性回归模型称为多变量回归模型（Multiple regression或Multivariable regerssion）。对于多个因变量的回归模型称为多元回归模型（Multivariate regression）。
 
 https://brilliant.org/wiki/multivariate-regression/
-
 
 \subsubsection*{多变量回归模型}
 
@@ -1472,118 +1688,6 @@ https://brilliant.org/wiki/multivariate-regression/
 \end{equation*}
 
 【待补充】时间序列的估计，使用OLS，也需要满足OLS的假设，否则估计有偏
-
-\subsection{一元线性回归}
-
-当回归函数$y=f(x_1,\dots,x_p)$，只包含一个自变量，一个因变量的情形，称为一元线性回归，此时假定回归模型如下所示，其中$e$为随机误差，并且假定$\E(e)=0$且$0<\Var(e)=\sigma^2<\infty$：
-\begin{equation*}
-    Y = b_0 + b_1 X + e
-\end{equation*}
-
-观察模型中变量n次可得样本$(X_i,Y_i)$，其中$i=1,2,\dots,n$，根据样本可知：
-\begin{equation*}
-    Y_i = b_0 + b_1 X_i + e_i \inlinesep i =1,\dots,n
-\end{equation*}
-
-此时$e_i$为第i次观察时，随机误差的取值，那么如上所述，对于随机变量$e_1,e_2,\dots,e_n$有：
-\begin{gather*}
-    e_1,e_2,\dots,e_n \inlinesep i.i.d \\
-    \E(e_i) = 0 \inlinesep \Var(e_i) = \sigma^2 \inlinesep i=1,2,\dots,n
-\end{gather*}
-
-记$\bar{X}$与$\bar{Y}$为$X_i$与$Y_i$的算术平均，易知有性质$\sum_{i=1}^{n} \left( X_i - \bar{X} \right) = 0$，令$\beta_0 = b_0 + b_1 \bar{X}$，$\beta_1=b_1$，改写回归方程可得：
-\begin{equation*}
-    Y_i = \beta_0 + \beta_1( X_i - \bar{X}) + e_i \inlinesep i =1,\dots,n
-\end{equation*}
-
-假设使用$\alpha_0$与$\alpha_1$，估计上述$\beta_0$与$\beta_1$，并使用回归函数进行预测，则有：
-\begin{equation*}
-    \hat{Y}_i = \alpha_0 + \alpha_1( X_i - \bar{X}) + e_i \inlinesep i =1,\dots,n
-\end{equation*}
-
-由于平方能去掉符号的影响，因此使用平方和作为指标，衡量偏离$Y_i - \hat{Y}_i$的大小：
-\begin{equation*}
-    Q(\alpha_0, \alpha_1)
-    = \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right)^2
-    = \sum_{i=1}^{n} \left[ Y_i - \alpha_0 - \alpha_1 \left( X_i - \bar{X} \right) \right]^2
-\end{equation*}
-
-为了使$Q(\alpha_0, \alpha_1)$最小（最小二乘法OLS），得到$\beta_0$与$\beta_1$的估计，应有：
-\begin{align*}
-    \frac{\partial Q}{\partial \alpha_0} &= -2 \sum_{i=1}^{n} \left[ Y_i - \alpha_0 - \alpha_1 \left( X_i - \bar{X} \right) \right] = 0 \\
-    \frac{\partial Q}{\partial \alpha_1} &= -2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right) \left[ Y_i - \alpha_0 - \alpha_1 \left( X_i - \bar{X} \right) \right] = 0
-\end{align*}
-
-对于一式$\alpha_0$有：
-\begin{gather*}
-    \frac{\partial Q}{\partial \alpha_0} = -2 \sum_{i=1}^{n} \left[ Y_i - \alpha_0 - \alpha_1 \left( X_i - \bar{X} \right) \right] = 0 \\
-    \sum_{i=1}^{n} Y_i - \sum_{i=1}^{n} \alpha_0 - \alpha_1 \cancel{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)} = 0 \\
-    \sum_{i=1}^{n} Y_i - n\alpha_0 = 0 \\
-    \alpha_1 = \frac{1}{n} \sum_{i=1}^{n} Y_i = \bar{Y}
-\end{gather*}
-
-将$\alpha_0 = \bar{Y}$代入二式：
-\begin{gather*}
-    \frac{\partial Q}{\partial \alpha_1} = -2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right) \left[ Y_i - \alpha_0 - \alpha_1 \left( X_i - \bar{X} \right) \right] = 0 \\
-    \sum_{i=1}^{n} \left( X_i - \bar{X} \right) \left[ Y_i - \bar{Y} - \alpha_1 \left( X_i - \bar{X} \right) \right] = 0 \\
-    \sum_{i=1}^{n} \left[ \left( X_i - \bar{X} \right) \left( Y_i - \bar{Y} \right) - \alpha_1 \left( X_i - \bar{X} \right)^2 \right] = 0 \\
-    \sum_{i=1}^{n}\left( X_i - \bar{X} \right) \left( Y_i - \bar{Y} \right) -  \alpha_1 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 = 0 \\
-    \alpha_1 = \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) \left( Y_i - \bar{Y} \right)}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}
-\end{gather*}
-
-或有：
-\begin{align*}
-    \alpha_1 &= \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) \left( Y_i - \bar{Y} \right)}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2} \\
-    &= \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) Y_i - \bar{Y} \cancel{ \sum_{i=1}^{n}\left( X_i - \bar{X} \right)}}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2} \\
-    &= \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) Y_i}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}
-\end{align*}
-
-将解记为$\hat{\beta}_0$和$\hat{\beta}_1$，则有：
-\begin{align*}
-    \beta_0 &= \bar{Y} \\
-    \beta_1 &= \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) \left( Y_i - \bar{Y} \right)}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2} \\
-    &= \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) Y_i}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}
-\end{align*}
-
-\begin{property}
-    $\hat{\beta}_0$和$\hat{\beta}_1$为$\beta_0$和$\beta_1$的无偏估计：
-    \begin{align*}
-        \E(\hat{\beta}_0) &= \E\left[\bar{Y}\right] = \E \left[ \frac{1}{n} \sum_{i=1}^{n} Y_i \right] = \frac{1}{n} \sum_{i=1}^{n} \E \left[ Y_i \right] \\
-        &= \frac{1}{n} \sum_{i=1}^{n} \E \left[ \beta_0 + \beta_1 ( X_i - \bar{X}) + e_i \right] \\
-        &= \beta_0 \\
-        \E(\hat{\beta}_1) &= \E\left[ \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) Y_i }{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2} \right] \\
-        &= \E\left[ \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) \left( \beta_0 + \beta_1 ( X_i - \bar{X}) + e_i \right) }{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2} \right] \\
-        &= \E\left[ \frac{\beta_0 \cancel{\sum_{i=1}^{n}\left( X_i - \bar{X} \right)} + \beta_1 \sum_{i=1}^{n}\left( X_i - \bar{X} \right)^2 + \cancel{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) e_i}}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2} \right] \\
-        &= \beta_1
-    \end{align*}
-\end{property}
-
-\begin{property}
-    $\hat{\beta}_0$和$\hat{\beta}_1$的方差
-
-    当$Y_1,\dots,Y_m$独立时，即两两之间的协方差为0，即当$\Cov(Y_i,Y_j)=0,\; i \neq j$时，有$\Var\left(\sum Y_i\right) = \sum \Var(Y_i)$，此时认为$X_i$为已知，并非随机变量，则有：
-    \begin{equation*}
-        \Var(Y_i) = \cancel{\Var(\beta_0)} + \beta_1^2 \cancel{\Var(X_i)} + \Var(e_i) = \sigma^2
-    \end{equation*}
-
-    综合上述条件$\hat{\beta}_0$方差有：
-    \begin{align*}
-        \Var(\hat{\beta}_0) &= \Var\left[ \frac{1}{n} \sum_{i=1}^{n} Y_i \right] = \frac{1}{n^2} \Var\left[ \sum_{i=1}^{n} Y_i \right] \\
-        &= \frac{1}{n^2} \sum_{i=1}^{n} \Var(Y_i) = \frac{n\sigma^2}{n^2} \\
-        &= \frac{\sigma^2}{n}
-    \end{align*}
-
-    同时：
-    \begin{align*}
-        \Var(\hat{\beta}_1) &= \Var \left( \frac{\sum_{i=1}^{n}\left( X_i - \bar{X} \right) Y_i }{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2} \right) \\
-        &= \frac{ \Var \left[ \sum_{i=1}^{n}\left( X_i - \bar{X} \right) Y_i \right] }{\left[\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2\right]^2} \\
-        &= \frac{\sum_{i=1}^{n}\left[ \left( X_i - \bar{X} \right)^2 \Var(Y_i) \right]}{\left[\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2\right]^2} \\
-        &= \frac{\sigma^2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 }{\left[\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2\right]^2} \\
-        &= \frac{\sigma^2}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}
-    \end{align*}
-\end{property}
-
-
 
 
 \subsection{GLS}

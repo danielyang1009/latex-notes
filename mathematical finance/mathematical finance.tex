@@ -955,13 +955,13 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
 
 \subsection{希腊值定义}
 
-定义衍生品价格，对标的价格的一阶导为Delta，对标的价格的二阶导为Gamma，对于期限的一阶导为Theta，对于无风险利率的一阶导为Rho，对于波动率的一阶导为Sigma。
+期权价格价格为V，那么期权价格对标的价格的一阶导为Delta，对标的价格的二阶导为Gamma，对于期限的一阶导为Theta，对于无风险利率的一阶导为Rho，对于波动率的一阶导为Vega。
 \begin{equation*}
     \text{Delta} = \frac{\partial V}{\partial S} \quad 
     \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \quad
+    \text{Vega} = \frac{\partial V}{\partial\sigma} \quad
     \text{Theta} = -\frac{\partial V}{\partial \tau} \quad
     \text{Rho} = \frac{\partial V}{\partial r} \quad
-    \text{Vega} = \frac{\partial V}{\partial\sigma} \quad
 \end{equation*}
 
 \subsubsection{Delta}
@@ -981,6 +981,58 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
     \caption{Detla与行权价之间的关系}
     \label{fig:delta-strike}
 \end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/delta_surf.png}
+    \caption{看涨期权Delta}
+    \label{fig:delta_surf}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/call_vs_stock.png}
+    \caption{看涨期权价格与标的价格}
+    \label{fig:call_vs_stock}
+\end{figure}
+
+\subsubsection{Gamma}
+
+Delta为跟标的贴合程度，以看涨期权为例，当为深度实值时，贴合程度最好，标的价格变化1单位，期权价格变化1单位。虚值贴合差，实值贴合好。
+
+若以标的资产价格为横轴，期权价格为纵轴，如上图期权价格与标的价格所示，Delta即曲线切线的斜率，即一阶导。而那么Gamma就是曲线的二阶导，为Delta的变化速度，或曲线弯曲程度或加速度，
+
+做多期权，有正的Gamma，能使得价格变化对投资者有利。即当价格上涨的时候，对投资者有利，变化越来越快，盈利越来越多。相反，当价格下跌时，对投资者不利，变化越来越慢，损失越来越小。而作为做市商等，卖期权，或做空期权，则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/gamma_surf.png}
+    \caption{看涨期权Gamma}
+    \label{fig:gamma_surf}
+\end{figure}
+
+\subsubsection{Vega}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/vega_surf.png}
+    \caption{看涨期权Vega}
+    \label{fig:vega_surf}
+\end{figure}
+
+\subsubsection{多空对希腊字母的影响}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+           & Delta & Gamma & Vega & Theta & Rho \\ \midrule
+Long Call  & $+$ & $+$ & $+$ & $-$ & $+$ \\
+Long Put   & $-$ & $+$ & $+$ & $-$ & $-$ \\
+Short Call & $-$ & $-$ & $-$ & $+$ & $+$ \\
+Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Black模型}
 

@@ -996,7 +996,7 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
     \label{fig:delta-strike}
 \end{figure}
 
-可以将Delta理解为期权价格与标的价格的贴合程度，以看涨期权为例，当为深度实值时，贴合程度最好，标的价格变化1单位，期权价格变化1单位。即虚值贴合差，对股价变动不敏感，而实值贴合好，对股价变动敏感。如下图所示，随着到期时间不断减少，期权价格曲线将越来越贴合期权内在价值。
+可以将Delta理解为期权价格与标的价格的贴合程度，以看涨期权为例，当为深度实值时，贴合程度最好，标的价格变化1单位，期权价格变化1单位。即虚值贴合差，对股价变动不敏感，而实值贴合好，对股价变动敏感。如下图所示，随着到期时间不断减少，期权价格曲线将越来越贴合期权内在价值。那么不同在值程度期权的Delta也将随着期限的衰减，差异不断加大。实值期权Delta将加速趋近1，而虚值期权将加速趋近0，平值期权变化较小。
 
 \begin{figure}[H]
     \centering
@@ -1016,35 +1016,35 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
 
 若以标的资产价格为横轴，期权价格为纵轴，如上图期权价格与标的价格所示，Delta即曲线切线的斜率，即一阶导。而那么Gamma就是曲线的二阶导，为Delta的变化速度，或曲线弯曲程度或加速度。
 
-做多期权，有正的Gamma，能使得价格变化对投资者有利。即当价格上涨的时候，对投资者有利，变化越来越快，盈利越来越多。相反，当价格下跌时，对投资者不利，变化越来越慢，损失越来越小。而作为做市商等，卖期权，或做空期权，则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大。
+做多期权，有正的Gamma，能使得价格变化对投资者有利。即当价格上涨的时候，对投资者有利，变化越来越快，盈利越来越多。相反，当价格下跌时，对投资者不利，变化越来越慢，损失越来越小。而作为做市商等，卖期权，或做空期权，则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大。看涨期权与看跌期权的Gamma相同。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/gamma_surf.png}
-    \caption{看涨期权多方Gamma}
+    \caption{看涨看跌期权多方Gamma}
     \label{fig:gamma_surf}
 \end{figure}
 
 \subsubsection{Vega}
 
-Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%$对期权价格的影响。对于期权的多头，其Vega为正，意味着隐含波动率的正向变化对其有利。
+Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%$对期权价格的影响。对于期权的多头，其Vega为正，意味着隐含波动率的正向变化对其有利。看涨期权与看跌期权的Vega相同。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/vega_surf.png}
-    \caption{看涨期权多方Vega}
+    \caption{看涨看跌期权多方Vega}
     \label{fig:vega_surf}
 \end{figure}
 
 \subsubsection{Theta}
 
-下图期权的时间价值曲线中，随着期限的减少，期权的时间价值在加速衰减。因此对于期权的多方，其时间价值在不断衰减，有Theta为负。相反，空方则Theta为正。
+下图期权的时间价值曲线中，随着期限的减少，期权的时间价值在加速衰减。因此对于期权的多方，其时间价值在不断衰减，有Theta为负。相反，空方则Theta为正。注意：对于Thtea多空符号相同，但值不同。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/time_value.jpeg}
     \caption{期权多方时间价值的}
-    \label{fig:}
+    \label{fig:time_value}
 \end{figure}
 
 \begin{figure}[H]
@@ -1097,8 +1097,20 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
     \text{Delta}_C &= e^{-r\tau}\left[N(d_1) + FN'(d_1)\frac{\partial d_1}{\partial F} - KN'(d_2)\frac{\partial d_2}{\partial F}\right] \\
     &= e^{-r\tau}N(d_1) \\
     \text{Delta}_P &= e^{-r\tau}\left[KN'(-d_2)\frac{\partial d_2}{\partial F} - N(-d_1) - FN'(-d_1)\frac{\partial d_1}{\partial F}\right] \\
-    &= e^{-r\tau}\left[ -N(-d_1) \right] \\
+    &= e^{-r\tau}\left[ -N(-d_1) \right]
+    = - e^{-r\tau} N(-d_1) \\
     &= e^{-r\tau}\left[ N(d_1) -1 \right]
+\end{align*}
+
+由远期（期货）的PCP公式：
+\begin{equation*}
+    C = P + \left( F - K \right) e^{-r(T-t)}
+\end{equation*}
+
+对期货价格$F$，求导可得：
+\begin{align*}
+    \frac{\partial C}{\partial F} &= \frac{\partial P}{\partial F} + e^{-r(T-t)} \\
+    \text{Delta}_{C} &= \text{Delta}_{P} + e^{-r(T-t)}
 \end{align*}
 
 \subsection{BSM模型的希腊值推导}
@@ -1204,7 +1216,7 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
 
 \subsubsection{Vega}
 
-对于Vega而言，看涨与看跌期权Vega相同
+对于Vega而言，看涨与看跌期权Vega相同（注意：此时计算出的波动率为每变化1，期权价格变动情况，而在实际交易中，一般以波动率每变化$1\%$，即变化$0.01$）：
 \begin{equation*}
     \text{Vega} = \frac{\partial V}{\partial \sigma}  = SN'(d_1)\sqrt{\tau}
 \end{equation*}
@@ -1225,12 +1237,12 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
 
 \subsubsection{Theta}
 
-对于欧式看涨期权有其Theta（$\Theta$）：
+对于欧式看涨期权有其Theta（$\Theta$）（注意：此时计算为期限每变化1，此时单位为年。实际交易中，一般以期限每变化1天，即变化$1/365$）：
 \begin{equation*}
     \text{Theta}_C = \frac{\partial C}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} - r K e^{-r\tau}N(d_2)
 \end{equation*}
 
-证明：
+\begin{proof}
 \begin{align*}
     \text{Theta}_C &= -\frac{\partial C}{\partial \tau} = - \frac{\partial [S_t N(d_1) - Ke^{-r\tau} N(d_2)]}{\partial \tau} \\ 
     &= -\frac{\partial S_t N(d_1)}{\tau} + \frac{\partial Ke^{-r\tau} N(d_2)}{\partial \tau} \\ 
@@ -1239,13 +1251,14 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
     &= \frac{\partial d_1}{\partial \tau} \left[\cancel{-S_t N'(d_1) + Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ -rN(d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
     &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) - rKe^{-r\tau} N(d_2)
 \end{align*}
+\end{proof}
 
 对于欧式看跌期权有：
 \begin{equation*}
     \text{Theta}_P = \frac{\partial P}{\partial \tau} = -\frac{S_t N'(d_1)\sigma}{2\sqrt{\tau}} + r K e^{-r\tau}N(-d_2)
 \end{equation*}
 
-证明：
+\begin{proof}
 \begin{align*}
     \text{Theta}_P &= -\frac{\partial P}{\partial \tau} = - \frac{\partial [-S_t N(-d_1) + Ke^{-r\tau} N(-d_2)]}{\partial \tau} \\ 
     &= \frac{\partial S_t N(-d_1)}{\tau} - \frac{\partial Ke^{-r\tau} N(-d_2)}{\partial \tau} \\ 
@@ -1253,8 +1266,11 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
     &= S_t N'(d_1)\frac{\partial d_1}{\partial \tau} + r Ke^{-r\tau} N(-d_2) - Ke^{-r\tau}N'(d_2)\left(\frac{\partial d_1}{\partial \tau} -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} \right) \\
     &= \frac{\partial d_1}{\partial \tau} \left[\cancel{S_t N'(d_1) - Ke^{-r\tau} N'(d_2) } \right] + Ke^{-r\tau} \left[ rN(-d_2) -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}} N'(d_2)\right] \\
     &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau} N(-d_2) \\
-    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau}[1- N(d_2) ] = \text{Theta}_c + rKe^{-r\tau}
+    &=  -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) + rKe^{-r\tau} \left[ 1- N(d_2) \right] \\
+    &= \left[ -\frac{1}{2}\frac{\sigma}{\sqrt{\tau}}S_t N'(d_1) - rKe^{-r\tau}N(d_2) \right] + rKe^{-r\tau} \\
+    & = \text{Theta}_c + rKe^{-r\tau}
 \end{align*}
+\end{proof}
 
 另有，利用Put-Call Parity可知：
 \begin{equation*}

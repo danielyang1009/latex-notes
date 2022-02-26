@@ -1000,9 +1000,16 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/delta_surf.png}
+    \includegraphics[width=\textwidth]{fig/delta_call_surf.png}
     \caption{看涨期权多方Delta}
-    \label{fig:delta_surf}
+    \label{fig:delta_call_surf}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig/delta_put_surf.png}
+    \caption{看跌期权多方Delta}
+    \label{fig:delta_put_surf}
 \end{figure}
 
 \begin{figure}[H]
@@ -1015,15 +1022,20 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
 \subsubsection{Gamma}
 
 若以标的资产价格为横轴，期权价格为纵轴，如上图期权价格与标的价格所示，Delta即曲线切线的斜率，即一阶导。而那么Gamma就是曲线的二阶导，为Delta的变化速度，或曲线弯曲程度或加速度。
+\begin{equation*}
+    \Gamma = \frac{\partial \Delta}{\partial S} = \frac{\partial^2 V}{\partial S^2}
+\end{equation*}
 
 做多期权，有正的Gamma，能使得价格变化对投资者有利。即当价格上涨的时候，对投资者有利，变化越来越快，盈利越来越多。相反，当价格下跌时，对投资者不利，变化越来越慢，损失越来越小。而作为做市商等，卖期权，或做空期权，则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大。看涨期权与看跌期权的Gamma相同。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/gamma_surf.png}
+    \includegraphics[width=\textwidth]{fig/gamma_surf.png}
     \caption{看涨看跌期权多方Gamma}
     \label{fig:gamma_surf}
 \end{figure}
+
+另外需要注意，只有期权有Gamma值，因此为了达到投资组合$\Pi$的Gamma中性状态，只能通过期权头寸的调整获得。实现Gamma中性往往会带来Delta的非中性，还需要调整标的资产或者期货头寸才能使得投资组合同时达到Delta中性与Gamma中性。
 
 \subsubsection{Vega}
 
@@ -1031,14 +1043,14 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/vega_surf.png}
+    \includegraphics[width=\textwidth]{fig/vega_surf.png}
     \caption{看涨看跌期权多方Vega}
     \label{fig:vega_surf}
 \end{figure}
 
 \subsubsection{Theta}
 
-下图期权的时间价值曲线中，随着期限的减少，期权的时间价值在加速衰减。因此对于期权的多方，其时间价值在不断衰减，有Theta为负。相反，空方则Theta为正。注意：对于Thtea多空符号相同，但值不同。
+下图期权的时间价值曲线中，随着剩余期限的减小，期权的时间价值在加速衰减。
 
 \begin{figure}[H]
     \centering
@@ -1047,12 +1059,173 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
     \label{fig:time_value}
 \end{figure}
 
+因此对于期权的多方，其时间价值在不断衰减，有Theta为负。相反，空方则Theta为正。注意：对于Thtea多空符号相同，但值不同。
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/theta_surf.png}
+    \includegraphics[width=\textwidth]{fig/theta_call_surf.png}
     \caption{看涨期权多方Theta}
-    \label{fig:}
+    \label{fig:theta_call_surf}
 \end{figure}
+
+只有具有高红利的欧式认购期权，Theta也可能为正。另外，可以看到在下图看跌期权多方的Theta中，深度实值的看跌期权，拥有正的Theta（深红色部分）。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig/theta_put_surf.png}
+    \caption{看跌期权多方Theta}
+    \label{fig:theta_put_surf}
+\end{figure}
+
+\subsection{Delta对冲}
+Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
+\begin{equation*}
+    \Delta = \frac{\partial V}{\partial S}
+\end{equation*}
+
+而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
+\begin{equation*}
+    \Delta V \times N_V = \Delta S \times N_S \qquad \Rightarrow \qquad
+    \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
+\end{equation*}
+
+而对于投资组合而言，其净Delta（Net portfolio delta）应为组合内所有某合约Delta与该合约数量乘积之和：
+\begin{equation*}
+    \sum_{i=1}^{n} \text{Delta}_i \times \text{期权合约数}_i
+\end{equation*}
+
+同样对于Vega而言，投资组合净Vega（Net portfolio vega）为：
+\begin{equation*}
+    \sum_{i=1}^{n} \text{Vega}_i \times \text{期权合约数}_i
+\end{equation*}
+
+假定股票价格遵循几何布朗运动，则有在现实测度（Physical probability measure）下：
+\begin{equation*}
+    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
+\end{equation*}
+
+根据伊藤引理：
+\begin{equation*}
+    f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
+\end{equation*}
+
+【待整理】 在Bakshi and Kapadia 2003中，
+
+在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
+\begin{equation*}
+    \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+\begin{equation*}
+    \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
+\end{equation*}
+
+Long call, short delta stock/ short call, long delta stock
+
+Long put, long delta stock/ short put, short delta stock
+
+此时需要注意，Put的Delta为负
+
+\subsection{希腊值分解}
+
+\subsubsection{泰勒级数}
+
+级数为无穷的序列（sequences）（或无穷多项）的和。泰勒级数（Taylor series）使用无限项序列来表示一个函数，每项由该函数在某一点的导数求得。一个函数的有限项的泰勒级数叫做泰勒多项式（Taylor polynomial）。对于一元函数在$x=a$处展开的泰勒级数有：
+\begin{align*}
+    f(x) &= \sum^{\infty}_{n=0} \frac{f^{(n)}(a)}{n!}(x-a)^n \\
+    &= \frac{f(a)}{1}(1)+ \frac{f'(a)}{1}(x-a) + \frac{f''(a)}{2}(x-a)^2 + \frac{f'''(a)}{6}(x-a)^3 + \dots \\
+    &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a) + \frac{f'''(a)}{6}(x-a)^3 + \dots
+\end{align*}
+
+对于多元函数在$(a,b)$处展开的泰勒级数为：
+\begin{align*}
+    f(x,y) &= f(a,b) + f'_x(a,b)(x-a) + f'_y(a,b)(y-b) \\
+    &\quad + \frac{1}{2}f''_{xx}(a,b)(x-a)^2 + \frac{1}{2}f''_{yy}(a,b)(y-b)^2 +\cancel{2*\frac{1}{2}}f''_{xy}(a,b)(x-a)(y-b)
+\end{align*}
+
+\subsubsection*{原理}
+假设使用多项式$P(x) = c_0 + c_1 (x-a) + c_2 (x-a)^2 + \dots$近似原函数。则应有多项式与原函数，从零阶导开始至$n$阶导，在$x=a$点的取值都与原函数相同（即从单个点，提取原函数所有导数信息）：
+\begin{itemize}
+    \item $x-a$使得带入a进行计算时，除了当前导数对应次数的项之外都等于零。如原函数在$a$点的二阶导$f''(a)$，对应泰勒级数$x$二次项的系数$c_2$：一阶导为$P'(x) = c_1 + 2c_2(x-a)+\dots$，二阶导为$P''(x) = 2c_2 + 3c_3(x-a)^2 + \dots$，则有$P''(a) = 2c_2 = f''(a)$，此时$c_2 = \tfrac{f''(a)}{2}$
+    \item 小于当前求导次数的泰勒级数项，由于求导都为零（如上所示求二阶导后，常数项与一次项都为0），使得多项式每一项的系数$c_n$都独立对应原函数n阶导数值
+    \item 系数为$\frac{1}{n!}$是为了取消多次求导的影响，如$P'''(x)=3 \cdot 2 \cdot 1 \cdot c_3(x-a) + \cdots$
+\end{itemize}
+
+\subsubsection{基于\tops{$S$}与\tops{$t$}的希腊值分解}
+
+假设投资组合$\Pi$（或期权价格V），为标的资产价格$S$与时间$t$的函数,则有在$(S_0,t_0)$使用泰勒级数展开为：
+\begin{align*}
+    \Pi(S,T) &= \Pi(S_0,t_0) + \frac{\partial \Pi}{\partial S}(S-S_0) + \frac{\partial \Pi}{\partial t}(t-t_0) \\
+    &\quad + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}(S-S_0)^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}(t-t_0)^2 + \frac{\partial^2 \Pi}{\partial S \partial t}(S-S_0)(t-t_0) + \dots
+\end{align*}
+
+整理可得（注意：$\Delta$代表变化，并非希腊值）：
+\begin{equation*}
+    \Delta \Pi = \frac{\partial \Pi}{\partial S}\Delta S + \frac{\partial \Pi}{\partial t}\Delta t + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}(\Delta S)^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}\Delta t^2 + \frac{\partial^2 \Pi}{\partial S \partial t}\Delta S \Delta t + \dots
+\end{equation*}
+
+将阶数高于$\Delta t$的项忽略（前三项之后）:
+\begin{equation*}
+    \Delta \Pi = \frac{\partial \Pi}{\partial S}\Delta S + \frac{\partial \Pi}{\partial t}\Delta t + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}(\Delta S)^2
+\end{equation*}
+
+得到：
+\begin{equation*}
+    \boxed{
+        \Delta \Pi = \Delta S \times \text{Delta} + \Delta t \times \text{Theta} + \frac{1}{2} (\Delta S)^2 \times \text{Gamma}
+    }
+\end{equation*}
+
+若忽略Theta的影响，只考虑Delta与Gamma。可以发现投资组合的变化可以主要分解为斜率部分与曲度部分。斜率部分由Delta解释，曲度部分由Gamma解释：
+\begin{equation*}
+    \Delta \Pi \approx \Delta S \times \text{Delta} + \frac{1}{2} (\Delta S)^2 \times \text{Gamma}
+\end{equation*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/delta_gamma_decom.png}
+    \caption{Delta与Gamma分解}
+    \label{fig:delta_gamma_decom}
+\end{figure}
+
+由上图可以看到，由于$(\Delta S)^2$为大于等于零，且作为期权多方Gamma为正，因此Gamma项为正。因此可以清楚在图上看到，Gamma对于期权多方的优势，即当标的资产价格上涨时，由于曲度存在，使得在Delta部分收益的基础上，还增加了Gamma部分的收益。而当标的资产下跌时，期权价格虽然损失了与上涨等量的Delta部分的收益，但依然获得了Gamma的收益。这样使得期权多方，赚得多，陪得少。相反，对于期权的空方，或一般为做市商，同理无论标的资产上涨或下跌，都必须损失Gamma部分的收益。使得空方，赚得少，陪得多。
+
+另外可以发现对于一个Delta中立的投资组合，即当$\text{Delta}=0$时，即值只考虑Theta与Gamma时，应有\footnote{见OFOD第十版附录19A\label{ofod_19a}}：
+\begin{equation*}
+    \Delta \Pi = \Delta t \times \text{Theta} + \frac{1}{2} (\Delta S)^2 \times \text{Gamma}
+\end{equation*}
+
+\subsubsection{基于\tops{$S$}与\tops{$\sigma$}的希腊值分解}
+
+在实践中,波动率并非为常数。在短时间内忽略无风险利率的变化，仅仅关注标的资产价格$S$以及隐含波动率$\sigma_{imp}$的变化，作为投资组合$\Pi$（或期权价格V）的变化近似，使用泰勒级数展开，则有\footref{ofod_19a}：
+\begin{align*}
+    \Delta \Pi &= \frac{\partial \Pi}{\partial S}\Delta S + \frac{\partial \Pi}{\partial \sigma_{imp}}\Delta \sigma_{imp} \\
+    &\quad + \frac{1}{2} \frac{\partial^2 \Pi}{\partial S^2}(\Delta S)^2 + \frac{\partial^2 \Pi}{\partial S \partial \sigma_{imp}}\Delta S \Delta \sigma_{imp} + \frac{1}{2} \frac{\partial^2 \Pi}{\partial \sigma^2_{imp}} (\Delta \sigma_{imp})^2 + \dots \\
+    &= \Delta S \times \text{Delta} + \Delta \sigma_{imp} \times \text{Vega} \\
+    &\quad + \frac{1}{2} (\Delta S)^2 \times \text{Gamma} + \Delta S \Delta \sigma_{imp} \times \text{Vanna} + \frac{1}{2} (\Delta \sigma_{imp})^2 \times \text{Vomma} + \dots
+\end{align*}
+
+Delta、Vega、Gamma对应了上式中的前三项，而交易员将$\tfrac{\partial^2 \Pi}{\partial S\partial \sigma_{imp}}$称为Vanna，或理解为Delta的Vega，即对于$\sigma_{imp}$的变动，Delta的敏感程度。将$\tfrac{\partial^2 \Pi}{\partial \sigma^2_{imp}}$称为Vomma，即Vega对于$\sigma_{imp}$的敏感程度，或Vega的Vega。
+
+\subsubsection{BSM分解}
+
+由BSM偏微分方程可知：
+\begin{equation*}
+    r \Pi = r S_t \frac{\partial \Pi}{\partial S} + \frac{\partial \Pi}{\partial t} + \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 \Pi}{\partial S^2}
+\end{equation*}
+
+改写为希腊值的形式：
+\begin{equation*}
+    \boxed{
+        r \Pi = r S_t \times \text{Delta} + \text{Theta} + \frac{1}{2} \sigma^2 S^2 \times \text{Gamma}
+    }
+\end{equation*}
+
+由上式可见，当一个投资组合即Delta中性又Gamma中性时，有$\text{Theta} = r\Pi$，即投资组合的价值将随时间以无风险连续复利率的速度增长。若假设无风险利率为0，则可得到Theta与Gamma的关系式：
+\begin{equation*}
+    \text{Theta} + \frac{1}{2} \sigma^2 S^2 \times \text{Gamma} = 0
+\end{equation*}
+
+那么可以看到$Theta$与$Gamma$的相互制约关系。对于期权的多头，其Gamma为正，但同时Theta为负。对于空头则相反，有Gamma为负，Theta为正。
 
 \subsection{Black模型的希腊值推导}
 
@@ -1302,119 +1475,6 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
     &= \frac{\partial d_1}{\partial \tau} \left[\cancel{-S_t N'(d_1) + Ke^{-r\tau} N'(d_2) } \right] - \tau K e^{-r\tau} N(-d_2) \\
     &= -\tau K e^{-r\tau} N(-d_2)
 \end{align*}
-
-\subsection{Delta对冲}
-Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
-\begin{equation*}
-    \Delta = \frac{\partial V}{\partial S}
-\end{equation*}
-
-而从持有标的资产和衍生品数量分别为$N_S$和$N_V$而言，为了维持对冲结果，易知对于每一单位标的资产，应使用$\Delta$单位衍生品进行对冲。
-\begin{equation*}
-    \Delta V \times N_V = \Delta S \times N_S \qquad \Rightarrow \qquad
-    \Delta = \frac{\partial V}{\partial S} = \frac{N_S}{N_V}
-\end{equation*}
-
-而对于投资组合而言，其净Delta（Net portfolio delta）应为组合内所有某合约Delta与该合约数量乘积之和：
-\begin{equation*}
-    \sum_{i=1}^{n} \text{Delta}_i \times \text{期权合约数}_i
-\end{equation*}
-
-同样对于Vega而言，投资组合净Vega（Net portfolio vega）为：
-\begin{equation*}
-    \sum_{i=1}^{n} \text{Vega}_i \times \text{期权合约数}_i
-\end{equation*}
-
-假定股票价格遵循几何布朗运动，则有在现实测度（Physical probability measure）下：
-\begin{equation*}
-    \frac{dS_t}{S_t} = \mu dt + \sigma dW_t
-\end{equation*}
-
-根据伊藤引理：
-\begin{equation*}
-    f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
-\end{equation*}
-
-【待整理】 在Bakshi and Kapadia 2003中，
-
-在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
-\begin{equation*}
-    \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
-\end{equation*}
-\begin{equation*}
-    \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
-\end{equation*}
-
-Long call, short delta stock/ short call, long delta stock
-
-Long put, long delta stock/ short put, short delta stock
-
-此时需要注意，Put的Delta为负
-
-\subsection{泰勒级数}
-
-级数为无穷的序列（sequences）（或无穷多项）的和。泰勒级数（Taylor series）使用无限项序列来表示一个函数，每项由该函数在某一点的导数求得。一个函数的有限项的泰勒级数叫做泰勒多项式（Taylor polynomial）。对于一元函数在$x=a$处展开的泰勒级数有：
-\begin{align*}
-    f(x) &= \sum^{\infty}_{n=0} \frac{f^{(n)}(a)}{n!}(x-a)^n \\
-    &= \frac{f(a)}{1}(1)+ \frac{f'(a)}{1}(x-a) + \frac{f''(a)}{2}(x-a)^2 + \frac{f'''(a)}{6}(x-a)^3 + \dots \\
-    &= f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a) + \frac{f'''(a)}{6}(x-a)^3 + \dots
-\end{align*}
-
-对于多元函数在$(a,b)$处展开的泰勒级数为：
-\begin{align*}
-    f(x,y) &= f(a,b) + f'_x(a,b)(x-a) + f'_y(a,b)(y-b) \\
-    &\quad + \frac{1}{2}f''_{xx}(a,b)(x-a)^2 + \frac{1}{2}f''_{yy}(a,b)(y-b)^2 +\cancel{2*\frac{1}{2}}f''_{xy}(a,b)(x-a)(y-b)
-\end{align*}
-
-\subsubsection*{原理}
-假设使用多项式$P(x) = c_0 + c_1 (x-a) + c_2 (x-a)^2 + \dots$近似原函数。则应有多项式与原函数，从零阶导开始至$n$阶导，在$x=a$点的取值都与原函数相同（即从单个点，提取原函数所有导数信息）：
-\begin{itemize}
-    \item $x-a$使得带入a进行计算时，除了当前导数对应次数的项之外都等于零。如原函数在$a$点的二阶导$f''(a)$，对应泰勒级数$x$二次项的系数$c_2$：一阶导为$P'(x) = c_1 + 2c_2(x-a)+\dots$，二阶导为$P''(x) = 2c_2 + 3c_3(x-a)^2 + \dots$，则有$P''(a) = 2c_2 = f''(a)$，此时$c_2 = \tfrac{f''(a)}{2}$
-    \item 小于当前求导次数的泰勒级数项，由于求导都为零（如上所示求二阶导后，常数项与一次项都为0），使得多项式每一项的系数$c_n$都独立对应原函数n阶导数值
-    \item 系数为$\frac{1}{n!}$是为了取消多次求导的影响，如$P'''(x)=3 \cdot 2 \cdot 1 \cdot c_3(x-a) + \cdots$
-\end{itemize}
-
-\subsection{对冲参数}
-
-假设投资组合$\Pi$为标的资产价格$S$与时间$t$的函数,则有在$(S_0,t_0)$展开为：
-\begin{align*}
-    \Pi(S,T) &= \Pi(S_0,t_0) + \frac{\partial \Pi}{\partial S}(S-S_0) + \frac{\partial \Pi}{\partial t}(t-t_0) \\
-    &\quad + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}(S-S_0)^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}(t-t_0)^2 + \frac{\partial^2 \Pi}{\partial S \partial t}(S-S_0)(t-t_0) + \dots
-\end{align*}
-
-整理可得：
-\begin{equation*}
-    \Delta \Pi = \frac{\partial \Pi}{\partial S}\Delta S + \frac{\partial \Pi}{\partial t}\Delta t + \frac{1}{2}\frac{\partial^2 \Pi}{\partial S^2}\Delta S^2 + \frac{1}{2}\frac{\partial^2 \Pi}{\partial t^2}\Delta t^2 + \frac{\partial^2 \Pi}{\partial S \partial t}\Delta S \Delta t + \dots
-\end{equation*}
-
-将阶数高于$\Delta t$的项忽略（前三项之后），可以发现对于一个Delta中立的投资组合，应有\footnote{见OFOD第十版附录19A\label{ofod_19a}}：
-\begin{equation*}
-    \Delta \Pi = \Theta \Delta t + \frac{1}{2} \Gamma \Delta S^2
-\end{equation*}
-
-在实践中,波动率并非为常数。在短时间内忽略无风险利率的变化，仅仅关注标的资产价格$S$以及隐含波动率$\sigma_{imp}$作为期权价格$V$的近似，则有\footref{ofod_19a}：
-\begin{equation*}
-    \Delta V = \frac{\partial V}{\partial S}\Delta S + \frac{\partial V}{\partial \sigma_{imp}}\Delta \sigma_{imp} + \frac{1}{2} \frac{\partial^2 V}{\partial S^2}\Delta S^2 + \frac{1}{2} \frac{\partial^2 V}{\partial \sigma^2_{imp}} \Delta \sigma^2_{imp} + \frac{\partial^2 V}{\partial S \partial \sigma_{imp}}\Delta S \Delta \sigma_{imp} + \dots
-\end{equation*}
-
-可见delta、vega、gamma对应了上式中的前三项。而交易员也将$\tfrac{\partial^2 V}{\partial \sigma^2_{imp}}$称为Vomma，即Vega对于$\sigma_{imp}$的敏感程度，或Vega的Vega。将$\tfrac{\partial^2 V}{\partial S\partial \sigma_{imp}}$称为Vanna，或理解为Delta的Vega，即对于$\sigma_{imp}$的变动，Delta的敏感程度。
-
-另外，由BSM偏微分方程可知：
-\begin{equation*}
-    \frac{\partial V}{\partial t} + r S_t \frac{\partial V}{\partial S} + \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} = rV 
-\end{equation*}
-
-改写为希腊值的形式：
-\begin{equation*}
-    \Theta + r S_t \Delta + \frac{1}{2} \sigma^2 S^2 \Gamma = rV
-\end{equation*}
-
-当Delta被完全对冲，即$\Delta=0$。为了讨论方便起见，假设无风险利率为0，因此有：
-\begin{equation*}
-    \Theta + \frac{1}{2} \sigma^2 S^2 \Gamma = 0
-\end{equation*}
-
-那么可以看到$\Theta=\frac{\partial V}{\partial t}$与$\Gamma=\frac{\partial^2 V}{\partial S^2}$的制约关系。即对于期权的多头，其Gamma为正，但同时Theta为负，对于空头则相反。
 
 \section{波动率}
 

@@ -24,9 +24,9 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/options-profit.png}
-    \caption{期权收益}
-    \label{fig:opt-profit}
+    \includegraphics[width=0.8\textwidth]{fig/options_maturity_profit.png}
+    \caption{期权到期收益}
+    \label{fig:options_maturity_profit}
 \end{figure}
 
 \section{布朗运动与维纳过程}
@@ -955,21 +955,21 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
 
 \subsection{希腊值定义与理解}
 
-期权是高度量化的工具，衡量每一个因素对期权价格变化的影响，在数学中即为求导。令期权价格价格为V，那么期权价格对标的价格的一阶导为Delta，对标的价格的二阶导为Gamma，对于波动率的一阶导为Vega，对于期限的一阶导为Theta，对于无风险利率的一阶导为Rho。
-\begin{equation*}
-    \text{Delta} = \frac{\partial V}{\partial S} \quad 
-    \text{Gamma}  = \frac{\partial^2 V}{\partial S^2} \quad
-    \text{Vega} = \frac{\partial V}{\partial\sigma} \quad
-    \text{Theta} = -\frac{\partial V}{\partial \tau} \quad
-    \text{Rho} = \frac{\partial V}{\partial r} \quad
-\end{equation*}
+期权是可以高度量化的工具，为了衡量单一因素对期权价格变化的影响，在数学中即为求导。因此令期权价格价格为V：
+\begin{itemize}
+    \item $\text{Delta} = \dfrac{\partial V}{\partial S}$：对标的价格的一阶导
+    \item $\text{Gamma}  = \frac{\partial^2 V}{\partial S^2}$：对标的价格的二阶导
+    \item $\text{Vega} = \frac{\partial V}{\partial\sigma}$：对波动率的一阶导
+    \item $\text{Theta} = -\frac{\partial V}{\partial \tau}$：对期限的一阶导
+    \item $\text{Rho} = \frac{\partial V}{\partial r}$：对无风险利率的一阶导
+\end{itemize}
 
 \subsubsection{多空对希腊字母的影响}
 
+对于Delta，很容易记忆，看涨期权多头受益于标的资产上涨，符号为正，空头相反，符号为负。而看跌期权多头，由于标的资产价格上涨亏损，符号为负，空头相反，符号为正。对于期权多头（看涨或看跌）其Gamma或Vega都为正，都不断的损失时间价值，Theta为负，空方则相反。期权多方的曲线为下凸，因Gamma的存在使得期权多头“赚得多，亏得少”，符号为正。而期权空方的曲线为上凸，由于Gamma存在使得其“赚得少，亏得快”，符号为负。对于期权多头（持有），波动率上升，使得期权价格上涨，因此Vega为正。
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}cccccc@{}}
-\toprule
+\begin{tabular}{@{}cccccc@{}} \toprule
            & Delta & Gamma & Vega & Theta & Rho \\ \midrule
 Long Call  & $+$ & $+$ & $+$ & $-$ & $+$ \\
 Long Put   & $-$ & $+$ & $+$ & $-$ & $-$ \\
@@ -980,24 +980,19 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
 
 \subsubsection{Delta}
 
-对于Delta而言，有看涨期权的Delta值在$(0,1)$之间，看跌期权的Delta值在$(-1,0)$之间。并且对于BSM而言，看涨期权Delta与看跌期权Delta有如下关系$\text{Delta}_C - \text{Delta}_P = 1$。其与股票价格的关系如下：
+如下图所示看涨期权的Delta值在$(0,1)$之间，看跌期权的Delta值在$(-1,0)$之间。对于BSM而言，看涨期权Delta与看跌期权Delta有如下关系$\text{Delta}_C - \text{Delta}_P = 1$。期权价格与标的资产价格的关系如下：
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/delta-stockprice.png}
-    \caption{Delta与标的价格之间的关系}
-    \label{fig:delta-stockprice}
+    \includegraphics[width=0.68\textwidth]{fig/delta_stock.png}
+    \caption{Delta与标的资产价格之间的关系}
+    \label{fig:delta_stock}
 \end{figure}
 
-如上图所示，可以看到当Delta的绝对值在$0.25$（粗略范围）附近时，看涨看跌期权都为虚值期权（OTM）。即当期权处于虚值状态时，标的资产变动对期权价格的影响较小。当Delta的绝对值在$0.5$（粗略估计）附近时，看涨与看跌期权均为平值期权（ATM）。当Delta的绝对值在$0.75$（粗略范围）附近时，看涨与看跌期权均为实值期权（ITM）。此时，期权处于实值状态，标的资产变动与期权价值变动接近于$1:1$。同时，由于简单定义的在值程度为$S/K$，对于看涨期权而言，行权价越低，在值程度越高，越接近实值期权。因此Delta与行权价之间的关系，与Delta与标的资产价格关系在水平上相反，具体关系如下：
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{fig/delta-strike.png}
-    \caption{Detla与行权价之间的关系}
-    \label{fig:delta-strike}
-\end{figure}
+如上图\ref{fig:delta_stock}所示，可以看到当Delta的\uline{绝对值}约在$0.25$附近时，看涨看跌期权都为虚值期权（OTM）。当期权处于虚值状态时，标的资产价格的变动对期权价格的影响较小。当Delta的\uline{绝对值}约$0.5$附近时，看涨与看跌期权均为平值期权（ATM），可以看到此时斜率最大，即Gamma最大（Delta对S求导）。当Delta的\uline{绝对值}约$0.75$附近时，看涨与看跌期权均为实值期权（ITM），此时标的资产变动与期权价值变动接近于$1:1$。
 
-可以将Delta理解为期权价格与标的价格的贴合程度，以看涨期权为例，当为深度实值时，贴合程度最好，标的价格变化1单位，期权价格变化1单位。即虚值贴合差，对股价变动不敏感，而实值贴合好，对股价变动敏感。如下图所示，随着到期时间不断减少，期权价格曲线将越来越贴合期权内在价值。那么不同在值程度期权的Delta也将随着期限的衰减，差异不断加大。实值期权Delta将加速趋近1，而虚值期权将加速趋近0，平值期权变化较小。
+可以将Delta理解为期权价格与标的价格的贴合程度，以看涨期权为例，当为深度实值时，贴合程度最好，标的价格变化1单位，期权价格变化1单位。即实值贴合好，对股价变动敏感，相反虚值贴合差，对股价变动不敏感。
 
+如下图所示，随着期限不断衰减，期权价格曲线将越来越贴合期权内在价值。并且不同在值程度期权的Delta，也将随着期限的衰减，差异不断加大。实值期权Delta将加速趋近1，而虚值期权将加速趋近0，平值期权变化较小。
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fig/delta_call_surf.png}
@@ -1012,22 +1007,14 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
     \label{fig:delta_put_surf}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{fig/call_vs_stock.png}
-    \caption{看涨期权价格与标的价格}
-    \label{fig:call_vs_stock}
-\end{figure}
-
 \subsubsection{Gamma}
 
-若以标的资产价格为横轴，期权价格为纵轴，如上图期权价格与标的价格所示，Delta即曲线切线的斜率，即一阶导。而那么Gamma就是曲线的二阶导，为Delta的变化速度，或曲线弯曲程度或加速度。
+若以期权价格为纵轴，标的资产价格为横轴，得到期权收益，如图\ref{fig:call_vs_stock}。那么Delta为该曲线切线的斜率，为一阶导，衡量期权价格对标的资产变动的敏感程度。Gamma为该曲线的二阶导，为Delta的变化速度，或曲线弯曲程度或加速度，衡量Delta对标的资产价格变动的敏感程度。同时Gamma如图\ref{fig:delta_stock}中所示，为Delta与标的资产价格关系的一阶导：
 \begin{equation*}
     \Gamma = \frac{\partial \Delta}{\partial S} = \frac{\partial^2 V}{\partial S^2}
 \end{equation*}
 
-做多期权，有正的Gamma，能使得价格变化对投资者有利。即当价格上涨的时候，对投资者有利，变化越来越快，盈利越来越多。相反，当价格下跌时，对投资者不利，变化越来越慢，损失越来越小。而作为做市商等，卖期权，或做空期权，则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大。看涨期权与看跌期权的Gamma相同。
-
+做多期权，有正的Gamma，标的资产价格的变化对投资者有利。具体而言，当价格上涨的时候，此时对投资者有利，随着标的资产价格的不断上涨，期权所带来的盈利越多。相反当价格下跌时，此时对投资者不利，但随着标的资产的不断下跌，损失越来越小。而作为做市商等，卖期权（期权空方），则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大，看涨期权与看跌期权的Gamma相同。
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fig/gamma_surf.png}
@@ -1035,12 +1022,11 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
     \label{fig:gamma_surf}
 \end{figure}
 
-另外需要注意，只有期权有Gamma值，因此为了达到投资组合$\Pi$的Gamma中性状态，只能通过期权头寸的调整获得。实现Gamma中性往往会带来Delta的非中性，还需要调整标的资产或者期货头寸才能使得投资组合同时达到Delta中性与Gamma中性。
+另外需要注意，\uline{只有期权有Gamma值}，因此为了达到投资组合$\Pi$的Gamma中性状态，只能通过期权头寸的调整获得。实现Gamma中性往往会带来Delta的非中性，还需要调整标的资产或者期货头寸才能使得投资组合同时达到Delta中性与Gamma中性。
 
 \subsubsection{Vega}
 
-Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%$对期权价格的影响。对于期权的多头，其Vega为正，意味着隐含波动率的正向变化对其有利。看涨期权与看跌期权的Vega相同。
-
+Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%$对期权价格的影响。对于期权的多头，其Vega为正，意味着隐含波动率的正向变化对其有利，空头则相反。看涨期权与看跌期权的Vega相同。当调整期权头寸使投资组合为Vega中性时，Gamma也会随之改变，因此要达到Vega与Gamma同时中性，需要使用同一标的的两种期权。
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fig/vega_surf.png}
@@ -1051,7 +1037,6 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
 \subsubsection{Theta}
 
 下图期权的时间价值曲线中，随着剩余期限的减小，期权的时间价值在加速衰减。
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fig/time_value.jpeg}
@@ -1060,7 +1045,6 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
 \end{figure}
 
 因此对于期权的多方，其时间价值在不断衰减，有Theta为负。相反，空方则Theta为正。注意：对于Thtea多空符号相同，但值不同。
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fig/theta_call_surf.png}
@@ -1069,7 +1053,6 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
 \end{figure}
 
 只有具有高红利的欧式认购期权，Theta也可能为正。另外，可以看到在下图看跌期权多方的Theta中，深度实值的看跌期权，拥有正的Theta（深红色部分）。
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fig/theta_put_surf.png}
@@ -1078,6 +1061,7 @@ Vega体现的为期权价格对波动率的敏感程度，即波动率变化$1\%
 \end{figure}
 
 \subsection{Delta对冲}
+
 Delta为衍生品价格变动与其标的资产价格变动的比率。如果假定股票价格（X）与期权价格（Y）为折线，则其斜率应为Delta，即对股票价格变动一单位，期权价格变动$\Delta$单位。而现实中并非折线，Delta则为两者切线斜率。
 \begin{equation*}
     \Delta = \frac{\partial V}{\partial S}
@@ -1357,7 +1341,7 @@ Delta、Vega、Gamma对应了上式中的前三项，而交易员将$\tfrac{\par
     = N(d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] = N(d_1) \\
     \text{Delta}_P &= \frac{\partial P}{\partial S}
     = -N(-d_1) + \frac{1}{S_t\sigma\sqrt{\tau}} \left[ S_t N'(d_1)-Ke^{-r\tau}N'(d_2) \right] \\
-    &= -\left[ 1- N(d_1) \right] = N(d_1)-1
+    &= -N(-d_1) = -\left[ 1- N(d_1) \right] = N(d_1)-1
 \end{align*}
 
 也可从看涨看跌平价关系（PCP）中，对等式两侧对S求导得到：
@@ -2677,6 +2661,8 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 
 \end{example}
 
+\divider
+
 在处理这类数据时需要额外注意：
 \begin{itemize}
     \item 跨过除夕日的合约，会自动变为带A的合约，代表已经经过调整。如上所述，其行权价$K$与合约单位都已经过调整。在事后时间点看，这些合约都会带上A，在事前进行计算时需要调整回原有的行权价与合约单位
@@ -2746,7 +2732,7 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 
 以波动划分，内在价值为\textbf{不考虑资产价格波动}的情况下，期权条款赋予期权多头的最高价值。而时间价值为\textbf{标的资产价格波动}为期权多头（权利方）所带来的隐含价值，由于期权的权利方只有权力而无义务，因此期权的内在价值以及时间价值都应大于0。时间价值受内在价值的影响，但内在价值不受时间价值的影响，因而使用两分法。即先计算出期权的内在价值，使用二分法，再确定期权的时间价值。
 
-\subsubsection*{John Hull定义}
+\subsubsection{John Hull定义}
 
 定义内在价值为，期权若在当下时点到期，期权所含的的内在价值，如OFOD教科书、上交所、万得中。若美式期权，这样定义就是合理的，由于美式期权在到期日之前可以随时行权，则其内在价值都基于当前时点的股价与行权价进行计算。但如果是欧式期权，则没有考虑行权价货币的时间价值，现货价格为当前时点，但行权价为未来时点，应该对未来时点的行权价进行贴现。且在中国市场由于现货的卖空限制，其实际价格被高估。
 \noindent\begin{align*}
@@ -2754,7 +2740,15 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     \text{看跌期权内在价值} & = \max(K-S_t,0)
 \end{align*}
 
-\subsubsection*{完美市场定义}
+期权的内在价值与时间价值关系如下，可以看到下边界为当标的资产价格趋近于零时，看涨期权趋近于S，下边界为$\max(S-K,0)$：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/call_vs_stock.png}
+    \caption{看涨期权价格与标的价格}
+    \label{fig:call_vs_stock}
+\end{figure}
+
+\subsubsection{完美市场定义}
 
 在考虑货币时间价值的情形内在价值如下，在完美市场中可适用，但没有考虑中国市场的卖空限制，需要进一步进行调整。
 \begin{align*}
@@ -2762,7 +2756,7 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     \text{看跌期权内在价值} & = \max\left(Ke^{-r(T-t)}-S_t,0\right)
 \end{align*}
 
-\subsubsection*{中国市场定义}
+\subsubsection{中国市场定义}
 
 不考虑时间价值，那么欧式看涨权利方与远期合约多头的差别就是期权只有权利而没有义务，因此内在价值应为$\max(f_{t,T},0)$。同理，对于欧式看跌期权应有$\max(-f_{t,T},0)$。即使用期货价格代替现货价格，在期货市场多空双方均能自由表达其看法，且中美市场均可使用，因此有：
 \begin{align*}
@@ -2770,7 +2764,7 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
     \text{看跌期权内在价值} & = \max\left[(K-F_{t,T})e^{-r(T-t)},0\right]
 \end{align*}
 
-\subsubsection*{ETF期权股指期货定义}
+\subsubsection{ETF期权股指期货定义}
 
 由于在中国市场ETF期权，如50ETF，有红利保护机制。即会下调行权价格，放大每手期权数量，相当于变相抬高了股票价格进行复权，修复由于分红带来的影响，因此可视为无红利资产进行处理。而在中国市场中并没有50ETF期货，只有股指期货，且股指期货不对分红进行调整，即没有红利保护，即其成分股分红后股指自然下跌。因此使用股指期货计算ETF期权内在价值时，还需要再做红利调整。由于在计算期货时将现货中的红利剔除：
 \begin{equation*}

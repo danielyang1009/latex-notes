@@ -1462,7 +1462,7 @@ Delta、Vega、Gamma对应了上式中的前三项，而交易员将$\tfrac{\par
 
 \section{波动率}
 
-波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（Backward looking），一类为前瞻波动率（Forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期：风险中性预期=现实预期-波动率风险溢酬=现实理性预期+投资者情绪-波动率风险溢酬）。
+波动率为一种风险的度量，所有的计算方法都是一种近似估计，并不代表准确的波动率。波动率可以大致分为两类，一类为回望波动率（Backward looking），一类为前瞻波动率（Forward looking）。两者的区别在于回望波动率使用的是一段时间内的历史数据所计算出来的，是已经发生的波动率，如：历史波动率、已实现波动率、GARCH波动率。而前瞻法或隐含法，是未来一段时间内波动率的期望，由于在期权交易中，所有的交易者都必须估计未来波动率，并以此为基础进行交易。因此在一个充分竞争的环境中，最后期权价格中的隐藏波动率就包含了市场对未来波动率的预期。具体而言可分为有模型法（如BS隐含波动率）和无模型法（为风险中性预期）。
 
 \subsection{波动率特征}
 
@@ -2132,11 +2132,77 @@ $F_{t}^{*}$由PCP关系计算获得，即：
     \text{AVIX} = 100 \times \sqrt{\E_{t}^{\fwm}\left[ QV_{t,T}^{S} \right] \times \frac{365}{T}}
 \end{equation*}
 
-\section{波动率微笑、期限结构、曲面}
+\section{波动率微笑}
 
-【待添加】波动率曲面（Volatility surface），期限结构（到期时间与波动率），波动率偏斜曲线Volatility Skew Curve，或波动率微笑（在值程度与波动率）
+\subsection{波动率风险溢酬}
 
-\subsection{样条插值}
+关于波动率风险溢酬为现实预期与风险中性预期之差，在考虑了投资者情绪则应有：
+\begin{align*}
+    \text{风险中性预期} &= \text{现实预期} - \text{波动率风险溢酬} \\
+    &= \text{现实理性预期} + \text{投资者情绪} - \text{波动率风险溢酬}
+\end{align*}
+
+如果波动率的系统性风险（无法通过分散化解）为正，波动率就不是好东西，人们不愿意够买与波动率正相关的产品，这类产品的价格就应该较低，因此波动率风险溢酬为正，现实世界中的波动率预期应大于隐含波动率的预期。
+
+如果波动率的系统性风险为负，那么波动率就是个好东西，人们愿意购买与波动率正相关的产品，这类产品的价格应该更高，因此波动率风险溢酬为负，现实世界的波动率预期就应该小于隐含波动率的预期。
+
+或者说只有正的系统性风险，增加了无法分散的风险，才需要获得整的风险溢酬。而相反，负的系统性风险，则能减少系统性风险，因此获得了好处，不应获得风险溢酬，而应该支付风险溢酬。
+
+\subsection{波动率微笑与波动率偏斜}
+
+波动率微笑（Volatility smile）定义为期权的隐含波动率与在值程度（K/S或K/F）的曲线。或可以定义为隐含波动率与期权Delta之间的关系，在这样定义下，一般将平值期权定义为$\text{Delta}=0.5$的看涨期权，或$\text{Delta}=-0.5$的看跌期权，这些平值期权一般称为“50-delta期权”（50-delta options）。
+
+波动率微笑的不同取决于，资产的隐含分布：
+\begin{itemize}
+    \item 若为标准正态分布（只有一、二阶矩），则应为一条直线
+    \item 若三阶矩有负偏（右偏），则投资者预期未来标的资产将大幅下跌概率大，则波动率微笑此时为一条斜向下的曲线，称为波动率偏斜（Volatility skew）；若三阶矩为正偏（左偏），则变为斜向上的曲线
+    \item 若四阶矩存在尖峰肥尾，则波动率微笑为对称，两侧向上弯曲的曲线，为波动率微笑
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig/vol_smile_skew.png}
+    \caption{波动率微笑与波动率偏斜}
+    \label{fig:vol_smile_skew}
+\end{figure}
+
+\subsection{波动率微笑与隐含风险中性分布}
+
+通过在某一时刻到期的波动率微笑，可以确定这一时间的资产价格风险中性分布，将这一分布称之为\uline{隐含概率分布}（Implied distribution）\footnote{见OFOD第十版第20章、章节末附录20A与Breeden and Litzenberger (1978)}
+
+对于期限为$T$、执行价格为$K$的欧式看涨期权的价格应为如下所示。其中$r$为利率，假定为常数，$g$为$S_T$：
+\begin{equation*}
+    c = e^{-rT} \int_{S_T=K}^{\infty} \left( S_T - K \right) g(S_T) dS_T
+\end{equation*}
+
+此时如果对$K$求导，可以得到：
+\begin{align*}
+    \frac{\partial c}{\partial K} &= -e^{-rT} \int_{S_T=K}^{\infty} g(S_T) dS_T \\
+    &= -e^{-rT} \bigg[ G(S_T) \bigg]_{K}^{\infty} \\
+    &= -e^{-rT} \left[ G(\infty) - G(K) \right] \\
+    &= e^{-rT} \left[ G(K) - G(\infty) \right]
+\end{align*}
+
+进一步对$K$求导：
+\begin{align*}
+    \frac{\partial^2 c}{\partial K^2} &= \frac{\partial }{\partial K} \left[ e^{-rT} G(K) - e^{-rT} G(\infty) \right] \\
+    &= e^{-rT}g(K)
+\end{align*}
+
+此时，概率密度函数$g$则：
+\begin{equation*}
+    g(K) = e^{rT} \frac{\partial^2 c}{\partial K^2}
+\end{equation*}
+
+这样就可以使用波动率微笑来估计风险中性概率分布。假定$c_1$、$c_2$和$c_3$为期限为$T$，执行价格为$K-\delta$、$K$和$K+\delta$的看涨期权，并假定$\delta$较小，因此可得到近似：
+\begin{align*}
+    g(K) &\approx e^{rT} \left[ \frac{c_1+c_3-2c_2}{\delta^2} \right] \\
+    &= e^{rT} \left[ \frac{c(K-\delta,T)+c(K+\delta,T)-2c(K,T)}{\delta^2} \right]
+\end{align*}
+
+\subsection{波动率曲面}
+
+\subsubsection{样条插值}
 
 使用最广泛的为样条插值（Spline interpolation），具体而言，为使用称之为\textbf{样条}的特殊分段多项式（Piecewice polynomial）进行插值。使用样条插值可以有效避免龙格现象（Runge's phenomenon），按照多项式次数，可分为线性（一次）样条插值（即数据点用直线进行连接）、二次样条插值、三次样条插值。对于三次样条插值（Cubic spline interpolation）要求函数值，一阶导数，二阶导数都连续（节点左右值相等）。而当使用的三次多项式形式为埃尔米特（Hermite）多项式时，又称之为三次埃尔米特样条插值（Cubic Hermite interpolation），要求节点（knots）值与一阶导数值相等。
 
@@ -2149,7 +2215,7 @@ $F_{t}^{*}$由PCP关系计算获得，即：
     \item 抛物线终结的三次样条（Parabolically terminated cubic spline）：第一段与最后一段的样条函数，$S_1$与$S_n$的次数被限制在最高二次
 \end{itemize}
 
-另外有贝塞尔曲线（Bezier curves），为使得可以节点的导数值可以控制的样条，但作为牺牲，节点处的一阶与二阶导数的平滑性不再能保证，有线性贝塞尔曲线、二次贝塞尔曲线，三次贝塞尔曲线。B样条（B-spline）或称为基样条（Basis spline），为贝塞尔曲线的一般化，可进一步推广为非均匀有理B样条（Non-Uniform Rational B-Splines，NURBS）
+另外有贝塞尔曲线（Bezier curves），为使得可以节点的导数值可以控制的样条，但作为牺牲，节点处的一阶与二阶导数的平滑性不再能保证，有线性贝塞尔曲线、二次贝塞尔曲线，三次贝塞尔曲线。B样条（B-spline）或称为基样条（Basis spline），为贝塞尔曲线的一般化，可进一步推广为非均匀有理B样条（Non-Uniform Rational B-Splines，NURBS）。
 
 \begin{remark}
     Python库

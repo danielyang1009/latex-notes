@@ -2148,6 +2148,30 @@ $F_{t}^{*}$由PCP关系计算获得，即：
 
 或者说只有正的系统性风险，增加了无法分散的风险，才需要获得整的风险溢酬。而相反，负的系统性风险，则能减少系统性风险，因此获得了好处，不应获得风险溢酬，而应该支付风险溢酬。
 
+\subsection{看涨看跌期权与波动率微笑}
+
+欧式看涨与看跌期权具有执行价格（行权价）和期限时，他们的隐含波动率是一样的。
+
+这说明欧式看涨期权的波动率微笑，与相同期限的欧式看跌期权的波动率微笑应该相同。
+
+已知对于相同期限（$T$）、相同执行价格（$K$）的看涨看跌期权，根据PCP关系有：
+\begin{equation*}
+    C_{t,T} + Ke^{-r(T-t)} = P_{t,T} + S_t
+\end{equation*}
+
+假设$C_{BS}$与$P_{BS}$是由BSM得到的看涨看跌期权价格，同时假设$C_{mkt}$与$P_{mkt}$为期权的市场价格，那么应有：
+\begin{align*}
+    C_{BS} + Ke^{-r(T-t)} = P_{BS} + S_t \\
+    C_{mkt} + Ke^{-r(T-t)} = P_{mkt} + S_t
+\end{align*}
+
+此时将两式相减，则有：
+\begin{equation*}
+    C_{BS} - C_{mkt} = P_{BS} - P_{mkt}
+\end{equation*}
+
+说明有由BSM公式得到的相同期限与执行价格的看涨看跌期权的定价，与市场价格误差完全相同。当由$C_{mkt}$得到的隐含波动率，假设为$20\%$，此时当BSM模型中的波动率为$20\%$时，即有$C_{BS} = C_{mkt}$，由于由BSM计算的$C_{BS}$与$P_{BS}$使用的波动率相同为$20\%$，此时则有$P_{BS} = P_{mkt}$。此时由于看涨看跌期权期限与执行价格相同，意味着此时看跌期权$P_{mkt}$的隐含波动率也为$20\%$。说明欧式看涨期权的隐含波动率与具有同样执行价格和期限的看跌期权的隐含波动率相同，即对于欧式看涨期权与看跌期权，其波动率（隐含）微笑，波动率曲面应重合。
+
 \subsection{波动率微笑与波动率偏斜}
 
 波动率微笑（Volatility smile）定义为期权的隐含波动率与在值程度（K/S或K/F）的曲线。或可以定义为隐含波动率与期权Delta之间的关系，在这样定义下，一般将平值期权定义为$\text{Delta}=0.5$的看涨期权，或$\text{Delta}=-0.5$的看跌期权，这些平值期权一般称为“50-delta期权”（50-delta options）。
@@ -2227,7 +2251,7 @@ $F_{t}^{*}$由PCP关系计算获得，即：
 
 \subsection{定价}
 
-定价思路为由于在签订远期合约时，有双方公平的原则（zero net market value at entry），应有$f(0,S_0)=0$，即远期合约签订之时为价值0。从而得到远期（期货）价格$F_{t,T}$，即在t时刻，使得远期合约价值为零的合理交割价格。
+定价思路为由于在签订远期合约时，有双方公平的原则（Zero net market value at entry），应有$f(0,S_0)=0$，即远期合约签订之时为价值0。从而得到远期（期货）价格$F_{t,T}$，即在t时刻，使得远期合约价值为零的合理交割价格。
 \begin{itemize}
     \item $S_t$：远期（期货）标的资产在t时刻的价格
     \item $K$：远期合约中的交割价格（Delivery price）
@@ -2579,22 +2603,53 @@ PCP平价可以直接从BS公式中推导；
 
 \subsection{无红利资产}
 
-对于无红利资产，使用远期合约（适用于中国市场与美国市场），构建如下两个组合：
+\subsubsection*{使用现货}
+
+对于无红利资产，使用股票（不支付股息），构建如下两个组合，且看涨期权与看跌期权具有相同的执行价格$K$与期限$T$：
 \begin{itemize}
-    \item 组合A：欧式看涨多头（+C）
-    \item 组合B：欧式看跌多头（+P） + \textbf{远期合约}多头（+f）
+    \item 组合A：欧式看涨多头 + 在$T$时刻收益为$K$的零息债券
+    \item 组合B：欧式看跌多头 + 1股股票
 \end{itemize}
 
 在T时刻，投资组合A与B有：
 \begin{table}[H]
 \centering
-\begin{tabular}{ccc}
+\begin{tabular}{@{}clll@{}}
 \toprule
-$S_T$与$K$关系 & \multicolumn{1}{c}{投资组合A} & \multicolumn{1}{c}{投资组合B} \\
-\midrule
-$S_T \geq K$ & $S_T-K$ & $0 + (S_T-K)$ \\
-$S_T < K$ & $0$ & $(K - S_T) + (S_T-K)$ \\ 
-\bottomrule
+                     &   & $S_T>K$ & $S_T<K$ \\ \midrule
+\multirow{3}{*}{组合A} & 看涨期权 & $S_T-K$ & $0$ \\
+                    & 零息债券 & $K$ & $K$ \\
+                    & 总和   & $S_T$ & $K$ \\ \midrule
+\multirow{3}{*}{组合B} & 看跌期权 & $0$ & $K-S_T$ \\
+                     & 股票   & $S_T$ & $S_T$ \\
+                     & 总和   & $S_T$ & $K$ \\ \bottomrule
+\end{tabular}
+\end{table}
+
+根据无套利原理，在$T$时刻两个组合有相同的收益，因此在$t$时刻也必须有相同的价值，否则就可以进行套利。零息债券在$t$时刻现值为$Ke^{-rT}$，因此可以得到：
+\begin{equation*}
+    C_{t,T} + Ke^{-r(T-t)} = P_{t,T} + S_t
+\end{equation*}
+
+\subsubsection*{使用远期}
+
+对于无红利资产，使用远期合约（适用于中国市场与美国市场），构建如下两个组合，且看涨期权与看跌期权具有相同的执行价格$K$与期限$T$：
+\begin{itemize}
+    \item 组合A：欧式看涨多头
+    \item 组合B：欧式看跌多头 + 远期合约多头
+\end{itemize}
+
+在T时刻，投资组合A与B有：
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}clll@{}}
+\toprule
+                     &   & $S_T>K$ & $S_T<K$ \\ \midrule
+\multirow{3}{*}{组合A} & 看涨期权 & $S_T-K$ & $0$ \\
+                    & 总和   & $S_T-K$ & $0$ \\ \midrule
+\multirow{3}{*}{组合B} & 看跌期权 & $0$ & $K-S_T$ \\
+                     & 远期合约 & $S_T-K$ & $S_T-K$ \\
+                     & 总和   & $S_T-K$ & $0$ \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -2608,7 +2663,7 @@ $S_T < K$ & $0$ & $(K - S_T) + (S_T-K)$ \\
     C(t,S_t) = P(t,S_t) + f(t,S_t)
 \end{equation*}
 
-将远期合约在t时刻价值$f(t,S_t) = S_t - Ke^{-r(T-t)}$代入，则有对于现货价格的PCP公式有：
+将远期合约在$t$时刻价值$f(t,S_t) = S_t - Ke^{-r(T-t)}$代入，则有对于现货价格的PCP公式有：
 \begin{equation*}
     C_{t,T} = P_{t,T} +  S_t - K e^{-r(T-t)}
 \end{equation*}
@@ -2618,7 +2673,7 @@ $S_T < K$ & $0$ & $(K - S_T) + (S_T-K)$ \\
     S^*_t = \left( C_{t,T} - P_{t,T} \right) + K e^{-r(T-t)}
 \end{equation*}
 
-由于远期价格为$F_{t,T} = S_t e^{r(T-t)}$，可得到对于远期（期货）的PCP公式：
+或使用期货，则有远期合约在$t$时刻价值$f(t,F_t) = (F_{t,T} - K) e^{-r(T-t)}$，可得到对于远期（期货）的PCP公式：
 \begin{equation*}
     C_{t,T} = P_{t,T} + \left( F_{t,T} - K \right) e^{-r(T-t)}
 \end{equation*}

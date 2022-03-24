@@ -1355,52 +1355,63 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \end{itemize}
 \end{remark}
 
-\section{回归模型}
+\section{线性回归模型}
+
+“回归”（Regression）一词来最早源于生物学，英国生物统计学家高尔顿（Galton），为达尔文的表兄。其根据1078对父辈与子辈的身高的研究发现，虽然身材高大的父辈比身材矮的父辈倾向于有高的孩子，但平均而言，身材高大的父辈的孩子要矮些，而身材矮小的父辈的孩子要高些。即无论高个子或矮个子的后代，都有向均值方向拉回的倾向。其认为认为自然界有一种约束力，使得身高的分布不会向高矮两个极端发展，而是趋于回到中心，所以称为向均值回归（regression to the mean）。而现在一般指一整套统计流程，其中包括研究因变量与自变量之间的关系的分析研究，建立回归模型，并寻找其中的最佳拟合关系。
 
 \subsection{回归模型分类}
 
-\subsubsection*{线性回归模型}
-
-线性回归模型（Linear regression）包含有：
+对于回归模型（Regression Model），可分文参数回归（Parametric regression）与半参或非参回归（Semi/Non-parametric regression）。对于参数回归模型，对样本的总体分布做假设，其回归函数形式为已知，参数待定，外延容易，但形式呆板。如：
 \begin{itemize}
-    \item 最小二乘法（Ordinary least squares，OLS）
-    \item 广义最小二乘法（Generalized least squares，GLS）
-    \item 加权最小二乘法（Weighted least squares）
-    \item 广义线性模型（General linear model）
+    \item 线性回归（Linear regression）
+    \item 逻辑回归（Logistic regression）
+    \item 岭回归（Ridge regression）
+    \item LASSO回归（Lasso regression）
+    \item 多项式回归（Polynomial regression）
 \end{itemize}
 
-\subsubsection*{参数回归与半参数非参数回归}
+顾名思义，线性回归模型就是采用线性的方法对自变量与因变量建模。当自变量的数目只有一个时，称为简单线性回归（Simple linear regression，SLR）或一元线性回归。对于多个自变量，单一因变量的线性回归模型称为多元回归模型（Multiple regression，MLR），并为了区分多个因变量的情形，将其称之为多变量回归（Multivariate regression）。
 
-参数回归或参数模型（Parametric regression），如各类线性回归，其回归函数形式为已知，参数待定，外延容易，但形式呆板。而对于半参或非参回归（Semi/Non-parametric regression），对函数的数学形式并无特殊的假定，外延困难，但拟合效果却较好。其中非参数回归基本方法如：
+对于参数的估计方法，最为常见方法为最小二乘法（Least squares），即通过最小化残差平方和估计参数。可分为线性最小二乘法与非线性最小二乘法。对于线性最小二乘法，又可分为：
 \begin{itemize}
-    \item 最近邻函数法（Nearest-neighbor或K-nearest neighbors）
+    \item 普通最小二乘法（Ordinary least squares，OLS）
+    \item 加权最小二乘法（Weighted least squares，WLS）
+    \item 广义最小二乘法（Generalized least squares，GLS）
+\end{itemize}
+
+而对于半参或非参回归（Semi/Non-parametric regression），不对样本的总体分布做假设。对函数的数学形式并无特殊的假定，外延困难，但拟合效果却较好。其中非参数回归基本方法如：
+\begin{itemize}
     \item 核函数回归（Kernel regression）
+    \item 最近邻函数法（Nearest-neighbor或K-nearest neighbors）
     \item 神经网络（Neural networks）
     \item 支持向量机（Support vector regression）
-    \item 光滑样条（Smoothing spline）
 \end{itemize}
 
 \subsection{一元线性回归}
 
-当回归函数$y=f(x_1,\dots,x_p)$，只包含一个自变量，一个因变量的情形，称为一元线性回归，或称为简单线性回归（Simple linear regression）。此时认为实际回归模型如下所示，其中$e$为随机误差，代表众多未加考虑的因素与随机因素的影响：
-\begin{equation*}
-    Y = \beta_0 + \beta_1 X + \varepsilon
-\end{equation*}
+\subsubsection{模型定义}
 
-同时理论回归模型应有：
-\begin{equation*}
-    \E(Y_i) = \beta_0 + \beta_1 X_i
-\end{equation*}
+一元线性回归为最简单的线性回归形式，其中只包含一个自变量与一个因变量。对于总体（Population）与样本（Sample）之间的关系，总体是我们希望研究的，如全中国人均工资与其教育水平之间的关系，但出于种种原因，我们只能从样本中推测这样的关系。方程（Function）描述的为理论关系，而模型（Model）则代表了实证中拟合关系。
+\begin{itemize}
+    \item 总体回归方程（Population regression function，PRF）：此为理论基础，代表了$Y$的均值，如何随着$X$的变化而变化。其代表的是总体均值的关系（或可以理解为代表性的个体），如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。我们并不研究个体，影响一个大学生工资的因素很多，并没有实际研究意义。但而研究整体中国人口学历与工资之间的，显然有研究意义。
+    \begin{equation*}
+        \E\left[ Y_i \given X_i \right] = \beta_0 + \beta_1 X_i
+    \end{equation*}
+    \item 总体回归模型（Population regression model，PRM）：由于现实世界是复杂的，模型只是现实问题的简化，并且在数据的搜集与测量过程中都将产生误差，这些除了$X_i$之外影响$Y_i$的微小因素称之为干扰项$\varepsilon$。由于干扰项的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
+    \begin{equation*}
+        Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
+    \end{equation*}
+    \item 样本回归方程（Sample regression function，SRF）：对于选取的$n$个样本$(X_i,Y_i)$，假设使用$\hat{\beta}_0$与$\hat{\beta}_1$为$\beta_0$与$\beta_1$的估计值。我们可以使用样本数据进行拟合并建立样本回归方程，得到真实值$Y_i$的样本估计值$\hat{Y}_i$。
+    \begin{equation*}
+        \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i
+    \end{equation*}
+    \item 样本回归模型（Sample regression model，SRM）：最后通过样本回归模型，解释总体回归模型中所描述的实际问题，$e$代表由模型带来的残差。
+    \begin{equation*}
+        Y_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + e_i
+    \end{equation*}
+\end{itemize}
 
-观察模型中变量$n$次可得样本$(X_i,Y_i)$，假设使用$\hat{\beta}_0$与$\hat{\beta}_1$，估计上述总体$\beta_0$与$\beta_1$，进行样本回归，得到真实值$Y_i$的样本估计值$\hat{Y}_i$：
-\begin{equation*}
-    \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i \inlinesep i =1,\dots,n
-\end{equation*}
-
-对于上述样本回归模型，应有：
-\begin{equation*}
-    Y_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + e_i \inlinesep i =1,\dots,n
-\end{equation*}
+\subsubsection{基本假定与普通最小二乘法}
 
 由于平方能去掉符号的影响，因此使用平方和作为指标，衡量真实值与估计值偏离的大小，即$Y_i - \hat{Y}_i$，定义如下函数$Q(\hat{\beta}_0, \hat{\beta}_1)$，并希望其最小：
 \begin{equation*}
@@ -1566,8 +1577,8 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     并且有（在计算协方差时，只有$\Cov(Y_i,Y_i)=\Var(Y_i)=\sigma^2$保留）：
     \begin{align*}
         \Cov(\bar{Y},\hat{\beta}_1)
-        &= \Cov \left[ \frac{1}{n} \sum_{i=1}^{n} Y_i, \frac{\sum_{j=1}^{n} \left(X_j - \bar{X}\right) Y_j}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right] \\
-        &= \frac{1}{n} \frac{1}{\sum_{i=1}^{n} \left(X_j - \bar{X}\right)^2} \Cov \left[ \sum_{i=1}^{n} Y_i, \sum_{j=1}^{n} \left(X_i - \bar{X}\right) Y_j \right] \\
+        &= \Cov \left( \frac{1}{n} \sum_{i=1}^{n} Y_i, \frac{\sum_{j=1}^{n} \left(X_j - \bar{X}\right) Y_j}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right) \\
+        &= \frac{1}{n} \frac{1}{\sum_{i=1}^{n} \left(X_j - \bar{X}\right)^2} \Cov \left( \sum_{i=1}^{n} Y_i, \sum_{j=1}^{n} \left(X_i - \bar{X}\right) Y_j \right) \\
         &= \frac{1}{n} \frac{1}{\sum_{i=1}^{n} \left(X_j - \bar{X}\right)^2} \sum_{i=1}^{n} \left(X_i - \bar{X}\right) \sigma^2 \\
         &= 0
     \end{align*}
@@ -1603,7 +1614,6 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 https://brilliant.org/wiki/multivariate-regression/
 
-\subsubsection*{多变量回归模型}
 
 对于多变量回归模型，即单一因变量，多个自变量的回归模型应有：
 \begin{equation*}
@@ -1638,42 +1648,7 @@ https://brilliant.org/wiki/multivariate-regression/
     \end{bmatrix}
 \end{equation*}
 
-\subsubsection*{多元回归模型}
-
-对于多元回归模型，即多因变量，多个自变量的回归模型应有：
-\begin{equation*}
-    \bm{Y = X \beta + \epsilon}
-\end{equation*}
-
-其中：
-\begin{equation*}
-    \begin{bmatrix}
-        y_1 \\
-        y_2 \\
-        \vdots \\
-        y_N
-    \end{bmatrix} =
-    \begin{bmatrix}
-        1 & x_{1,1} & x_{1,2} & \dots & x_{1,K} \\
-        1 & x_{2,1} & x_{2,2} & \dots & x_{2,K} \\
-        \vdots & \vdots & \vdots & \ddots & \vdots \\
-        1 & x_{N,1} & x_{N,2} & \dots & x_{N,K} \\
-    \end{bmatrix}
-    \begin{bmatrix}
-        \beta_0 \\
-        \beta_1 \\
-        \vdots \\
-        \beta_K
-    \end{bmatrix} + 
-    \begin{bmatrix}
-        \epsilon_1 \\
-        \epsilon_2 \\
-        \vdots \\
-        \epsilon_N
-    \end{bmatrix}
-\end{equation*}
-
-\subsection{最小二乘估计}
+\subsection{普通最小二乘法}
 
 有n个观察值$\{x_i,y_i\}_{i=1}^{n}$，其线性回归模型有如下形式：
 \begin{equation*}
@@ -1703,10 +1678,17 @@ https://brilliant.org/wiki/multivariate-regression/
 
 【待补充】时间序列的估计，使用OLS，也需要满足OLS的假设，否则估计有偏
 
+\subsection{广义最小二乘法}
 
-\subsection{GLS}
+广义最小二乘法（GLS），在放弃了同方差和序列相关的假设之下（准确地说是对误差项的条件方差作了更一般的假定），我们看到的回归式叫generalized regression model。在这种model里，GLS估计量是BLUE的。如果误差项的条件方差、协方差矩阵是已知的，GLS就是可行的，我们皆大欢喜。【存在异方差和序列相关】
 
-【待添加】
+
+简单举个例子，具体就不用符号了，推来推去太复杂。假设你有一把尺子，去测量一个物体的长度。你用同一把尺子测量n次，每次的测量误差就是这个尺子的误差（忽略其他因素），这就是我们所说的最小二乘里的同方差假定。现在你换一种方法，还是测量n次，但是你每次测量用的尺子精度不一样，有点大，有的小。这就是说所谓的“异方差”，这个时候你用普通最小二乘，就会导致估计不一致，这个时候，你想到一个办法就是，对于估计量中的样本，除以相应样本的那把尺子的误差，这样处理之后，就又变成同方差了。
+
+作者：gurudk
+链接：https://www.zhihu.com/question/37930145/answer/140471525
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 \section{时间序列}
 
@@ -1800,7 +1782,19 @@ https://brilliant.org/wiki/multivariate-regression/
 
 因此，在衡量对金融时间序列模型是否合适时，需先得到原时间序列与拟合序列之间的残差序列。然后依据残差序列的相关图，发现其是否含有未考虑的额外自相关性。若残差的相关图与上图类似，则可以认为该残差序列为一个随机噪声，即模型已经很好的捕捉了原时间序列中的自相关性。若残差的相关图体现了额外的自相关性，其将为改进已有的模型提供依据。
 
-\subsubsection*{检验单个ACF}
+\subsection{自相关检验}
+
+在线性模型中，需要满足一定的假设，如残差为独立。同样在时间序列当中，如果残差不独立，即自相关。如果时间序列变量之间独立，那么此时残差应该为白噪声，如果有特定的模式（如自相关），那么此时时间序列的独立性将不再满足。那么此时时间序列将如线性模型一样产生一定的问题，如参数估计量非有效（无偏，但不具备最小方差属性），变量的显著性检验失去意义，模型的预测失效。对于时间序列其他的自相关检验方法，一般有如下方法：
+\begin{itemize}
+    \item 观察ACF图
+    \item Durbin-Watson test
+    \item Ljung-Box Q test
+    \item Lagrange Multiplier test
+    \item Breusch-Godfrey Test （基于LM检验）
+    \item Hildreth-Lu Procedure
+\end{itemize}
+
+\subsubsection{检验单个ACF}
 
 若$\{r_t\}$为\textbf{独立同分布}（i.i.d.）序列，满足$\E(r_t^2)<\infty$，那么对于任意正整数$l$，有$\hat{p}_l$渐进的服从均值为$0$、方差为$1/T$的$N\sim(0,\frac{1}{T})$的正态分布。在更加一般的条件下，若$\{r_t\}$为\textbf{弱平稳}序列，满足$r_t = \mu + \sum_{i=0}^{q}\psi_i a_{t-i}$，其中$\phi_0=1$，$\{a_t\}$为均值为0的独立同分布变量序列，对于$l>q$，则有$\hat{p}_l$渐进的服从如下正态分布，称为Bartlett公式：
 \begin{equation*}
@@ -1817,14 +1811,34 @@ https://brilliant.org/wiki/multivariate-regression/
 临界值根据统计量的具体分布决定，由于统计量$t_{\hat{\rho}}$渐近服从标准正态分布。
 对于双侧检验临界值$\pm Z_{\alpha/2}$为，使得标准正态分布PDF曲线下方阴影面积部分，左右两侧面积相加为$\alpha$的$Z$值。具体而言为标准正态分布CDF的$100(\alpha/2)$与$100(1-\alpha/2)$的两个分位点。例如当临界值为$\alpha=5\%$时，查表（Z-table）得知，为使得标准正态分布左右两侧阴影区域面积为$2.5\%$与$97.5\%$的两个临界值$Z$值，为$Z=\pm 1.96$。
 
-\subsubsection*{混成检验}
+\subsubsection{Durbin-Watson检验}
 
-在时间序列研究中，有两个著名的用于\uline{检测残差中自相关性}的\textbf{混成检验}（Portmanteau test），为Ljung-Box检验和Box-Pierce检验，其中Ljung-Box是Box-Pierce的扩展。目的在于\textbf{检验$r_t$的几阶自相关系数是否同时为零}。可以采用的方法还包括计算ACF和PCAF并观察其图像，但是无论是ACF还是PACF都只能考虑\uline{某一特定滞后阶数}的自相关，BP检验与LB检验则是基于\uline{一系列滞后阶数}。Box和Pierce（1970）检验统计量为：
+在检验残差中的自相关时，一般使用Ljung-Box检验，而非Durbin-Watson检验。这是由于DW检验只检验了滞后一阶的自回归，而很多时候自回归出现在更高阶的滞后项中，因此使用LB检验是更好的选择。对于Durbin-Watson检验而言，其原假设为残差中不存在自相关，而备择假设为残差中存在自相关，且为AR(1)过程：
+\begin{align*}
+    \text{H}_0: \ & \rho = 0 \\
+    \text{H}_1: \ & \rho \neq 0
+\end{align*}
+
+若残差中存在自回归AR(1)，即$\varepsilon_t = \rho \varepsilon_{t-1} + \mu_t$，则DW统计量有：
+\begin{equation*}
+    d = \frac{\sum_{t=2}^{T} (\varepsilon_t - \varepsilon_{t-1})^2}{\sum_{t=1}^{T} \varepsilon^2_t}
+\end{equation*}
+
+由于DW统计量近似于$d \approx 2(1-\hat{\rho})$，因此取值范围在$[0,4]$之间。当统计量：
+\begin{itemize}
+    \item 显著小于2时：有正的自相关
+    \item 等于于2：无自相关
+    \item 显著小于2：有负的自相关
+\end{itemize}
+
+\subsubsection{Ljung-Box Q检验}
+
+在时间序列研究中，有两个著名的用于\uline{检测残差中自相关性}（残差的独立性）的\textbf{混成检验}（Portmanteau test），为Ljung-Box检验（或 Ljung-Box Q test）和Box-Pierce检验，其中Ljung-Box是Box-Pierce的扩展。目的在于\textbf{检验$r_t$的几阶自相关系数是否同时为零}。可以采用的方法还包括计算ACF和PCAF并观察其图像，但是无论是ACF还是PACF都只能考虑\uline{某一特定滞后阶数}的自相关，BP检验与LB检验则是基于\uline{一系列滞后阶数}。Box和Pierce（1970）检验统计量为：
 \begin{equation*}
     Q^{*}(m) = T\sum_{i=1}^{m} \hat{\rho}_{l}^{2}
 \end{equation*}
 
-$Q^{*}(m)$渐进地服从自由度为$m$的$\chi^2$分布，\uline{检验原假设为无显著序列相关（自相关）}，而备择假设为有显著的序列相关性。即当\textbf{接受原假设}$H_0$时，则代表该时间序列有没有显著的序列相关性：
+$Q^{*}(m)$渐进地服从自由度为$m$的$\chi^2$分布，\uline{检验原假设为无显著序列相关（自相关）}（即残差序列独立），而备择假设为有显著的序列相关性（残差序列非独立）。即当\textbf{接受原假设}$H_0$时，则代表该时间序列有没有显著的序列相关性：
 \begin{align*}
     H_0&: \rho_1=\dots=\rho_{m}=0 \\
     H_1&: \text{对于某}\; i \in \{1,\dots,m\},\rho_i \neq 0
@@ -1835,12 +1849,22 @@ Ljung和Box（1978）提高有限样本时的检验功效，修改后的统计�
     Q(m) = T(T+2) \sum_{i=1}^{m} \frac{\hat{\rho}_{l}^{2}}{T-l}
 \end{equation*}
 
+\subsection{自相关处理}
+
+当发现了残差中存在自相关，主要有如下三种转换
+\begin{itemize}
+    \item Cochrane-Orcutt Procedure
+    \item Hildreth-Lu Procedure
+    \item First Differences Procedure Section
+\end{itemize}
+
+https://online.stat.psu.edu/stat501/lesson/14/14.3
+
 \subsection{白噪声与线性时间序列}
 
 \subsubsection{白噪声与随机游走}
 
-当$\{\omega_t\}$为一个有限均值和有限方差的\textbf{独立同分布}（Independent and identically distributed，iid）随机变量序列，则称其为\textbf{白噪声}（White noise）序列。独立同分布指一组随机变量$X_t$中，每个变量的概率分布都相同（均值方差等相同），显然满足平稳性要求。且白噪声满足序列不相关，相互独立，即$\omega_i$的取值不影响$\omega_j$的取值。对于白噪声序列，有其所有$l \neq 0 $的自相关函数（ACF）都为零$\rho_l = 0$。若$\omega_t$服从均值为$0$和方差为$\alpha^{2}$的正态分布，则称其为\textbf{
-高斯白噪声}（Gaussian white noise）。
+当$\{\omega_t\}$为一个有限均值和有限方差的\textbf{独立同分布}（Independent and identically distributed，iid）随机变量序列，则称其为\textbf{白噪声}（White noise）序列。独立同分布指一组随机变量$X_t$中，每个变量的概率分布都相同（均值方差等相同），显然满足平稳性要求。且白噪声满足序列不相关，相互独立，即$\omega_i$的取值不影响$\omega_j$的取值。对于白噪声序列，有其所有$l \neq 0 $的自相关函数（ACF）都为零$\rho_l = 0$。若$\omega_t$服从均值为$0$和方差为$\alpha^{2}$的正态分布，则称其为\textbf{高斯白噪声}（Gaussian white noise）。
 
 若时间序列$\{x_t\}$满足$x_t = x_{t-1} + \omega_t$，其中$\omega_t$为均值为$0$，方差为$\sigma^2$的白噪声，则序列$\{x_t\}$为随机游走（Random walk）。由定义可知，在任意$t$时刻，$x_t$都为过去所有历史白噪声的综合，即：
 \begin{equation*}
@@ -2201,26 +2225,6 @@ MA(q)模型为：
 
 【待添加】
 
-\subsection{残差自相关检验}
-
-在检验残差中的自相关时，一般使用如上提到的Ljung-Box检验，而非Durbin-Watson检验。这是由于DW检验只检验了滞后一阶的自回归，而很多时候自回归出现在更高阶的滞后项中，因此使用LB检验是更好的选择。对于Durbin-Watson检验而言，其原假设为残差中不存在自相关，而备择假设为残差中存在自相关，且为AR(1)过程：
-\begin{align*}
-    \text{H}_0: \ & \rho = 0 \\
-    \text{H}_1: \ & \rho \neq 0
-\end{align*}
-
-若残差中存在自回归AR(1)，即$\varepsilon_t = \rho \varepsilon_{t-1} + \mu_t$，则DW统计量有：
-\begin{equation*}
-    d = \frac{\sum_{t=2}^{T} (\varepsilon_t - \varepsilon_{t-1})^2}{\sum_{t=1}^{T} \varepsilon^2_t}
-\end{equation*}
-
-由于DW统计量近似于$d \approx 2(1-\hat{\rho})$，因此取值范围在$[0,4]$之间。当统计量：
-\begin{itemize}
-    \item 显著小于2时：有正的自相关
-    \item 等于于2：无自相关
-    \item 显著小于2：有负的自相关
-\end{itemize}
-
 \subsection{平稳性（单位根）检验}
 
 对于时间序列的中的单位根检验，有大致一下三种检验方法：
@@ -2230,7 +2234,7 @@ MA(q)模型为：
     \item PP检验：Phillips and Perron（1988）
 \end{itemize}
 
-\subsubsection*{DF检验}
+\subsubsection{DF检验}
 
 假设模型有：
 \begin{gather*}
@@ -2260,7 +2264,7 @@ MA(q)模型为：
     = \frac{\sum_{t=1}^{T} p_{t-1} e_t}{\hat{\sigma}_{a} \sqrt{\sum_{t=1}^{T} p_{t-1}^{2}}} 
 \end{equation*}
 
-\subsubsection*{ADF检验}
+\subsubsection{ADF检验}
 
 对于计量常用的AR(p)模型而言，为了检验AR(p)模型是否存在单位根，可以使用\textbf{扩展的Dickey-Fuller检验}（Augmented Dickey-Fuller）。其中原假设为$H_0: \beta=1$，而备择假设为$H_a: \beta<1$，模型有：
 \begin{equation*}
@@ -2676,6 +2680,37 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
 \end{align*}
 
 其中有$\sigma_t^2 = \alpha_0 + \alpha_1 a_{t-1}^{2} + \beta_1 \sigma_{t-1}^{2}$
+
+\section{其他检验}
+
+\subsection{格兰杰因果关系检验}
+
+格兰杰因果关系检验（Granger causality test），根据回归分析中的自回归模型，检验一组时间序列${X_t}$是否为另一组时间序列${Y_t}$的原因，即一个时间序列对另一个时间序列的增量预测能力。具体而言检验${X_t}$序列中的滞后项，对${Y_t}$序列是否有预测能力，因此这里的“因果关系”并非现实中的因果关系，仅从信息（现象）发生的前后顺序及预测效果定义。当果${X_t}$的历史信息，使得${Y_t}$的预测残差平方和显著的小于没有${X_t}$历史信息的残差平方和，即${X_t}$历史信息显著的提高了对${Y_t}$的预测精度，那么${X_t}$为${Y_t}$的Granger原因。由于Granger因果关系检验与序列信息紧密相关，因此许多文献称之为信息溢出检验（Information Spillover）。后来的计量经济学家对其进行修改与扩充，如使用面板数据（Panel data）的向量自回归模型（VAR model，AR）。具体而言，假设只检查一阶滞后项：
+\begin{align*}
+    Y_t &= \alpha_0 + \alpha_1 X_{t-1} + \alpha_2 Y_{t-1} + \varepsilon_{1,t} \\
+    X_t &= \beta_0 + \beta_1 Y_{t-1} + \beta_2 X_{t-1} + \varepsilon_{2,t}
+\end{align*}
+
+此时假设为$H_0: \alpha_1=0$与$H_0: \beta_1=0$，当拒绝$\alpha_1=0$时，则有认为${X_t}$为${Y_t}$的原因。反之则有当拒绝$\beta_1=0$时，则认为${Y_t}$为${X_t}$的原因。若有要检查$p$阶滞后项（上标代表滞后阶数），则原假设与备择假设为分别为：
+\begin{align*}
+    &H_0: \alpha_{1}^{1} = \alpha_{1}^{2} = \dots = \alpha_{1}^{p} = 0 \\
+    &H_a: \text{至少有一个}\alpha_{1}^{j} \neq 0
+\end{align*}
+
+此时LR检验统计量渐近服从$\chi^2(p)$，若拒绝原假设，则有${X_t}$为${Y_t}$的原因，即${X_t}$对${Y_t}$有预测能力。
+
+\subsection{Jarque-Bera检验}
+
+在统计学中，Jarque–Bera检验是对样本数据是否具有符合正态分布的偏度和峰度的拟合优度的检验。该检验以卡洛斯•哈尔克和阿尼•K•贝拉（Carlos Jarque and Anil K. Bera）来命名。JB统计量定义为：
+\begin{equation*}
+    \text{JB} = \frac{S^2}{6/n} + \frac{(K-3)^2}{24/n}    
+\end{equation*}
+
+其中$n$为样本数，$S$为样本偏度，$K$为样本峰度：
+\begin{align*}
+    S &= \frac{\hat{\mu}_3}{\hat{\sigma}^3} = \frac{\frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})^3}{\left( \frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})^2 \right)^{\frac{3}{2}}} \\
+    K &= \frac{\hat{\mu}_4}{\hat{\sigma}^4} = \frac{\frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})^4}{\left( \frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})^2 \right)^{\frac{4}{2}}}
+\end{align*}
 
 \section{卡尔曼滤波}
 

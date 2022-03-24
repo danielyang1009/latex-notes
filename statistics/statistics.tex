@@ -1393,11 +1393,11 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 一元线性回归为最简单的线性回归形式，其中只包含一个自变量与一个因变量。对于总体（Population）与样本（Sample）之间的关系，总体是我们希望研究的，如全中国人均工资与其教育水平之间的关系，但出于种种原因，我们只能从样本中推测这样的关系。方程（Function）描述的为理论关系，而模型（Model）则代表了实证中拟合关系。
 \begin{itemize}
-    \item 总体回归方程（Population regression function，PRF）：此为理论基础，代表了$Y$的均值，如何随着$X$的变化而变化。其代表的是总体均值的关系（或可以理解为代表性的个体），如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。我们并不研究个体，影响一个大学生工资的因素很多，并没有实际研究意义。但而研究整体中国人口学历与工资之间的，显然有研究意义。
+    \item 总体回归方程（Population regression function，PRF）：此为理论基础，代表了$Y$的均值，如何随着$X$的变化而变化，为总体均值的关系（或可以理解为代表性的个体）。如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。我们并不研究个体，影响一个大学生工资的因素很多，并没有实际研究意义。
     \begin{equation*}
         \E\left[ Y_i \given X_i \right] = \beta_0 + \beta_1 X_i
     \end{equation*}
-    \item 总体回归模型（Population regression model，PRM）：由于现实世界是复杂的，模型只是现实问题的简化，并且在数据的搜集与测量过程中都将产生误差，这些除了$X_i$之外影响$Y_i$的微小因素称之为干扰项$\varepsilon$。由于干扰项的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
+    \item 总体回归模型（Population regression model，PRM）：由于现实世界是复杂的，模型只是现实问题的简化，除了$X_i$之外影响$Y_i$的因素称之为干扰项$\varepsilon$。由于干扰项的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
     \begin{equation*}
         Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
     \end{equation*}
@@ -1405,7 +1405,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \begin{equation*}
         \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i
     \end{equation*}
-    \item 样本回归模型（Sample regression model，SRM）：最后通过样本回归模型，解释总体回归模型中所描述的实际问题，$e$代表由模型带来的残差。
+    \item 样本回归模型（Sample regression model，SRM）：最后通过样本回归模型，解释总体回归模型中所描述的实际问题。$e$为残差，代表由模型或者数据搜集或测量过程中带来的误差。
     \begin{equation*}
         Y_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + e_i
     \end{equation*}

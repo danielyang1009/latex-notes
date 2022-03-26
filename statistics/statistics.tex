@@ -100,11 +100,12 @@
 
 \subsection{相关系数}
 
-相关系数（Correlation Coefficient），为研究变量间线性相关程度的量。最早由统计学家卡尔·皮尔逊设计，也称为皮尔逊积矩相关系数（Pearson product-moment correlation coefficient），或皮尔逊相关系数：
-\begin{equation*}
-    \rho_{X,Y} = \frac{\Cov(X,Y)}{\sigma_X\sigma_Y}
-    = \frac{\E\left[\left(X-\E[X]\right)\left(Y-\E[Y]\right)\right]}{\sigma_X\sigma_Y}
-\end{equation*}
+相关系数（Correlation Coefficient），为研究变量间线性相关程度的量。最早由统计学家卡尔·皮尔逊设计，也称为皮尔逊积矩相关系数（Pearson product-moment correlation coefficient），或皮尔逊相关系数（总体相关系数）：
+\begin{align*}
+    \rho_{X,Y} &= \frac{\Cov(X,Y)}{\sqrt{\Var(X)\Var(Y)}}
+    = \frac{\Cov(X,Y)}{\sigma_X\sigma_Y} \\
+    &= \frac{\E\left[\left(X-\E[X]\right)\left(Y-\E[Y]\right)\right]}{\sigma_X\sigma_Y}
+\end{align*}
 
 样本相关系数有：
 \begin{equation*}
@@ -1397,11 +1398,11 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \begin{equation*}
         \E\left[ Y_i \given X_i \right] = \beta_0 + \beta_1 X_i
     \end{equation*}
-    \item 总体回归模型（Population regression model，PRM）：由于现实世界是复杂的，模型只是现实问题的简化，除了$X_i$之外影响$Y_i$的因素称之为干扰项$\varepsilon$。由于干扰项的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
+    \item 总体回归模型（Population regression model，PRM）：由于现实世界是复杂的，模型只是现实问题的简化，除了$X_i$之外影响$Y_i$的因素称之为干扰项$\varepsilon$或随机扰动项。由于干扰项的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
     \begin{equation*}
         Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
     \end{equation*}
-    \item 样本回归方程（Sample regression function，SRF）：对于选取的$n$个样本$(X_i,Y_i)$，假设使用$\hat{\beta}_0$与$\hat{\beta}_1$为$\beta_0$与$\beta_1$的估计值。我们可以使用样本数据进行拟合并建立样本回归方程，得到真实值$Y_i$的样本估计值$\hat{Y}_i$。
+    \item 样本回归方程（Sample regression function，SRF）：也被称为OLS回归线（OLS regression line），对于选取的$n$个样本$(X_i,Y_i)$，假设使用$\hat{\beta}_0$与$\hat{\beta}_1$为$\beta_0$与$\beta_1$的估计值。我们可以使用样本数据进行拟合并建立样本回归方程，得到真实值$Y_i$的样本估计值$\hat{Y}_i$。
     \begin{equation*}
         \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i
     \end{equation*}
@@ -1411,21 +1412,56 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \end{equation*}
 \end{itemize}
 
-\subsubsection{基本假定与普通最小二乘法}
+\subsubsection{基本假定}
 
-由于平方能去掉符号的影响，因此使用平方和作为指标，衡量真实值与估计值偏离的大小，即$Y_i - \hat{Y}_i$，定义如下函数$Q(\hat{\beta}_0, \hat{\beta}_1)$，并希望其最小：
+回归分析的主要目的，就是通过对样本分析，建立样本回归模型，从而尽可能准确的估计总体回归模型。由于引入了随机扰动项，只有对随机扰动的分布做出假定，才能正确的确定估计参数的分布性质，才能进一步进行假设检验和区间估计。
+
+根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归参数（回归系数）的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计给出的参数估计量。其中的“最优”指比较其他估计量，方差最小（离散程度最小），因此也可称为“最小方差线性无偏估计”。如上所述，对于参数估计量的标准，除了最优（Best）或称有效性，线性性（Linear），无偏性（Unbiased）还有一致性（Consistent）代表当样本数量增加，参数估计将收敛于理论值。高斯·马尔科夫对于随机扰动项$\varepsilon$有如下假设：
+\begin{itemize}
+    \item $\E\left(\varepsilon_i \given X\right)=0$：条件零均值，在给定自变量$X$的条件下，随机扰动项的均值为0，即不包含任何趋势。利用全期望公式还可以推导出无条件零均值：
+    \begin{equation*}
+        \E(\varepsilon_i) = \E\left[ \E \left( \varepsilon_i \given X \right) \right] = 0
+    \end{equation*}
+    \item $\Var\left(\varepsilon_i \given X \right) = \sigma^2 \leq \infty$：同方差（Homoscedastic），在给定自变量$X$的情况下，被解释变量$Y$在均值附近的波动程度是一致的，若违反需要考虑异方差。
+    \item $\Cov\left(\varepsilon_i,\varepsilon_j \given X \right) = 0 \ilsep \forall i\neq j$：序列不相关，若违反则需考虑序列相关。
+\end{itemize}
+
+对于经典线性模型，一般还有如下假设：
+\begin{itemize}
+    \item $\varepsilon \sim N(0,\sigma^2)$：正态分布，正态性假设提出为了假设检验与区间估计，正态性的假定不影响对参数的点估计，只有在确定参数的统计分布时才需要。在正态性假设下，可以得到$Y \given X \sim N\left( \beta_0 + \beta_1 x, \sigma^2 \right) $
+    \item $\Cov\left(X_i,\varepsilon_i\right) = 0$：若违反需要考虑动态模型
+\end{itemize}
+
+\subsubsection{普通最小二乘法}
+
+$\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。理想的估计方法应使得理论值$Y_i$和拟合值的$\hat{Y}_i$的差，即$Y_i - \hat{Y}_i = e_i$残差尽可能的小。由于得到的结果可能为正，也可能为负，为了去除符号带来的影响，因此选择使用平方和作为作为衡量标准。定义如下函数$Q(\hat{\beta}_0, \hat{\beta}_1)$为残差的平方和函数：
 \begin{equation*}
     Q(\hat{\beta}_0, \hat{\beta}_1)
     = \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right)^2
     = \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right)^2
+    = \sum_{i=1}^{n} e_i^2
 \end{equation*}
 
-为了使$Q(\hat{\beta}_0,\hat{\beta}_1)$最小，应有：
+并希望其最小，则有：
+\begin{equation*}
+    \min \sum_{i=1}^{n} Q(\hat{\beta}_0, \hat{\beta}_1) = \min \sum_{i=1}^{n} e_i^2
+\end{equation*}
+
+对$\hat{\beta}_0$与$\hat{\beta}_1$偏导可以得到OLS参数估计的一阶条件（First
+ order conditions），应有：
 \begin{align*}
     \frac{\partial Q}{\partial \hat{\beta}_0} &= -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0 \\
     \frac{\partial Q}{\partial \hat{\beta}_1} &= -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) X_i = 0
 \end{align*}
 
+求解一阶条件，即可得到回归系数的OLS估计$\hat{\beta}_0$与$\hat{\beta}_1$：
+\begin{align*}
+    \hat{\beta}_0 &= \bar{Y} - \hat{\beta}_1 \bar{X} \\
+    \hat{\beta}_1 &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+    &= \frac{\Cov(X,Y)}{\Var(X)} = \frac{\rho_{XY} \sigma_X \sigma_Y}{\Var(X)} = \rho_{XY} \frac{\sigma_Y}{\sigma_X}
+\end{align*}
+
+\begin{proof}
 对于一式对$\hat{\beta}_0$求导，有：
 \begin{gather*}
     \frac{\partial Q}{\partial \hat{\beta}_0} = -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0 \\
@@ -1444,7 +1480,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \hat{\beta}_1 = \frac{\sum_{i=1}^{n} X_i Y_i - n \bar{X} \bar{Y}}{\sum_{i=1}^{n} X_i^2 - n \bar{X}^2}
 \end{gather*}
 
-对于分子，有：
+化简上述公式，对于分子有：
 \begin{align*}
     \sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)
     &= \sum_{i=1}^{n} \left( X_i Y_i - X_i\bar{Y} - \bar{X}Y_i + \bar{X}\bar{Y} \right) \\
@@ -1453,7 +1489,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     &=\sum_{i=1}^{n} X_i Y_i - n\bar{X}\bar{Y}
 \end{align*}
 
-对于分母，有：
+对于分母有：
 \begin{align*}
     \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2
     &= \sum_{i=1}^{n} \left( X_i^2 - 2 X_i\bar{X} + \bar{X}^2 \right) \\
@@ -1468,19 +1504,65 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \hat{\beta}_1 &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
     &= \frac{\Cov(X,Y)}{\Var(X)} = \frac{\rho_{XY} \sigma_X \sigma_Y}{\Var(X)} = \rho_{XY} \frac{\sigma_Y}{\sigma_X}
 \end{align*}
+\end{proof}
 
-根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归系数的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计（其中最佳指比较其他估计量，方差最小），或称为“最小方差线性无偏估计”。对于参数估计量的标准，除了如上所述的有效性（Best），线性性（Linear），无偏性（Unbiased）还有一致性（Consistent）。高斯·马尔科夫对于随机误差$e$有如下假设：
-\begin{itemize}
-    \item $\E(e_i)=0$：零均值
-    \item $\Var(e_i) = \sigma^2 \leq \infty$：同方差（Homoscedastic），若违反需要考虑异方差
-    \item $\Cov(e_i,e_j) = 0,\; \forall i\neq j$：不相关，若违反则需考虑序列相关
-\end{itemize}
+根据如上推导的OLS参数估计的一阶条件，还能得到下述三条性质。
 
-对于经典线性模型，一般还有如下假设：
-\begin{itemize}
-    \item $e \sim N(0,\sigma^2)$：正态分布
-    \item $\Cov(X_i,e_i) = 0$：若违反需要考虑动态模型
-\end{itemize}
+\begin{property}
+    点$\left(\bar{X},\bar{Y}\right)$总在OLS回归线上
+
+    \begin{equation*}
+        \bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}
+    \end{equation*}
+
+    \begin{proof}
+        由对于$\partial Q/\partial \hat{\beta}_0 = 0$的一阶条件可知$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$，显然有$\bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}$。
+    \end{proof}
+    \label{ppt:ols-reg-line}
+\end{property}
+
+\begin{property}
+    OLS残差的样本和、样本均值均为零
+    \begin{equation*}
+        \sum_{i=1}^{n} e_i = 0
+    \end{equation*}
+
+    \begin{proof}
+        已知$e_i = Y_i - \hat{Y}_i$，并根据上述性质\ref{ppt:ols-reg-line}与$\partial Q / \partial \hat{\beta}_0 = 0$的一阶条件可知：
+        \begin{equation*}
+            \sum_{i=1}^{n} e_i 
+            = \sum_{i=1}^{n} \left(Y_i - \hat{Y}_i\right)
+            = \sum_{i=1}^{n} \left(Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0
+        \end{equation*}
+    \end{proof}
+
+    因此$\sum_{i=1}^{n} e_i=0$且$\E[e_i]=0$。
+    \label{ppt:ols-error-mean}
+\end{property}
+
+\begin{property}
+    解释变量与OLS残差的样本协方差为零
+    \begin{equation*}
+        \sum_{i=1}^{n} X_i e_i = 0
+    \end{equation*}
+
+    \begin{proof}
+        由上性质\ref{ppt:ols-error-mean}可知$\E[e_i]=0$，因此解释变量与残差的协方差应有：
+        \begin{align*}
+            \Cov(X_i,e_i) &= \E\left[\left(X_i - \E[X]\right)\left(e_i - \E[e]\right)\right] \\
+            &= \E \left[e_i \left(X_i - \bar{X}\right) \right] \\
+            &= \E[e_i X_i] - \bar{X}\E[e_i] \\
+            &= \frac{1}{n} \sum_{i=1}^{n} e_i X_i
+        \end{align*}
+    
+        根据$\partial Q / \partial \hat{\beta}_1 = 0$的一阶条件可知：
+        \begin{equation*}
+            \sum_{i=1}^{n} X_i e_i = \sum_{i=1}^{n} X_i \left(Y_i - \hat{Y}_i\right) = \sum_{i=1}^{n} X_i \left(Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i\right) = 0
+        \end{equation*}
+    \end{proof}
+\end{property}
+
+\subsubsection{OLS估计量的期望与方差}
 
 \begin{property}
     $\hat{\beta}_0$与$\hat{\beta}_1$为$Y_i$的线性组合
@@ -1494,23 +1576,23 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \begin{equation*}
         \hat{\beta}_1
         = \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) Y_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
-        = \sum_{i=1}^{n} \frac{ \left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} Y_i
+        = \sum_{i=1}^{n} \left[\frac{ \left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}\right] Y_i
         = \sum_{i=1}^{n} b_i Y_i
     \end{equation*}
 
-    可得：
+    因此：
     \begin{equation*}
         \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}
         = \bar{Y} - \bar{X} \sum_{i=1}^{n} b_i Y_i
     \end{equation*}
     
-    由于$X_i$为已知，那么此时显然$\hat{\beta}_0$与$\hat{\beta}_1$为$Y_i$的线性组合。
+    由上可见，显然$\hat{\beta}_0$与$\hat{\beta}_1$为$Y_i$的线性组合。
 \end{property}
 
 \begin{property}
-    $\hat{\beta}_0$和$\hat{\beta}_1$为$\beta_0$和$\beta_1$的无偏估计
+    $\hat{\beta}_0$和$\hat{\beta}_1$的期望与无偏性
 
-    $b_i$有如下性质：
+    上文所定义的$b_i$，有如下性质：
     \begin{align*}
         \sum_{i=1}^{n} b_i
         &= \frac{\cancel{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)}}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} = 0 \\
@@ -1533,7 +1615,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         &= \beta_1 + \sum_{i=1}^{n} b_i e_i
     \end{align*}
 
-    可得$\hat{\beta}_0$与$\hat{\beta}_1$的期望为：
+    可得$\hat{\beta}_0$与$\hat{\beta}_1$的期望为如下所示，因此OLS估计量的无偏性得证：
     \begin{align*}
         \E\left( \hat{\beta}_1 \right)
         &= \beta_1 + \sum_{i=1}^{n} b_i \E(e_i) = \beta_1 \\
@@ -1558,15 +1640,15 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
     那么：
     \begin{equation*}
-        \Var(\hat{\beta}_1) = \Var\left( \sum_{i=1}^{n} b_i Y_i \right)
+        \Var\left(\hat{\beta}_1\right) = \Var\left( \sum_{i=1}^{n} b_i Y_i \right)
     \end{equation*}
 
-    由$Cov(e_i,e_j)=0$随机误差不相关（注意，独立一定不相关，不相关不一定独立），可得到$\Cov(Y_i,Y_j)=0$：
+    由$Cov(e_i,e_j)=0$随机误差不相关，可得到$\Cov(Y_i,Y_j)=0$。注意：独立一定不相关，不相关不一定独立。此时相关指线性相关，即$\rho_{XY}=0$。例如在圆上的两点，显然不线性相关，但并非独立。
     \begin{equation*}
         \Var(\hat{\beta}_1) = \sum_{i=1}^{n} b_i^2 \Var(Y_i)
     \end{equation*}
 
-    由于$\Var(e_i)$为同方差，那么$\Var(Y_i) = \Var(Y_j) = \sigma^2,\; \forall i,j$：
+    由于$\Var(e_i)$为同方差，那么$\Var(Y_i) = \Var(Y_j) = \sigma^2 \ilsep \forall i,j$：
     \begin{equation*}
         \Var(\hat{\beta}_1)
         = \Var(Y_i) \sum_{i=1}^{n} b_i^2
@@ -1574,7 +1656,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         = \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
     \end{equation*}
     
-    并且有（在计算协方差时，只有$\Cov(Y_i,Y_i)=\Var(Y_i)=\sigma^2$保留）：
+    并且有（在计算协方差时，只有$\Cov(Y_i,Y_i)=\Var(Y_i)=\sigma^2$项保留）：
     \begin{align*}
         \Cov(\bar{Y},\hat{\beta}_1)
         &= \Cov \left( \frac{1}{n} \sum_{i=1}^{n} Y_i, \frac{\sum_{j=1}^{n} \left(X_j - \bar{X}\right) Y_j}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right) \\
@@ -1607,6 +1689,112 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         = \frac{\sigma^2 \sum_{i=1}^{n} X_i^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
     \end{equation*}
 \end{property}
+
+\subsubsection{假设检验}
+
+在$\sigma$已知，并且满足假设的前提下，对于$\hat{\beta}_1$而言，服从如下分布：
+\begin{equation*}
+    \hat{\beta}_1 \sim N\left( \beta_1, \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right)
+\end{equation*}
+
+那么即可构建检验统计量：
+\begin{equation*}
+    \frac{\hat{\beta}_1 - \beta_1}{s.d.(\hat{\beta}_1)} \sim N(0,1)
+\end{equation*}
+
+其中$\hat{\beta}_1$的标准差：
+\begin{equation*}
+    s.d.(\hat{\beta}_1) = \frac{\sigma}{\sqrt{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}}
+\end{equation*}
+
+若$\sigma$未知，则需要使用$\hat{\sigma}$代替，使用$\hat{\beta}_1$的标准误去构建检验统计量，此时不再服从标准正态分布，而是t分布，自由度为$n-2$：
+\begin{equation*}
+    \frac{\hat{\beta}_1 - \beta_1}{s.e.(\hat{\beta}_1)} \sim t(n-2)
+\end{equation*}
+
+其中$\hat{\beta}_1$的标准误：
+\begin{equation*}
+    s.e.(\hat{\beta}_1) = \frac{\hat{\sigma}}{\sqrt{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}}
+\end{equation*}
+
+构建检验统计量之后，就可以进行假设检验，提出假设：
+\begin{align*}
+    H_0&: \beta_1 = 0 \\
+    H_1&: \beta_1 \neq 0
+\end{align*}
+
+给定显著性水平$\alpha$，当$\abs{T} > t_{\alpha/2}(n-2)$时，则说明检验统计量在$\alpha$显著性水平下显著，则拒绝原假设。
+
+\subsubsection{总变差分解与拟合优度}
+
+通过OLS估计得到了样本回归方程，此时我们希望衡量样本回归方程对数据拟合的好坏程度，这一指标通常被称为拟合优度（Goodness of fit）。在回归分析中，常见的拟合优度指标为可决系数（Coefficient of determination）或使用$R^2$表示。
+
+除了回归分析之外，衡量给定分布对数据的的拟合优度有如下常见方法：
+\begin{itemize}
+    \item Bayesian information criterion
+    \item Akaike information criterion
+    \item Chi-square test
+    \item Kolmogorov–Smirnov test
+\end{itemize}
+
+具体而言：
+\begin{equation*}
+    R^2 = \frac{\text{SSE}}{\text{SST}} = \frac{\text{SST}-\text{SSR}}{\text{SST}} = 1 - \frac{\text{SSR}}{\text{SST}}
+\end{equation*}
+
+由于SSR的大小与样本容量n的大小，已经变量的多少有关，因此不应仅采用SSR这一绝对量来衡量样本观测值与估计值偏离的大小，检验统计量应选择相对量。
+
+其中定义\textbf{总平方和}（Sum of squares total，SST）或总离差平方和，SST衡量被解释变量观测值$Y_i$总变差的大小，即在样本中的离散程度，同时可以看到将SST除以自由度$n-1$就得到了$Y_i$的样本方差：
+\begin{equation*}
+    \text{SST} = \sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2
+\end{equation*}
+
+\textbf{总残差平方和}（Error sum of squares，SSE），SSE衡量被解释变量观测值与估计值之间的总变差大小，其自由度为$n-k$
+\begin{equation*}
+    \text{SSE} = \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right)^2
+    = \sum_{i=1}^{n} e_i^2
+\end{equation*}
+
+\textbf{总回归平方和}（Regression sum of squares，SSR），SSR衡量被解释变量回归估计值的总变差大小，其自由度为$k-1$：
+\begin{equation*}
+    \text{SSR} = \sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y} \right)^2
+\end{equation*}
+
+\begin{proof}
+    对于$\hat{Y}_i$其方差应有：
+    \begin{equation*}
+        \Var(\hat{Y}_i) = \frac{1}{n} \sum_{i=1}^{n} \left( \hat{Y}_i - \E(\hat{Y}_i) \right)^2
+    \end{equation*}
+
+    其中，根据上述回归估计$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$：
+    \begin{equation*}
+        \E(\hat{Y}_i) = \frac{1}{n} \sum_{i=1}^{n} \hat{Y}_i
+        = \frac{1}{n} \sum_{i=1}^{n} \left( \hat{\beta_0} + \hat{\beta}_1 X_i \right) = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}
+        = \bar{Y}
+    \end{equation*}
+
+    可以看到SSR就是回归估计值$\hat{Y}_i$的方差。
+\end{proof}
+
+根据如上对SST、SSR与SSE的定义，那么\textbf{总变差分解}满足如下分解，即总变差（方差）能分解为两部分，一部分为能被回归解释的变差，另一部为不能被回归解释的变差：
+\begin{equation*}
+    \text{SST} = \text{SSR} + \text{SSE}
+\end{equation*}
+
+\begin{proof}
+    \begin{align*}
+        \text{SST} &= \sum_{i=1}^{n} \left(Y_i - \bar{Y}\right)^2 \\
+        &= \sum_{i=1}^{n} \left[(Y_i - \hat{Y}_i) + (\hat{Y}_i - \bar{Y})\right]^2 \\
+        &= \sum_{i=1}^{n} \left(Y_i - \hat{Y}\right)^2
+        + 2\sum_{i=1}^{n} \left(Y_i - \hat{Y}_i\right)\left(\hat{Y}_i - \bar{Y}\right)
+        + \sum_{i=1}^{n} \left(\hat{Y}_i - \bar{Y}\right)^2 \\
+        &= \text{SSR} + 2\sum_{i=1}^{n} \left(Y_i - \hat{Y}_i\right)\left(\hat{Y}_i - \bar{Y}\right) + \text{SSE} \\
+        &= \text{SSR} + 2\sum_{i=1}^{n} e_i \left[(\hat{\beta}_0 + \hat{\beta}_1 \hat{X}) - (\hat{\beta}_0 + \hat{\beta}_1 X_i)\right] + \text{SSE} \\
+        &= \text{SSR} + 2\hat{\beta}_1 \sum_{i=1}^{n} e_i \left(X_i-\bar{X}\right) + \text{SSE} \\
+        &= \text{SSR} + 2\hat{\beta}_1 \left(\sum_{i=1}^{n} e_i X_i - \bar{X}\sum_{i=1}^{n}e_i\right) + \text{SSE} \\
+        &= \text{SSR} + \text{SSE}
+    \end{align*}
+\end{proof}
 
 \subsection{多元线性回归}
 

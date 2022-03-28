@@ -66,10 +66,10 @@
     \Var(X + a) &= \Var(X) \\
     \Var(aX) &= a^2\Var(X) \\
     \Var(aX \pm bY) &= a^2\Var(X) + b^2\Var(Y) \pm 2ab \Cov(X,Y) \\
-    \Var(\sum_{i=1}^{N} X_i) &= \sum_{i,j=1}^{N}\Cov(X_i,X_j) = \sum_{i=1}^{N}\Var(X_i) + \sum_{i \neq j}\Cov(X_i,X_j) \\
-    \Var(\sum_{i=1}^{N} a_i X_i) &= \sum_{i,j=1}^{N}a_i a_j\Cov(X_i,X_j) \\
-    &= \sum_{i=1}^{N}a_i^2\Var(X_i) + \sum_{i \neq j} a_i a_j \Cov(X_i,X_j) \\
-    &= \sum_{i=1}^{N}a_i^2\Var(X_i) + 2\sum_{1 \leq i \leq j \leq N} a_i a_j \Cov(X_i,X_j)
+    \Var(\sum_{i=1}^{n} X_i) &= \sum_{i,j=1}^{n}\Cov(X_i,X_j) = \sum_{i=1}^{n}\Var(X_i) + \sum_{i \neq j}\Cov(X_i,X_j) \\
+    \Var(\sum_{i=1}^{n} a_i X_i) &= \sum_{i,j=1}^{n}a_i a_j\Cov(X_i,X_j) \\
+    &= \sum_{i=1}^{n}a_i^2\Var(X_i) + \sum_{i \neq j} a_i a_j \Cov(X_i,X_j) \\
+    &= \sum_{i=1}^{n}a_i^2\Var(X_i) + 2\sum_{1 \leq i \leq j \leq N} a_i a_j \Cov(X_i,X_j)
 \end{align*}
 
 \subsection{协方差}
@@ -384,35 +384,41 @@
 
 \subsection{标准差与标准误}
     
-\uline{标准差}与\uline{标准误}都衡量的是离散程度。标准差的对象为一次抽样里样本个体（样本量为$n$）间的离散程度。而标准误的对象，为从同一总体多次抽样得到的多个样本（每个样本量为$n$），每个的样本的某种统计量（均值、标准差、中位数，分位数等等），为该统计量的标准差。因此当统计量为样本均值时，此时样本均值标准误（Standard error of the mean，SEM）衡量的为样本均值的离散程度。
-    
-假设$x_1,x_2,\dots,x_n$为n个独立观察值，并且有总体均值为$\mu$，总体标准差为$\sigma$，并令$T = x_1 + x_2 + \dots + x_n$，样本均值为$\bar{x} = T/n$，此时有：
+\uline{标准差}与\uline{标准误}都衡量的是离散程度，区别在于两者衡量离散程度的对象不同。标准差衡量的对象为一次抽样里样本个体（样本量为$n$）间的离散程度。而标准误衡量的对象，为从同一总体多次抽样得到的多个样本（每个样本量为$n$），每个的样本的某种\uline{统计量}（均值、标准差、中位数，分位数等等），为该统计量的标准差。因此当统计量为样本均值时，此时样本均值标准误（Standard error of the mean，SEM）衡量的为样本均值的离散程度。
+
+假设$X_1,X_2,\dots,X_n$为n个独立观察值，并且有总体均值为$\mu$，总体标准差为$\sigma$，此时对于样本均值的方差有：
+\begin{align*}
+    \Var(\bar{X}) &= \Var\left(\frac{X_1 + X_2 + \dots + X_n}{n}\right) \\
+    &= \frac{1}{n^2} \Var\left(X_1 + X_2 + \dots + X_n\right) \\
+    &= \frac{1}{n^2} \left[ \Var(X_1) + \Var(X_2) + \dots + \Var(X_n) \right] \\
+    &= \frac{1}{n^2} [n\sigma^2] \\
+    &= \frac{\sigma^2}{n}
+\end{align*}
+
+可以发现样本均值服从$\bar{X}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布，分母$n$可以理解为对样本容量的调整。此时标准误$s.e.(\bar{X})$，具体而言即样本均值的标准差$s.d.(\bar{X})$（Standard deviation of the sample means）或$\sigma_{\bar{X}}$，由样本均值的方差开方得到。若总体标准差未知，当样本容量30时，样本标准差趋近于总体标准差，使用样本标准差$\hat{\sigma}$代替。
 \begin{equation*}
-    \Var(T) = \Var(x_1) + \Var(x_2) + \dots + \Var(x_n) = n \sigma^2
-\end{equation*}
-    
-对于样本均值的方差有：
-\begin{equation*}
-    \Var(\bar{x}) = \Var(\frac{T}{n}) = \frac{1}{n*2} \Var(T) = \frac{1}{n^2} n\sigma^2 = \frac{\sigma^2}{n}
+    s.e(\bar{X}) = \frac{\sigma}{\sqrt{n}}
 \end{equation*}
 
-即样本均值服从$\bar{x}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布。此时样本均值标准误，具体而言即样本均值的标准差（Standard deviation of the sample means）为：
-\begin{equation*}
-    \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
-\end{equation*}
-
-对于样本均值的标准误可以用如上简单公式计算得到，当样本量太小、正态分布假设不满足，或没有简单公式可以计算标准误时，可以采用\uline{自助法}（Bootstrapping）重抽样的方法模拟出一个抽样分布。具体而言，对于一个样本量为$N$的样本，重复进行多次有放回的随机抽样，每次抽样时，样本量也均为$N$。注意此时为有放回的抽样，因此样本中的个体可能被抽样多次。对每次抽样都计算所关注的统计量（如均值），从而可以直接获得一个关于该统计量的抽样分布。
+对于样本均值的标准误可以用如上简单公式计算得到，当样本量太小、正态分布假设不满足，或没有简单公式可以计算标准误时，可以采用\uline{自助法}（Bootstrapping）重抽样的方法模拟出一个抽样分布。具体而言，对于一个样本量为$n$的样本，重复进行多次有放回的随机抽样，每次抽样时，样本量也均为$n$。注意此时为有放回的抽样，因此样本中的个体可能被抽样多次。对每次抽样都计算所关注的统计量（如均值），从而可以直接获得一个关于该统计量的抽样分布。
 
 \subsection{Z检验}
 
-当总体均值与标准差已知，或样本量大于30时，此时的样本标准差$\hat{\sigma}$将接近总体标准差$\sigma$。Z检验（Z-test）是一种参数检验，用于检验样本与总体均值是否有差异，z统计量（z-statistic）服从z-分布或标准正态分布（查表用z-table），其中分母为样本标准误（Standard error）为$\sigma/\sqrt{n}$，$\hat{\sigma}$为样本标准差。因此有：
+Z检验（Z-test）是一种参数检验，用于当\uline{总体均值与标准差已知}，或样本量大于30时，检验样本均值与总体均值是否有显著差异。z统计量（z-statistic）服从正态分布（查表用z-table）：
 \begin{equation*}
-    z\text{-statistic} = \frac{\bar{X}-\mu}{SE(\bar{X})} = \frac{\bar{X} - \mu}{\hat{\sigma}/\sqrt{n}}
+    z\text{-statistic} = \frac{\bar{X}-\mu}{s.d.(\bar{X})} = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}}
 \end{equation*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/z-vs-t-test.png}
+    \caption{Z-test与T-test}
+    \label{fig:z-vs-t-test}
+\end{figure}
 
 \subsection{T检验}
 
-T检验（或称Student's t test）是一种参数检验，即假设样本服从或近似服从正态分布。用于样本较小（样本量小于30）或总体标准差未知。有如下常见的四个用途：
+T检验（或称Student's t test）是一种参数检验，即假设样本服从或近似服从正态分布。用于样本较小（样本量小于30）或\uline{总体标准差未知}的情形。有如下常见的四个用途：
 \begin{itemize}
     \item 单样本均值检验（One-sample t-test）:用于检验\uline{单样本的均值}是否与已知的\uline{总体均值}相等
     \item 回归系数的显著性检验（t-test for regression coefficient significance）:用于检验\uline{回归模型的解释变量对被解释变量是否有显著影响}
@@ -422,9 +428,9 @@ T检验（或称Student's t test）是一种参数检验，即假设样本服从
 
 \subsubsection{单样本检验}
 
-对于检验单样本样本均值与总体均值是否有差异（One-sample t-test），t统计量（t-statistics）服从t-分布（查表用t-table，自由度为$n-1$，$n$为样本数量），基于样本标准差。t-分布描述了的是标准化（Standardized）的样本均值$\bar{X}$与总体均值$\mu$的距离，即t统计量描述了此时\uline{样本均值距离总体均值多少个标准差}。
+对于检验单样本样本均值与总体均值是否有差异（One-sample t-test），t统计量（t-statistics）服从t-分布（查表用t-table，单样本自由度为$n-1$，$n$为样本数量），基于样本标准差。t-分布描述了的是标准化（Standardized）的样本均值$\bar{X}$与总体均值$\mu$的距离，即t统计量描述了此时\uline{样本均值距离总体均值多少个标准差}。其中分母为样本标准误（Standard error）为$\sigma/\sqrt{n}$，$\hat{\sigma}$为样本标准差。因此有：
 \begin{equation*}
-    t\text{-statistic} = \frac{\bar{X}-\mu}{SE(\bar{X})} = \frac{\bar{X}-\mu}{\hat{\sigma}/\sqrt{n}}
+    t\text{-statistic} = \frac{\bar{X}-\mu}{s.e.(\bar{X})} = \frac{\bar{X}-\mu}{\hat{\sigma}/\sqrt{n}}
 \end{equation*}
 
 如下所示为t-分布的概率密度函数（PDF），其中$\nu=n-1$为自由度，$\Gamma$为Gamma函数（Gamma function）：
@@ -448,30 +454,37 @@ T检验（或称Student's t test）是一种参数检验，即假设样本服从
 
 \subsubsection{一元回归系数检验}
 
-假设有如下线性回归模型，$x$已知，$\alpha$与$\beta$为待估参数，且$\epsilon$服从均值为0，方差未知假设为$\sigma^2$的正态分布：
+假设有如下总体回归模型，$X$已知，$\beta_0$与$\beta_1$为待估参数，且$\varepsilon$服从均值为0，方差未知假设为$\sigma^2$的正态分布：
 \begin{equation*}
-    y = \alpha + \beta x + \epsilon
+    Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
 \end{equation*}
 
-此时检验回归系数$\beta$是否等于某$\beta_0$，一般假设$\beta_0 = 0$，即原假设为$X$与$Y$两者不存在线性关系。t-统计量（或t-score）服从自由度为$n-2$的t分布：
+同时有样本回归模型：
 \begin{equation*}
-    t\text{-statistic} = \frac{\hat{\beta} - \beta_0}{SE(\hat{\beta})} \sim T_{n-2}
+    Y_i = \hat{\beta}_0 + \hat{\beta}_1 X + e_i
 \end{equation*}
 
-其中有$\hat{\beta}$的标准误为：
+此时检验回归系数估计值$\hat{\beta}_1$是否等于某$\beta'$，一般假设$\beta' = 0$，即原假设为$X$与$Y$两者不存在线性关系。t-统计量（t-statistic或t-score）服从自由度为$n-2$的t分布：
 \begin{equation*}
-    SE_{\hat{\beta}} = \frac{\sqrt{\frac{1}{n-2} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}}{\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2}}
+    t\text{-statistic} = \frac{\hat{\beta}_1 - \beta'}{s.e.(\hat{\beta}_1)} \sim T_{n-2}
 \end{equation*}
 
-对于残差，有：
+其中有$\hat{\beta}_1$的标准误，即统计量$\hat{\beta}_1$的标准差，当总体方差已知时：
 \begin{equation*}
-    \hat{\epsilon}_i = y_i - \hat{y}_i = y_i - (\hat{\alpha} + \hat{\beta} x_i )
+    s.e.(\hat{\beta}_1) = \frac{\sigma}{\sqrt{\sum_{i=1}^{n} (X_i - \bar{X})^2}}
 \end{equation*}
 
-由于残差平方和（Sum of squared residuals）为$SSR=\sum_{i=1}^n \epsilon_i^2$，可改写t-统计量为：
+当总体方差未知时，对于$\sigma^2$的无偏估计量$\hat{\sigma}^2$，即为均方残差（Mean squared error）有：
 \begin{equation*}
-    t\text{-statistic} = \frac{(\hat{\beta} - \beta_0)\sqrt{n-2}}{\sqrt{\frac{SSR}{\sum_{i=1}^{n} (x_i - \bar{x})^2}}}
+    \hat{\sigma}^2 = \frac{\text{SSE}}{n-2} = \text{MSE}
 \end{equation*}
+
+那么此时：
+\begin{align*}
+    s.e.(\hat{\beta}_1) &= \frac{\hat{\sigma}}{\sqrt{\sum_{i=1}^{n} (X_i - \bar{X})^2}} \\
+    &= \frac{\sqrt{\text{SSE}/(n-2)}}{\sqrt{\sum_{i=1}^{n} (X_i - \bar{X})^2}} \\
+    &= \frac{\sqrt{\sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2 / (n-2)}}{\sqrt{\sum_{i=1}^{n} (X_i - \bar{X})^2}}
+\end{align*}
 
 \subsubsection{多元线性回归系数}
 
@@ -595,8 +608,8 @@ F分布概率密度函数（PDF）如下图所述，为右偏（Right skew）或
 \begin{tabular}{@{}ccccc@{}}
 \toprule
 \textbf{偏差来源} & \textbf{偏差平方和} & \textbf{自由度} & \textbf{均方} & \textbf{F值} \\ \midrule
-组间 & SSB & $K-1$ & $MSB=\frac{SSB}{K-1}$ & $\frac{MSA}{MSE}$ \\
-组内 & SSE & $N-K$ & $MSE=\frac{SSE}{N-K}$ &                   \\
+组间 & SSB & $K-1$ & $MSB=\frac{\text{SSB}}{K-1}$ & $\frac{\text{MSA}}{\text{MSE}}$ \\
+组内 & SSE & $N-K$ & $MSE=\frac{\text{SSE}}{N-K}$ &                   \\
 总计 & SST & $N-1$ &                       &                   \\ \bottomrule
 \end{tabular}
 \end{table}
@@ -1394,19 +1407,19 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 一元线性回归为最简单的线性回归形式，其中只包含一个自变量与一个因变量。对于总体（Population）与样本（Sample）之间的关系，总体是我们希望研究的，如全中国人均工资与其教育水平之间的关系，但出于种种原因，我们只能从样本中推测这样的关系。方程（Function）描述的为理论关系，而模型（Model）则代表了实证中拟合关系。
 \begin{itemize}
-    \item 总体回归方程（Population regression function，PRF）：此为理论基础，代表了$Y$的均值，如何随着$X$的变化而变化，为总体均值的关系（或可以理解为代表性的个体）。如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。我们并不研究个体，影响一个大学生工资的因素很多，并没有实际研究意义。
+    \item 总体回归方程（Population regression function，PRF）：此为理论基础，代表了$Y$的均值，如何随着$X$的变化而变化，为总体均值的关系（或可以理解为代表性的个体）。如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。
     \begin{equation*}
         \E\left[ Y_i \given X_i \right] = \beta_0 + \beta_1 X_i
     \end{equation*}
-    \item 总体回归模型（Population regression model，PRM）：由于现实世界是复杂的，模型只是现实问题的简化，除了$X_i$之外影响$Y_i$的因素称之为干扰项$\varepsilon$或随机扰动项。由于干扰项的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
+    \item 总体回归模型（Population regression model，PRM）：对于样本容量为$n$的随机样本$(X_i,Y_i)$，假设其服从总体回归方程。由于现实世界是复杂的，模型只是现实问题的简化，在第$i$次观察中，除了$X_i$之外影响$Y_i$的因素$\varepsilon_i$被称为\uline{误差}项或干扰项。由于误差的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
     \begin{equation*}
         Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
     \end{equation*}
-    \item 样本回归方程（Sample regression function，SRF）：也被称为OLS回归线（OLS regression line），对于选取的$n$个样本$(X_i,Y_i)$，假设使用$\hat{\beta}_0$与$\hat{\beta}_1$为$\beta_0$与$\beta_1$的估计值。我们可以使用样本数据进行拟合并建立样本回归方程，得到真实值$Y_i$的样本估计值$\hat{Y}_i$。
+    \item 样本回归方程（Sample regression function，SRF）：也被称为OLS回归线（OLS regression line），假设使用$\hat{\beta}_0$与$\hat{\beta}_1$为$\beta_0$与$\beta_1$的估计值。我们可以使用样本数据进行拟合并建立样本回归方程，得到真实值$Y_i$的样本拟合值$\hat{Y}_i$。
     \begin{equation*}
         \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i
     \end{equation*}
-    \item 样本回归模型（Sample regression model，SRM）：最后通过样本回归模型，解释总体回归模型中所描述的实际问题。$e$为残差，代表由模型或者数据搜集或测量过程中带来的误差。
+    \item 样本回归模型（Sample regression model，SRM）：最后通过样本回归模型，解释总体回归模型中所描述的实际问题，其中$e$为\uline{残差}，观测实际值与拟合值之差。
     \begin{equation*}
         Y_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + e_i
     \end{equation*}
@@ -1506,23 +1519,23 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
 \end{align*}
 \end{proof}
 
-根据如上推导的OLS参数估计的一阶条件，还能得到下述三条性质。
+根据如上推导的OLS参数估计的一阶条件，还能得到下述三条代数性质。
 
 \begin{property}
-    点$\left(\bar{X},\bar{Y}\right)$总在OLS回归线上
+    点$\left(\bar{X},\bar{Y}\right)$总在OLS回归线上。
 
     \begin{equation*}
         \bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}
     \end{equation*}
 
     \begin{proof}
-        由对于$\partial Q/\partial \hat{\beta}_0 = 0$的一阶条件可知$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$，显然有$\bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}$。
+        由一阶条件$\partial Q/\partial \hat{\beta}_0 = 0$可知$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$，显然有$\bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}$。
     \end{proof}
     \label{ppt:ols-reg-line}
 \end{property}
 
 \begin{property}
-    OLS残差的样本和、样本均值均为零
+    OLS残差的样本和、样本均值均为零。
     \begin{equation*}
         \sum_{i=1}^{n} e_i = 0
     \end{equation*}
@@ -1536,12 +1549,12 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
         \end{equation*}
     \end{proof}
 
-    因此$\sum_{i=1}^{n} e_i=0$且$\E[e_i]=0$。
+    因此$\sum_{i=1}^{n} e_i=0$且$\E[e_i]=0$，并且等价的，拟合值$\hat{Y}_i$样本均值与${Y_i}$样本均值相等，即$\bar{\hat{Y}}=\bar{Y}$。
     \label{ppt:ols-error-mean}
 \end{property}
 
 \begin{property}
-    解释变量与OLS残差的样本协方差为零
+    解释变量与OLS残差的样本协方差为零。
     \begin{equation*}
         \sum_{i=1}^{n} X_i e_i = 0
     \end{equation*}
@@ -1555,7 +1568,7 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
             &= \frac{1}{n} \sum_{i=1}^{n} e_i X_i
         \end{align*}
     
-        根据$\partial Q / \partial \hat{\beta}_1 = 0$的一阶条件可知：
+        根据一阶条件$\partial Q / \partial \hat{\beta}_1 = 0$可知：
         \begin{equation*}
             \sum_{i=1}^{n} X_i e_i = \sum_{i=1}^{n} X_i \left(Y_i - \hat{Y}_i\right) = \sum_{i=1}^{n} X_i \left(Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i\right) = 0
         \end{equation*}
@@ -1566,27 +1579,39 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
 
 \begin{property}
     $\hat{\beta}_0$与$\hat{\beta}_1$为$Y_i$的线性组合
-    \begin{align*}
-        \hat{\beta}_1 &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
-        &= \frac{1}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \left[ \sum_{i=1}^{n} \left( X_i - \bar{X} \right) Y_i - \bar{Y} \sum_{i=1}^{n} \left( X_i - \bar{X} \right) \right] \\
-        &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) Y_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
-    \end{align*}
 
-    令$b_i = \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}$，那么可以将$\hat{\beta}_1$改写为：
+    如上文所证明$\hat{\beta}_1$为：
     \begin{equation*}
-        \hat{\beta}_1
-        = \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) Y_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
-        = \sum_{i=1}^{n} \left[\frac{ \left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}\right] Y_i
-        = \sum_{i=1}^{n} b_i Y_i
+        \hat{\beta}_1 = \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
     \end{equation*}
 
-    因此：
+    利用性质：
+    \begin{align*}
+        \sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left(Y_i - \bar{Y}\right)
+        &= \sum_{i=1}^{n} \left( X_i - \bar{X} \right) Y_i - \bar{Y} \sum_{i=1}^{n} \left( X_i - \bar{X} \right) \\
+        &= \sum_{i=1}^{n} \left( X_i - \bar{X} \right) Y_i - \bar{Y} \cancel{\left(\sum_{i=1}^{n} X_i - \sum_{i=1}^{n} \bar{X}\right)} \\
+        &= \sum_{i=1}^{n} \left( X_i - \bar{X} \right) Y_i
+    \end{align*}
+
+    可得：
+    \begin{equation*}
+        \hat{\beta}_1 = \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) Y_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+    \end{equation*}
+
+    令$b_i = \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}$，那么可以将$\hat{\beta}_1$改写为：
+    \begin{align*}
+        \hat{\beta}_1 &= \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) Y_i}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        &= \frac{(X_1 - \bar{X})Y_1}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} Y_1 + \frac{(X_2 - \bar{X})}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} Y_2 + \dots + \frac{(X_n - \bar{X})}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} Y_n \\
+        &= \sum_{i=1}^{n} b_i Y_i
+    \end{align*}
+
+    同时可以改写$\hat{\beta}_0$：
     \begin{equation*}
         \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}
         = \bar{Y} - \bar{X} \sum_{i=1}^{n} b_i Y_i
     \end{equation*}
     
-    由上可见，显然$\hat{\beta}_0$与$\hat{\beta}_1$为$Y_i$的线性组合。
+    由上可见，显然$\hat{\beta}_0$与$\hat{\beta}_1$均为$Y_i$的线性组合。
 \end{property}
 
 \begin{property}
@@ -1606,19 +1631,19 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
         = \frac{\sum_{i=1}^{n} \left(X_i - \bar{X}\right) \left( X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} = 1
     \end{align*}
 
-    此时：
+    此时，OLS估计量$\hat{\beta}_0$与$\hat{\beta}_1$为，$\beta_0$与$\beta_1$加上干扰项的线性组合：
     \begin{align*}
         \hat{\beta}_1
         &= \sum_{i=1}^{n} b_i Y_i 
-        = \sum_{i=1}^{n} b_i \left( \beta_0 + \beta_1 X_i + e_i \right) \\
-        &=  \beta_0 \sum_{i=1}^{n} b_i + \beta_1 \sum_{i=1}^{n} b_i X_i + \sum_{i=1}^{n} b_i e_i \\
-        &= \beta_1 + \sum_{i=1}^{n} b_i e_i
+        = \sum_{i=1}^{n} b_i \left( \beta_0 + \beta_1 X_i + \varepsilon_i \right) \\
+        &=  \beta_0 \sum_{i=1}^{n} b_i + \beta_1 \sum_{i=1}^{n} b_i X_i + \sum_{i=1}^{n} b_i \varepsilon_i \\
+        &= \beta_1 + \sum_{i=1}^{n} b_i \varepsilon_i
     \end{align*}
 
-    可得$\hat{\beta}_0$与$\hat{\beta}_1$的期望为如下所示，因此OLS估计量的无偏性得证：
+    可得$\hat{\beta}_0$与$\hat{\beta}_1$的期望为如下所示，当满足假设$\E(\varepsilon_i)=0$时，OLS估计量的无偏性得证：
     \begin{align*}
         \E\left( \hat{\beta}_1 \right)
-        &= \beta_1 + \sum_{i=1}^{n} b_i \E(e_i) = \beta_1 \\
+        &= \beta_1 + \sum_{i=1}^{n} b_i \E(\varepsilon_i) = \beta_1 \\
         \E\left(\hat{\beta}_0 \right)
         &= \bar{Y} - \E\left( \hat{\beta}_1 \right) \bar{X}
         = \bar{Y} - \beta_1 \bar{X} = \beta_0
@@ -1628,35 +1653,27 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
 \begin{property}
     $\hat{\beta}_0$和$\hat{\beta}_1$的方差
 
-    由于$X_i$为已知，可认为其为常数，并非随机变量，其方差为零，可知：
+    由于$X_i$为已知，可认为其为常数而非随机变量，其方差为零。根据总体回归模型$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i$，并且根据假设$\Var(\varepsilon_i \given X)$为同方差或常方差（方差为常数），即$\Var(Y_i) = \Var(Y_j) = \sigma^2 \ilsep \forall i,j$，可知：
     \begin{equation*}
-        \Var(Y_i) = \cancel{\Var(\beta_0)} + \beta_1^2 \cancel{\Var(X_i)} + \Var(e_i) = \sigma^2
+        \Var(Y_i) = \cancel{\Var(\beta_0)} + \beta_1^2 \cancel{\Var(X_i)} + \Var(\varepsilon_i) = \sigma^2
     \end{equation*}
 
-    由上可知，令$b_i = \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}$，可以将$\hat{\beta}_1$改写为：
-    \begin{equation*}
-        \hat{\beta}_1 = \sum_{i=1}^{n} b_i Y_i
-    \end{equation*}
+    由上文可知，令$b_i = \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}$，可以将$\hat{\beta}_1$改写为$\hat{\beta}_1 = \sum_{i=1}^{n} b_i Y_i$，那么此时：
+    \begin{align*}
+        \Var\left(\hat{\beta}_1\right) &= \Var\left( \sum_{i=1}^{n} b_i Y_i \right) \\
+        &= \sum_{i=1}^{n} b_i^2 \Var(Y_i) + 2b_i b_j \sum_{i\neq j} \Cov(Y_i,Y_j)
+    \end{align*}
 
-    那么：
-    \begin{equation*}
-        \Var\left(\hat{\beta}_1\right) = \Var\left( \sum_{i=1}^{n} b_i Y_i \right)
-    \end{equation*}
+    由假设$Cov(\varepsilon_i,\varepsilon_j)=0$随机误差不相关，可得到$\Cov(Y_i,Y_j)=0$，最终结果如下所示。注意：当不满足随机误差不相关时，即$\Cov(Y_i,Y_j)$非零，其本应进入方差计算，但错误假设其为零，因此导致方差有偏且被低估，及检验假设时t值变大。
+    \begin{align*}
+        \Var\left(\hat{\beta}_1\right)
+        &= \sum_{i=1}^{n} b_i^2 \Var(Y_i) \\
+        &= \Var(Y_i) \sum_{i=1}^{n} b_i^2 \\
+        &= \sigma^2 \sum_{i=1}^{n} b_i^2 \\
+        &= \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
+    \end{align*}
 
-    由$Cov(e_i,e_j)=0$随机误差不相关，可得到$\Cov(Y_i,Y_j)=0$。注意：独立一定不相关，不相关不一定独立。此时相关指线性相关，即$\rho_{XY}=0$。例如在圆上的两点，显然不线性相关，但并非独立。
-    \begin{equation*}
-        \Var(\hat{\beta}_1) = \sum_{i=1}^{n} b_i^2 \Var(Y_i)
-    \end{equation*}
-
-    由于$\Var(e_i)$为同方差，那么$\Var(Y_i) = \Var(Y_j) = \sigma^2 \ilsep \forall i,j$：
-    \begin{equation*}
-        \Var(\hat{\beta}_1)
-        = \Var(Y_i) \sum_{i=1}^{n} b_i^2
-        = \sigma^2 \sum_{i=1}^{n} b_i^2
-        = \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
-    \end{equation*}
-    
-    并且有（在计算协方差时，只有$\Cov(Y_i,Y_i)=\Var(Y_i)=\sigma^2$项保留）：
+    注意：独立一定不相关，不相关不一定独立。此时相关指线性相关，即$\rho_{XY}=0$。例如在圆上的两点，显然不线性相关，但并非独立。并且有可以推导如下性质（在计算协方差时，只有$\Cov(Y_i,Y_i)=\Var(Y_i)=\sigma^2$项保留）：
     \begin{align*}
         \Cov(\bar{Y},\hat{\beta}_1)
         &= \Cov \left( \frac{1}{n} \sum_{i=1}^{n} Y_i, \frac{\sum_{j=1}^{n} \left(X_j - \bar{X}\right) Y_j}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right) \\
@@ -1665,12 +1682,13 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
         &= 0
     \end{align*}
 
-    综上，$\hat{\beta}_0$方差有：
+    根据上述性质，$\hat{\beta}_0$方差有：
     \begin{align*}
         \Var(\hat{\beta}_0) 
         &= \Var\left( \bar{Y} - \hat{\beta}_1 \bar{X} \right) \\
         &= \Var \left(\bar{Y}\right) + \bar{X}^2 \Var\left( \hat{\beta}_1 \right) - 2\bar{X} \cancel{\Cov(\bar{Y},\hat{\beta}_1)} \\
         &= \Var\left( \frac{1}{n} \sum_{i=1}^{n} Y_i \right) + \bar{X}^2 \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        &= \frac{1}{n^2} \left(\sum_{i=1}^{n} \Var(Y_i) + \cancel{\sum_{i \neq j} \Cov(Y_i,Y_j)}\right) + \bar{X}^2 \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
         &= \frac{\sigma^2}{n} + \frac{\sigma^2 \bar{X}^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
         &= \frac{\sigma^2 \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
         + \frac{n \sigma^2 \bar{X}^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
@@ -1683,7 +1701,7 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
         = \sum_{i=1}^{n} X_i^2 - n \bar{X}^2 
     \end{equation*}
 
-    代入上式，可得：
+    代入上式，最终可得：
     \begin{equation*}
         \Var(\hat{\beta}_0)
         = \frac{\sigma^2 \sum_{i=1}^{n} X_i^2}{n \sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}
@@ -1692,24 +1710,24 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
 
 \subsubsection{假设检验}
 
-在$\sigma$已知，并且满足假设的前提下，对于$\hat{\beta}_1$而言，服从如下分布：
+在$\sigma$\uline{已知}，并且满足假设的前提下，对于$\hat{\beta}_1$而言，服从如下分布：
 \begin{equation*}
     \hat{\beta}_1 \sim N\left( \beta_1, \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right)
 \end{equation*}
 
 那么即可构建检验统计量：
 \begin{equation*}
-    \frac{\hat{\beta}_1 - \beta_1}{s.d.(\hat{\beta}_1)} \sim N(0,1)
+    \frac{\hat{\beta}_1 - \beta_1}{s.e.(\hat{\beta}_1)} \sim N(0,1)
 \end{equation*}
 
-其中$\hat{\beta}_1$的标准差：
+其中$\hat{\beta}_1$的标准误，即其标准差：
 \begin{equation*}
     s.d.(\hat{\beta}_1) = \frac{\sigma}{\sqrt{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}}
 \end{equation*}
 
-若$\sigma$未知，则需要使用$\hat{\sigma}$代替，使用$\hat{\beta}_1$的标准误去构建检验统计量，此时不再服从标准正态分布，而是t分布，自由度为$n-2$：
+若$\sigma$\uline{未知}，则需要使用$\hat{\sigma}$代替，使用$\hat{\beta}_1$的标准误去构建检验统计量，此时不再服从标准正态分布，而是t分布，自由度为$n-2$：
 \begin{equation*}
-    \frac{\hat{\beta}_1 - \beta_1}{s.e.(\hat{\beta}_1)} \sim t(n-2)
+    \frac{\hat{\beta}_1 - \beta_1}{s.e.(\hat{\beta}_1)} \sim T_{n-2}
 \end{equation*}
 
 其中$\hat{\beta}_1$的标准误：
@@ -1727,19 +1745,17 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
 
 \subsubsection{总变差分解与拟合优度}
 
-通过OLS估计得到了样本回归方程，此时我们希望衡量样本回归方程对数据拟合的好坏程度，这一指标通常被称为拟合优度（Goodness of fit）。在回归分析中，常见的拟合优度指标为可决系数（Coefficient of determination）或使用$R^2$表示。
-
-除了回归分析之外，衡量给定分布对数据的的拟合优度有如下常见方法：
+通过OLS估计得到了样本回归方程，此时我们希望衡量样本回归方程对数据拟合的好坏程度，这一指标通常被称为拟合优度（Goodness of fit）。回归分析之外，衡量给定分布对数据的的拟合优度有如下常见方法：
 \begin{itemize}
-    \item Bayesian information criterion
-    \item Akaike information criterion
+    \item Bayesian information criterion（BIC）
+    \item Akaike information criterion（AIC）
     \item Chi-square test
     \item Kolmogorov–Smirnov test
 \end{itemize}
 
-具体而言：
+在回归分析中，常见的拟合优度指标为可决系数（Coefficient of determination）或称判定系数，使用$R^2$表示。可决系数衡量可解释的波动与总波动之比，即被解释变量$Y$中有多少样本波动，能被解释变量$X$的波动解释。具体而言：
 \begin{equation*}
-    R^2 = \frac{\text{SSE}}{\text{SST}} = \frac{\text{SST}-\text{SSR}}{\text{SST}} = 1 - \frac{\text{SSR}}{\text{SST}}
+    R^2 = \frac{\text{SSR}}{\text{SST}} = \frac{\text{SST}-\text{SSE}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}}
 \end{equation*}
 
 由于SSR的大小与样本容量n的大小，已经变量的多少有关，因此不应仅采用SSR这一绝对量来衡量样本观测值与估计值偏离的大小，检验统计量应选择相对量。

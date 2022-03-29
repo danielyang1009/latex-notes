@@ -395,12 +395,23 @@
     &= \frac{\sigma^2}{n}
 \end{align*}
 
-可以发现样本均值服从$\bar{X}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布，分母$n$可以理解为对样本容量的调整。此时标准误$s.e.(\bar{X})$，具体而言即样本均值的标准差$s.d.(\bar{X})$（Standard deviation of the sample means）或$\sigma_{\bar{X}}$，由样本均值的方差开方得到。若总体标准差未知，当样本容量30时，样本标准差趋近于总体标准差，使用样本标准差$\hat{\sigma}$代替。
+可以发现样本均值服从$\bar{X}\sim N(\mu,\frac{\sigma^2}{n})$的正态分布，分母$n$可以理解为对样本容量的调整。此时标准误$s.e.(\bar{X})$，具体而言即样本均值的标准差（Standard deviation of the sample means），下文使用$s.d.(\bar{X})$或$\sigma_{\bar{X}}$表示，由样本均值的方差开方得到。若总体标准差未知，当样本容量30时，样本标准差趋近于总体标准差，使用样本标准差$\hat{\sigma}$代替。
 \begin{equation*}
     s.e(\bar{X}) = \frac{\sigma}{\sqrt{n}}
 \end{equation*}
 
 对于样本均值的标准误可以用如上简单公式计算得到，当样本量太小、正态分布假设不满足，或没有简单公式可以计算标准误时，可以采用\uline{自助法}（Bootstrapping）重抽样的方法模拟出一个抽样分布。具体而言，对于一个样本量为$n$的样本，重复进行多次有放回的随机抽样，每次抽样时，样本量也均为$n$。注意此时为有放回的抽样，因此样本中的个体可能被抽样多次。对每次抽样都计算所关注的统计量（如均值），从而可以直接获得一个关于该统计量的抽样分布。
+
+【待核实】
+当检验的为统计量时，如均值，则分母使用标准误（对应统计量的标准差）：
+\begin{equation*}
+    \frac{\bar{X} - X'}{s.e.(\bar{X})} \quad\text{或}\quad \frac{\bar{X} - X'}{s.d.(\bar{X})}
+\end{equation*}
+
+当检验的为样本中的单个观察值时，则使用标准差：
+\begin{equation*}
+    \frac{X_i - X'}{s.d.(X)}
+\end{equation*}
 
 \subsection{Z检验}
 
@@ -1407,7 +1418,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 一元线性回归为最简单的线性回归形式，其中只包含一个自变量与一个因变量。对于总体（Population）与样本（Sample）之间的关系，总体是我们希望研究的，如全中国人均工资与其教育水平之间的关系，但出于种种原因，我们只能从样本中推测这样的关系。方程（Function）描述的为理论关系，而模型（Model）则代表了实证中拟合关系。
 \begin{itemize}
-    \item 总体回归方程（Population regression function，PRF）：此为理论基础，代表了$Y$的均值，如何随着$X$的变化而变化，为总体均值的关系（或可以理解为代表性的个体）。如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。
+    \item 总体回归方程（Population regression function，PRF）：此为理论基础，无法直接观测。代表了$Y$的均值，如何随着$X$的变化而变化，为总体均值的关系（或可以理解为代表性的个体）。如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。
     \begin{equation*}
         \E\left[ Y_i \given X_i \right] = \beta_0 + \beta_1 X_i
     \end{equation*}
@@ -1710,7 +1721,9 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
 
 \subsubsection{假设检验}
 
-在$\sigma$\uline{已知}，并且满足假设的前提下，对于$\hat{\beta}_1$而言，服从如下分布：
+\subsubsection*{总体标准差已知}
+
+在$\sigma$\uline{已知}，并且满足假设的前提下，由上文推导可知$\hat{\beta}_1$服从如下分布：
 \begin{equation*}
     \hat{\beta}_1 \sim N\left( \beta_1, \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \right)
 \end{equation*}
@@ -1720,19 +1733,144 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
     \frac{\hat{\beta}_1 - \beta_1}{s.e.(\hat{\beta}_1)} \sim N(0,1)
 \end{equation*}
 
-其中$\hat{\beta}_1$的标准误，即其标准差：
+其中$\hat{\beta}_1$的标准误：
 \begin{equation*}
-    s.d.(\hat{\beta}_1) = \frac{\sigma}{\sqrt{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}}
+    s.e.(\hat{\beta}_1) = \frac{\sigma}{\sqrt{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}}
 \end{equation*}
 
-若$\sigma$\uline{未知}，则需要使用$\hat{\sigma}$代替，使用$\hat{\beta}_1$的标准误去构建检验统计量，此时不再服从标准正态分布，而是t分布，自由度为$n-2$：
+\subsubsection*{总体标准差未知}
+
+一般而言$\sigma$已知的情况较少，更多的情况$\sigma$\uline{未知}，此时可以使用样本数据估计，得到$\sigma$的估计值$\hat{\sigma}$。具体而言，虽然$\sigma^2 = \Var(\varepsilon_i) = \E(\varepsilon_i^2) = \frac{1}{n} \sum_{i=1}^{n} \varepsilon_i$，但由于误差是无法观测的，因此无法使用。而残差可以从数据中计算出来，但若直接使用残差代替误差进行估计$\frac{1}{n} \sum_{i=1}^{n} e_i = \text{SSE}/n$，可以发现该估计量其实有偏的。由于在OLS中，需要满足两个约束，即如下两个一阶条件。
+\begin{gather*}
+    \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right) = 0 \\
+    \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right) X_i = 0
+\end{gather*}
+
+因此OLS的残差只有$n-2$个自由度，即只需要知道残差中的$n-2$个，就可以通过两个一阶条件得到剩下的两个残差，因此若要得到$\sigma^2$的无偏估计量，就需要对自由度进行调整：
+\begin{equation*}
+    \hat{\sigma}^2 = \frac{\sum_{i=1}^{n} e_i^2}{n-2} = \frac{\text{SSE}}{n-2}
+\end{equation*}
+
+在假定满足的情况下，$\sigma^2$的的无偏估计有：
+\begin{equation*}
+    \E\left( \hat{\sigma}^2 \right) = \sigma^2
+\end{equation*}
+
+\begin{proof}
+    首先需要注意区分误差$\varepsilon_i$与残差$e_i$，利用总体回归模型$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i$与样本回归模型$Y_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + e_i$，将残差写为误差的函数。可以看到$e_i$不等于$\varepsilon_i$，但由于$\hat{\beta}_0$与$\hat{\beta}_1$的期望等于$\beta_0$与$\beta_1$,因此两者的期望值之差为零。
+    \begin{align*}
+        e_i &= Y_i - \hat{Y}_i \\
+        &= Y_i - \hat{\beta}_0 + \hat{\beta}_1 X_i 
+        = \left( \beta_0 + \beta_1 X_i + \varepsilon_i \right) - \hat{\beta}_0 + \hat{\beta}_1 X_i \\
+        &= \varepsilon_i - \left( \hat{\beta}_0 - \beta_0 \right) - \left( \hat{\beta}_1 - \beta_1 \right) X_i
+    \end{align*}
+    
+    对上式等式左右两侧取平均，并利用$\E\left(e_i\right)=0$，可知：
+    \begin{equation*}
+        0 = \bar{\varepsilon} - \left( \hat{\beta}_0 - \beta_0 \right) - \left( \hat{\beta}_1 - \beta_1 \right) \bar{X}
+    \end{equation*}
+
+    再与其相减，得到：
+    \begin{align*}
+        e_i &= \varepsilon_i - \left( \hat{\beta}_0 - \beta_0 \right) - \left( \hat{\beta}_1 - \beta_1 \right) X_i - \left[ \bar{\varepsilon} - \left( \hat{\beta}_0 - \beta_0 \right) - \left( \hat{\beta}_1 - \beta_1 \right) \bar{X} \right] \\
+        &= \left( \varepsilon_i - \bar{\varepsilon} \right) - \left( \hat{\beta}_1 - \beta_1 \right) \left( X_i - \bar{X} \right)
+    \end{align*}
+
+    等式两侧平方：
+    \begin{equation*}
+        e_i^2 = 
+        \left( \varepsilon_i - \bar{\varepsilon} \right)^2
+        - 2\left( \varepsilon_i - \bar{\varepsilon} \right) \left( \hat{\beta}_1 - \beta_1 \right) \left( X_i - \bar{X} \right)
+        + \left( \hat{\beta}_1 - \beta_1 \right)^2 \left(X_i - \bar{X}\right)^2
+    \end{equation*}
+
+    并对对等式两侧所有i求和，最终得到所需$\sum_{i=1}^{n} e_i^2$：
+    \begin{equation*}
+        \sum_{i=1}^{n} e_i^2 = 
+        \sum_{i=1}^{n} \left( \varepsilon_i - \bar{\varepsilon} \right)^2 
+        - 2 \left( \hat{\beta}_1 - \beta_1 \right) \sum_{i=1}^{n} \left( \varepsilon_i - \bar{\varepsilon} \right) \left( X_i - \bar{X} \right)
+        + \left( \hat{\beta}_1 - \beta_1 \right)^2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2
+    \end{equation*}
+
+    对每一项求期望，第一项有：
+    \begin{align*}
+        \E \left[ \sum_{i=1}^{n} \left( \varepsilon_i - \bar{\varepsilon} \right)^2 \right]
+        &= \E \left[ \sum_{i=1}^{n} \left( \varepsilon_i^2 - 2 \varepsilon_i \bar{\varepsilon} + \bar{\varepsilon}^2 \right) \right] \\
+        &= \E \left( \sum_{i=1}^{n}  \varepsilon_i^2 \right) - 2 \E \left( \sum_{i=1}^{n}  \varepsilon_i \bar{\varepsilon} \right) + \E \left( \sum_{i=1}^{n} \bar{\varepsilon}^2 \right) \\
+        &= \sum_{i=1}^{n} \E (\varepsilon_i)^2 - 2\E \left[ \sum_{i=1}^{n} \varepsilon_i \frac{\varepsilon_1 + \varepsilon_2 + \dots + \varepsilon_n}{n} \right] + n\E \left( \bar{\varepsilon}^2 \right) \\
+        &= \sum_{i=1}^{n} \E (\varepsilon_i)^2 - \frac{2}{n} \E \left[ \left( \varepsilon_1 + \varepsilon_2 + \dots + \varepsilon_n \right) \sum_{i=1}^{n} \varepsilon_i \right] + n \E\left[ \left(\frac{\sum_{i=1}^{n} \varepsilon_i}{n} \right)^2 \right] \\
+        &= \sum_{i=1}^{n} \Var(\varepsilon_i) - \frac{2}{n} \E \left( \sum_{i=1}^{n} \varepsilon_i \right)^2 + \frac{1}{n} \E \left( \sum_{i=1}^{n} \varepsilon_i \right)^2 \\
+        &= \sum_{i=1}^{n} \Var(\varepsilon_i) - \frac{1}{n} \E \left( \sum_{i=1}^{n} \varepsilon_i \right)^2
+    \end{align*}
+
+    其中由于$\Cov(\varepsilon_i, \varepsilon_j)=0$，所有交乘项都为0，得到：
+    \begin{equation*}
+        \frac{1}{n} \E \left( \sum_{i=1}^{n} \varepsilon_i \right)^2
+        = \frac{1}{n} \left[ \E(\varepsilon_1^2) + \E(\varepsilon_2^2) + \dots + \E(\varepsilon_n^2) \right]
+        = \sigma^2
+    \end{equation*}
+    
+    因此，对于第一项：
+    \begin{equation*}
+        \E \left[ \sum_{i=1}^{n} \left( \varepsilon_i - \bar{\varepsilon} \right)^2 \right] = n\Var(\varepsilon_i) - \sigma^2 = (n-1)\sigma^2
+    \end{equation*}
+
+    由于：
+    \begin{equation*}
+        \hat{\beta}_1 = \beta_1 + \frac{\sum_{i=1}^{n}\left(X_i - \bar{X}\right) \varepsilon_i}{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}
+    \end{equation*}
+
+    变换可得：
+    \begin{equation*}
+        \sum_{i=1}^{n}\left(X_i - \bar{X}\right) \varepsilon_i = \left( \hat{\beta}_1 - \beta_1 \right) \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2
+    \end{equation*}
+
+    将其代入第二项中：
+    \begin{align*}
+        - 2 \left( \hat{\beta}_1 - \beta_1 \right) \sum_{i=1}^{n} \varepsilon_i \left( X_i - \bar{X} \right)
+        = -2 \left( \hat{\beta}_1 - \beta_1 \right)^2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2
+    \end{align*}
+
+    由于$\E\hat{\beta}_1\ = \beta_1$，因此$\Var\left( \hat{\beta}_1 \right) = \E \left[ \left( \hat{\beta}_i - \E\hat{\beta}_1 \right)^2 \right] = \E \left[ \left( \hat{\beta}_i - \beta_1 \right)^2 \right]$。并且由于$X_i$为已知，即求的实际为$\E(\cdot \given X)$条件期望，又因$\beta_1$为常数，因此对第二项取期望应有：
+    \begin{align*}
+        -2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \E \left[ \left( \hat{\beta}_1 - \beta_1 \right)^2 \right]
+        &= -2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \Var\left(\hat{\beta}_1\right) \\
+        &= -2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \frac{\sigma^2}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2} \\
+        &= -2 \sigma^2
+    \end{align*}
+
+    对于第三项，同上可得：
+    \begin{align*}
+        \E \left[ \left( \hat{\beta}_1 - \beta_1 \right)^2 \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \right]
+        &= \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \E \left[ \left( \hat{\beta}_1 - \beta_1 \right)^2 \right] \\
+        &= \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \Var\left(\hat{\beta}_1\right) \\
+        &= \sigma^2
+    \end{align*}
+
+    最终可得：
+    \begin{equation*}
+        \E\left( \sum_{i=1}^{n} e_i^2 \right) = (n-1)\sigma^2 - 2\sigma^2 + \sigma^2 = (n-2)\sigma^2
+    \end{equation*}
+
+    因此得到$\E\left(\hat{\sigma}^2\right)=\sigma^2$：
+    \begin{equation*}
+        \E\left( \hat{\sigma}^2 \right) 
+        = \E \left( \frac{\sum_{i=1}^{n} e_i^2}{n-2} \right) 
+        = \E \left( \frac{\text{SSE}}{n-2} \right) 
+        = \sigma^2
+    \end{equation*}
+\end{proof}
+
+使用$\hat{\beta}_1$的标准误去构建检验统计量，此时不再服从标准正态分布，而是t分布，如上文所述自由度为$n-2$：
 \begin{equation*}
     \frac{\hat{\beta}_1 - \beta_1}{s.e.(\hat{\beta}_1)} \sim T_{n-2}
 \end{equation*}
 
 其中$\hat{\beta}_1$的标准误：
 \begin{equation*}
-    s.e.(\hat{\beta}_1) = \frac{\hat{\sigma}}{\sqrt{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}}
+    s.e.(\hat{\beta}_1) 
+    = \frac{\hat{\sigma}}{\sqrt{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}}
+    = \frac{\sqrt{\sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2 / (n-2)}}{\sqrt{\sum_{i=1}^{n} (X_i - \bar{X})^2}}
 \end{equation*}
 
 构建检验统计量之后，就可以进行假设检验，提出假设：
@@ -1753,12 +1891,23 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
     \item Kolmogorov–Smirnov test
 \end{itemize}
 
-在回归分析中，常见的拟合优度指标为可决系数（Coefficient of determination）或称判定系数，使用$R^2$表示。可决系数衡量可解释的波动与总波动之比，即被解释变量$Y$中有多少样本波动，能被解释变量$X$的波动解释。具体而言：
+在回归分析中，常见的拟合优度指标为判定系数（Coefficient of determination）或称可决系数，使用$R^2$表示。可决系数衡量可解释的波动与总波动之比，即被解释变量$Y$中有多少样本波动，能被解释变量$X$的波动解释。并且由于SSR的大小与样本容量n的大小，以及变量的多少有关，因此不应仅采用SSR这一绝对量来衡量样本观测值与估计值偏离的大小，检验统计量应选择相对量。具体而言：
 \begin{equation*}
     R^2 = \frac{\text{SSR}}{\text{SST}} = \frac{\text{SST}-\text{SSE}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}}
 \end{equation*}
 
-由于SSR的大小与样本容量n的大小，已经变量的多少有关，因此不应仅采用SSR这一绝对量来衡量样本观测值与估计值偏离的大小，检验统计量应选择相对量。
+另外，由于有：
+\begin{equation*}
+    \hat{Y}_i - \bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_i - \left[ \hat{\beta_0} + \hat{\beta}_1 \bar{X} \right] = \hat{\beta}_1 \left( X_i - \bar{X} \right)
+\end{equation*}
+
+因此可将判定系数改写为:
+\begin{equation*}
+    R^2 = \frac{\text{SSR}}{\text{SST}}
+    = \frac{\sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y}\right)^2}{\sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2}
+    = \hat{\beta}_1^2 \frac{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}{\sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2}
+    = \hat{\beta}_1^2 \frac{S_X^2}{S_Y^2}
+\end{equation*}
 
 其中定义\textbf{总平方和}（Sum of squares total，SST）或总离差平方和，SST衡量被解释变量观测值$Y_i$总变差的大小，即在样本中的离散程度，同时可以看到将SST除以自由度$n-1$就得到了$Y_i$的样本方差：
 \begin{equation*}
@@ -1776,26 +1925,34 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
     \text{SSR} = \sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y} \right)^2
 \end{equation*}
 
-\begin{proof}
+\begin{property}
+    SSR与$\Var(\hat{Y}_i)$
+
     对于$\hat{Y}_i$其方差应有：
     \begin{equation*}
-        \Var(\hat{Y}_i) = \frac{1}{n} \sum_{i=1}^{n} \left( \hat{Y}_i - \E(\hat{Y}_i) \right)^2
+        \Var(\hat{Y}_i) = \E \left[ \hat{Y}_i - \E(\hat{Y}_i) \right]^2
+        = \frac{1}{n} \sum_{i=1}^{n} \left[ \hat{Y}_i - \E(\hat{Y}_i) \right]^2
     \end{equation*}
 
-    其中，根据上述回归估计$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$：
+    由于$\bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}$，可得：
     \begin{equation*}
         \E(\hat{Y}_i) = \frac{1}{n} \sum_{i=1}^{n} \hat{Y}_i
         = \frac{1}{n} \sum_{i=1}^{n} \left( \hat{\beta_0} + \hat{\beta}_1 X_i \right) = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}
         = \bar{Y}
     \end{equation*}
 
-    可以看到SSR就是回归估计值$\hat{Y}_i$的方差。
-\end{proof}
+    因此可以得到：
+    \begin{equation*}
+        \Var(\hat{Y}_i) = \frac{1}{n} \sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y} \right)^2 = \frac{\text{SSR}}{n}
+    \end{equation*}
+\end{property}
 
-根据如上对SST、SSR与SSE的定义，那么\textbf{总变差分解}满足如下分解，即总变差（方差）能分解为两部分，一部分为能被回归解释的变差，另一部为不能被回归解释的变差：
-\begin{equation*}
-    \text{SST} = \text{SSR} + \text{SSE}
-\end{equation*}
+\begin{property}
+    根据如上对SST、SSR与SSE的定义，那么总平方和满足如下分解，即总平方能分解为两部分，一部分为能被回归解释的变差，另一部为不能被回归解释的变差：
+    \begin{equation*}
+        \text{SST} = \text{SSR} + \text{SSE}
+    \end{equation*}
+\end{property}
 
 \begin{proof}
     \begin{align*}
@@ -1811,6 +1968,7 @@ $\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。
         &= \text{SSR} + \text{SSE}
     \end{align*}
 \end{proof}
+
 
 \subsection{多元线性回归}
 

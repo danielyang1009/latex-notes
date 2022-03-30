@@ -57,9 +57,85 @@
 \end{align*}
 
 对于无偏的样本方差；
-\begin{align*}
+\begin{equation*}
     S^2 = \frac{1}{n-1} \sum_{i=1}^{n} \left(X_i - \bar{X} \right)^2
-\end{align*}
+\end{equation*}
+
+\begin{proof}
+    如上所述，假设使用计算总体方差的方法计算样本方差为$S_0^2$（用于区分无偏的样本方差），即：
+    \begin{equation*}
+        S_0^2 = \E[\left(X - \mu \right)^2]
+        = \frac{1}{n} \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2
+    \end{equation*}
+
+    对其取期望则有：
+    \begin{align*}
+        \E\left[S_0^2\right] 
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \right] \\
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( \left( X_i - \mu \right) - \left( \bar{X} - \mu \right) \right)^2 \right] \\
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( \left( X_i - \mu \right)^2 - 2 \left( X_i - \mu \right) \left( \bar{X} - \mu \right) + \left( \bar{X} - \mu \right)^2 \right) \right] \\
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \mu \right)^2 - \frac{2}{n} \left( \bar{X} - \mu \right) \sum_{i=1}^{n} \left( X_i - \mu \right) + \frac{1}{n} \left( \bar{X} - \mu \right)^2 \sum_{i=1}^{n} 1 \right] \\
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \mu \right)^2 - \frac{2}{n} \left( \bar{X} - \mu \right) \sum_{i=1}^{n} \left( X_i - \mu \right) + \left( \bar{X} - \mu \right)^2 \right]
+    \end{align*}
+    
+    其中对$\bar{X} - \mu$进行变形：
+    \begin{equation*}
+        \bar{X} - \mu = \frac{1}{n} \sum_{i=1}^{n} X_i - \mu
+        = \frac{1}{n} \sum_{i=1}^{n} X_i - \frac{1}{n} \sum_{i=1}^{n}\mu
+        = \frac{1}{n} \sum_{i=1}^{n} \left( X_i - \mu \right)
+    \end{equation*}
+
+    代入：
+    \begin{align*}
+        \E\left[S_0^2\right] 
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \mu \right)^2 - \frac{2}{n} \left( \bar{X} - \mu \right) \sum_{i=1}^{n} \left( X_i - \mu \right) + \left( \bar{X} - \mu \right)^2 \right] \\
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \mu \right)^2 - 2 \left( \bar{X} - \mu \right)^2 + \left( \bar{X} - \mu \right)^2 \right] \\
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \mu \right)^2 - \left( \bar{X} - \mu \right)^2 \right] \\
+        &= \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \mu \right)^2 \right] - \E\left[\left( \bar{X} - \mu \right)^2 \right] \\
+        &= \sigma^2 - \E\left[\left( \bar{X} - \mu \right)^2 \right] \\
+    \end{align*}
+
+    其中若$X_i$为独立随机变量，则应有$\Var\left( \sum_{i=1}^{n} X_i \right) = \sum_{i=1}^{n} \Var \left( X_i \right)$，并且有：
+    \begin{equation*}
+        \E\left[\bar{X}\right] 
+        = \E\left[\frac{\sum_{i=1}^{n} X_i}{n}\right]
+        = \frac{1}{n} \sum_{i=1}^{n} \E[X_i]
+        = \frac{1}{n} \sum_{i=1}^{n} \mu
+        = \mu
+    \end{equation*}
+    
+    得到：
+    \begin{align*}
+        \E\left[\left( \bar{X} - \mu \right)^2 \right]
+        &= \E\left[\left( \bar{X} - \E[\bar{X}] \right)^2 \right]
+        = \Var\left[ \bar{X} \right] \\
+        &= \Var\left[ \frac{1}{n} \sum_{i=1}^{n} X_i \right] \\
+        &= \frac{1}{n^2} \sum_{i=1}^{n} \Var(X_i) \\
+        &= \frac{n \sigma^2}{n^2} \\
+        &= \frac{\sigma^2}{n}
+    \end{align*}
+
+    最终可得：
+    \begin{equation*}
+        \E\left[S_0^2\right] 
+        = \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \right]
+        = \sigma^2 - \E\left[\left( \bar{X} - \mu \right)^2 \right]
+        = \sigma^2 - \frac{\sigma^2}{n}
+        = \frac{n-1}{n} \sigma^2
+    \end{equation*}
+
+    由此可见$S_0^2$并非无偏估计，需要对其进行调整（所谓自由度）才能得到$\sigma$的无偏估计，即：
+    \begin{equation*}
+        \sigma^2
+        = \frac{n}{n-1} \E\left[S_0^2\right]
+        = \frac{n}{n-1} \E \left[\frac{1}{n} \sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2 \right]
+    \end{equation*}
+
+    此时经过调整后得到样本方差，为总体方差的无偏估计：
+    \begin{equation*}
+        S^2 = \frac{1}{n-1} \sum_{i=1}^{n} \left(X_i - \bar{X} \right)^2
+    \end{equation*}
+\end{proof}
 
 其性质有：
 \begin{align*}
@@ -1003,7 +1079,7 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
     &= \E (X^2\given Y) - \E^2(X\given Y)
 \end{align*}
 
-\begin{proposition}
+\begin{law}
     总期望定律（Law of total expectation）或称为双重期望定理（Double expectation theorem），或称全期望公式有：
     \begin{equation*}
         \E(X) = \E\left[ \E(X\given Y) \right]
@@ -1021,7 +1097,9 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
             &= \sum_x x P(X=x) = \E(X)
         \end{align*}
     \end{proof}
-\end{proposition}
+
+    \label{law-total-expectation}
+\end{law}
 
 \begin{remark}
     或可以先展开内层期望进行证明$\E\left[ \E(X\given Y) \right] = \E\left[ \sum_x x P(X=x\given Y) \right]$。由此可以发现内层条件期望求得的结果为关于Y的函数，因此外层的期望作用于随机变量Y，而内层的期望作用于随机变量X。积分先后顺序可以对调，可以理解为一个矩形面积，可以由积分底再积分高获得，或先积分高再积分底，两者结果相同。且倒数第二步，可以将与随机变量Y无关的，只关于随机变量X的部分提出至括弧外。
@@ -1050,6 +1128,8 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
             
         将两项相加，再次根据方差定义$\Var(X) = \E(X^2) - \E^2(X)$替换，得证。
     \end{proof}
+
+    \label{law-total-variance}
 \end{proposition}
 
 \subsection{贝叶斯定理}
@@ -1416,13 +1496,13 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 \subsubsection{模型定义}
 
-一元线性回归为最简单的线性回归形式，其中只包含一个自变量与一个因变量。对于总体（Population）与样本（Sample）之间的关系，总体是我们希望研究的，如全中国人均工资与其教育水平之间的关系，但出于种种原因，我们只能从样本中推测这样的关系。方程（Function）描述的为理论关系，而模型（Model）则代表了实证中拟合关系。
+一元线性回归只包含一个自变量与一个因变量为最简单的线性回归形式。关于总体（Population）与样本（Sample）之间的关系，总体是我们希望研究的，如全中国人均工资与其教育水平之间的关系，但出于种种原因，我们只能从样本中推测这样的关系。方程（Function）描述的为理论关系，而模型（Model）则代表了实证中拟合关系。
 \begin{itemize}
-    \item 总体回归方程（Population regression function，PRF）：此为理论基础，无法直接观测。代表了$Y$的均值，如何随着$X$的变化而变化，为总体均值的关系（或可以理解为代表性的个体）。如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生工资达到某水平，显然是错误的。
+    \item 总体回归方程（Population regression function，PRF）：为理论基础，无法直接观测。方程代表了$Y$的均值如何随着$X$的变化而变化，为总体均值的关系（或可以理解为代表性的个体）。如给定大学学历的中国人口，他们的平均工资是什么水平。因此并不指总体中的所有个体，每个大学毕业生的工资都达到某水平，显然这是错误的。
     \begin{equation*}
         \E\left[ Y_i \given X_i \right] = \beta_0 + \beta_1 X_i
     \end{equation*}
-    \item 总体回归模型（Population regression model，PRM）：对于样本容量为$n$的随机样本$(X_i,Y_i)$，假设其服从总体回归方程。由于现实世界是复杂的，模型只是现实问题的简化，在第$i$次观察中，除了$X_i$之外影响$Y_i$的因素$\varepsilon_i$被称为\uline{误差}项或干扰项。由于误差的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
+    \item 总体回归模型（Population regression model，PRM）：对于样本容量为$n$的随机样本$(X_i,Y_i)$，假设其服从总体回归方程，由于现实世界是复杂的，模型只是现实问题的简化。因此第$i$次观察中，除了$X_i$之外影响$Y_i$的因素$\varepsilon_i$被称为\uline{误差}项或干扰项（无法观察）。由于误差的存在，使得$Y_i$偏离了$\E\left[ Y_i \given X_i \right]$。
     \begin{equation*}
         Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
     \end{equation*}
@@ -1430,7 +1510,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \begin{equation*}
         \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i
     \end{equation*}
-    \item 样本回归模型（Sample regression model，SRM）：最后通过样本回归模型，解释总体回归模型中所描述的实际问题，其中$e$为\uline{残差}，观测实际值与拟合值之差。
+    \item 样本回归模型（Sample regression model，SRM）：最后通过样本回归模型，解释总体回归模型中所描述的实际问题（$Y_i$），其中$e$为\uline{残差}，观测实际值与拟合值之差。
     \begin{equation*}
         Y_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + e_i
     \end{equation*}
@@ -1438,41 +1518,128 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 \subsubsection{基本假定}
 
-回归分析的主要目的，就是通过对样本分析，建立样本回归模型，从而尽可能准确的估计总体回归模型。由于引入了随机扰动项，只有对随机扰动的分布做出假定，才能正确的确定估计参数的分布性质，才能进一步进行假设检验和区间估计。
+回归分析的主要目的，就是通过对样本分析，建立样本回归模型，从而尽可能准确的估计总体回归模型。由于在观察度量的过程中引入误差项（随机扰动项），只有对误差的分布做出假定，才能正确的确定估计参数的分布性质，从而进一步进行假设检验和区间估计。
 
 根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归参数（回归系数）的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计给出的参数估计量。其中的“最优”指比较其他估计量，方差最小（离散程度最小），因此也可称为“最小方差线性无偏估计”。如上所述，对于参数估计量的标准，除了最优（Best）或称有效性，线性性（Linear），无偏性（Unbiased）还有一致性（Consistent）代表当样本数量增加，参数估计将收敛于理论值。高斯·马尔科夫对于随机扰动项$\varepsilon$有如下假设：
 \begin{itemize}
     \item $\E\left(\varepsilon_i \given X\right)=0$：条件零均值，在给定自变量$X$的条件下，随机扰动项的均值为0，即不包含任何趋势。利用全期望公式还可以推导出无条件零均值：
     \begin{equation*}
-        \E(\varepsilon_i) = \E\left[ \E \left( \varepsilon_i \given X \right) \right] = 0
+        Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
     \end{equation*}
-    \item $\Var\left(\varepsilon_i \given X \right) = \sigma^2 \leq \infty$：同方差（Homoscedastic），在给定自变量$X$的情况下，被解释变量$Y$在均值附近的波动程度是一致的，若违反需要考虑异方差。
-    \item $\Cov\left(\varepsilon_i,\varepsilon_j \given X \right) = 0 \ilsep \forall i\neq j$：序列不相关，若违反则需考虑序列相关。
-\end{itemize}
 
-对于经典线性模型，一般还有如下假设：
+    \label{ols-assumnption-1}
+\end{assumption}
+
+\begin{assumption}
+    随机抽样（Random Sampling）
+
+    $(X_i,Y_i) \ilsep i=1,\dots,n$，代表样本容量为n的服从总体回归模型的随机样本。
+
+    \label{ols-assumnption-2}
+\end{assumption}
+
+\begin{assumption}
+    解释变量的样本有波动（Variation in $X$）
+
+    样本中$X_i \ilsep i=1,\dots,n$的数值不为完全相同。若完全相同，则为一条垂直与X轴的直线，此时$\sum_{i=1}^{n} (X_i - \bar{X})^2 =0$，无法得到估计量$\hat{\beta}_1$。
+
+    \label{ols-assumnption-3}
+\end{assumption}
+
+\begin{assumption}
+    零条件均值（Zero Conditional Mean）
+
+    给定解释变量的任何值，误差的期望值都为0。
+    \begin{equation*}
+        \E\left[ \varepsilon \given X \right] = 0
+    \end{equation*}
+
+    利用全期望公式还可以推导出无条件零均值：
+    \begin{equation*}
+        \E(\varepsilon) = \E\left[ \E \left( \varepsilon \given X \right) \right] = 0
+    \end{equation*}
+
+    \label{ols-assumnption-4}
+\end{assumption}
+
+根据假设\ref{ols-assumnption-4}，还能得到性质$\Cov(X,\varepsilon)=0$。
+\begin{proof}
+    \begin{align*}
+        \Cov(X,\varepsilon) &= \E\left[ \left(X - \E[X]\right) \left(\varepsilon - \E[\varepsilon]\right)\right] \\
+        &= \E[X\varepsilon]- \E[X] \cancel{\E[\varepsilon]} \\
+        &= \E[X\varepsilon]
+    \end{align*}
+
+    利用全期望公式可知$\E[X\varepsilon] = \E\left[\E(X\varepsilon \given X)\right]$，因此：
+    \begin{align*}
+        \Cov(X,\varepsilon) &= \E\left[\E(X\varepsilon \given X)\right] \\
+        &= \E\left[ X \cancel{\E(\varepsilon \given X)}\right] \\
+        &= 0
+    \end{align*}
+
+\end{proof}
+
+\begin{assumption}
+    同方差性（Homoskedasticity）
+
+    给定解释变量的任何值，误差都具有相同的方差，即：
+    \begin{equation*}
+        \Var\left(\varepsilon_i \given X \right) = \sigma^2
+    \end{equation*}
+
+    \label{ols-assumnption-5}
+\end{assumption}
+
+根据上述假设，还能推导出如下性质：
 \begin{itemize}
-    \item $\varepsilon \sim N(0,\sigma^2)$：正态分布，正态性假设提出为了假设检验与区间估计，正态性的假定不影响对参数的点估计，只有在确定参数的统计分布时才需要。在正态性假设下，可以得到$Y \given X \sim N\left( \beta_0 + \beta_1 x, \sigma^2 \right) $
-    \item $\Cov\left(X_i,\varepsilon_i\right) = 0$：若违反需要考虑动态模型
+    \item 根据总方差定律（\ref{law-total-variance}），应有$\Var(\varepsilon) = \E\left[ \Var(\varepsilon \given X) \right] + \Var\left[ \cancel{\E(\varepsilon \given X)} \right]$，同时可以得到无条件方差$\Var\left(\varepsilon_i \right) = \sigma^2$
+    \item 由于$\Var(\varepsilon \given X) = \E(\varepsilon^2 \given X) - \left[ \cancel{\E(\varepsilon \given X)} \right]^2$，因此$\E(\varepsilon^2 \given X) = \sigma^2$
+    \item 如果假定$X$与$\varepsilon$独立，可以得到$\E(\varepsilon \given X) = \E(\varepsilon) =0$且$\Var(\varepsilon \given X)$，但独立性有时是过强的假定。
 \end{itemize}
 
-\subsubsection{普通最小二乘法}
+当$\Var(\varepsilon \given X)$取决于$X$时，则称误差项表现出异方差性（Heteroskedasticity），并且由于$\Var(\varepsilon \given X) = \Var(Y \given X)$，只要$\Var(Y \given X)$为$X$的函数时，就出现了异方差性。
 
-$\hat{Y}_i$为自变量或解释变量，通过回归模型得到的拟合值。理想的估计方法应使得理论值$Y_i$和拟合值的$\hat{Y}_i$的差，即$Y_i - \hat{Y}_i = e_i$残差尽可能的小。由于得到的结果可能为正，也可能为负，为了去除符号带来的影响，因此选择使用平方和作为作为衡量标准。定义如下函数$Q(\hat{\beta}_0, \hat{\beta}_1)$为残差的平方和函数：
+\begin{assumption}
+    误差正态性（Normality）
+
+    总体误差$\varepsilon$独立于解释变量$X$且服从均值为0、方差为$\sigma^2$的正态分布：
+    \begin{equation*}
+        \varepsilon \sim N(0,\sigma^2)
+    \end{equation*}
+
+    因此$Y \given X \sim N(\beta_0+\beta_1 X, \sigma^2)$
+    \label{ols-assumnption-6}
+\end{assumption}
+
+正态性假设提出为了假设检验与区间估计，正态性的假定不影响对参数的点估计，只有在确定参数的统计分布时才需要。此时可以将如上假设条件进行总结，如下图所示，通过假设\ref{ols-assumnption-1}至假设\ref{ols-assumnption-4}可以确保OLS估计量为线性无偏估计量），即$\E\left[\hat{\beta}_0\right]=\beta_0$与$\E\left[\hat{\beta}_1\right]=\beta_1$，即得到了估计量的均值。
+
+通过上述假设，加上同方差假设\ref{ols-assumnption-5}，可以推导OLS估计量的方差$\Var\left[\hat{\beta}_0\right]$与$\Var\left[\hat{\beta}_1\right]$。并且可以通过高斯·马尔科夫定理（Gauss-Markove Theorm），得到估计量的BLUE性质，即除了无偏，还是最优。根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归参数（回归系数）的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计给出的参数估计量。其中的“最优”指比较其他估计量，方差最小（离散程度最小），因此也可称为“最小方差线性无偏估计”。
+
+最后加上正态性假设\ref{ols-assumnption-6}，构成了经典线性模型假设（Classical linear model assumptions，CLM），如上已知了OLS估计量的均值与方差，但并未确保其分布。由于OLS估计量为随机变量$Y_i$（由于包含不可观测的误差$\varepsilon_i$）的线性组合（和）。因此根据中心极限定理 (Central limit theorem)，在大样本下，估计量将服从正态分布。而在小样本的情况下，只有正态性的假设，可能保证OLS估计量服从正态分布。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/ols-assumptions.png}
+    \caption{OLS基本假设}
+    \label{fig:ols-assumptions}
+\end{figure}
+
+\subsubsection{普通最小二乘法（OLS）}
+
+$\hat{Y}_i$为自变量或解释变量通过回归模型所得到的拟合值，在理想的估计方法下，应使得理论值$Y_i$和拟合值的$\hat{Y}_i$的差，即$e_i = Y_i - \hat{Y}_i$残差尽可能的小。由于得到的残差结果可能为正或为负，为了去除符号带来的影响，因此选择使用平方和作为衡量标准。定义如下函数$Q(\hat{\beta}_0, \hat{\beta}_1)$为残差的平方和函数，其中$\hat{\beta}_0$与$\hat{\beta}_1$为参数$\beta_0$与$\beta_1$（未知常数）的OLS估计值：
 \begin{equation*}
     Q(\hat{\beta}_0, \hat{\beta}_1)
+    = \sum_{i=1}^{n} e_i^2
     = \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right)^2
     = \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right)^2
-    = \sum_{i=1}^{n} e_i^2
 \end{equation*}
 
 并希望其最小，则有：
 \begin{equation*}
-    \min \sum_{i=1}^{n} Q(\hat{\beta}_0, \hat{\beta}_1) = \min \sum_{i=1}^{n} e_i^2
+    \min Q(\hat{\beta}_0, \hat{\beta}_1) = \min \sum_{i=1}^{n} e_i^2
 \end{equation*}
 
-对$\hat{\beta}_0$与$\hat{\beta}_1$偏导可以得到OLS参数估计的一阶条件（First
- order conditions），应有：
+由$Q$对$\hat{\beta}_0$与$\hat{\beta}_1$求偏导可以得到OLS参数估计的两个一阶条件（First order conditions）：
 \begin{align*}
     \frac{\partial Q}{\partial \hat{\beta}_0} &= -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0 \\
     \frac{\partial Q}{\partial \hat{\beta}_1} &= -2 \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) X_i = 0

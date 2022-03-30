@@ -1520,9 +1520,10 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 回归分析的主要目的，就是通过对样本分析，建立样本回归模型，从而尽可能准确的估计总体回归模型。由于在观察度量的过程中引入误差项（随机扰动项），只有对误差的分布做出假定，才能正确的确定估计参数的分布性质，从而进一步进行假设检验和区间估计。
 
-根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归参数（回归系数）的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计给出的参数估计量。其中的“最优”指比较其他估计量，方差最小（离散程度最小），因此也可称为“最小方差线性无偏估计”。如上所述，对于参数估计量的标准，除了最优（Best）或称有效性，线性性（Linear），无偏性（Unbiased）还有一致性（Consistent）代表当样本数量增加，参数估计将收敛于理论值。高斯·马尔科夫对于随机扰动项$\varepsilon$有如下假设：
-\begin{itemize}
-    \item $\E\left(\varepsilon_i \given X\right)=0$：条件零均值，在给定自变量$X$的条件下，随机扰动项的均值为0，即不包含任何趋势。利用全期望公式还可以推导出无条件零均值：
+\begin{assumption}
+    线性于参数（Linearity in Parameters）
+
+    总体回归模型的参数和随机扰动项为线性的（解释变量可以是非线性的），且模型是正确设置的。
     \begin{equation*}
         Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
     \end{equation*}

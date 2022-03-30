@@ -1516,7 +1516,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \end{equation*}
 \end{itemize}
 
-\subsubsection{基本假定}
+\subsubsection{OLS假定}
 
 回归分析的主要目的，就是通过对样本分析，建立样本回归模型，从而尽可能准确的估计总体回归模型。由于在观察度量的过程中引入误差项（随机扰动项），只有对误差的分布做出假定，才能正确的确定估计参数的分布性质，从而进一步进行假设检验和区间估计。
 
@@ -1563,7 +1563,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \label{ols-assumnption-4}
 \end{assumption}
 
-根据假设\ref{ols-assumnption-4}，还能得到性质$\Cov(X,\varepsilon)=0$。
+根据假定\ref{ols-assumnption-4}，还能得到性质$\Cov(X,\varepsilon)=0$。
 \begin{proof}
     \begin{align*}
         \Cov(X,\varepsilon) &= \E\left[ \left(X - \E[X]\right) \left(\varepsilon - \E[\varepsilon]\right)\right] \\
@@ -1612,11 +1612,11 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
     \label{ols-assumnption-6}
 \end{assumption}
 
-正态性假设提出为了假设检验与区间估计，正态性的假定不影响对参数的点估计，只有在确定参数的统计分布时才需要。此时可以将如上假设条件进行总结，如下图所示，通过假设\ref{ols-assumnption-1}至假设\ref{ols-assumnption-4}可以确保OLS估计量为线性无偏估计量），即$\E\left[\hat{\beta}_0\right]=\beta_0$与$\E\left[\hat{\beta}_1\right]=\beta_1$，即得到了估计量的均值。
+正态性假设提出为了假设检验与区间估计，正态性的假定不影响对参数的点估计，只有在确定参数的统计分布时才需要。此时可以将如上假设条件进行总结，如下图所示，通过假定\ref{ols-assumnption-1}至假定\ref{ols-assumnption-4}可以确保OLS估计量为线性无偏估计量），即$\E\left[\hat{\beta}_0\right]=\beta_0$与$\E\left[\hat{\beta}_1\right]=\beta_1$，即得到了估计量的均值。
 
-通过上述假设，加上同方差假设\ref{ols-assumnption-5}，可以推导OLS估计量的方差$\Var\left[\hat{\beta}_0\right]$与$\Var\left[\hat{\beta}_1\right]$。并且可以通过高斯·马尔科夫定理（Gauss-Markove Theorm），得到估计量的BLUE性质，即除了无偏，还是最优。根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归参数（回归系数）的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计给出的参数估计量。其中的“最优”指比较其他估计量，方差最小（离散程度最小），因此也可称为“最小方差线性无偏估计”。
+通过上述假设，加上同方差假定\ref{ols-assumnption-5}，可以推导OLS估计量的方差$\Var\left[\hat{\beta}_0\right]$与$\Var\left[\hat{\beta}_1\right]$。并且可以通过高斯·马尔科夫定理（Gauss-Markove Theorm），得到估计量的BLUE性质，即除了无偏，还是最优。根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定，则回归参数（回归系数）的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计给出的参数估计量。其中的“最优”指比较其他估计量，方差最小（离散程度最小），因此也可称为“最小方差线性无偏估计”。
 
-最后加上正态性假设\ref{ols-assumnption-6}，构成了经典线性模型假设（Classical linear model assumptions，CLM），如上已知了OLS估计量的均值与方差，但并未确保其分布。由于OLS估计量为随机变量$Y_i$（由于包含不可观测的误差$\varepsilon_i$）的线性组合（和）。因此根据中心极限定理 (Central limit theorem)，在大样本下，估计量将服从正态分布。而在小样本的情况下，只有正态性的假设，可能保证OLS估计量服从正态分布。
+最后加上正态性假定\ref{ols-assumnption-6}，构成了经典线性模型假设（Classical linear model assumptions，CLM），如上已知了OLS估计量的均值与方差，但并未确保其分布。由于OLS估计量为随机变量$Y_i$（由于包含不可观测的误差$\varepsilon_i$）的线性组合（和）。因此根据中心极限定理 (Central limit theorem)，在大样本下，估计量将服从正态分布。而在小样本的情况下，只有正态性的假设，可能保证OLS估计量服从正态分布。
 
 \begin{figure}[H]
     \centering

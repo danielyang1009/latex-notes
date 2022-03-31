@@ -1105,7 +1105,7 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
     或可以先展开内层期望进行证明$\E\left[ \E(X\given Y) \right] = \E\left[ \sum_x x P(X=x\given Y) \right]$。由此可以发现内层条件期望求得的结果为关于Y的函数，因此外层的期望作用于随机变量Y，而内层的期望作用于随机变量X。积分先后顺序可以对调，可以理解为一个矩形面积，可以由积分底再积分高获得，或先积分高再积分底，两者结果相同。且倒数第二步，可以将与随机变量Y无关的，只关于随机变量X的部分提出至括弧外。
 \end{remark}
 
-\begin{proposition}
+\begin{law}
     总方差定律（Law of total variance）有：
     \begin{equation*}
         \Var(X) = \E\left[ \Var(X\given Y) \right] + \Var\left[ \E(X\given Y) \right]
@@ -1130,7 +1130,7 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
     \end{proof}
 
     \label{law-total-variance}
-\end{proposition}
+\end{law}
 
 \subsection{贝叶斯定理}
 
@@ -1555,15 +1555,10 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         \E\left[ \varepsilon \given X \right] = 0
     \end{equation*}
 
-    利用全期望公式还可以推导出无条件零均值：
-    \begin{equation*}
-        \E(\varepsilon) = \E\left[ \E \left( \varepsilon \given X \right) \right] = 0
-    \end{equation*}
-
     \label{ols-assumnption-4}
 \end{assumption}
 
-根据假定\ref{ols-assumnption-4}，还能得到性质$\Cov(X,\varepsilon)=0$。
+利用总期望公式（\ref{law-total-expectation}）还可以推导出无条件零均值$\E(\varepsilon) = \E\left[ \E \left( \varepsilon \given X \right) \right] = 0$。再次利用总期望公式还能得到性质$\Cov(X,\varepsilon)=0$。
 \begin{proof}
     \begin{align*}
         \Cov(X,\varepsilon) &= \E\left[ \left(X - \E[X]\right) \left(\varepsilon - \E[\varepsilon]\right)\right] \\
@@ -1571,13 +1566,12 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         &= \E[X\varepsilon]
     \end{align*}
 
-    利用全期望公式可知$\E[X\varepsilon] = \E\left[\E(X\varepsilon \given X)\right]$，因此：
+    由总期望公式可知$\E[X\varepsilon] = \E\left[\E(X\varepsilon \given X)\right]$，因此：
     \begin{align*}
         \Cov(X,\varepsilon) &= \E\left[\E(X\varepsilon \given X)\right] \\
         &= \E\left[ X \cancel{\E(\varepsilon \given X)}\right] \\
         &= 0
     \end{align*}
-
 \end{proof}
 
 \begin{assumption}
@@ -1608,11 +1602,12 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
         \varepsilon \sim N(0,\sigma^2)
     \end{equation*}
 
-    因此$Y \given X \sim N(\beta_0+\beta_1 X, \sigma^2)$
     \label{ols-assumnption-6}
 \end{assumption}
 
-正态性假设提出为了假设检验与区间估计，正态性的假定不影响对参数的点估计，只有在确定参数的统计分布时才需要。此时可以将如上假设条件进行总结，如下图所示，通过假定\ref{ols-assumnption-1}至假定\ref{ols-assumnption-4}可以确保OLS估计量为线性无偏估计量），即$\E\left[\hat{\beta}_0\right]=\beta_0$与$\E\left[\hat{\beta}_1\right]=\beta_1$，即得到了估计量的均值。
+因此可得$Y \given X \sim N(\beta_0+\beta_1 X, \sigma^2)$。正态性假设提出为了假设检验与区间估计，正态性的假定不影响对参数的点估计，只有在确定参数的统计分布时才需要。
+
+此时可以将如上假定条件进行总结，如下图所示，通过假定\ref{ols-assumnption-1}至假定\ref{ols-assumnption-4}可以确保OLS估计量为线性无偏估计量），即$\E\left[\hat{\beta}_0\right]=\beta_0$与$\E\left[\hat{\beta}_1\right]=\beta_1$，即得到了估计量的均值。
 
 通过上述假设，加上同方差假定\ref{ols-assumnption-5}，可以推导OLS估计量的方差$\Var\left[\hat{\beta}_0\right]$与$\Var\left[\hat{\beta}_1\right]$。并且可以通过高斯·马尔科夫定理（Gauss-Markove Theorm），得到估计量的BLUE性质，即除了无偏估计量之外，还是最优的无偏估计量，最优指相比其他的无偏估计量，其方差最小（离散程度最小）。根据高斯·马尔科夫定理（Gauss-Markov Theorem），在线性回归模型中，如果线性模型满足高斯马尔可夫假定（即假定\ref{ols-assumnption-1}至假定\ref{ols-assumnption-5}），则回归参数（回归系数）的“最优线性无偏估计”(Best Linear Unbiased Estimator，BLUE)就是普通最小二乘法估计OLS给出的参数估计量。
 

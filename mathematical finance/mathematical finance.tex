@@ -862,15 +862,15 @@ $n$期几何平均收益率有：
 
 \subsection{关于\tops{$N(d_1)$}与\tops{$N(d_2)$}}
 
-对于期权，在定价时有两个不确定性需要考虑：
+期权的价值取决于行权后的收益，对于未能行权的期权，其收益为零，价值也为零。对于行权的期权，其收益决定于两个重要的不确定性因素：
 \begin{itemize}
-    \item 期权到行权日到底是不是实值期权（In-The-Money），是否能够行权（能不能赚钱）
-    \item 如果能行权了，那么收益的期望到底能有多少（能赚多少）
+    \item 行权概率：期权到期是否能够行权，或是否为实值期权
+    \item 行权收益：如果能够行权，那么收益的期望到底能有多少
 \end{itemize}
 
-那么$N(d_1)$与$N(d_2)$对应了两个不确定性的概率，以欧式看涨期权为例。第二项比较容易理解，$N(d_2)$为在风险中性世界中，股票被行权的概率，即为$P(S_T>K)$。因此$Ke^{-r(T-t)}N(d_2)$为在当前时刻（折现后），考虑了行权概率后，所需支付的行权费成本。
+那么$N(d_2)$与$N(d_1)$对应了上述两个不确定性的概率，以欧式看涨期权为例，$N(d_2)$为在\uline{风险中性世界}中，股票被行权的概率，即为$P(S_T>K)$。因此BSM欧式看涨期权第二项，$Ke^{-r(T-t)}N(d_2)$为在当前时刻（折现后），考虑了行权概率后，所需支付的执行价格，为成本。
 
-第二项如果理解为成本，那么第一项代表着考虑行权概率后，当前时间点的股票收益期望。要能有收益，先决条件是能行权，即首先应有$S_T>K$。因此股票在行权时的价值应为一个条件期望$\E[S_T | S_T >K]$，是基于在行权价之上。此条件期望在乘以行权概率$N(d_2)$，并折现到当前时点，应为第一项。应有：
+如果将第二项理解为成本，那么第一项代表着考虑行权概率后，在当前时间点的股票收益期望。要能有收益，先决条件是能行权，即首先应有$S_T>K$。因此股票在行权时的价值应为一个条件期望$\E[S_T | S_T >K]$，是基于在行权价之上。此条件期望在乘以行权概率$N(d_2)$，并折现到当前时点，应为第一项。应有：
 \begin{equation*}
     e^{r(T-t)} \E[S_T | S_T >K] N(d_2) = S_t N(d_1)
 \end{equation*}
@@ -925,6 +925,33 @@ $n$期几何平均收益率有：
     \quad \text{或} \quad
     \max\left[ (K - F_t) B_t,0 \right] \leq P_t \leq K B_t
 \end{equation*}
+
+\subsection{Black公式与分红}
+
+对于Black公式：
+\begin{align*}
+    C &= e^{-r\tau}\left[FN(d_1) - KN(d_2)\right] \\
+    P &= e^{-r\tau}\left[KN(-d_2) - FN(-d_1)\right]
+\end{align*}
+
+其中有：
+\begin{align*}
+    d_1 &= \frac{\ln(F/K) + \frac{1}{2} \sigma^2 \tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= \frac{\ln(F/K) - \frac{1}{2} \sigma^2 \tau}{\sigma \sqrt{\tau}}
+    = d_1 - \sigma \sqrt{\tau}
+\end{align*}
+
+假设分红的现值为PVD为未来一系列分红的贴现，即$\text{PVD} = \sum_{i=1}^{n} D_{t_i} e^{r_{t_i} t_i}$，$D_{t_i}$为在未来$t_i$时刻的分红，$r_{t_i}$为在未来$t_i$时刻的贴现率。那么应有关系$e^{-r\tau}F = S-\text{PVD}$，将其代入上述Black公式中，可得考虑了分红现值的Black公式：
+\begin{align*}
+    C &= \left(S-\text{PVD}\right) N(d_1) - e^{-r\tau} KN(d_2) \\
+    P &= e^{-r\tau}KN(-d_2) - \left(S-\text{PVD}\right) N(-d_1)
+\end{align*}
+
+此时：
+\begin{align*}
+    d_1 &= \frac{\ln\left[\left( S-\text{PVD} \right) e^{-r\tau} /K\right] + \frac{1}{2} \sigma^2 \tau}{\sigma \sqrt{\tau}} \\
+    d_2 &= d_1 - \sigma \sqrt{\tau}
+\end{align*}
 
 \section{希腊值}
 

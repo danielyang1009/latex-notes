@@ -921,17 +921,35 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
 
 \subsection{条件概率}
 
-条件概率（Conditional probability）记为$P(A\given B)$，指已知事件B发生的情况下事件A发生的概率，即把原本的样本空间，缩小为只有B发生的样本空间，从中再计算A发生的概率。而联合概率分布（Joint probability distribution）或简称为\textbf{联合分布}，表示两个事件同时发生的概率，记为$P(A,B)$或$P(A\cap B)$，其样本空间为原本未缩小的空间。
+条件概率（Conditional probability）记为$P(A\given B)$，指已知事件B发生的条件下事件A发生的概率，因此称之为条件概率。反之，如果无所谓B发生与否，希望知道A发生的概率，则为无条件概率。
 \begin{equation*}
     P(A \given B) = \frac{P(A \cap B)}{P(B)}
 \end{equation*}
 
-\begin{remark}
-    同理$P(B\given A) = \frac{P(A \cap B)}{P(A)}$，即有$P(A \cap B) = P(B\given A)P(A) = P(A\given B)P(B)$。易知同时满足AB条件的概率，即为已知满足A条件的子集中，再满足条件B的概率（为条件概率，即其样本空间为缩小后满足条件A的空间）。或满足条件B的子集中，再满足条件A的概率。
-\end{remark}
+其中联合概率分布（Joint probability distribution）或简称为\textbf{联合分布}，表示两个事件同时发生的概率，记为$P(A,B)$或$P(A\cap B)$。
+
+\begin{property}
+    同理可知$P(B\given A) = \frac{P(A \cap B)}{P(A)}$，可得：
+    \begin{equation*}
+        P(A \cap B) = P(B\given A)P(A) = P(A\given B)P(B)
+    \end{equation*}
+    
+    易知同时满足AB条件的概率，即在满足A条件的子集中$P(A)$的基础上，再满足条件B的概率$P(B \given A)$，即把原本的样本空间，限制或缩小为只有A发生的样本空间，从中再计算B发生的概率，反之亦然。
+\end{property}
+
+\begin{property}
+    同时可知：
+    \begin{align*}
+        P(A\given B) &= \frac{P(A\cap B)}{P(B)} \\
+        &= \frac{P(B\given A)P(A)}{P(B)} \\
+        &= P(B\given A) \frac{P(A)}{P(B)} 
+    \end{align*}
+
+    由上可知，两个相反的条件概率，可以通过两者的无条件概率进行转换。
+\end{property}
 
 \begin{example}
-    假设有两个小碗，分别为甲碗与乙碗，每个小碗中有若干小球，共有蓝色与黄色两种颜色，具体数量如下。
+    假设有两个小碗，分别为甲碗与乙碗，每个小碗中有若干小球，共有蓝色与黄色两种颜色，具体数量如下列列联表（Contingency table）所示：
     \begin{table}[H]
     \centering
     \begin{tabular}{cccc}\toprule
@@ -941,9 +959,24 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
     \end{tabular}
     \end{table}
 
-    那么任意选取一个碗，并从中选取一个小球，颜色为蓝色的概率应为$P(\text{蓝色})=\frac{4}{10}$，同时有$P(\text{黄色})=\frac{6}{10}$。若已知取的碗为甲碗，那么选取蓝色小球的概率应为$P(\text{蓝色}\given \text{碗}=\text{甲碗})=\frac{1}{5}$，此时样本空间改变，被限制在了甲碗中，此时称为条件概率。
-
-    若此时任意从两个碗中选取一个小球，小球颜色是蓝色，那么此时该小球是从甲碗中选取的概率为$P(\text{甲碗}\given \text{颜色}=\text{蓝色})=\frac{1}{4}$，注意$P(\text{甲碗}\given \text{蓝色})$与$P(\text{蓝色}\given \text{甲碗})$的概率并不相同。
+    那么任意选取一个碗，并从中选取一个小球，颜色为蓝色的概率应为$P(\text{蓝色})=\frac{4}{10}$，同时有$P(\text{黄色})=\frac{6}{10}$。若已知取的碗为甲碗，那么选取蓝色小球的概率，从整个样本空间观察，应有：
+    \begin{equation*}
+        P(\text{蓝色}\given \text{甲碗})
+        = \frac{P(\text{蓝色} \cap \text{甲碗})}{P(\text{甲碗})}
+        = \frac{1/10}{5/10}
+        = \frac{1}{5}
+    \end{equation*}
+    
+    或从限制的样本空间观察，此时由于已知选择的是甲碗，因此被被限制在了甲碗的样本空间中，其中只有一个蓝色的球，显然因此概率为$\frac{1}{5}$，对比无条件概率$P(\text{颜色=蓝色})=\frac{4}{10}$，此时限制了样本空间为甲碗，由于甲碗中蓝色球的概率较低，使得已知甲碗的前提下，颜色为蓝的概率下降。具体而言，由上述条件概率转换公式可知：
+    \begin{equation*}
+        P(\text{蓝色} \given \text{甲碗})
+        = P(\text{蓝色}) \frac{P(\text{甲碗}\given \text{蓝色})}{P(\text{甲碗})}
+        = \frac{4}{10} \times \frac{1/4}{5/10}
+        = \frac{4}{10} \times \frac{1}{2} 
+        = \frac{1}{5}
+    \end{equation*}
+    
+    可知，限制样本空间为甲碗，取得蓝色球的概率，只有无条件概率的一半。若此时任意从两个碗中选取一个小球，小球颜色是蓝色，那么此时该小球是从甲碗中选取的概率为$P(\text{甲碗}\given \text{颜色}=\text{蓝色})=\frac{1}{4}$，注意$P(\text{甲碗}\given \text{蓝色})$与$P(\text{蓝色}\given \text{甲碗})$的概率并不相同。
 \end{example}
 
 \begin{example}

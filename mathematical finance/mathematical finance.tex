@@ -910,6 +910,7 @@ $n$期几何平均收益率有：
     \item 对于期权的下边界，则应有应大于其内在价值。对于有红利资产，则应扣除其红利，再计算其内在价值
     \item 对于完美市场，应有看涨期权下边界为$C_t \geq \max \left[ S_t-Ke^{-r(T-t)} , 0 \right]$
     \item 同理，在完美市场中，看跌期权下边界为$P_t \geq \max \left[ Ke^{-r(T-t)} - S_t,0 \right]$
+    \item 假设标的资产的红利率（Dividend yield）为$q$，那么应将将股票价格$S$替换为$S e^{-q(T-t)}$
 \end{itemize}
 
 因此对于看涨期权，其边界应有：

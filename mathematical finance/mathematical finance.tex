@@ -29,6 +29,30 @@
     \label{fig:options-maturity-profit}
 \end{figure}
 
+\subsubsection*{术语}
+
+\begin{itemize}
+    \item Option Type：指看涨或看跌期权
+    \item Option Style：指欧式期权或美式期权
+    \item Option Chain：相同标的，所有的看涨期权\uline{和}所有看跌期权（即所有期权）
+    \item Option Class：相同标的，所有的看涨期权\uline{或}所有看跌期权（即所有相同Option Type的期权）
+    \item Option Series：相同标的，相同行权价、相同\uline{到期月份}的所有的看涨期权\uline{或}所有看跌期权
+\end{itemize}
+
+以Option Series为例，可以看到相同标的百度、相同到期月份为3月、相同行权价为80的有3个，分别为如下所示，其中除了前四位为标的，接下去的六位为YYMMDD，此时可以看到，在三月到期的有3月16日，3月22日与3月28日三个期权，其中16号为Quarterlly option，而22号为Weekly option，28号为由于周五为Easter friday，那么就移动到最近的交易日为周四：
+\begin{itemize}
+    \item BIDU130316C00080000
+    \item BIDU130322C00080000
+    \item BIDU130328C00080000
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/option-series.png}
+    \caption{Option Series}
+    \label{fig:option-series}
+\end{figure}
+
 \section{布朗运动与维纳过程}
 
 \textbf{布朗运动}（Brownian motion）指是微小粒子或者颗粒在流体中做无规则运动。在数学中将这种运动定义为\textbf{维纳过程}（Wiener process）是一种连续时间随机过程，为描述证券价格随机性的基本模型，而对于期权以及其他的金融衍生品则可认为是证券价格的函数，此时衍生品价格为证券价格这一随机过程的函数。即只需要假定标的资产遵循的随机过程，利用伊藤引理可得到衍生品遵循随机过程，使得我们可以利用随机分析（Stochastic calculus）这一工具，对期权以及其他金融衍生品的价格进行量化建模。早在1900年法国人路易斯 • 巴舍利耶（Louis Bachelier）在他的博士论文《投机理论》（Théorie de la spéculation）中首次使用随机过程（现称布朗运动）分析股票和期权的价格。比爱因斯坦于1905年提出的描述花粉粒子在水中运动的论文提早了5年。
@@ -1016,11 +1040,9 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
     \label{fig:delta-stock}
 \end{figure}
 
-如上图\ref{fig:delta-stock}所示，可以看到当Delta的\uline{绝对值}约在$0.25$附近时，看涨看跌期权都为虚值期权（OTM）。当期权处于虚值状态时，标的资产价格的变动对期权价格的影响较小。当Delta的\uline{绝对值}约$0.5$附近时，看涨与看跌期权均为平值期权（ATM），可以看到此时斜率最大，即Gamma最大（Delta对S求导）。当Delta的\uline{绝对值}约$0.75$附近时，看涨与看跌期权均为实值期权（ITM），此时标的资产变动与期权价值变动接近于$1:1$。
+如上图\ref{fig:delta-stock}所示，对于期权权利方（多方），无论看涨看跌期权，随着标的价格上涨，Delta也增大。反之若为期权义务方（空方），则随着标的价格的下跌，Delta也减小。并且可以看到当Delta的\uline{绝对值}约在$0.25$附近时，看涨看跌期权都为虚值期权（OTM）。当期权处于虚值状态时，标的资产价格的变动对期权价格的影响较小。当Delta的\uline{绝对值}约$0.5$附近时，看涨与看跌期权均为平值期权（ATM），可以看到此时斜率最大，即Gamma最大（Delta对S求导）。当Delta的\uline{绝对值}约$0.75$附近时，看涨与看跌期权均为实值期权（ITM），此时标的资产变动与期权价值变动接近于$1:1$。
 
-可以将Delta理解为期权价格与标的价格的贴合程度，以看涨期权为例，当为深度实值时，贴合程度最好，标的价格变化1单位，期权价格变化1单位。即实值贴合好，对股价变动敏感，相反虚值贴合差，对股价变动不敏感。
-
-如下图所示，随着期限不断衰减，期权价格曲线将越来越贴合期权内在价值。并且不同在值程度期权的Delta，也将随着期限的衰减，差异不断加大。实值期权Delta将加速趋近1，而虚值期权将加速趋近0，平值期权变化较小。
+可以将Delta理解为期权价格与标的价格的贴合程度，以看涨期权为例，当为深度实值时，贴合程度最好，标的价格变化1单位，期权价格变化1单位。即实值贴合好，对股价变动敏感，相反虚值贴合差，对股价变动不敏感。如下图所示，随着期限不断衰减，期权价格曲线将越来越贴合期权内在价值。并且不同在值程度期权的Delta，也将随着期限的衰减，差异不断加大。实值期权Delta将加速趋近1，而虚值期权将加速趋近0，平值期权变化较小。
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fig/delta-call-surf.png}
@@ -1042,7 +1064,7 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
     \Gamma = \frac{\partial \Delta}{\partial S} = \frac{\partial^2 V}{\partial S^2}
 \end{equation*}
 
-做多期权，有正的Gamma，标的资产价格的变化对投资者有利。具体而言，当价格上涨的时候，此时对投资者有利，随着标的资产价格的不断上涨，期权所带来的盈利越多。相反当价格下跌时，此时对投资者不利，但随着标的资产的不断下跌，损失越来越小。而作为做市商等，卖期权（期权空方），则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大，看涨期权与看跌期权的Gamma相同。
+期权权利方（多方），有正的Gamma，标的资产价格的变化对投资者有利。具体而言，当价格上涨的时候，此时对投资者有利，随着标的资产价格的不断上涨，期权所带来的盈利越多。相反当价格下跌时，此时对投资者不利，但随着标的资产的不断下跌，损失越来越小。而作为做市商等，卖期权（期权空方），则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大，看涨期权与看跌期权的Gamma相同。
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fig/gamma-surf.png}

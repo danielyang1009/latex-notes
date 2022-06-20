@@ -108,11 +108,49 @@ https://www.youtube.com/watch?v=9GOfBq5Go9U
 
 \subsection{即期利率、远期利率、到期收益率}
 
-即期利率（Spot rate）
+即期利率（Spot rate）：从t时刻开始，到T时刻到期，所有现金流只发生在T时刻的投资回报率。因而也常常被称为灵犀利率（zero-coupon interest rate or zero rate）或称零息收益率（zero-coupon yield）。同时即期利率与贴现因子是一一对应的，贴现因子只是即期利率的另一种表达。
 
-远期利率（Forward rate）
+到期收益率（Yield-tomaturity，YTM）：$y_t^T$为从t时刻开始，到T时刻到期，投资的年化平均内含回报率，可以看做是即期利率的一种加权平均，与债券价格一一对应。另外由于一般最后一笔现金流权重较大，因此到期收益率与即期收益率较为接近。具体而言，每一年都以一个相同的利率贴现，而即期利率每个时间段不同。假设一个2年到期，每年末付息的债券，那么有使用即期利率进行贴现，与使用YTM进行贴现结果应相同：
+\begin{equation*}
+    \frac{C_1}{1+s_{0,1}} +\frac{C_2+P}{1+s_{0,2}} = 
+    \frac{C_1}{1+y_{0,2}} +\frac{C_3+P}{(1+y_{0,2})^2}
+\end{equation*}
 
-到期收益率（Yield-tomaturity，YTM）：与债券价格一一对应
+对于使用连续复利，使用到期收益率计算，可以看到每期使用利率$y_t^{t_n}$不变：
+\begin{equation*}
+    V_{t_0}^{t_n} = C_1 e^{-y_{t_0,t_n}(t_1-t_0)} + C_2 e^{-y_{t_0,t_n}(t_2-t_0)}
+    + \dots + C_n e^{-y_{t_0,t_n}(t_n-t_0)}
+    = \sum_{i=1}^{n} C_i e^{-y_{t_0,t_n}\times (t_i-t_0)}
+\end{equation*}
+
+使用即期利率进行计算，对于不同时间跨度的贴现利率不同：
+\begin{equation*}
+    V_{t_0}^{t_n} = C_1 e^{-s_{t_0,t_1}(t_1-t_0)} + C_2 e^{-s_{t_0,t_2}(t_2-t_0)}
+    + \dots + C_n e^{-s_{t_0,t_n}(t_n-t_0)}
+    = \sum_{i=1}^{n} C_i e^{-s_{t_0,t_i}\times (t_i-t_0)}
+\end{equation*}
+
+远期利率（Forward rate）可视为边际利率，即对于上行的期限结构，远期利率高于长期利率。相反，对于下降的利率期限结构，那么远期利率低于长期利率。假设三个时间节点$t_0,t_1,t_2$，连续复利有可得：
+\begin{equation*}
+    e^{r_{t_0,t_1}(t_1-t_0)} \times e^{r_{t_1,t_2}(t_2-t_1)} = e^{r_{t_0,t_2}(t_2-t_0)}
+\end{equation*}
+
+那么此时远期利率$r_{t_1,t_2}$有：
+\begin{gather*}
+    r_{t_0,t_1}(t_1-t_0) + r_{t_1,t_2}(t_2-t_1) = r_{t_0,t_2}(t_2-t_0) \\
+    r_{t_1,t_2}(t_2-t_1) = r_{t_0,t_2}(t_2-t_0) - r_{t_0,t_1}(t_1-t_0) \\
+    r_{t_1,t_2} = \frac{r_{t_0,t_2}(t_2-t_0) - r_{t_0,t_1}(t_1-t_0)}{(t_2-t_1)}
+\end{gather*}
+
+期货利率：本质与远期利率相同，通过期货合约规定未来一定期限的利率，但在交易机制设计上，使得两者有一定的差异。远期利率协议报价为利率，而利率期货报价一般为价格，期货利率隐含在报价中（100-利率=94，那么利率为6\%），因此两者多头也不同，远期利率，多头规避利率上升风险。而期货利率多头（价格上涨），规避利率下跌风险。
+
+
+债券报价时使用净价而非全价：
+\begin{itemize}
+    \item 全价（full price）：现金价格（cash price）或发票价格（invoice price）
+    \item 净价（clean price）：等于全价减去应计利息（accrued interest），避免报价不连续
+\end{itemize}
+
 
 \section{利率模型导论}
 

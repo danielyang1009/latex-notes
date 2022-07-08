@@ -2886,6 +2886,51 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
     \end{verbatim}
 \end{remark}
 
+\section{面板回归}
+
+考虑时间差异$v_t$，和考虑个体i差异$\alpha_i$
+\begin{equation*}
+    Y_{it} = \beta_0 + \beta_1 X_{it} + \mu_t + \omega_i + \varepsilon_{it}
+\end{equation*}
+
+若T不大，可以使用dummy variable方法，如对每个时间创建一个虚拟变量。但一般个体数量N较大，若为个体也创建虚拟变量，处理困难。
+
+随机效应？使用Pooled OLS？即假设个体没有差异？那么此时的残差与自变量，$\Cov(\omega_i + \varepsilon_{it},X_{it}) = 0$，OLS才是consistent，unbiased的。若$\Cov(\omega_i,X_{it})=0$，即控制了所有变量，或$\omega_i$特别小时，可以直接采用Pool OLS或OLS方法。但$\Cov(\omega_i,X_{it})$不一定为0，导致有偏，且不一致，因此需要考虑固定效应，或一阶差分。
+
+可以看到如下，为三个城市，两个年份的数据，若不考虑个体差异，直接使用pooled OLS回归，那么导致斜率为负。但明显三个城市的犯罪率随着失业率提升而提高，斜率应为正。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/fe-fo-pooled-ols.png}
+    \caption{Fixed effects, First differences and Pooled OLS}
+    \label{fig:fe-fo-pooled-ols}
+\end{figure}
+
+固定效应使用差分的方法可以消除即，由于$T=2$，因此此时Fixed Effect与First diferences方法相同：
+\begin{equation*}
+    \text{crime}_{it} - \bar{\text{crime}}_i = \beta(\text{unemp}_{it} - \bar{\text{unemp}}_i) + e_{it}
+\end{equation*}
+
+对于固定效应，可以看到此时将移除time-constant即不随着时间改变的部分:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/fixed-effects.png}
+    \caption{固定效应}
+    \label{fig:fixed-effects}
+\end{figure}
+
+
+\subsection{聚类调整标准误}
+
+
+Reference
+
+\begin{itemize}
+    \item \href{https://en.wikipedia.org/wiki/Clustered\_standard\_errors}{Wiki:Clustered standard errors}
+    \item Petersen, Mitchell A., 2009, Estimating Standard Errors in Finance Panel Data Sets: Comparing Approaches, The Review of Financial Studies 22, 435–480.
+    \item Cameron, A. Colin, and Douglas L. Miller, 2015, A Practitioner’s Guide to Cluster-Robust Inference, Journal of human resources 50, 317–372.
+    \item Abadie, Alberto, Susan Athey, Guido W. Imbens, and Jeffrey Wooldridge, 2022, When Should You Adjust Standard Errors for Clustering? Unpublished Working PaperUnpublished Working Paper.
+\end{itemize}
+
 \section{条件异方差模型}
 
 波动率有一个特性称之为波动率聚类（Volatility clustering），这意味着收益率的波动率是随时间变化的，不同阶段收益率的方差是不同的，这就是异方差性（heteroskedastic）。资产收益率表现出高波动伴随着高波动时期（大牛市或者股灾的时候），而低波动又往往伴随着低波动，因此\uline{波动率之间是存在序列相关性的}，这就是“条件”一词的来源。将二者结合就有了条件异方差（Conditional heteroskedasticity）。

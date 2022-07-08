@@ -1159,6 +1159,11 @@ Long put, long delta stock/ short put, short delta stock
 
 此时需要注意，Put的Delta为负
 
+假设持有时间为t到t+1，具体操作为在t时刻时，买入Delta份看涨看跌期权（消耗现金$-C_{t}$），卖出一份股票（获得现金$+ \Delta S_{t}$）。而在t+1时刻进行平仓，那么需要卖出Delta份看涨看跌期权（获得现金$C_{t+1}$），买入一份股票（消耗现金$- \Delta S_{t+1}$）。因此整体投资组合的收益应为：
+\begin{equation*}
+    ( C_{t+1} -\Delta S_{t+1} ) + ( -C_{t} + \Delta S_{t} ) =  (C_{t+1} - C_{t}) - \Delta (S_{t+1} - S_{t})
+\end{equation*}
+
 \subsection{希腊值分解}
 
 \subsubsection{泰勒级数}
@@ -3149,6 +3154,36 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 \begin{equation*}
     x_{t+1} = x_t - \frac{f'(x_t)}{f''(x_t)}
 \end{equation*}
+
+
+\section{股指计算方法}
+
+\subsection{道琼斯}
+    
+道琼斯工业平均指数（Dow Jones Industrial Average, DJIA），计算方法为成分股的平均值，除以一个Dow Divisor。
+\begin{equation*}
+    \text{DJIA} = \frac{\sum P_i }{\text{Divisor}}
+\end{equation*}
+
+其中Divisor用于调节，当股票拆分、分拆之等，又如旧公司退出，新公司进入，使得指数保持不变。可以看到这样编制的缺点就是每支成分股都等权重的编入股指，假设A公司或B公司上涨10元，那么都将导致股指将上涨10。但若A公司的流通股数量是B的10倍，显然影响远超B公司。
+
+\subsection{标准普尔500}
+
+标准普尔500指数（Standard \& Poor's 500，S\&P 500） ，标普500是使用市值作为权重计算指数，称为Capitalization-weighted indices，简称market cap weighted，或称为Value-weighted。
+\begin{equation*}
+    \text{SP 500} = \frac{\sum P_{i,1} Q_{i,0}}{\sum P_{i,0}, Q_{i,0}}
+\end{equation*}
+
+大致编制方法为，标普500对于每个公司都计算Investable Weight Factor或IWF，用于计算可供投资者交易的$Q$，即$Q=\text{IWF}_i * \text{Total shares}_i$，用于去除掉不流通股票，这样也称为float-adjusted，分母为该成分股编入股指时的价格。
+
+\section{汇率表示方法}
+
+USD/JPY约为136，即1美元兑换136日元。USD/CNY约为6.7，即美元兑人民币为6.7。或表示为USDCNY或USD：CNY，称为USD to CNY或USD against CNY。比值的形式有：
+\begin{equation*}
+    \text{USD/CNY} = \frac{6.7}{1} = \frac{\text{CNY}}{\text{USD}}
+\end{equation*}
+
+Base currency在前，为在外汇交易中买入的货币。Quote currency在后，或称为Local currency，为在外汇交易中卖出的货币。显然此时有USD作为分母称为Base currency，而CNY作为分子为Quote currency。如果做多USD/CNY，那么即希望Base currency USD涨，从而获利，若做空USD/CNY，那么希望USD跌。若将苹果作为一种货币，假设苹果价格为2元/个或$\frac{\text{人民币}}{\text{苹果}}= \frac{2}{1}$，即有苹果：人民币为2。做多苹果，那么希望base currency涨价，即苹果涨价。此时人民币为Local currency，即希望卖出的品种，买入苹果。
 
 \end{appendices}
 

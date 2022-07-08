@@ -15,6 +15,16 @@
     \item campbell-shiller分解
 \end{itemize}
 
+计算夏普比例时：
+\begin{itemize}
+    \item 当收益率为日频，其均值乘以252（交易日，或240中国），得到年化收益率均值，而对于月频收益率则乘以12
+    \item 对于标准差的计算，当样本乘以252时，其方差分母部分放大252*252倍，但考虑到样本数目将缩小252倍
+    \item 因此对于方差而言估计值应放大252倍，而标准差应放大sqrt(252)倍
+    \item 同理对于月频数据，收益率标准差应放大sqrt(12)倍
+    \item 偏度和峰度不随着放大缩小改变
+\end{itemize}
+
+
 \section{基础}
 
 \subsection{CAPM与APT}

@@ -3178,12 +3178,77 @@ ETF有红利保护，ETF远期（中国市场未上市）无红利保护，因�
 
 \section{汇率表示方法}
 
-USD/JPY约为136，即1美元兑换136日元。USD/CNY约为6.7，即美元兑人民币为6.7。或表示为USDCNY或USD：CNY，称为USD to CNY或USD against CNY。比值的形式有：
+USD/JPY约为136，即1美元兑换136日元。USD/CNY约为6.7，即美元兑人民币为6.7，从字面理解即1美金，兑换6.7人民币。也经常表示为USDCNY或USD：CNY，称为USD to CNY或USD against CNY。在前的货币称为Base currency，在后的称为Quote currency，或称为Local currency。
+
+以做多USD/CNY为例，假设当前为6.7，一个月后上涨至6.8，即每单位USD可兑换的CNY变多，即Base currency USD对CNY上涨，从而获利。若做空USD/CNY，那么希望USD跌。根据做多做空盈利的方向而言，此时Base currency为在外汇交易者买入的货币，而Quote currency为卖出的货币，所持有的希望卖出的货币，所以也称为Local currency。
+
+若将苹果作为一种货币，假设苹果价格为2元/个（苹果）或$\frac{\text{苹果}}{\text{人民币}}= \frac{2}{1}$，即有苹果：人民币为2。做多苹果，那么希望base currency涨价，即苹果涨价。此时人民币为Local currency，即希望卖出的人民币，买入苹果。套用美元兑人民币的例子，同样可以表述为6.7 CNY/USD，此时local currency为人民币，卖出人民币，买入美元。
 \begin{equation*}
-    \text{USD/CNY} = \frac{6.7}{1} = \frac{\text{CNY}}{\text{USD}}
+    \text{USD} : \text{CNY} = 6.7:1 \quad \Rightarrow \quad 1 \text{USD} = 6.7 \text{CNY}
 \end{equation*}
 
-Base currency在前，为在外汇交易中买入的货币。Quote currency在后，或称为Local currency，为在外汇交易中卖出的货币。显然此时有USD作为分母称为Base currency，而CNY作为分子为Quote currency。如果做多USD/CNY，那么即希望Base currency USD涨，从而获利，若做空USD/CNY，那么希望USD跌。若将苹果作为一种货币，假设苹果价格为2元/个或$\frac{\text{人民币}}{\text{苹果}}= \frac{2}{1}$，即有苹果：人民币为2。做多苹果，那么希望base currency涨价，即苹果涨价。此时人民币为Local currency，即希望卖出的品种，买入苹果。
+即需要6.7元才能买入1美元，或卖出1美元能买入6.7元人民币，两种表述方式相同，但可见Base currency即为每单位或1单位该货币，为基准能兑换N单位其他国家货币。
+
+\section{利率平价}
+
+利率平价（Interest rate parity）可分为以下两种：
+\begin{itemize}
+    \item Covered Interest Rate Parity（CIP）：利用远期合约锁定远期汇率，对冲风险
+    \item Uncovered Interest Rate Parity（UIP）：不适用远期合约单对冲风险，所以是uncovered，根据有效市场假说，应该不能获得超额收益
+\end{itemize}
+
+对于CIP，使用远期汇率对冲风险。假设即期汇率S，远期汇率F（形式均为FOR/LOC，即每单位境外货币FOR，兑换多少LOC当地货币）:
+\begin{equation*}
+    (1 + i_{L}) = \frac{F_{F/L}}{S_{F/L}} (1+ i_{F})
+\end{equation*}
+
+两国利差，如中国名义（Nominal）利率为3\%，而美国利率为1\%，那么应该卖出美金，买入人民币，投资中国债券，从而赚取利差。那么未来应该人民币贬值2\%，或美元兑人民币升值2\%，不然就存在套利机会。
+
+从上式变形，等式两边都减去1：
+\begin{equation*}
+    \frac{(1 + i_{L})}{(1+ i_{F})} - 1 = \frac{i_L-i_F}{1+i_F} = \frac{F_{F/L}}{S_{F/L}} - 1 \\
+\end{equation*}
+
+因此对于CIP而言，应有如下关系，即利差与汇率变化相等：
+\begin{equation*}
+    (i_{L}-i_{F}) \approx \frac{F_{F/L}-S_{F/L}}{S_{F/L}}
+\end{equation*}
+
+\begin{example}
+    假设当前GBP/USD汇率为1.35，并且美国的利率为1.1\%，英国的利率为3.25\%，那么根据CIP远期汇率应有持有1单位本国货币（USD），$1+1.1\%$。应与1美金兑换成英镑并持有，$\tfrac{1}{S_{F/L}} \times (1+3.25\%)$，最终将其通过远期汇率兑换会美金，两者应有平价关系：
+    \begin{equation*}
+        (1+1.1\%) = \frac{1}{S_{F/L}} \times (1+3.25\%) \times F_{F/L}
+    \end{equation*}
+
+    那么：
+    \begin{equation*}
+        F_{F/D} = 1.35 \times \frac{(1+1.1\%)}{(1+3.25\%)} \approx 1.32
+    \end{equation*}
+\end{example}
+
+UIP不适用远期锁定未来汇率，假设UIP成立，未来汇率的期望，应由一下关系得到：
+\begin{equation*}
+    (1 + i_{L}) = \frac{\E(S_{t+1})}{S_t} (1+ i_{F})
+\end{equation*}
+
+若CIP与UIP都同时成立，那么：
+\begin{equation*}
+    \E (S_{t+1}) = F_{F/L}
+\end{equation*}
+
+CIP只需要无套利就能成立，由于交易成本等远远可能违反CIP。
+
+
+Carry trade：为卖出低利率国家货币，买入高利率国家货币并投资该国
+
+Diversified carry trade：买入一篮子货币
+
+
+Wikipedia reference：
+\begin{itemize}
+    \item \href{https://en.wikipedia.org/wiki/Interest_rate_parity}{Interest rate parity}
+    \item \href{https://en.wikipedia.org/wiki/Carry_(investment)#Currency}{Carry}
+\end{itemize}
 
 \end{appendices}
 

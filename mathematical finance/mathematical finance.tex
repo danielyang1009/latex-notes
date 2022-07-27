@@ -2424,26 +2424,42 @@ $F_{t}^{*}$由PCP关系计算获得，即：
 
 \subsection{\tops{$F_{t,T}$}与\tops{$S_t$}}
 
-如上部分讨论，对于对于无红利股票远期与现货，有$F_{t,T} = S_t e^{r(T-t)}$，由于持有股票的持仓成本即为占用资金的成本。而对于大宗商品等则需要考虑持仓成本，在t时刻，远期（期货）价格$F_t$与现货价格$S_t$有如下关系，易知持仓成本即将现货持有到期的成本，否则将可进行套利。由于远期为合约，只在规定到期日交割标的资产。在合约到期之前并不持有实际现货，因此无法获得持有现货的收益，并且持有现货到合约到期日的成本需计算在远期价格内，两者关系应有如下关系。其中对于商品期货，便利收益指实际持有持有现货带来的收益，一般认为由于持有现货有两点优势：可从短期商品的紧缺中获利，也可保持生产线的运转。
+如上部分讨论，对于对于无红利股票远期与现货，有$F_{t,T} = S_t e^{r(T-t)}$，由于持有股票的持仓成本即为占用资金的成本。而对于大宗商品等则需要考虑持仓成本，在t时刻，远期（期货）价格$F_t$与现货价格$S_t$有如下关系，易知持仓成本即将现货持有到期的成本，否则将可进行套利。由于远期为合约，只在规定到期日交割标的资产。在合约到期之前并不持有实际现货，因此无法获得持有现货的收益，并且持有现货到合约到期日的成本需计算在远期价格内，两者关系应有如下关系。其中对于商品期货，便利收益指实际持有持有现货带来的收益，一般认为由于持有现货有两点优势：可从短期商品的紧缺中获利，也可保持生产线的运转。由于在$t$时刻，如现货价格和净持仓成本都为已知，则可确定期货价格。相反已知期货的价格与净持仓成本，则可确定现货价格，此为期货的价格发现功能。两者为相对价格关系，基于无套利条件得到。
 \begin{align*}
     F_{t,T} &= S_t + \textbf{净持仓成本（Net cost of carry）} \\
     &= S_t + \text{合约期限内成本（Carry cost）} - \text{合约期限内收益（Carry return）} \\
     &= S_t + \text{利息成本} + \text{储藏成本（storage cost）} - \text{红利收益} - \text{便利收益（Convenience yield）}
 \end{align*}
 
-由于在$t$时刻，如现货价格和持仓成本都为已知，则可确定期货价格。相反已知期货的价格与持仓成本，则可确定现货价格，此为期货的价格发现功能。两者为相对价格关系，基于无套利条件得到。在中国往往有现货价格$S_t$大于期货价格$F_t$（期货贴水，此时有正基差），即现货价格被高估。这是由于现货做空机制不完善，很难进行融券，即使能融券成本也较高。使得套利投资者无法在现货被高估的情况下，通过卖出现货（卖出开仓）买进期货（因为只有持有现货才能卖出）进行套利。造成现货与期货市场的分割，无法达到一体化的预期。另外由于买卖现货需要交纳印花税，而期货不需要，且期货佣金往往低于现货。
-
 \subsubsection*{基差与期货升贴水}
 
-基差（Basis）指现货与远期价格之差（现货价格Spot price有时又被称为Cash price）。\textbf{注意}：如在万得中定义基差为期货价格减去现货价格。在此定义下，“负基差”指现货价格高于期货价格。如上式$F_t$与$S_t$的关系可知，现货价格高于期货价格，期货处于贴水状态，此时净持仓成本为负。
+对于商品期货而言，基差（Basis）指现货与远期价格之差（现货价格Spot price有时又被称为Cash price），即：
 \begin{equation*}
-    \textbf{基差} = \text{现货价格} - \text{期货价格}
+    \text{基差（商品期货）} = \text{现货价格} - \text{期货价格}
 \end{equation*}
 
-对于远期（期货）而言，\textbf{升水}（contango）指当期货价格高于现货价格（或未来预期即期价格），此时为期货溢价，此时有负基差。也称为正向市场（Normal market），即期限较短的合约（Near-maturity contract）价格低于期限较远的合约（Far-maturity contract）。相反而言，如期货价格低于现货价格，则称期货\textbf{贴水}（Backwardation），此时为现货溢价，有正基差。或称为逆向市场（Inverted market），即期限较短合约的价格高于期限较远的合约。
+那么对于商品期货而言：
+\begin{itemize}
+    \item 正基差：现货价格高于期货价格，期货贴水（Backwardation），净持仓成本为负。此时的市场称为逆向市场（Inverted market），即期限较短合约（Near-maturity contract）的价格高于期限较远的合约（Far-maturity contract）。
+    \item 负基差：现货价格低于期货价格，期货升水（Contango，支付交易延期费），净持仓成本为正。此时的市场被称之为正向市场或正常市场（Normal market），即期限较短的合约价格低于期限较远的合约。之所以称之为正向市场，由于大多数商品期货储藏成本较大，大于便利收益，使得期货升水。
+\end{itemize}
 
-需要注意的是，与商品期货相反，\uline{在金融期货中，一般定义基差为期货价格减去现货价格}。因此，当金融期货贴水，称有负基差，而金融期货，称有正基差。
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/backwardation.jpg}
+        \caption{期货贴水（Backwardation）}
+        \label{fig:backwardation}
+    \end{subfigure}%
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/contango.jpg}
+        \caption{期货升水（Contango）}
+        \label{fig:contango}
+    \end{subfigure}
+    \caption{商品期货贴水与升水}
+\end{figure}
 
+另外随着到期时间的临近，期货价格将收敛于现货价格：
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -2456,8 +2472,17 @@ $F_{t}^{*}$由PCP关系计算获得，即：
         \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,0.5) -- (0,2.5) node[midway,right,xshift=0.6em]{\small 正基差};
         \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=0.2em}] (0,2.5) -- (0,4.5) node[midway,right,xshift=0.6em]{\small 负基差};
     \end{tikzpicture}
-    \caption{$F_{t,T}$与$S_t$}
+    \caption{商品期货市场$F_{t,T}$与$S_t$}
 \end{figure}
+
+\subsubsection*{金融期货}
+
+需要格外注意的是，与商品期货相反，\uline{在金融期货中，一般定义基差为期货价格减去现货价格}，即：
+\begin{equation*}
+    \text{基差（金融期货）} = \text{期货价格} - \text{现货价格}
+\end{equation*}
+
+因此，当金融期货贴水，即期货价格小于现货价格，称有负基差。而金融期货升水，或期货价格大于现货价格，称有正基差。在中国市场中，在股指期货中一般存在期货贴水的现象，即现货价格$S_t$大于期货价格$F_t$（期货贴水），现货价格被高估。这是由于现货做空机制不完善，很难进行融券，即使能融券成本也较高。使得套利投资者在现货被高估的情况下，难以通过卖出现货（卖出开仓）买进期货进行\textbf{反向套利}（Reversed cash and carry arbitrage；买入现货卖出期货为\textbf{正向套利}）。造成现货与期货市场的分割，无法达到一体化的预期。另外由于买卖现货需要交纳印花税，而期货不需要，且期货佣金往往低于现货。
 
 \subsection{\tops{$F_{t,T}$}与\tops{$\E_t[S_T]$}}
 
@@ -2468,7 +2493,7 @@ $F_{t}^{*}$由PCP关系计算获得，即：
 
 从现货角度出发，在现实测度下设$\mu$为到期收益率，则应有$\E_t[S_T]=S_t e^{\mu(T-t)}$，此时$\mu$为无风险收益率与风险溢酬之和。如果标的资产$S$\textbf{系统性风险为正}，则要求有\textbf{正的风险溢酬}。在T时刻，假设期货价格$S_T = F_{T,T}$为2000，标的资产的系统风险为正，对持有者不利，则要求500元的正的风险溢价为承担风险的补偿，此时$S_t$为1500元。则有到期收益率大于无风险收益率$\mu>r$，因为承担额外的风险需要额外的风险溢酬作为回报。
 
-\begin{figure}[H]  
+\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.5\textwidth}
     \begin{tikzpicture}[scale=0.9]
@@ -2503,7 +2528,7 @@ $F_{t}^{*}$由PCP关系计算获得，即：
     \label{fig:M2}  
     \end{subfigure}
     \caption{现实测度下$F_{t,T}=S_t e^{r(T-t)}$与$\E(S_T)$}
-\end{figure}  
+\end{figure}
 
 相反，如果标的资产$S$\textbf{系统性风险为负}（如VIX系统性风险为负），则应有\textbf{负的风险溢酬}。即标的资产能对冲风险，减少风险敞口，此时风溢酬为负，减少收益，使得到期收益率小于无风险收益率$\mu<r$。
 

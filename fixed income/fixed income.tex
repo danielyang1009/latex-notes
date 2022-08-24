@@ -15,29 +15,43 @@
 
 \subsection{久期}
 
-什么是久期（Duration）：
+久期（Duration）衡量利率变动（1\%）对债券价格的影响，即衡量债券对利率的敏感程度（Sensitivity）或暴露（Exposure），即衡量了利率风险的大小（Interest rate risk）。那么高久期意味着利率变动对债券价格影响大，或债券价格对利率变动更敏感。反之，对于第久期的债券，利率变动对其影响较小。
 \begin{itemize}
-    \item 利率变动（1\%）对债券价格的影响。例如当久期为3时，利率每上涨1\%，将使得债券价格下跌3\%。
-    \item 高久期意味着利率变动对债券价格影响大，或债券价格对利率变动更敏感，即衡量sensitivity或exposure。
-    \item 债券期限越长，受到利率影响更大，久期越大。相反，债券期限越短，受到利率影响更小，久期越小。
-    \item 票息越小，那么更少的金额在最终到期之前被支付，因而久期越大。假设一个零息债券，所有的现金流都在到期日，那么受利率影响最大。相反，票息越大，现金流越在期限内平摊开来，久期越小。
+    \item 期限影响：债券期限越长，受到利率影响更大，则久期越大。相反，债券期限越短，受到利率影响更小，久期越小。假设一笔隔夜偿还的债券，和一笔十年偿还的债券，显然期限更长的债券受利率影响更大。
+    \item 票息影响：票息越小，那么更少的金额在最终到期之前被支付，因而久期越大。假设一个零息债券，只有一笔本金在到期日支付，此时所有的现金流都在到期日，那么受利率影响最大。相反，票息越大，现金流越在期限内平摊开来，久期越小。
 \end{itemize}
 
-一般情况下提到久期一般指麦考利久期（Macaulay Duration），令$V=\sum_{i=1}^{t} PV_i$为所有现金流的现值之和：
+\subsection*{麦考利久期}
+
+一般情况下提到久期一般指麦考利久期（Macaulay Duration），对于一个支付n期票息债券，$CF_i$为每一期现金流，y为到期收益率（YTM），M为面值额债券，此时每一期的现值$PV_i$应有$\text{PV}_i = \frac{\text{CF}_i}{(1+y)^i}$。此时债券现值TPV（Total Present Value）为所有现金流现值之和，用P表示：
 \begin{equation*}
-    \text{MacD} = \frac{\sum_{i=1}^{t} t \times PV_i}{\sum_{i=1}^{t} PV_i}
-    = \frac{\sum_{i=1}^{t}t\times PV_i}{V} = \sum_{i=1}^{t} \frac{PV_i}{V} \times t
+    P = \sum_{i=1}^{n} \text{PV}_i = \sum_{i=1}^{n} \frac{\text{CF}_i}{(1+y)^i}
 \end{equation*}
 
-P为价格，n为期限，y为到期收益率，M为面值：
-\begin{equation*}
-    \text{MacD} = \left(\sum_{i=1}^{n} \frac{iC}{(1+y)^i} + \frac{nM}{(1+y)^n}\right) \bigg/ P
-\end{equation*}
+此时定义麦考利久期如下：
+\begin{align*}
+    \text{MacD} &= \frac{\sum_{i=1}^{n} t_i \times PV_i}{P}
+    = \sum_{i=1}^{n} \left( t_i \times \frac{PV_i}{P} \right) \\
+    &= \left[ \frac{1 \text{CF}_1}{(1+y)^1} + \frac{2\text{CF}_2}{(1+y)^2} + \dots + \frac{n \text{CF}_n}{(1+y)^{n}} \right] \frac{1}{P}
+\end{align*}
 
-同时现值P有：
-\begin{equation*}
-    P = \sum_{i=1}^{n} \frac{C}{(1+y)^i} + \frac{M}{(1+y)^n}
-\end{equation*}
+可以看到事实上久期计算的为加权平均的债券期限，其中权重为每一笔现金流现值占所有现金流现值的比值。若使用连续复利计算（Continuously compounded），则有：
+\begin{gather*}
+    P = \sum_{i=1}^{n} \text{PV}_i = \sum_{i=1}^{n} \text{CF}_i e^{-y t_i} \\
+    \text{MacD} = \sum_{i=1}^{n} t_i \frac{\text{CF}_i e^{-y t_i}}{P}
+\end{gather*}
+
+\begin{example}
+    假设如下图所示两年期面值为100的债券，半年一次支付票息，票面利率为20\%，到期收益率为3.9605\%。此时该债券的麦考瑞久期应有：
+    \begin{align*}
+        \text{MacD} &= \left[ 0.5 \times \frac{10}{(1+0.039605)^{0.5}}
+        + 1 \times \frac{10}{(1+0.039605)^{1}} \right. \\
+        & \qquad \left. + 1.5 \times \frac{10}{(1+0.039605)^{1.5}}
+        + 2 \times \frac{110}{(1+0.039605)^{2}} \right] \frac{1}{P} \\
+        &= \frac{0.5 \times 9.81 + 1 \times 9.62 + 1.5 \times 9.43 + 2 \times 101.78}{9.81 + 9.62 + 9.43 + 101.78} \\
+        &\approx 1.78
+    \end{align*}
+\end{example}
 
 \begin{figure}[H]
     \centering
@@ -46,44 +60,90 @@ P为价格，n为期限，y为到期收益率，M为面值：
     \label{fig:duration}
 \end{figure}
 
-可以看到事实上久期计算的为加权平均的债券期限，其中权重为每一笔现金流现值，占所有现金流现值的比值。乘以每一笔现金流期限（支付时间），计算得到麦考利久期。
-
-\begin{example}
-
-https://www.youtube.com/watch?v=9GOfBq5Go9U
-    
-上涨下跌1\%，那么新的债券价格应有，（1-久期*利率变化）*V
-
-此时假设利率变化与债券价格为线性
-
-\end{example}
-
-对于修正久期（Modified duration），其中$k$为复利计算频率（1为每年，2为半年...），$y_k$为按k周期复利计算的YTM，有：
+麦考利久期的计算方式与计算重心（Center of mass）的方式相同，实质为计算所有现金流现值（$PV_i$）的重心位置。重心的计算公式（一维）有如下所示（$m$为每个部分的重量，$x$为距离）：
 \begin{equation*}
-    \text{ModD} = \frac{\text{MacD}}{1+y_k/k}
+    x_{cm} = \frac{m_1 x_1 + m_2 x_2 + \dots + m_n x_n}{m_1 + m_2 + \dots + m_n}
 \end{equation*}
 
-当$k=1$时，由上可知：
+\subsection*{修正久期}
+
+麦考利久期只是衡量了利率风险的相对大小，即一个10年久期的债券，比5年久期的债券风险更大，而修正久期就对其进行了量化。例如：当修正久期为3时，利率每上涨1\%，将使得债券价格下跌3\%。因此定义修正久期（Modified duration）为，对于利率变化债券价格变化的百分比：
 \begin{equation*}
-    P = \sum_{i=1}^{n} \frac{C}{(1+y)^i} + \frac{M}{(1+y)^n}
+    \text{ModD} = -\frac{1}{P} \frac{\partial P}{\partial y} = \frac{\partial \ln P}{\partial y}
+\end{equation*}
+
+当复利计算频率为1，由上可知：
+\begin{equation*}
+    P = \sum_{i=1}^{n} \text{PV}_i = \sum_{i=1}^{n} \frac{\text{CF}_i}{(1+y)^i}
+    = \frac{\text{CF}_1}{(1+y)^1} + \frac{\text{CF}_2}{(1+y)^2} + \dots + \frac{\text{CF}_n}{(1+y)^{n}}
 \end{equation*}
 
 对y求导可得：
 \begin{equation*}
-    \frac{dP}{dy} = \frac{(-1)C}{(1+y)^2} + \frac{(-2)C}{(1+y)^3} + \dots + \frac{(-n)C}{(1+y)^{n+1}} + \frac{(-n)M}{(1+y)^{n+1}}
+    \frac{\partial P}{\partial y} = \frac{(-1)\text{CF}_1}{(1+y)^2} + \frac{(-2)\text{CF}_2}{(1+y)^3} + \dots + \frac{(-n)\text{CF}_n}{(1+y)^{n+1}}
 \end{equation*}
 
-等式两边同乘$1/P$，并提取$-1/(1+y)$，可以看到后半部分即为麦考利久期：
+将$\frac{-1}{(1+y)}$提出，等式两边同乘$\frac{1}{P}$，可以看到后半部分为麦考利久期：
 \begin{align*}
-    \frac{dP}{dy} \frac{1}{P} &= -\frac{1}{1+y} \left\{ \left[ \frac{C}{(1+y)^1} + \frac{2C}{(1+y)^2} + \dots + \frac{nC}{(1+y)^{n}} + \frac{nM}{(1+y)^{n}} \right] \frac{1}{P} \right\} \\
+    \frac{\partial P}{\partial y} \frac{1}{P} &= -\frac{1}{1+y} \left[ \frac{\text{CF}_1}{(1+y)^1} + \frac{2\text{CF}_2}{(1+y)^2} + \dots + \frac{n \text{CF}_n}{(1+y)^{n}} \right] \frac{1}{P} \\
     &= -\frac{1}{1+y} \times \text{MacD} \\
     &= - \text{ModD}
 \end{align*}
 
-因此对于y较小的变化，有：
+其中$k$为复利计算频率（1为每年，2为半年...），$y_k$为按k周期复利计算的YTM，有如下关系。当使用连续复利进行计算时，即$k=\infty$时，有麦考利久期与修正久期相等$\text{ModD} = \text{MacD}$。
 \begin{equation*}
-    \frac{\Delta P}{P} = - \text{ModD} \times \Delta y
+    \text{ModD} = \frac{\text{MacD}}{1+y_k/k}
 \end{equation*}
+
+当使用连续复利计算时，由上可知：
+\begin{equation*}
+    P = \text{CF}_1 e^{-y1} + \text{CF}_2 e^{-y2} + \dots + \text{CF}_n e^{-yn}
+\end{equation*}
+
+同样对y求导，
+\begin{equation*}
+    \frac{dP}{dy} = -1 \text{CF}_1 e^{-y1} -2 \text{CF}_2 e^{-y2} - \dots -n \text{CF}_n e^{-yn}
+\end{equation*}
+
+并同乘$-\frac{1}{P}$，同时根据久期的定义，同样可以发现当使用连续复利进行计算时，麦考利久期与修正久期相等。
+\begin{align*}
+    \text{ModD} = - \frac{dP}{dy} \frac{1}{P} = \frac{1}{P} \left[ 1 \text{CF}_1 e^{-y1} +2 \text{CF}_2 e^{-y2} + \dots -n \text{CF}_n e^{-yn} \right]
+    = \text{MacD}
+\end{align*}
+
+由于可以使用$\frac{P(y+\Delta y) - P(y-\Delta y)}{2\Delta y}$估计$\frac{\partial P}{\partial y}$，因此也可以用如下公式估算修正久期：
+\begin{equation*}
+    \text{ModD} \approx - \frac{P(y+\Delta y) - P(y-\Delta y)}{2 P \Delta y}
+\end{equation*}
+
+因此对于y较小的变化，可近似认为（即假定债券价格随着利率线性变化）：
+\begin{equation*}
+    \frac{\Delta P}{P} \approx - \text{ModD} \times \Delta y
+\end{equation*}
+
+\begin{example}
+    假设一个期限为8年的债券，每年付息，票息为5\%，其到期收益率为6\%。
+
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{@{}crrrr@{}}
+    \toprule
+    \textbf{期数} & \multicolumn{1}{c}{\textbf{现金流}} & \multicolumn{1}{c}{\textbf{现值}} & \multicolumn{1}{c}{\textbf{权重}} & \multicolumn{1}{c}{\textbf{期数乘权重}} \\ \midrule
+    1 & 50 & 47.17 & 5.03\% & 0.05 \\
+    2 & 50 & 44.50 & 4.74\% & 0.09 \\
+    3 & 50 & 41.98 & 4.48\% & 0.13 \\
+    4 & 50 & 39.60 & 4.22\% & 0.17 \\
+    5 & 50 & 37.36 & 3.98\% & 0.20 \\
+    6 & 50 & 35.25 & 3.36\% & 0.23 \\
+    7 & 50 & 33.25 & 3.55\% & 0.25 \\
+    8 & 1050 & 658.78 & 70.24\% & 5.62 \\ \midrule
+    \textbf{合计} & \textbf{} & \textbf{937.90} & \textbf{100\%} & \textbf{6.74} \\ \bottomrule
+    \end{tabular}
+    \end{table}
+
+    此时可以看到麦考利久期$\text{MacD} = 6.74$，并有修正久期$\text{ModD} = \frac{\text{MacD}}{1+y} = \frac{6.74}{1.06} = 6.36$。那么此时对于利率变动$\pm 1\%$，应有债券价格变动约$\mp 6.36\%$，即$937.90 \times 6.36\% = 59.65$（假设为线性变化）。
+\end{example}
+
 
 \subsection{凸性调整}
 
@@ -149,6 +209,13 @@ https://www.youtube.com/watch?v=9GOfBq5Go9U
     \item 全价（full price）：现金价格（cash price）或发票价格（invoice price）
     \item 净价（clean price）：等于全价减去应计利息（accrued interest），避免报价不连续（由于票息）
 \end{itemize}
+
+\subsection{Riding Yield Curve}
+
+期限结构骑乘，由于期限结构是向上倾斜的，当假设持有期期限结构不变时，自然roll down或riding yiled curve，即。即利率下行，债券价格上涨。
+
+当想投资两年期的固定收益债券时，假设投资2年的债券，并持有到期。也可以投资一个期限更长的债券，并持有两年，获得更高的收益。
+
 
 \section{利率模型导论}
 
@@ -421,10 +488,28 @@ Principal component analysis（PCA）使将一组高度相关的变量（如不�
 
 是什么原因决定了利率曲线（期限结构）的形状
 
-\subsubsection{纯预期理论（Pure Expectation Theory）}
+\subsubsection{预期假说（Expectation Hypothesis）}
+
+对于预期假说（Expectation Hypothesis，EH），与纯预期假说（Pure Expectation Hypothesis，PEH），或称纯预期理论（Pure Expectation Theory）或完全预期理论的区别。纯预期假设更加严格或作更强的假设，纯预期理论（PEH）认为：
+\begin{itemize}
+    \item 长期债券相较于短期债券的超额收益的期望为0
+    \item 利率期限风险溢酬（Yield term premia）为0
+    \item 远期风险溢酬（Forward term premia）为0
+\end{itemize}
+
+而预期假设（EH）对于纯预期假设有一定的放松，认为：
+\begin{itemize}
+    \item 长期债券相较于短期债券的超额收益的期望为常数
+    \item 利率期限风险溢酬为常数
+    \item 远期风险溢酬为常数
+\end{itemize}
+
+这个假说认为曲线的斜率是由于短期利率期望的改变。长期债券的较高收益反应了未来收益率上升的预期，然而长期债券的较低收益（一个向下滑动或者反向的收益率曲线）反应了短期利率下降的预期。
 
 认为当前的利率期限结构仅代表了市场对未来即期利率变化的预期，该理论认为不存在风险溢酬，认为现实测度就是风险中性测度。看似能解释各种形状的利率期限结构，但不符合现实。投资1年期与投资30年期相比，30年之间的不确定性更大，风险更大投资者要求需要有相应的风险补偿。
 由于期限结构仅包含对未来的预期，在纯预期理论认为远期利率为即期利率的现实期望，事实上两者并不相等，只有在特定测度（远期测度）下两者才会相等，而非现实测度，在现实测度下还需要加上风险溢酬。
+
+\href{https://en.wikipedia.org/wiki/Expectations_hypothesis}{Expectation Hypothesis}
 
 \subsubsection{流动性偏好理论（Liquidity Preference Theory）}
 

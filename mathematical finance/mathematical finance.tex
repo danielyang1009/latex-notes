@@ -547,7 +547,7 @@
 \end{eqnarray}
 
 \begin{example}
-    当名义利率为$12\%$时，有年化实际利率（Effective annual interest rate或Annual equivalent rate，AER）为：
+    当名义利率（Nominal rate）为$12\%$时，有年化实际利率（Effective annual interest rate或Annual equivalent rate，AER）为：
     \begin{table}[H]
     \centering
     \begin{tabular}{@{}lll@{}}
@@ -2486,6 +2486,7 @@ $F_{t}^{*}$由PCP关系计算获得，即：
 
 股指成分股集中分红时间约为每年5月至8月，即便扣除在股指期货存续期间由于分红造成的回落，股指期货仍有较大幅度的贴水。造成股指期货贴水的原因大致有如下几点：
 \begin{itemize}
+    \item 中性交易：机构做空需求，市场中性策略或Alpha策略基金都需要做空股指期货，即支付“贴水”成本给提供流动性的做多者。并且中小盘股相较于大盘股更容易做Alpha策略，因此对中小盘的做空需求更高，因此IC与IM的贴水要比IH与IF高。
     \item 空头套保：指数大幅度下行，空头套保（Short hedge，卖出股指期货）的规模较大，若市场多头不够，导致期货贴水。
     \item 做空机制：现货做空机制不完善，难以进行融券，即使能融券成本也较高。使得套利投资者难以在现货被高估的情况下，通过卖出现货（卖出开仓）买进期货进行\textbf{反向套利}（Reversed cash and carry arbitrage；同样，当现货低估的时候，买入现货卖出期货的行为称为\textbf{正向套利}）。因此在期货市场，多空双方都能自由表达其对未来的预期。但现货市场只有多方，而空方只有持有现货才能表达其预期。因此造成现货与期货市场的分割，无法达到一体化的预期。
     \item 印花税：买卖现货需要交纳印花税，而期货不需要，且期货佣金往往低于现货。

@@ -13,6 +13,59 @@
 
 \section{基本概念}
 
+\subsection{复利}
+
+单利（Simple interest）与复利（Compound interest）的差别在于之前产生的利息是否进入下一期的计算（即不考虑利息的时间价值），若进入下一期的计算则为复利。
+\begin{example}
+    假设一个存入1000元，名义年利率为4\%，每年4次付息，那么有在四年后，单利可获得：
+    \begin{equation*}
+        1000 + 1000 \times \frac{4\%}{4} \times 4 \times 4 = 1160 
+    \end{equation*}
+
+    复利可获得：
+    \begin{equation*}
+        1000 \times ( 1 + \frac{4\%}{4})^{4 \times 4} = 1172.57
+    \end{equation*}
+\end{example}
+
+对于在一年内多次付息，若一年支付$12\%$，那么半年付息将分两次支付，每次支付$6\%$。假设面值为1000，那么在半年的时候将获得$1000 \times \frac{0.12}{2} = 60$利息，与之前本金相加得到$1060$。此时到年末，假设本金与利息都将获得$6\%$的利息，那么就有$1060 \times \frac{0.12}{2} = 63.60$，即最终将获得$1000 \times (1+\frac{0.12}{2})^2 = 1123.60$。因此在这个例子里，名义利率（Nominal rate）为$10\%$，而实际年利率或有效年利率（Effective annual rate，EAR或Annual equivalent rate，AER）则为$\frac{1123.60}{1000}-1 = 12.36\%$，可见计息频率增加，导致实际年化利率上升。
+
+\begin{example}
+    当名义利率为$12\%$时，有实际年利率为：
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lll@{}}
+    \toprule
+    频率（m） & 实际利率 & 实际年化利率 \\ \midrule
+    1（一年）   & $\frac{0.12}{1}=0.12$  & $(1.12)^1-1=0.12$ \\
+    2（半年）   & $\frac{0.12}{2}=0.06$  & $(1.06)^2-1=0.1236$      \\
+    4（季度）   & $\frac{0.12}{4}=0.03$  & $(1.03)^4-1=0.125509$       \\
+    12（月度）  & $\frac{0.12}{12}=0.01$ & $(1.01)^{12}-1=0.126162$ \\
+    52（周度）  & $\frac{0.12}{52}=0.0023$  & $(1.0023)^{52}-1=0.127341$\\
+    365（日度） & $\frac{0.12}{365}=0.00033$ & $(1.00033)^{365}-1=0.127475$ \\
+    $\infty$ （连续）  & \multicolumn{2}{l}{$ \lim_{m \rightarrow \infty} (1+\frac{0.12}{m})^{m} - 1 = e^{0.12} - 1 = 0.127497
+    $}            \\ \bottomrule
+    \end{tabular}
+    \end{table}
+\end{example}
+
+假设平价发行的债券，票面利率为12，面值为12，当计息频率为1时，即按年计息，则有：
+\begin{equation*}
+    1000 = \frac{1120}{(1+0.12)^1}
+\end{equation*}
+
+当计息频率为2时，使用名义利率进行贴现：
+\begin{equation*}
+    1000 = \frac{60}{(1+\frac{0.12}{2})^1} + \frac{1060}{(1+\frac{0.12}{2})^2}
+\end{equation*}
+
+或使用实际年化利率进行贴现：
+\begin{equation*}
+    1000 = \frac{60}{(1+0.1236)^{0.5}} + \frac{1060}{(1+0.1236)^1}
+\end{equation*}
+
+可以看到计算实际年化利率的过程即为将利率变化为以年为频率的过程。
+
 \subsection{久期}
 
 久期（Duration）衡量利率变动（1\%）对债券价格的影响，即衡量债券对利率的敏感程度（Sensitivity）或暴露（Exposure），即衡量了利率风险的大小（Interest rate risk）。那么高久期意味着利率变动对债券价格影响大，或债券价格对利率变动更敏感。反之，对于第久期的债券，利率变动对其影响较小。
@@ -67,7 +120,7 @@
 
 \subsection*{修正久期}
 
-麦考利久期只是衡量了利率风险的相对大小，即一个10年久期的债券，比5年久期的债券风险更大，而修正久期就对其进行了量化。例如：当修正久期为3时，利率每上涨1\%，将使得债券价格下跌3\%。因此定义修正久期（Modified duration）为，对于利率变化债券价格变化的百分比：
+麦考利久期只是衡量了利率风险的相对大小，即一个10年久期的债券，比5年久期的债券风险更大，而修正久期就对其进行了量化。例如：当修正久期为3时，利率每上涨1\%，将使得债券价格下跌3\%。因此定义修正久期（Modified duration）为对于利率变化债券价格变化的百分比：
 \begin{equation*}
     \text{ModD} = -\frac{1}{P} \frac{\partial P}{\partial y} = \frac{\partial \ln P}{\partial y}
 \end{equation*}
@@ -86,16 +139,35 @@
 将$\frac{-1}{(1+y)}$提出，等式两边同乘$\frac{1}{P}$，可以看到后半部分为麦考利久期：
 \begin{align*}
     \frac{\partial P}{\partial y} \frac{1}{P} &= -\frac{1}{1+y} \left[ \frac{\text{CF}_1}{(1+y)^1} + \frac{2\text{CF}_2}{(1+y)^2} + \dots + \frac{n \text{CF}_n}{(1+y)^{n}} \right] \frac{1}{P} \\
-    &= -\frac{1}{1+y} \times \text{MacD} \\
-    &= - \text{ModD}
+    &= -\frac{1}{1+y} \times \text{MacD}
 \end{align*}
 
-其中$k$为复利计算频率（1为每年，2为半年...），$y_k$为按k周期复利计算的YTM，有如下关系。当使用连续复利进行计算时，即$k=\infty$时，有麦考利久期与修正久期相等$\text{ModD} = \text{MacD}$。
+同时，由于$\text{ModD} = -\frac{1}{P} \frac{\partial P}{\partial y}$，因此可以得到：
+\begin{equation*}
+    \text{ModD} = \frac{\text{MacD}}{1+y}
+\end{equation*}
+
+当$y_k$为名义利率时，假设$k$为复利计算频率（1为每年，2为每半年...），$t_i$为票息支付时间（年，如2年半年付息债券则有$t_i=0.5,1.0,1.5,2.0$）：
+\begin{equation*}
+    P = \sum_{i=1}^{n} \text{PV}_i = \sum_{i=1}^{n} \frac{\text{CF}_i}{(1+y_k/k)^{k t_i}}
+\end{equation*}
+
+由定义可知，其麦考利久期为：
+\begin{equation*}
+    \text{MacD} = \sum_{i=1}^{n} \frac{t_i}{P} \frac{\text{CF}_i}{(1+y_k/k)^{k t_i}}
+\end{equation*}
+
+如同对修正久期的推导可得，
+\begin{equation*}
+    \frac{\partial P}{\partial y_k} = - \frac{1}{1+y_k/k} \sum_{i=1}^{n} t_i \frac{\text{CF}_i}{(1+y_k/k)^{k t_i}} = - \frac{\text{MacD} \times P}{1 + y_k/k}
+\end{equation*}
+
+因此：
 \begin{equation*}
     \text{ModD} = \frac{\text{MacD}}{1+y_k/k}
 \end{equation*}
 
-当使用连续复利计算时，由上可知：
+可以看到当使用连续复利进行计算时，即$k=\infty$时，有麦考利久期与修正久期相等$\text{ModD} = \text{MacD}$。同时也可以通过连续复利进行贴现证明，当使用连续复利计算时，由上可知：
 \begin{equation*}
     P = \text{CF}_1 e^{-y1} + \text{CF}_2 e^{-y2} + \dots + \text{CF}_n e^{-yn}
 \end{equation*}

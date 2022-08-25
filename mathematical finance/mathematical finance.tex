@@ -546,25 +546,6 @@
     \frac{S_t}{S_{t-1}} = e^{R_{log}} \quad\rightarrow\quad R_{log} = \ln \frac{S_t}{S_{t-1}}
 \end{eqnarray}
 
-\begin{example}
-    当名义利率（Nominal rate）为$12\%$时，有年化实际利率（Effective annual interest rate或Annual equivalent rate，AER）为：
-    \begin{table}[H]
-    \centering
-    \begin{tabular}{@{}lll@{}}
-    \toprule
-    频率（m） & 实际利率 & 实际年化利率 \\ \midrule
-    1（一年）   & $\frac{0.12}{1}=0.12$  & $(1.12)^1-1=0.12$ \\
-    2（半年）   & $\frac{0.12}{2}=0.06$  & $(1.06)^2-1=0.1236$      \\
-    4（季度）   & $\frac{0.12}{4}=0.03$  & $(1.03)^4-1=0.125509$       \\
-    12（月度）  & $\frac{0.12}{12}=0.01$ & $(1.01)^{12}-1=0.126162$ \\
-    52（周度）  & $\frac{0.12}{52}=0.0023$  & $(1.0023)^{52}-1=0.127341$\\
-    365（日度） & $\frac{0.12}{365}=0.00033$ & $(1.00033)^365-1=0.127475$ \\
-    $\infty$ （连续）  & \multicolumn{2}{l}{$ \lim_{m \rightarrow \infty} (1+\frac{0.12}{m})^{m} - 1 = e^{0.12} = 0.127497
-    $}            \\ \bottomrule
-    \end{tabular}
-    \end{table}
-\end{example}
-
 \subsection{单期收益}
 
 对于计算\textbf{单期}的收益，可分为\textbf{百分比收益}或（Arithmetic return）或称为简单收益（Simple return），与

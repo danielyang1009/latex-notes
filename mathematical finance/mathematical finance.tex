@@ -87,23 +87,23 @@
 
 此时，由于$\varepsilon_t$与$dt$独立，套用上式，同时由于$\varepsilon_t \sim N(0,1)$，则有：
 \begin{equation*}
-    \E(dZ_t) = \E(\varepsilon_t \sqrt{dt}) = 0
+    \E(dW_t) = \E(\varepsilon_t \sqrt{dt}) = 0
 \end{equation*}
 
 应为方差有：
 \begin{align*}
-    \Var(dZ_t) & = \Var( \varepsilon_t \sqrt{dt}) \\
+    \Var(dW_t) & = \Var( \varepsilon_t \sqrt{dt}) \\
     & =  \Var(\varepsilon_t) \Var(\sqrt{dt}) + [\E(\varepsilon_t)]^2 \Var(\sqrt{dt}) + [E(\sqrt{dt})]^2 \Var(\varepsilon_t) \\
     & = \Var(\varepsilon_t) \left[ \Var[(\sqrt{dt})^2] - [\E(\sqrt{dt})]^2 \right] \\
     & = \Var(\varepsilon_t) \left[ \E[(\sqrt{dt})^2] - [\E(\sqrt{dt})]^2 + [\E(\sqrt{dt})]^2 \right] \\
     & = 1 \cdot \E(dt) = dt
 \end{align*}
 
-\textbf{方差可加性}，由下式可见，由于独立增量，导致协方差项为零，使得方差可加。
+\textbf{方差可加性}，由于独立增量，因此协方差为零，即$\sum_{i\neq j} \Cov(X_i,X_j)$ = 0，使得方差可加。
 \begin{align*}
-     & \Var(X_1+X_2+X_3) \\
-     & = \Var(X_1) + \Var(X_2) + \Var(X_3) \\
-     & + \Cov(X_1,X_2) + \Cov(X_2,X_3) + \Cov(X_1,X_3)
+    \Var(X_1+X_2+X_3)
+    & = \Var(X_1) + \Var(X_2) + \Var(X_3) \\
+    &\quad + \cancel{\Cov(X_1,X_2)} + \cancel{\Cov(X_2,X_3)} + \cancel{\Cov(X_1,X_3)}
 \end{align*}
 
 由上可知，增量在连续形式$dW_t$以及离散形式$W_T-W_t$下，均服从均值为零，方差为时间长度的正态分布，即有：
@@ -198,7 +198,7 @@
 
     利用切比雪夫不等式（Chebyshev's inequality）：
     \begin{align*}
-        P\left( \abs{Q_{\Pi} - \E(Q_{\Pi}} \geq \frac{1}{n} \right) &\leq n^2 \Var(Q_{\Pi}) \\
+        P\left( \abs{Q_{\Pi} - \E(Q_{\Pi})} \geq \frac{1}{n} \right) &\leq n^2 \Var(Q_{\Pi}) \\
         \lim_{\norm{\Pi} \rightarrow 0} P\left( \abs{Q_{\Pi} - T} \geq \frac{1}{n} \right) &\leq n^2 \lim_{\norm{\Pi} \rightarrow 0} \Var(Q_{\Pi})  \\
         \lim_{\norm{\Pi} \rightarrow 0} P\left( \abs{Q_{\Pi} - T} \geq \frac{1}{n} \right) &= 0
     \end{align*}
@@ -1535,7 +1535,7 @@ Delta、Vega、Gamma对应了上式中的前三项，而交易员将$\tfrac{\par
 
 \subsection{历史波动率}
 
-历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算过去一个月内交易日的标准差。注意在计算标准差时，即为计算时间频率的波动平均值，如对日频数据计算标准差，得到日频波动率，需要$\times \sqrt{252}$进行年化。
+历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算过去一个月内交易日的标准差。注意在计算标准差时，若对日频数据计算标准差，此时得到的为日频波动率，需要乘以$\sqrt{252}$进行年化（见夏普比率部分对波动率讨论与布朗运动中的方差可加性）。
 
 假设$r_i$为一个资产的收益率，对数收益率$r_i = \ln \left( \frac{S_i}{S_{i-1}} \right)$（连续复利收益率）时间序列，令$t=1,2,3,\dots,N$，其样本均值有$\bar{r} = \frac{1}{N} \sum_{i=1}^{N}r_i$，则样本方差为：
 \begin{align*}

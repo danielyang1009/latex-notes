@@ -1533,9 +1533,58 @@ Delta、Vega、Gamma对应了上式中的前三项，而交易员将$\tfrac{\par
 
 波动率对价格的大幅上升与价格的大幅下降翻译不同，这一不对称性过去被成为杠杆效应（Leverage effects），因为增加的风险，被认为是来自于负面冲击所引起杠杆的增加。具体而言指，当股票价格下跌时，使得公司股东权益下降，但由于公司负债不变，公司的债务股本比（Debt-to-equity ratio）会增大，公司会有更高的杠杆率。而更高的杠杆也会让公司的信用恶化，促使公司的股票价格进一步下跌。一些波动率模型具体针对已有模型刻画上述这些特征上的落点而提出的，例如EGARC和模型就是为了刻画波动率对资产收益率的不对称性而提出的。
 
+\subsection{收益率与波动率}
+
+假设收益率时间序列为$r_1, r_2, \dots, r_n$，并假设收益率之间相互独立，即$\Cov_{i\neq j} (r_i, r_j) = 0$。若假设年收益率为各期收益（日收益、月收益）之和时$r^a = \sum_{i=1}^{n} r_i$，那么此时应有：
+\begin{gather*}
+    \Var(r) = \sum_{i=1}^{n} \Var(r_i) \\
+    \sigma(r^a) = \sqrt{n} \times \sigma(r)
+\end{gather*}
+
+由上可见，当年收益率为各期收益率之和时，使用期数的根号（$\sqrt{n}$）对波动率（标准差）进行年化。即对日频波动率乘以$\sqrt{252}$（中国市场约为240）年化，而对于月频波动率乘以$\sqrt{12}$年化。而对于收益率一般计算为乘积，若$r^a$为年收益率，以月频收益率为例，那么应有其为月频收益率$r^m = r_1,\dots,r_{12}$的乘积：
+\begin{equation*}
+    r^a = (1+r_1)(1+r_2)\cdots(1+r_{12})-1
+\end{equation*}
+
+对于标准差，有如下关系：
+\begin{equation*}
+    \std(X) = \sqrt{\E[X^2] - \E^2[X]}
+\end{equation*}
+
+因此年波动率应有：
+\begin{equation*}
+    \std(r^a) = \std(1+r^a) = \sqrt{\E[(1+r^a)^2] - \left(\E[1+r^a]\right)^2}
+\end{equation*}
+
+由于月频收益率$r^m$为独立同分布（i.i.d），因此乘积的期望等于期望的乘积，$M$为月收益率的期望：
+\begin{equation*}
+    \E[1+r^a] = \E[1+r_1] \E[1+r_2] \cdots \E[1+r_n] = (1+\E[r^m])^{12} = (1+M)^{12}
+\end{equation*}
+
+同时令$Q = \E[(1+r^m)^2]$，由于独立同分布，因此有：
+\begin{equation*}
+    \E[(1+r^a)^2] = \E[(1+r_1)^2] \E[(1+r_2)^2] \cdots \E[(1+r_{12})^2] = Q^{12}
+\end{equation*}
+
+令$S$为$r^m$的标准差，即$S=\std(r^m)$，对于月收益$r^m$的方差有：
+\begin{equation*}
+    S^2 = \std^2(1+r^m) = \E[(1+r^m)^2] - \left(\E[1+r^m]\right)^2
+\end{equation*}
+
+得到$Q= S^2 + (1+M)^2$，代入原式：
+\begin{equation*}
+    \std(r^a) = \sqrt{ \left(S^2 + (1+M)^2\right)^{12} - (1+M)^{24}}
+\end{equation*}
+
+Reference:
+\begin{itemize}
+    \item Levy, Haim, and Deborah Gunthorpe, 1993, Optimal Investment Proportions in Senior Securities and Equities Under Alternative Holding Periods, The Journal of Portfolio Management 19, 30–36.
+    \item Kaplan, Paul  D., 2013, What’s Wrong with Multiplying by the Square Root of Twelve, Morningstar.
+\end{itemize}
+
 \subsection{历史波动率}
 
-历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算过去一个月内交易日的标准差。注意在计算标准差时，若对日频数据计算标准差，此时得到的为日频波动率，需要乘以$\sqrt{252}$进行年化（见夏普比率部分对波动率讨论与布朗运动中的方差可加性）。
+历史波动率（Historical volatility）是基于历史信息得到的，指资产收益率在过去一段时间内表现出的波动水平，可以由资产收益率在过去一段时间内的标准差计算得到。一般使用日频数据，如计算过去一个月内交易日的标准差。注意在计算标准差时，若对日频数据计算标准差，此时得到的为日频波动率，需要乘以$\sqrt{252}$进行年化（见布朗运动中的方差可加性）。
 
 假设$r_i$为一个资产的收益率，对数收益率$r_i = \ln \left( \frac{S_i}{S_{i-1}} \right)$（连续复利收益率）时间序列，令$t=1,2,3,\dots,N$，其样本均值有$\bar{r} = \frac{1}{N} \sum_{i=1}^{N}r_i$，则样本方差为：
 \begin{align*}

@@ -1541,39 +1541,55 @@ Delta、Vega、Gamma对应了上式中的前三项，而交易员将$\tfrac{\par
     \sigma(r^a) = \sqrt{n} \times \sigma(r)
 \end{gather*}
 
-由上可见，当年收益率为各期收益率之和时，使用期数的根号（$\sqrt{n}$）对波动率（标准差）进行年化。即对日频波动率乘以$\sqrt{252}$（中国市场约为240）年化，而对于月频波动率乘以$\sqrt{12}$年化。而对于收益率一般计算为乘积，若$r^a$为年收益率，以月频收益率为例，那么应有其为月频收益率$r^m = r_1,\dots,r_{12}$的乘积：
+由上可见，当年收益率为各期收益率之和时，使用期数的根号（$\sqrt{n}$）对波动率（标准差）进行年化。即对日频波动率乘以$\sqrt{252}$（中国市场约为240）年化，而对于月频波动率乘以$\sqrt{12}$年化。而对于收益率一般计算为乘积，若$r^a$为年收益率，以月频收益率为例，那么应有其为月频收益率$r = r_1,\dots,r_{12}$的乘积：
 \begin{equation*}
-    r^a = (1+r_1)(1+r_2)\cdots(1+r_{12})-1
+    1 + r^a = (1+r_1)(1+r_2)\cdots(1+r_{12})
 \end{equation*}
 
 对于标准差，有如下关系：
 \begin{equation*}
-    \std(X) = \sqrt{\E[X^2] - \E^2[X]}
+    \std[X] = \sqrt{\E[X^2] - \E^2[X]}
 \end{equation*}
 
 因此年波动率应有：
 \begin{equation*}
-    \std(r^a) = \std(1+r^a) = \sqrt{\E[(1+r^a)^2] - \left(\E[1+r^a]\right)^2}
+    \std[r^a] = \std[1+r^a] = \sqrt{\E[(1+r^a)^2] - \left(\E[1+r^a]\right)^2}
 \end{equation*}
 
-由于月频收益率$r^m$为独立同分布（i.i.d），因此乘积的期望等于期望的乘积，$M$为月收益率的期望：
-\begin{equation*}
-    \E[1+r^a] = \E[1+r_1] \E[1+r_2] \cdots \E[1+r_n] = (1+\E[r^m])^{12} = (1+M)^{12}
-\end{equation*}
+由于月频收益率$r$为独立同分布（i.i.d），因此乘积的期望等于期望的乘积，令$\mu$为月收益率的期望$\E[r]$：
+\begin{align*}
+    \E[1+r^a] &= \E[1+r_1] \E[1+r_2] \cdots \E[1+r_n] \\
+    &= (1+\E[r])^{12} \\
+    &= (1+\mu)^{12}
+\end{align*}
 
-同时令$Q = \E[(1+r^m)^2]$，由于独立同分布，因此有：
+同样由于$r$独立同分布，令：
+\begin{align*}
+    Q &= \E[(1+r)^2] \\
+    &= 1 + 2\E[r] + \E[r^2] \\
+    &= 1 + 2\E[r] + \Var[r] + (\E[r])^2
+\end{align*}
+
+因此有：
 \begin{equation*}
     \E[(1+r^a)^2] = \E[(1+r_1)^2] \E[(1+r_2)^2] \cdots \E[(1+r_{12})^2] = Q^{12}
 \end{equation*}
 
-令$S$为$r^m$的标准差，即$S=\std(r^m)$，对于月收益$r^m$的方差有：
+令月收益率的标准差$\std[r] = \sigma$，对于月收益$r$的方差有如下关系：
+\begin{align*}
+    \sigma^2 &= \Var[1+r] \\
+    &= \E[(1+r)^2] - (\E[1+r])^2 \\
+    &= Q - (1+\mu)^2
+\end{align*}
+
+整理可得$Q = \sigma^2 + (1+\mu)^2$，并将$Q$和$\mu$代回年波动率表达式中，可得：
 \begin{equation*}
-    S^2 = \std^2(1+r^m) = \E[(1+r^m)^2] - \left(\E[1+r^m]\right)^2
+    \std(r^a) = \sqrt{ \left[\sigma^2 + (1+\mu)^2\right]^{12} - (1+\mu)^{24}}
 \end{equation*}
 
-得到$Q= S^2 + (1+M)^2$，代入原式：
+可以看到修正后的年化波动率使用了月频收益率的期望$\mu$与标准差$\sigma$，即前二阶矩，而相比简单乘以$\sqrt{12}$，只使用了二阶矩。同理，对于$n$期收益率进行年化，其期望与标准差分别为$\mu_n$和$\sigma_n$，应有年化波动率：
 \begin{equation*}
-    \std(r^a) = \sqrt{ \left(S^2 + (1+M)^2\right)^{12} - (1+M)^{24}}
+    \sigma_a = \sqrt{ \left[\sigma_n^2 + (1+\mu_n)^2\right]^{n} - (1+\mu_n)^{2n} }
 \end{equation*}
 
 Reference:

@@ -23,7 +23,10 @@
 
 由于收益数据一般为日频或月频的，而最终需要将夏普比率进行年化。因此需要进行一系列的调整。首先，无风险利率一般都是年化以后的，因此在计算超额收益率时，需要将其调整为月频或日频的。如面对月频收益率，对应月频无风险利率应为$(1 + r_{monthly}^f)^{12} = 1 + r_{annual}^f$。而对应日频应为$(1 + r_{daily}^f)^{252} = 1 + r_{annual}^f$（虽然债券应为365日计息，但实际如股票等资产交易日只有252）。
 
-其次，当计算完日频或月频的夏普比率后，需要将其转化为年化的夏普比率。当收益率为日频，其均值乘以252交易日（或对于中国市场240交易日）进行年化，而对于月频收益率则乘以12，此时实际假定了\uline{年收益为日收益或月收益之和}。当假设日收益或月收益之间相互独立时（协方差为零），方差可加。此时波动率却不随时间线性变化，而是随着时间的平方根变化（$\sqrt{t}$）。因此对于日频的夏普比率，应乘以$\frac{252}{\sqrt{252}} = \sqrt{252}$进行转换，而对于月频则同理应乘以$\sqrt{12}$进行转换。还需要注意的是偏度和峰度不随着放大缩小改变，即不受年化的影响。注意：日频或月频的夏普比率转换为年频，与实际年频计算存在一定差距。
+其次，当计算完日频或月频的夏普比率后，需要将其转化为年化的夏普比率。当收益率为日频，其均值乘以252交易日（或对于中国市场240交易日）进行年化，而对于月频收益率则乘以12，此时实际假定了\uline{年收益为日收益或月收益之和}。当假设日收益或月收益之间相互独立时（协方差为零），方差可加。此时波动率却不随时间线性变化，而是随着时间的平方根变化（$\sqrt{t}$）。因此对于日频的夏普比率，应乘以$\frac{252}{\sqrt{252}} = \sqrt{252}$进行转换，而对于月频则同理应乘以$\sqrt{12}$进行转换。还需要注意的是偏度和峰度不随着放大缩小改变，即不受年化的影响。注意：日频或月频的夏普比率转换为年频，与实际年频计算存在一定差距。并且当收益率之间的关系为叠乘关系时，对于$n$期收益率的波动率进行年化，正确的计算波动率的方式为（见波动率章节）：
+\begin{equation*}
+    \sigma_a = \sqrt{ \left[\sigma_n^2 + (1+\mu_n)^2\right]^{n} - (1+\mu_n)^{2n} }
+\end{equation*}
 
 \subsection{CAPM与APT}
 
@@ -632,7 +635,7 @@ GMM，它可以轻松的求出我们需要的各种量（Hansen 功不可没啊�
 
 \section{Campbell-Shiller分解}
 
-Campbell-Shiller分解又称为Campbell-Shiller Return Identity，对于对数收益（$r_{t+1}$）有如下关系：
+Campbell-Shiller分解又称为Campbell-Shiller return identity或Campbell-Shiller log linear relation，对于对数收益（$r_{t+1}$）有如下关系：
 \begin{equation*}
     r_{t+1} \approx \rho(p_{t+1} - d_{t+1}) + \Delta d_{t+1} - (p_t - d_t)
 \end{equation*}
@@ -640,22 +643,36 @@ Campbell-Shiller分解又称为Campbell-Shiller Return Identity，对于对数�
 其中$\rho$为系数
 
 \begin{proof}
-    对于百分比收益率$R_{t+1}$有如下关系，并分子分母同时除以$D_t$，即使用Price-dividend ratio（下文用$pd$表示）表示：
+    对于百分比收益率$R_{t+1}$有如下关系，提取$D_{t+1}$并同除$D_{t}$：
     \begin{equation*}
         R_{t+1} = \frac{P_{t+1} + D_{t+1}}{P_t} = \frac{\left( \frac{P_{t+1}}{D_{t+1}} + 1\right) \frac{D_{t+1}}{D_t}}{\frac{P_t}{D_t}}
     \end{equation*}
 
-    取对数可得：
+    对等式两边取对数，令$r_t = \ln(R_t)$，$p_t = \ln(P_t)$与$d_t = \ln(D_t)$，并且令$\delta_t = \ln(\frac{P_t}{D_t})$，则有：
+    \begin{align*}
+        r_{t+1} &= \ln\left( 1 + \frac{P_{t+1}}{D_{t+1}} \right) + \ln\left( \frac{D_{t+1}}{D_t} \right) - \ln\left( \frac{P_t}{D_t} \right)  \\
+        &= \log \left( 1 + e^{\delta_{t+1}} \right) + \Delta d_{t+1} - \delta_t
+    \end{align*}
+
+    使用泰勒级数在$x_0$展开$\ln(1+e^x)$，并只保留一次项：
     \begin{equation*}
-        r_{t+1} = \log \left( 1+ e^{{pd}_{t+1}} \right) + \Delta d_{t+1} - {pd}_t
+        \ln(1+e^x) \approx \ln (1+e^{x_0}) + \frac{e^{x_0}}{1+e^{x_0}}(x-x_0)
     \end{equation*}
 
-    对第一项对数，进行泰勒展开，可得：
+    若使用长期均值$\delta$作为$x_0$：
     \begin{equation*}
-        r_{t+1} \approx \log \left( 1+ e^{pd} \right) + \frac{e^{pd}}{1+ e^{pd}}({pd}_{t+1} - {pd}) + \Delta d_{t+1} - {pd}_t
+        r_{t+1} \approx \ln(1+e^{\delta}) + \frac{e^{\delta}}{1+ e^{\delta}} (\delta_{t+1} - \delta) + \Delta d_{t+1} - \delta_t
+    \end{equation*}
+        
+    令$\rho = \frac{e^\delta}{1+e^\delta} = \frac{1}{1+D/P}$，则$\kappa = \ln (1+e^\delta) - \rho \delta$两者均为常数：
+    \begin{equation*}
+        r_{t+1} \approx \kappa + \rho \delta_{t+1} + \Delta d_{t+1} - \delta_t
     \end{equation*}
 
-
+    当忽略常数项时，计算协方差时：
+    \begin{equation*}
+        r_{t+1} \approx \rho(p_{t+1} - d_{t+1}) + \Delta d_{t+1} - (p_t - d_t)
+    \end{equation*}
 \end{proof}
 
 

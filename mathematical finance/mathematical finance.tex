@@ -514,11 +514,48 @@
     &= e^{2\mu+\sigma^2}\left(e^{\sigma^2} - 1\right)\\
 \end{align*}
 
-\section{比例收益率与对数收益率}
+\section{百分比收益率与对数收益率}
+
+在金融研究中，在计算收益率的是哦户，一般使用对数收益率。其对比百分比收益率的优势在于，对于单一资产的收益率，对数收益率时序可加。如一个资产在在第一年上涨50\%，而在第二年下跌50\%，其算术平均收益率为0（即时序上不可加），但显然该资产年年的投资亏损的初始金额的25\%。同样的例子，若使用对数收益率计算，则该资产两年的对数收益率分别为$\ln(1.5) = 40.5\%$与$\ln(0.5) = -69.3\%$，利用对数收益率时序可加的特点，其两年算术平均为$-28.77\%$，转换为百分比收益率为$e^{-28.77\%} - 1 = -25\%$，为实际真实的收益率。可以看到上述对数收益率与百分比收益率的计算是等价的，但是能大大降低运算难度。
+
+由于对数收益率时序上可加的特点（线性），即只需要对单期的收益率进行加总即可获得多期的收益率：
+\begin{align*}
+    \ln\frac{X_T}{X_0} &= \ln \left[ \frac{X_1}{X_0} \times \frac{X_2}{X_1} \times \cdots \times \frac{X_T}{X_{T-1}} \right] \\
+    &= \ln\frac{X_1}{X_0} + \ln\frac{X_2}{X_1} + \cdots + \ln\frac{X_T}{X_{T-1}}
+\end{align*}
+
+并且利用该特点，可以得到“中心极限定理”与“大数定理”。若不同期之间的对数收益率相互独立，那么T期的收益率相加，相当于T个独立随机变量相加，由中心极限定理可知，其和的分布将逼近正态分布。并且由“大数定理”可知，随着T的增大，单期收益率的均值，将收敛于期望：
+\begin{equation*}
+    \frac{1}{T} \left[ \ln\frac{X_1}{X_0} + \ln\frac{X_2}{X_1} + \cdots + \ln\frac{X_T}{X_{T-1}} \right] \rightarrow \E\left[ \ln\frac{X_T}{X_0} \right] \quad as \quad T \rightarrow \infty
+\end{equation*}
+
+对数压缩了数据的尺度，使得数据在较小时更敏感。对比上证指数与上证指数取对数后，在取对数之前可以看到05-07年大牛市从998到6124取得了600\%的收益。而在取了对数之后，可以清晰看到，90年代末期的牛市从95到1558点，得到1500\%的收益率。即随着指数数值越来越大，绝对数值的变化越来越大，使得难以观察其相对数值的变化。以2为底取对数为例，$\log_2 2 =1$，$\log_2 4 =2$，$\log_2 8 =3$，可以看到取对数后每单位的变化，对应着相同百分比的变化。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig/sse-normal-scale.png}
+    \caption{上证指数}
+    \label{fig:sse-normal-scale}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig/sse-log-scale.png}
+    \caption{上证指数取对数}
+    \label{fig:sse-log-scale}
+\end{figure}
+
+而对于不同资产在截面上的收益率，则应使用百分比收益率，具有截面可加性。以两个资产为例，投资资金为$m_1$与$m_2$，期末百分比收益率为$r_1$与$r_2$，那么此时有：
+\begin{align*}
+    r_p &= \frac{m_1(1+r_1) + m_2(1+r_2)}{m_1+m_2} - 1 \\
+    &= \frac{m_1}{m_1 + m_2} r_1 + \frac{m_2}{m_1 + m_2} r_2
+\end{align*}
+
+可以看到此时投资组合在截面上的收益率即为各个资产百分比收益率的投资金额加权平均。
 
 \subsection{对数收益率推导}
 
-对数收益率，或称连续复合收益率（Continuously compounded return），以复合利率为例。假设名义利率（Nominal interest rate）为$r$，进行再投资，且一年计息$m$次，则有实际利率（Effective interest rate，EIR）为：
+对数收益率（Log return），或称连续复合收益率（Continuously compounded return），以复合利率为例。假设名义利率（Nominal interest rate）为$r$，进行再投资，且一年计息$m$次，则有实际利率（Effective interest rate，EIR）为：
 \begin{equation*}
     \begin{aligned}
         \text{当$m=1$时：} &\quad 1+r \\
@@ -542,9 +579,9 @@
 \end{equation*}
 
 以股票价格$S_t$为例，有对应的对数收益$R_{log}$为：
-\begin{eqnarray}
+\begin{equation*}
     \frac{S_t}{S_{t-1}} = e^{R_{log}} \quad\rightarrow\quad R_{log} = \ln \frac{S_t}{S_{t-1}}
-\end{eqnarray}
+\end{equation*}
 
 \subsection{单期收益}
 
@@ -3515,7 +3552,7 @@ BS
 
 \section{汇率表示方法}
 
-USD/JPY约为136，即1美元兑换136日元。USD/CNY约为6.7，即美元兑人民币为6.7，从字面理解即1美金，兑换6.7人民币，也可称为CNY per USD。也经常表示为USDCNY或USD：CNY，称为USD to CNY或USD against CNY。在前的货币称为Base currency，在后的称为Quote currency，或称为Local currency。
+USD/CNY约为6.7，即美元兑人民币为6.7，从字面理解即1美金（每美金），兑换6.7人民币，也可称为CNY per USD。也经常表示为USDCNY或USD：CNY，称为USD to CNY或USD against CNY。在前的货币称为Base currency（每），在后的称为Quote currency或称为Local currency。
 
 以做多USD/CNY为例，假设当前为6.7，一个月后上涨至6.8，即每单位USD可兑换的CNY变多，即Base currency USD对CNY上涨，从而获利。若做空USD/CNY，那么希望USD跌。根据做多做空盈利的方向而言，此时Base currency为在外汇交易者买入的货币，而Quote currency为卖出的货币，所持有的希望卖出的货币，所以也称为Local currency。
 
@@ -3544,47 +3581,45 @@ USD/JPY约为136，即1美元兑换136日元。USD/CNY约为6.7，即美元兑�
     (1 + i_{L}) = \frac{F_{F/L}}{S_{F/L}} (1+ i_{F})
 \end{equation*}
 
-两国利差，如中国名义（Nominal）利率为3\%，而美国利率为1\%，那么应该卖出美金，买入人民币，投资中国债券，从而赚取利差。那么未来应该人民币贬值2\%，或美元兑人民币升值2\%，不然就存在套利机会。
+两国利差，如中国名义（Nominal）利率为3\%，而美国利率为1\%，那么应该卖出美金，买入人民币，投资中国债券，从而赚取利差。那么未来应该人民币贬值2\%，或美元兑人民币升值2\%，不然就存在套利机会。即投资高利率国所获得的额外收益，将由该国汇率贬值抵消。
 
 从上式变形，等式两边都减去1：
 \begin{equation*}
     \frac{(1 + i_{L})}{(1+ i_{F})} - 1 = \frac{i_L-i_F}{1+i_F} = \frac{F_{F/L}}{S_{F/L}} - 1 \\
 \end{equation*}
 
-因此对于CIP而言，应有如下关系，即利差与汇率变化相等：
+因此对于CIP而言，应有如下近似关系，即利差应与汇率变化相等：
 \begin{equation*}
     (i_{L}-i_{F}) \approx \frac{F_{F/L}-S_{F/L}}{S_{F/L}}
 \end{equation*}
 
-\begin{example}
-    假设当前GBP/USD汇率为1.35，并且美国的利率为1.1\%，英国的利率为3.25\%，那么根据CIP远期汇率应有持有1单位本国货币（USD），$1+1.1\%$。应与1美金兑换成英镑并持有，$\tfrac{1}{S_{F/L}} \times (1+3.25\%)$，最终将其通过远期汇率兑换会美金，两者应有平价关系：
-    \begin{equation*}
-        (1+1.1\%) = \frac{1}{S_{F/L}} \times (1+3.25\%) \times F_{F/L}
-    \end{equation*}
-
-    那么：
-    \begin{equation*}
-        F_{F/D} = 1.35 \times \frac{(1+1.1\%)}{(1+3.25\%)} \approx 1.32
-    \end{equation*}
-\end{example}
-
-UIP不适用远期锁定未来汇率，假设UIP成立，未来汇率的期望，应由一下关系得到：
+对于UIP而言，不用远期锁定未来汇率，假设UIP成立，未来汇率的期望应由以下关系得到：
 \begin{equation*}
     (1 + i_{L}) = \frac{\E(S_{t+1})}{S_t} (1+ i_{F})
 \end{equation*}
 
-若CIP与UIP都同时成立，那么：
+若CIP与UIP都同时成立（不考虑风险溢酬），那么：
 \begin{equation*}
     \E (S_{t+1}) = F_{F/L}
 \end{equation*}
 
-CIP只需要无套利就能成立，由于交易成本等远远可能违反CIP。
+\begin{example}
+    假设当前GBP/USD汇率为1.35，并且美国的利率为1.1\%，英国的利率为3.25\%，那么根据CIP远期汇率应有持有1单位本国货币（USD），投资本国债券所获得的收益，即$1+1.1\%$。应与1美金兑换成英镑并持有，$\tfrac{1}{S_{F/L}} \times (1+3.25\%)$，最终将其通过远期汇率兑换会美金，由于使用远期合约进行锁定，那么两者应有CIP平价关系：
+    \begin{equation*}
+        (1+1.1\%) = \frac{1}{S_{F/L}} \times (1+3.25\%) \times F_{F/L}
+    \end{equation*}
 
+    此时可以看到，远期汇率约为$1.32$，即英镑应贬值约$(1.32-1.35)/1.35=2.22\%$，近似于两国利差：
+    \begin{equation*}
+        F_{F/L} = 1.35 \times \frac{(1+1.1\%)}{(1+3.25\%)} \approx 1.32
+    \end{equation*}
+\end{example}
+
+CIP只需要无套利就能成立，由于交易成本等远远可能违反CIP。
 
 Carry trade：为卖出低利率国家货币，买入高利率国家货币并投资该国
 
 Diversified carry trade：买入一篮子货币
-
 
 Wikipedia reference：
 \begin{itemize}

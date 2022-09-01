@@ -12,67 +12,107 @@
 
 \section{基础}
 
-\subsection{夏普比率}
-
-在1994年，作者重新定义事前（ex-ante）夏普比率为：
-\begin{equation*}
-    S_a = \frac{\E[R_a-R_b]}{\sigma_a} = \frac{\E[R_a-R_b]}{\sqrt(\Var (R_a - R_b))}
-\end{equation*}
-
-其中$R_a$为资产收益，$R_b$为无风险资产收益，那么此时分子为超额收益的期望，分母则为超额收益标准差，事后（ex-post）夏普比率则使用已实现收益进行计算。根据方差的性质，若在样本期间内认为无风险收益$R_f$为常数，那么此时$\sqrt{\Var[R-R_f]} = \sqrt{\Var[R]}$。
-
-由于收益数据一般为日频或月频的，而最终需要将夏普比率进行年化。因此需要进行一系列的调整。首先，无风险利率一般都是年化以后的，因此在计算超额收益率时，需要将其调整为月频或日频的。如面对月频收益率，对应月频无风险利率应为$(1 + r_{monthly}^f)^{12} = 1 + r_{annual}^f$。而对应日频应为$(1 + r_{daily}^f)^{252} = 1 + r_{annual}^f$（虽然债券应为365日计息，但实际如股票等资产交易日只有252）。
-
-其次，当计算完日频或月频的夏普比率后，需要将其转化为年化的夏普比率。当收益率为日频，其均值乘以252交易日（或对于中国市场240交易日）进行年化，而对于月频收益率则乘以12，此时实际假定了\uline{年收益为日收益或月收益之和}。当假设日收益或月收益之间相互独立时（协方差为零），方差可加。此时波动率却不随时间线性变化，而是随着时间的平方根变化（$\sqrt{t}$）。因此对于日频的夏普比率，应乘以$\frac{252}{\sqrt{252}} = \sqrt{252}$进行转换，而对于月频则同理应乘以$\sqrt{12}$进行转换。还需要注意的是偏度和峰度不随着放大缩小改变，即不受年化的影响。注意：日频或月频的夏普比率转换为年频，与实际年频计算存在一定差距。并且当收益率之间的关系为叠乘关系时，对于$n$期收益率的波动率进行年化，正确的计算波动率的方式为（见波动率章节）：
-\begin{equation*}
-    \sigma_a = \sqrt{ \left[\sigma_n^2 + (1+\mu_n)^2\right]^{n} - (1+\mu_n)^{2n} }
-\end{equation*}
-
 \subsection{CAPM与APT}
 
-资本资产定价模型（Capital Asset Pricing Model，CAPM）的诞生，才首次清晰的描绘出风险与收益率之间的关系。根据CAPM模型，资产的预期超额收益率由如下一元线性方程决定：
+直至资本资产定价模型（Capital Asset Pricing Model，CAPM）的诞生，才首次清晰的描绘出风险与收益率之间的关系。根据CAPM模型，资产$i$的预期超额收益率由如下一元线性模型（单因子）决定：
 \begin{equation*}
     \E[R_i] - R_f = \beta_i \left( \E[R_M]-R_f \right)
 \end{equation*}
 
-其中$R_i$为某资产$i$的收益率，$R_f$为无风险收益率，$\E[R_M]$为市场组合的预期收益率，$\E[R_m]- R_f$为市场风险溢价（Market risk premium），也称为市场因子。其中有$\beta_i = \frac{\Cov(R_i,R_M)}{\Var(R_M)}$，$\beta$刻画了该资产$i$收益对于市场收益的敏感程度，也被称为资产$i$对市场风险的暴露程度。
+其中$R_i$为某资产$i$的收益率，$R_f$为无风险收益率，$\E[R_M]$为市场组合的预期收益率，而$\E[R_m]- R_f$称为市场因子，为市场风险溢价（Market risk premium）。其中有$\beta_i = \frac{\Cov(R_i,R_M)}{\Var(R_M)}$，其刻画了该资产$i$收益对于市场收益的敏感程度，也被称为资产$i$对市场风险的暴露程度。因此CAPM描绘了资产$i$的预期超额收益率的来源，是由市场组合的预期超额收益率和该资产对其的风险暴露程度共同决定。
 
-随后Ross（1976）提出了著名的套利定价理论（Arbitrage Pricing Theory，APT），为多元线性模型:
+在后续的研究中，人们发现不同资产的收益率并非由单一的市场因子所决定，随后Ross（1976）提出了套利定价理论（Arbitrage Pricing Theory，APT），为多元（多因子）线性模型，假设资产$i$的:
 \begin{equation*}
     \E[R_i^e] = \bm{\beta_{i}' \lambda}
 \end{equation*}
 
-同CAPM模型相同，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），即该目标因子的收益率变化对股票超额收益变化的影响程度（控制其他因子后）。$\bm{\lambda}$是因子预期收益率（Factor expected return），或称为因子溢价（Factor risk premium）或因子风险溢酬。由此可见，资产$i$的预期超额收益率$\E[R_i^e]$，为等式右侧一系列因子的预期收益率，以及该资产在这些因子上的暴露决定。
-
-此时研究的是不同资产之间的预期超额收益率的差别，称为（横）截面（Cross-sectional）差异，而非时间序列（Time-series）或时序上的差异。因子代表了收益率的一种结构，给定了结构与因子预期收益率，不同资产预期超额收益率的差别，由其在这些因子上的暴露决定。\uline{那么多因子模型研究的核心问题，是找到一组能够解释股票预期收益率界面差异的因子}。
+同CAPM模型相类似，$\bm{\lambda}$为因子溢价（Factor risk premium）或因子风险溢酬，或称因子预期收益率（Factor expected return）。$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），即因子的收益率变化对资产超额收益变化的影响程度（控制其他因子后）。在多因子模型研究中，研究的是不同资产之间的预期超额收益率的差别，因此称为（横）截面（Cross-sectional，CS）差异，而非时间序列（Time-series，TS）或时序上的差异。对于某个资产$i$的预期超额收益率$\E[R_i^e]$，给定等式右侧一系列因子的预期收益率，由该资产在这些因子上的暴露$\beta_i$决定。那么不同资产预期超额收益率的差别，由其在这些因子上的暴露的差别决定。因此\uline{多因子模型研究的核心，是找到一组能够解释股票预期超额收益率截面差异的因子}。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{fig/capm_sml.jpg}
+    \includegraphics[width=0.6\textwidth]{fig/capm-sml.jpg}
     \caption{CAPM：Security Market Line}
-    \label{fig:sml}
+    \label{fig:capm-sml}
 \end{figure}
 
-有几点需要注意，在这里使用$\E[\bm{R_i^e}]$为代表资产的预期超额收益率，而非如CAPM中表示的$\E[R_i] - R_f$，是因为在实证中，经常采用多空对冲建立投资组合，此时便无需再减去无风险收益率。另外，学界研究的对象始终为资产的预期草娥收益，因此有时将“超额”二字省略。
+需要注意的是在这里使用$\E[\bm{R_i^e}]$代表资产的预期超额收益率，而非如CAPM中表示的$\E[R_i] - R_f$，这是由于在实证研究中经常使用构建多空对冲投资组合的方法构建因子，因此无需再减去无风险收益率。另外，学界研究的对象始终为资产的预期超额收益，因此有时将“超额”二字省略。
 
-\subsection{异象}
-
-而在实际过程中，等式两侧并不相等，而存在着定价误差$\alpha_i$（Pricing error）：
+在实证的过程中，等式两侧并不相等，而存在着定价误差$\alpha_i$（Pricing error）。为资产$i$实际预期收益率，与多因子模型隐含的预期收益率之间差值：
 \begin{equation*}
     \E[R_i^e] = \alpha_i + \bm{\beta_{i}' \lambda}
 \end{equation*}
 
 定价误差有可能由两方面产生：
 \begin{itemize}
-    \item 模型设定偏误，即等式右侧遗漏了重要的因子，当被遗漏因子加入后，可消除定价误差
-    \item 模型设定没有问题，但由于资产收益的实际数据只是总体的一个样本，那么误差总是存在的，此时需要通过统计的方法检验误差$\alpha_i$是否显著不为零：
+    \item 模型设定有误：等式右侧遗漏了重要的因子，当被遗漏因子加入后，定价误差消除
+    \item 模型设定无误：由于资产收益的实际数据只是总体中的一个样本，那么误差总是存在的。此时需要通过统计的方法检验误差$\alpha_i$是否显著不为零：
     \begin{itemize}
-        \item 若$\alpha_i$并非显著偏离于零，则出现只是样本问题
-        \item 若$\alpha_i$\textbf{显著偏离零}，则说明了可以通过套利而获得超额收益的机会，市场对该资产出现错误定价（Mispricing），从而导致了实际预期收益率与多因子模型下的预期收益率出现偏离
+        \item 若$\alpha_i$并非显著不等于于零，那么定价误差的出现只是样本问题
+        \item 若$\alpha_i$\textbf{显著不等于零}，则说明可以获得模型都无法解释的超额收益，市场对该资产出现错误定价（Mispricing），从而导致了实际预期收益率与多因子模型下的预期收益率出现偏离
     \end{itemize}
 \end{itemize}
 
-假使我们根据基本面特征或量价指标等特征，挑选出一揽子股票并构建\uline{多空投资组合}。若该组合的收益率（方程左侧）无法被多因子模型（方程右侧，如3因子、4因子、5因子模型）解释，则称该特征为一个\textbf{异象}（Anomaly）。即该特征获得了多因子模型无法解释$alpha$收益率，但从有效市场假说出发，市场中不应该存在很多异象。同时在学界不断的挖掘中，获得了400+个异象，且在样本内都获得了很高的t-statistics，这里可能存在两个原因：
+\subsection*{SML与CML}
+
+如上所述，CAPM描述的是预期收益率与对于市场因子的风险暴露之间的关系，使用证券市场线（Security market line）可表示为：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/sml.png}
+    \caption{SML}
+    \label{fig:sml}
+\end{figure}
+
+对于资本市场线（Capital market line，CML）为（Capital allocation line，CAL）的一个特例。在CAL中，该直线由无风险资产（$R_f$）与风险资产两种资产组成，而CML中的风险资产为市场组合。那么此时该投资组合的预期收益率为：
+\begin{equation*}
+    \E(R_P) = w R_f + (1-w) E(R_m)
+\end{equation*}
+
+方差有：
+\begin{equation*}
+    \sigma_P^2 = w^2 \sigma_f^2 + + (1-w)^2 \sigma_m^2 + 2w(1-w) \Cov(R_f,R_m)
+\end{equation*}
+
+由于无风险资产风险为零，即$\sigma_f = 0$。并且无风险资产与风险资产的协方差也应为零，即$\Cov(R_f,R_m)$，可以得到：
+\begin{equation*}
+    \sigma_p = (1-w) \sigma_m
+\end{equation*}
+
+将上述$w$关系代入，可得该投资组合预期收益率与标准差的关系：
+\begin{align*}
+    \E(R_P) &= w R_f + (1-w) E(R_m) \\
+    &= \left(1 - \frac{\sigma_p}{\sigma_m} \right) R_f + \E(R_m) \frac{\sigma_p}{\sigma_m} \\
+    &= R_f + \frac{\E(R_m) - R_f}{\sigma_m} \sigma_p
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/cml.png}
+    \caption{CML}
+    \label{fig:cml}
+\end{figure}
+
+\subsection{因子、多因子模型与异象}
+
+关于资产$i$预期收益率的多因子关系式，展现了多因子研究中的三个部分：整体$\bm{\beta_{i}' \lambda}$为多因子模型或\uline{定价模型}；其中所包含的解释变量即为定价因子（Pricing factors）；当对于某个资产$i$，其$\alpha_i$显著不等于零，则这个资产为一个异象（Anomaly），或称之为异象因子（Anomaly factors）。
+
+\begin{equation*}
+    \E[R_i^e] = \alpha_i + \bm{\beta_{i}' \lambda}
+\end{equation*}
+
+因子描述了众多资产所共同暴露的某种系统性风险，而该因子对应的因子收益率为对该种系统性风险的风险补偿，因子的收益率就是这些资产的共性收益。因此不同的投资组合，归根结底可以归纳为不同因子的组合。由于因子驱动了资产收益率，两者共同运动（Co-movement），因此因子一定与资产收益率的协方差有关。在Fama（1970）中，提出了联合假说（Joint hypothesis）问题，即想要检验市场的有效性就必须先有一个合理的资产定价模型。只有知道了定价模型给出的均衡状态下股票的预期收益率，才有可能检验市场是否有效
+
+因此在多因子模型研究的框架中，面临的的几个主要问题：
+\begin{itemize}
+    \item 如何选择因子构建多因子模型？
+    \item 如何计算资产在因子上的暴露以及因子收益率？
+    \item 如何使用统计的方法检验定价误差$\alpha_i$？
+\end{itemize}
+
+\subsection{异象}
+
+【待核实】回到定价模型上，如果定价模型无误，且定价误差显著不等于零，那么说明市场存在错误定价，资产为异象。但若定价模型有误，缺少了重要因子，那么即称之为异象因子。
+
+假使我们根据基本面特征或量价指标等特征，挑选出一揽子股票并构建\uline{多空投资组合}。若该投资组合的收益率（方程左侧）无法被多因子模型（方程右侧，如3因子、4因子、5因子模型）解释，则称该特征为一个\textbf{异象}（Anomaly）。即该特征获得了多因子模型无法解释$\alpha$收益率，但从有效市场假说出发，市场中不应该存在很多异象。同时在学界不断的挖掘中，获得了400+个异象，且在样本内都获得了很高的t-statistics，这里可能存在两个原因：
 \begin{itemize}
     \item 数据挖掘，大量的异象在样本内被挖掘出，因此Harvey，Liu和Zhu（2016）提出异象收益率的t-statistic至少要超过3.0，而非传统的5\%显著性对应的2.0，才可能真正有效，而非来源于运气
     \item 模型相关，若以$CAPM$为定价模型，那么许多异象都能获得CAPM无法解释的$\alpha$收益率，同时随着定价模型中因子个数的增加，更多的异象变得不再显著，而真正的定价模型是未知的
@@ -84,7 +124,7 @@ Hou，Xue和Zhang（2017）长达146页对异象的研究中，复现了学术�
 
 \subsection{因子}
 
-因子代表了不同资产收益率的某种驱动力，而该因子的收益率就是这些资产的共性收益（同涨同跌）。而如同估值、GDP这些抽象的因子，都可以通过\uline{因子模拟投资组合}（Factor mimicking porfolio）的方式，将抽象概念转换为实际载体，从而进行定量研究。构建因子模拟投资组合需要满足两个条件：
+如同估值、GDP这些抽象的因子，都可以通过\uline{因子模拟投资组合}（Factor mimicking porfolio）的方式，将抽象概念转换为实际载体，从而进行定量研究。构建因子模拟投资组合需要满足两个条件：
 \begin{itemize}
     \item 该投资组合在该目标因子上有大于零的暴露、且在其他因子上的暴露为零（纯粹的反应目标因子收益）
     \item 该投资组合的特质性风险（Idiosyncratic risk），即个股收益率在时序上的随机扰动，在所有满足上述条件的投资组合中最小（减少随机扰动带来的误差）
@@ -96,9 +136,7 @@ Hou，Xue和Zhang（2017）长达146页对异象的研究中，复现了学术�
     \item 由于多个异象之间并不完全独立，需要排除相关性的影响，考察是否有增量贡献
 \end{itemize}
 
-如价值因子，也可以采用$E/P$或$B/P$构建High-Minus-Low组合，若同时使用，两者相关性必然很高，因此若使用其一作为价值因子，另一因子对资产预期收益率截面差异的解释能力的增量贡献将变得很低，无法称为因子。
-
-对于因子模型接下去的问题就是，在构建多因子模型时：选取因子因子的数目；以及选取哪些因子。第一个问题，因遵循简约法则（The Law of Parsimony），或奥卡姆剃刀（Occam's razor）。若从ICAPM（Intertemporal CAPM）的角度理解多因子模型，每个因子应代表某种状态变量（State variable），即为投资者想要对冲的某种风险。因此，因子的个数应该是有限的。目前主流的多因子模型如下：
+许多因子都能解释资产预期收益率截面差异，但显然不能吧所有因子都放进一个多因子模型中。很多因子存在相关性，因此希望因子是相互独立的，每个因子都能对解释资产预期收益率截面差异有显著的增量贡献。如价值因子，也可以采用$E/P$或$B/P$构建High-Minus-Low组合，若同时使用，两者相关性必然很高，因此若使用其一作为价值因子，另一因子对资产预期收益率截面差异的解释能力的增量贡献将变得很低，无法称为因子。另外要考虑简约法则（The Law of Parsimony），每个因子代表的是不同资产所暴露的某种共性风险，那么因子数量一定时有限。学术界主流多因子模型一般包括3~5个因子。目前主流的多因子模型如下：
 \begin{itemize}
     \item Fama-French 三因子模型（Fama and French 1993）：多因子模型的开山鼻祖，包括MKT、HML以及SMB三因子。其中包含了MKT市场因子，HML价值因子，与SMB规模因子
     \item Carhart 四因子模型（Carhart 1997）：在 Fama-French三因子模型上加上了动量MOM因子。
@@ -109,14 +147,22 @@ Hou，Xue和Zhang（2017）长达146页对异象的研究中，复现了学术�
     \item Daniel-Hirshleifer-Sun三因子模型（Daniel, Hirshleifer and Sun 2018）：在MKT的基础上，使用PEAD和FIN两个指标作为短期和长期行为因子（Behavioral factors）的代理指标，构建了三因子模型。该模型由于包括了传统的MKT市场因子，又包括行为因子，故称为复合模型。
 \end{itemize}
 
-对于第二个问题，则涉及了不同多因子模型之间的比较。目前学界主要有三种方法：
+如同估值、GDP这些抽象的因子，都可以通过\uline{因子模拟投资组合}（Factor mimicking porfolio）的方式，将抽象概念转换为实际载体，从而进行定量研究。构建因子模拟投资组合需要满足两个条件：
+\begin{itemize}
+    \item 该投资组合在该目标因子上有大于零的暴露、且在其他因子上的暴露为零（纯粹的反应目标因子收益）
+    \item 该投资组合的特质性风险（Idiosyncratic risk），即个股收益率在时序上的随机扰动，在所有满足上述条件的投资组合中最小（减少随机扰动带来的误差）
+\end{itemize}
+
+\subsection{因子模型比较}
+
+【待整理】
+
+对于不同多因子模型之间的比较。目前学界主要有三种方法：
 \begin{itemize}
     \item GRS tests
     \item Mean-Variance Spanning tests
     \item Bayesian approach
 \end{itemize}
-
-【待整理】
 
 GRS tests（Gibbons，Ross和Shanken 1989）检验n个资产在给定因子模型下的定价错误$\alpha$，是否在统计上联合为零（jointly equal to zero）。在比较两个多因子模型时，使用两个模型的因子互为资产和定价模型进行检验。
 
@@ -138,19 +184,15 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
 
 【待整理】
 
-除了市场因子以外的风险都是可以被分散的，所以只要是超过市场组合收益的部分都叫做超额收益。
-
-多因子模型的表达式同样强调，只有那些影响众多资产收益率共同运动的风险，而非资产的特质性风险（即可以通过分散化规避掉的风险），才是预期收益率的来源。
+多因子模型的表达式强调，只有那些影响众多资产收益率共同运动的风险，而非资产的特质性风险（即可以通过分散化规避掉的风险），才是预期收益率的来源。
 
 系统风险（Systematic risk）的暴露程度，即对于市场风险暴露的大小。即资产的预期超额收益率，由市场组合（市场因子）的预期超额收益率与该资产对市场风险的暴露大小决定。或可以理解为，单项资产的$\beta$系数是指资产预期超额收益率与市场组合预期超额收益率之间变动关系的敏感程度。
 
 系统性风险（Systematic risk），又称市场风险或不可分散风险，是影响所有资产的、不能通过资产组合而消除的风险。这部分风险是由那些影响整个市场的风险所引起的，无论怎样分散投资，也不可能消除系统性风险。避免集中投资于单一市场可减少系统性风险。单项资产、证券资产组合或不同公司受系统性风险影响不一样，系统性风险的大小通常用beta系数（$\beta$系数）来衡量。
 
-\section{方法论}
+\section{投资组合排序法}
 
-\subsection{排序法}
-
-\subsubsection{因子收益率}
+\subsection{因子收益率}
 
 如上所述，构建因子模拟投资组合，即获得因子收益率，需要知道所有股票在该因子上的暴露。即因子暴露是，构建因子模拟投资组合，计算因子收益率的前提。而个股在某因子$k$上的暴露为，在控制其他因子之后，该目标因子$k$的收益率与股票超额收益的敏感程度。即需要已知因子收益率才能计算因子暴露。这样就陷入了“先有鸡还是先有蛋”的困境。
 
@@ -165,7 +207,7 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
 
 【思考】如上所述，因子收益率是所有股票共性的收益来源，不同股票在在这些因子收益率上的暴露不同，从而造成了截面上的差别。如果只考虑如BM这样的变量，并不能作为所有共性的部分。在Barra中直接作为暴露？需标准化处理
 
-\subsubsection{检验}
+\subsection{检验}
 
 检验因子预期收益率，原假设为因子预期收益率为零，而由定义可知因子的预期收益率应大于零。令$\{\lambda_t\} \; (t=1,2,\dots,T)$代表因子收益率时间序列，因子预期收益率的估计$\hat{\lambda}$以及其标准误分别为：
 \begin{gather*}
@@ -178,7 +220,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
     t\text{-statistic} = \frac{\hat{\lambda}}{s.e.(\hat{\lambda})}
 \end{equation*}
 
-\subsubsection{多重排序法}
+\subsection{多重排序法}
 
 上述方法使用单一变量对股票排序，称之为单变量排序（Univariate sorting）。根据如上所述因子模拟投资组合的所需满足的条件，应该仅在目标因子上有暴露，在非目标因子上没有暴露。而如上BM的例子中，做多BM最高组，做空BM最低组，其中还包含了对于其他因子的暴露，如市值等，这样就造成估计误差，难以准确估计BM因子。为了排除其他因子的干扰，常见的做法时使用多个变量，进行双重排序（Double sorting或Bivariate sorting）或三重排序（Triple sorting），这些方法统称为多重排序法。
 
@@ -198,7 +240,7 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 条件双重排序，核心为考察控制了$X_1$之后，变量$X_2$对股票收益率的影响。此时两个变量的重要性与排序的先后顺序有关，由于第一排序变量仅为控制变量，而第二排序变量与收益率之间的关系更为重要。因此也只需围绕第二排序变量，构建因子模拟投资组合，并计算因子收益率，方法与计算独立双重排序时相同
 
-\subsection{多因子模型}
+\section{多因子模型回归检验}
 
 假设N与K代表资产和因子的个数，对于多因子截面关系式：
 \begin{equation*}
@@ -276,9 +318,9 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/ts_reg.jpg}
+    \includegraphics[width=0.8\textwidth]{fig/ts-reg.jpg}
     \caption{时序回归}
-    \label{fig：ts_reg}
+    \label{fig:ts-reg}
 \end{figure}
 
 这样就通过了时序回归，得到了个股超额收益率与因子暴露在截面上的关系。注意，此时的截面关系并非通过OLS得到，因此直线并不是最小化定价误差$\alpha_i$的平方和为目标求出的。由于是在时序上进行OLS回归，因此其最小化资产i，在时序上的误差$\epsilon_{t,i}$的平方和。
@@ -366,9 +408,9 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/cs_reg.jpg}
+    \includegraphics[width=0.8\textwidth]{fig/cs-reg.jpg}
     \caption{传统截面回归}
-    \label{fig：cs_reg}
+    \label{fig:cs-reg}
 \end{figure}
 
 因此截面回归，也称为两步回归估计（Two-pass regression estimate）。首先，通过时序回归首先得到个股对因子的暴露。其次，对超额收益率取均值，即个股转换为点$(\beta_i,\E[R_i])$，并对N支个股同时进行截面回归，最终得到定价误差与因子收益率，因此截面回归通过最小化所有资产定价误差$\alpha_i$平方和的方式来确定截面关系。
@@ -421,9 +463,9 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/ts_vs_cs.jpg}
+    \includegraphics[width=0.8\textwidth]{fig/ts-vs-cs.jpg}
     \caption{时序回归与截面回归}
-    \label{fig:ts_vs_cs}
+    \label{fig:ts-vs-cs}
 \end{figure}
 
 \subsection{Fama-MacBeth回归}
@@ -562,6 +604,22 @@ GMM，它可以轻松的求出我们需要的各种量（Hansen 功不可没啊�
 
 \begin{appendices}
 
+\section{夏普比率}
+
+在1994年，作者重新定义事前（ex-ante）夏普比率为：
+\begin{equation*}
+    S_a = \frac{\E[R_a-R_b]}{\sigma_a} = \frac{\E[R_a-R_b]}{\sqrt(\Var (R_a - R_b))}
+\end{equation*}
+
+其中$R_a$为资产收益，$R_b$为无风险资产收益，那么此时分子为超额收益的期望，分母则为超额收益标准差，事后（ex-post）夏普比率则使用已实现收益进行计算。根据方差的性质，若在样本期间内认为无风险收益$R_f$为常数，那么此时$\sqrt{\Var[R-R_f]} = \sqrt{\Var[R]}$。
+
+由于收益数据一般为日频或月频的，而最终需要将夏普比率进行年化。因此需要进行一系列的调整。首先，无风险利率一般都是年化以后的，因此在计算超额收益率时，需要将其调整为月频或日频的。如面对月频收益率，对应月频无风险利率应为$(1 + r_{monthly}^f)^{12} = 1 + r_{annual}^f$。而对应日频应为$(1 + r_{daily}^f)^{252} = 1 + r_{annual}^f$（虽然债券应为365日计息，但实际如股票等资产交易日只有252）。
+
+其次，当计算完日频或月频的夏普比率后，需要将其转化为年化的夏普比率。当收益率为日频，其均值乘以252交易日（或对于中国市场240交易日）进行年化，而对于月频收益率则乘以12，此时实际假定了\uline{年收益为日收益或月收益之和}。当假设日收益或月收益之间相互独立时（协方差为零），方差可加。此时波动率却不随时间线性变化，而是随着时间的平方根变化（$\sqrt{t}$）。因此对于日频的夏普比率，应乘以$\frac{252}{\sqrt{252}} = \sqrt{252}$进行转换，而对于月频则同理应乘以$\sqrt{12}$进行转换。还需要注意的是偏度和峰度不随着放大缩小改变，即不受年化的影响。注意：日频或月频的夏普比率转换为年频，与实际年频计算存在一定差距。并且当收益率之间的关系为叠乘关系时，对于$n$期收益率的波动率进行年化，正确的计算波动率的方式为（见波动率章节）：
+\begin{equation*}
+    \sigma_a = \sqrt{ \left[\sigma_n^2 + (1+\mu_n)^2\right]^{n} - (1+\mu_n)^{2n} }
+\end{equation*}
+
 \section{APT推导}
 
 第一步，假设资产的收益率，在单因子情形下，满足如下线性模型：
@@ -635,12 +693,17 @@ GMM，它可以轻松的求出我们需要的各种量（Hansen 功不可没啊�
 
 \section{Campbell-Shiller分解}
 
-Campbell-Shiller分解又称为Campbell-Shiller return identity或Campbell-Shiller log linear relation，对于对数收益（$r_{t+1}$）有如下关系：
+Campbell-Shiller分解又称为Campbell-Shiller return identity或Campbell-Shiller log linear relation，对于对数收益（$r_{t+1}$）有如下近似关系（忽略常数，$\rho$为常数）：
 \begin{equation*}
     r_{t+1} \approx \rho(p_{t+1} - d_{t+1}) + \Delta d_{t+1} - (p_t - d_t)
 \end{equation*}
 
-其中$\rho$为系数
+因此可以看到未来收益的来源可以分为三个部分：
+\begin{itemize}
+    \item 未来高的price-dividend ratio，或未来高股价
+    \item 股息的增长
+    \item 当前低的price-dividend ratio，或现在低股价
+\end{itemize}
 
 \begin{proof}
     对于百分比收益率$R_{t+1}$有如下关系，提取$D_{t+1}$并同除$D_{t}$：
@@ -675,7 +738,12 @@ Campbell-Shiller分解又称为Campbell-Shiller return identity或Campbell-Shill
     \end{equation*}
 \end{proof}
 
+同时通过Campbell-Shiller return identity，将价格移至等式一侧，可以得到Campbell-shiller present value formula。
+\begin{equation*}
+    \delta_t \approx \sum_{i=1}^{\infty} \rho^{i-1} \Delta d_{t+i} - \sum_{i=1}^{\infty} \rho^{i-1} r_{t+i}
+\end{equation*}
 
+可以发现最后一项为长期的收益，而长期收益来源于当前低股价（$\delta_t$），和高股息的增长。
 
 \end{appendices}
 

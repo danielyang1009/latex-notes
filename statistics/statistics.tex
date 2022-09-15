@@ -1648,7 +1648,7 @@ $P(A)$为先验概率（Prior probability），即不考虑任何B方面的因�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/ols-assumptions.png}
+    \includegraphics[width=0.9\textwidth]{fig/ols-assumptions.png}
     \caption{OLS基本假设}
     \label{fig:ols-assumptions}
 \end{figure}
@@ -1868,7 +1868,7 @@ $\hat{Y}_i$为自变量或解释变量通过回归模型所得到的拟合值，
     由上文可知，令$b_i = \frac{\left(X_i - \bar{X}\right)}{\sum_{i=1}^{n} \left(X_i - \bar{X}\right)^2}$，可以将$\hat{\beta}_1$改写为$\hat{\beta}_1 = \sum_{i=1}^{n} b_i Y_i$，那么此时：
     \begin{align*}
         \Var\left(\hat{\beta}_1\right) &= \Var\left( \sum_{i=1}^{n} b_i Y_i \right) \\
-        &= \sum_{i=1}^{n} b_i^2 \Var(Y_i) + 2b_i b_j \sum_{i\neq j} \Cov(Y_i,Y_j)
+        &= \sum_{i=1}^{n} b_i^2 \Var(Y_i) + 2 \sum_{i\neq j} b_i b_j \Cov(Y_i,Y_j)
     \end{align*}
 
     由假设$Cov(\varepsilon_i,\varepsilon_j)=0$随机误差不相关，可得到$\Cov(Y_i,Y_j)=0$，最终结果如下所示。注意：当不满足随机误差不相关时，即$\Cov(Y_i,Y_j)$非零，其本应进入方差计算，但错误假设其为零，因此导致方差有偏且被低估，及检验假设时t值变大。
@@ -2888,6 +2888,32 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
 
 \section{面板回归}
 
+面板数据（Panel data）指在数据中既有截面数据，又有时间序列数据，即$X_{i,t} \ilsep i=1,\dots,N \ilsep t=1,\dots,T$。对于面板数据而言，平衡面板数据（Balanced panel）指面板中的每个个体，在每个时刻都有其观察值，相反则为非平衡面板数据（Unbalanced panel）。那么对于面板数据进行回归，就被称为建立面板模型，或进行面板回归（面板分析）。
+
+面板模型可分为三种类型：
+\begin{itemize}
+    \item 独立的pooled panels（PoolOLS？普通的OLS回归，混合估计？）
+    \item 随机效应模型（Random effects models，RE）
+    \item 固定效应模型（Fixed effects models，FE）
+\end{itemize}
+
+https://www.zhihu.com/question/272018837
+
+\subsection{检验}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cccc@{}}
+\toprule
+\textbf{类型} & \textbf{目的}   & \textbf{检验值}      & \textbf{结论} \\ \midrule
+F检验         & FE模型与Pool模型比较 & p值<0.05 & FE模型        \\
+BP检验        & RE模型与Pool模型比较 & p值<0.05 & RE模型        \\
+Hausman检验   & FE模型与Re模型比较   & p值<0.05 & FE模型        \\ \bottomrule
+\end{tabular}
+\end{table}
+
+【待整理】
+
 考虑时间差异$v_t$，和考虑个体i差异$\alpha_i$
 \begin{equation*}
     Y_{it} = \beta_0 + \beta_1 X_{it} + \mu_t + \omega_i + \varepsilon_{it}
@@ -2921,11 +2947,11 @@ $\omega_j$为权重函数，Newey和West建议$l$取$4(T/100)^{2/9}$的整部：
 
 \subsection{聚类调整标准误}
 
-
 Reference
 
 \begin{itemize}
-    \item \href{https://en.wikipedia.org/wiki/Clustered\_standard\_errors}{Wiki:Clustered standard errors}
+    \item \href{https://en.wikipedia.org/wiki/Clustered\_standard\_errors}{Wiki: Clustered standard errors}
+    \item \href{https://quant.stackexchange.com/questions/35756/fama-mac-beth-1973-vs-fixed-effect}{Fama-MacBeth vs Fixed effect}
     \item Petersen, Mitchell A., 2009, Estimating Standard Errors in Finance Panel Data Sets: Comparing Approaches, The Review of Financial Studies 22, 435–480.
     \item Cameron, A. Colin, and Douglas L. Miller, 2015, A Practitioner’s Guide to Cluster-Robust Inference, Journal of human resources 50, 317–372.
     \item Abadie, Alberto, Susan Athey, Guido W. Imbens, and Jeffrey Wooldridge, 2022, When Should You Adjust Standard Errors for Clustering? Unpublished Working PaperUnpublished Working Paper.

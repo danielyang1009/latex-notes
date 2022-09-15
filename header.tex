@@ -36,6 +36,7 @@
     citecolor=black,
     filecolor=black,
 }
+% \usepackage{minted}
 \usepackage[UTF8]{ctex}
 \usepackage{CJKfntef}
 % \usepackage{xeCJKfntef}
@@ -89,9 +90,10 @@
 \DeclareMathOperator{\Cov}{Cov}
 \newcommand{\abs}[1]{\left\lvert #1\right\rvert}
 \newcommand{\norm}[1]{\left\lVert #1\right\rVert}
-\newcommand{\given}{\,\vert\,}
-\newcommand{\ilsep}{,\,} %inline separation
-\newcommand{\eqsep}{\,,\quad} %equation separation
+\newcommand{\given}{\:\vert\,}
+\newcommand{\ilsep}{,\;} %inline separation
+\newcommand{\eqsep}{\;,\quad} %equation separation
+\newcommand{\code}[1]{\texttt{#1}} % 与\verb|some_code|相同
 % * places the underscored argument underneath the word rather than to the bottom right of it
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}

@@ -176,6 +176,86 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
 
 上式中，$P(\theta_i)$是模型$i$参数的先验分布，$P(D \given \theta_i)$是模型$i$的似然函数。上述贝叶斯方法的核心在于确定$P(\theta_i)$。根据Pastor和Stambaugh（2000） 以及Barillas和Shanken（2018）的理论，它和以两个模型中的全部因子作为资产所构成的投资组合的预期最大夏普率的平方与市场夏普率的比值有关。
 
+\subsection{因子与SDF}
+
+对于资产定价的研究，有两种方式：
+\begin{itemize}
+    \item 绝对定价（Absolute pricing）：试着将资产价格与所暴露的宏观经济风险联系起来，如CCAPM、ICAPM
+    \item 相对定价（Relative pricing）：利用一系列已知价格的资产给其他资产定价，如期权定价模型或APT
+\end{itemize}
+
+而无论采用哪种方式，不同的资产定价模型都可以放入Cochrane 2005的无套利定价框架之中，资产$i$在$t$时刻的价格$p_{i,t}$应满足如下关系。即在$t+1$时刻，资产处于某种状态$s$，其概率为$\pi_{t+1}(s)$，资产支付的回报和对应的折现因子分别为$\pi_{t+1}(s)$与$m_{t+1}(s)$，此时m为随机贴现因子（Stochastic discount factor，SDF）：
+\begin{equation*}
+    p_{i,t} = \sum_s \pi_{t+1}(s) m_{t+1}(s) x_{t+1}(s)
+\end{equation*}
+
+若使用期望表示：
+\begin{equation*}
+    p_{i,t} = \E_t[m_{t+1}(s) x_{t+1}(s)]
+\end{equation*}
+
+或简单写为：
+\begin{equation*}
+    p = \E[mx]
+\end{equation*}
+
+早期的研究重点为研究SDF的性质，以及什么能决定和影响SDF。而如今在的研究，更常见的是通过beta pricing models，即研究资产预期收益率与风险暴露（beta）之间的关系，即熟悉的多因子模型。看似beta pricing models放弃了对SDF的研究，但实际上beta models与SDF是等价的，这种等价性为如今我们能通过多因子模型研究资产定价提供了保证。
+
+根据资产定价理论，随机贴现因子$m$与因子$f$满足关系$m=a+b'f$，将因子$f$通过去均值（demean），使其均值信息保留在$a$中，因此有$m=a+b'(f-\E[f])$。另外，利用$\E[mR^e]=0$，可以将$m$进行缩放，使得$a=1$，得到简化后的关系$m=1+b'(f-\E[f])$。那么此时有如下定理（Cochrane 2005，6.3节）：
+\begin{thm}
+    Given the model：
+    \begin{equation}
+        m = 1 + [f-\E(f)]'b, \qquad 0=\E(mR^e)
+        \tag{6.7}
+        \label{cochrane:eq6.7}
+    \end{equation}
+
+    one can find $\lambda$ such that
+    \begin{equation}
+        \E(R^e) \beta' \lambda
+        \tag{6.8}
+        \label{cochrane:eq6.8}
+    \end{equation}
+
+    where $\beta$ are the multiple regression coefficients of excess returns $R^e$ on the factors. Conversely, given $\lambda$ in \ref{cochrane:eq6.8}, we can find b such that \ref{cochrane:eq6.7} holds.
+\end{thm}
+
+以上定理说明，当我们吧资产预期超额收益率表示为$\beta$与$\lambda$的乘积（多因子模型）时，SDF可以表示为这些因子的线性组合，此时$\beta$就是资产超额收益$R^e$对于因子f的多元回归系数。
+
+\begin{proof}
+    由$m=1+(f-E[f])'b$可知$\E[m]=1$。利用$0=\E[mR^e]$与$\E[m]=1$，以及$\Cov(XY)=E[XY] -\E[X]\E[Y]$可知：
+    \begin{align*}
+        \Cov(m,R^e) &= \E[mR^e] - \E[m]\E[R^e] \\
+        &= 0 - 1 \E[R^e] \\
+        &= \E[R^e]
+    \end{align*}
+
+    因此$\E[R^e] = -\Cov(m,R^e)$，又由SDF的表达式可知。常数b可以提出，且其他常数不影响协方差可以消去：
+    \begin{align*}
+        \Cov(m,R^e) &= \Cov(1+(f-\E[f])'b,R^e) \\
+        &= \Cov(f'-(\E[f])',R^e)b \\
+        &= \Cov(f',R^e)b
+    \end{align*}
+
+    因此有：
+    \begin{equation*}
+        \E[R^e] = -\Cov(f',R^e)b
+    \end{equation*}
+
+    利用$\beta' = \Cov(f',R^e)\Var(f)^{-1}$，代入上式：
+    \begin{align*}
+        \E[R^e] &= -\Cov(f',R^e)\left[ \Var(f)^{-1} \Var(f) \right]b \\
+        &= \beta'(-\Var(f)b)
+    \end{align*}
+
+    令$\lambda = -\Var(f)b$，则有：
+    \begin{equation*}
+        \E[R^e] = \beta' \lambda
+    \end{equation*}
+
+    这样就从SDF推导得到了多因子模型，而也可以从多因子模型反推出SDF。
+\end{proof}
+
 \subsection{系统性风险}
 
 【待整理】
@@ -593,6 +673,8 @@ Fama-MacBeth截面回归和传统截面回归的相同点和区别是：
 若在第一步时序回归中$\bm{\beta_i}$不变，那么对于传统截面回归的先均值再回归，与FM截面回归的先回归再均值，两种方式在所有T期上得到的估计是相同的（但FM截面回归在检验上一定的优势）。
 
 【待整理】
+
+一步在时序上进行回归得到，相同的结果？
 
 由于截面上收益率的（上市公司收益，乃至基金收益）相关性显然不会为零，正的截面相关性使得standard error被低估，因此计算t值的时候被高估。FM方法先在每个时间点t，进行截面回归，而后在时序上取对估计值去平均（假设在时序上不相关？）。
 

@@ -56,6 +56,14 @@
     &= \int x^2 f(x) dx - \mu^2
 \end{align*}
 
+矩阵形式：
+\begin{align*}
+    \Var(X) &= \E\left( [X -\E(X)][X-\E(X)]' \right) \\
+    &= \E\left( XX' - X[\E(X)]' - \E(X)X' + \E(X)[\E(X)]' \right) \\
+    &= \E[XX'] - \E(X)[\E(X)]' \\
+    &= \E\left( X [X - \E(X)]' \right)
+\end{align*}
+
 对于无偏的样本方差；
 \begin{equation*}
     S^2 = \frac{1}{n-1} \sum_{i=1}^{n} \left(X_i - \bar{X} \right)^2
@@ -248,7 +256,7 @@
 \centering
 \begin{tabular}{@{}clll@{}}
 \toprule
-\textbf{阶} & \multicolumn{1}{c}{\textbf{原始矩}} & \multicolumn{1}{c}{\textbf{中心矩}} & \multicolumn{1}{c}{\textbf{标准矩}} \\ \midrule
+\textbf{阶数} & \multicolumn{1}{c}{\textbf{原始矩}} & \multicolumn{1}{c}{\textbf{中心矩}} & \multicolumn{1}{c}{\textbf{标准矩}} \\ \midrule
 \textbf{0} & $\E(x^0)= 1 $ & $\E[(X-\mu)^0] = 1$ & $\frac{\E[(X-\mu)^0]}{\sigma^0} = 1$ \\
 \textbf{1} & $\E(x^1)= \mu \,\text{（均值）} $ & $\E[(X-\mu)^1] = 0$ & $\frac{\E[(X-\mu)^1]}{\sigma^1} = 0$ \\
 \textbf{2} & $\E(x^2) $ & $\E[(X-\mu)^2] = \sigma^2$ \,\text{（方差）} & $\frac{\E[(X-\mu)^2]}{\sigma^2} = 1$ \\
@@ -1944,7 +1952,7 @@ $\hat{Y}_i$为自变量或解释变量通过回归模型所得到的拟合值，
 
 因此OLS的残差只有$n-2$个自由度，即只需要知道残差中的$n-2$个，就可以通过两个一阶条件得到剩下的两个残差，因此若要得到$\sigma^2$的无偏估计量，就需要对自由度进行调整：
 \begin{equation*}
-    \hat{\sigma}^2 = \frac{\sum_{i=1}^{n} e_i^2}{n-2} = \frac{\text{SSE}}{n-2}
+    \hat{\sigma}^2 = \frac{\sum_{i=1}^{n} e_i^2}{n-2} = \frac{\text{SSE}}{n-2} = \text{MSE}
 \end{equation*}
 
 在假定满足的情况下，$\sigma^2$的的无偏估计有：

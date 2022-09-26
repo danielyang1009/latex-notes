@@ -174,9 +174,31 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
     P(D \given M_i) = \int_{\theta_i} P(\theta_i) P(D \given \theta_i) d\theta_i
 \end{equation*}
 
-上式中，$P(\theta_i)$是模型$i$参数的先验分布，$P(D \given \theta_i)$是模型$i$的似然函数。上述贝叶斯方法的核心在于确定$P(\theta_i)$。根据Pastor和Stambaugh（2000） 以及Barillas和Shanken（2018）的理论，它和以两个模型中的全部因子作为资产所构成的投资组合的预期最大夏普率的平方与市场夏普率的比值有关。
+上式中，$P(\theta_i)$是模型$i$参数的先验分布，$P(D \given \theta_i)$是模型$i$的似然函数。上述贝叶斯方法的核心在于确定$P(\theta_i)$。根据Pastor和Stambaugh（2000）以及Barillas和Shanken（2018）的理论，它和以两个模型中的全部因子作为资产所构成的投资组合的预期最大夏普率的平方与市场夏普率的比值有关。
 
-\subsection{因子与SDF}
+\subsection{系统性风险}
+
+【待整理】
+
+多因子模型的表达式强调，只有那些影响众多资产收益率共同运动的风险，而非资产的特质性风险（即可以通过分散化规避掉的风险），才是预期收益率的来源。
+
+系统风险（Systematic risk）的暴露程度，即对于市场风险暴露的大小。即资产的预期超额收益率，由市场组合（市场因子）的预期超额收益率与该资产对市场风险的暴露大小决定。或可以理解为，单项资产的$\beta$系数是指资产预期超额收益率与市场组合预期超额收益率之间变动关系的敏感程度。
+
+系统性风险（Systematic risk），又称市场风险或不可分散风险，是影响所有资产的、不能通过资产组合而消除的风险。这部分风险是由那些影响整个市场的风险所引起的，无论怎样分散投资，也不可能消除系统性风险。避免集中投资于单一市场可减少系统性风险。单项资产、证券资产组合或不同公司受系统性风险影响不一样，系统性风险的大小通常用beta系数（$\beta$系数）来衡量。
+
+\subsection{股权风险溢价}
+
+股权风险溢价（Equity risk premium）为股票收益与债券收益之差（在CAPM中$R_i-R_f = \beta_i (R_m-R_f)$），大多数时间为正，意味着股票投资比债券投资带来更高的收益，在少数金融危机时可能为负，但投资股票的风险也远大于投资债券。股权溢价之谜（Equity premium puzzle）指在Mebra和Prescott（1985）的研究中，设立模型并最终得到股权溢价的表达式，使用美国实际数据拟合参数，发现需要大的风险厌恶的系数才能拟合实际的数据，而这么大的风险厌恶系数是不合理的。
+
+
+\subsection{数据处理}
+
+Fama and French (1993)五因子中使用百分比收益，因为设计横截面，投资组合。
+
+
+\section{随机贴现因子}
+
+\subsection{随机贴现因子与因子模型}
 
 对于资产定价的研究，有两种方式：
 \begin{itemize}
@@ -184,7 +206,7 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
     \item 相对定价（Relative pricing）：利用一系列已知价格的资产给其他资产定价，如期权定价模型或APT
 \end{itemize}
 
-而无论采用哪种方式，不同的资产定价模型都可以放入Cochrane 2005的无套利定价框架之中，资产$i$在$t$时刻的价格$p_{i,t}$应满足如下关系。即在$t+1$时刻，资产处于某种状态$s$，其概率为$\pi_{t+1}(s)$，资产支付的回报和对应的折现因子分别为$\pi_{t+1}(s)$与$m_{t+1}(s)$，此时m为随机贴现因子（Stochastic discount factor，SDF）：
+而无论采用哪种方式，不同的资产定价模型都可以放入Cochrane（2005）的无套利定价框架之中，资产$i$在$t$时刻的价格$p_{i,t}$应满足如下关系。即在$t+1$时刻，资产处于某种状态$s$，其概率为$\pi_{t+1}(s)$，资产支付的回报和对应的折现因子分别为$\pi_{t+1}(s)$与$m_{t+1}(s)$，此时m为随机贴现因子（Stochastic discount factor，SDF）：
 \begin{equation*}
     p_{i,t} = \sum_s \pi_{t+1}(s) m_{t+1}(s) x_{t+1}(s)
 \end{equation*}
@@ -201,7 +223,7 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
 
 早期的研究重点为研究SDF的性质，以及什么能决定和影响SDF。而如今在的研究，更常见的是通过beta pricing models，即研究资产预期收益率与风险暴露（beta）之间的关系，即熟悉的多因子模型。看似beta pricing models放弃了对SDF的研究，但实际上beta models与SDF是等价的，这种等价性为如今我们能通过多因子模型研究资产定价提供了保证。
 
-根据资产定价理论，随机贴现因子$m$与因子$f$满足关系$m=a+b'f$，将因子$f$通过去均值（demean），使其均值信息保留在$a$中，因此有$m=a+b'(f-\E[f])$。另外，利用$\E[mR^e]=0$，可以将$m$进行缩放，使得$a=1$，得到简化后的关系$m=1+b'(f-\E[f])$。那么此时有如下定理（Cochrane 2005，6.3节）：
+根据资产定价理论，随机贴现因子$m$与因子$f$满足关系$m=a+b'f$，将因子$f$通过去均值（demean），使其均值信息保留在$a$中，因此有$m=a+b'(f-\E[f])$。另外，利用$\E[mR^e]=0$，可以将$m$进行缩放，使得$a=1$，得到简化后的关系$m=1+b'(f-\E[f])$。那么此时有如下定理，详见Cochrane（2005）中6.3节：
 \begin{thm}
     Given the model：
     \begin{equation}
@@ -256,24 +278,55 @@ Mean-Variance Spanning tests考察n个已知资产构建的mean-variance有效�
     这样就从SDF推导得到了多因子模型，而也可以从多因子模型反推出SDF。
 \end{proof}
 
-\subsection{系统性风险}
+\subsection{随机贴现因子与有效前沿}
 
-【待整理】
+有效前沿又称马科维茨的均值-方差前沿（Mean-variance (efficient) frontier），考虑超额收益$R^e$和随机贴现因子$m$，由资产定价理论有$0=\E[mR^e]$：
+\begin{align*}
+    0 &= \E[mR^e] \\
+    &= \E[m]\E[R^e] + \Cov(m,R^e) \\
+    &= \E[m]\E[R^e] + \rho(m,R^e)\sigma(m)\sigma(R^e)
+\end{align*}
 
-多因子模型的表达式强调，只有那些影响众多资产收益率共同运动的风险，而非资产的特质性风险（即可以通过分散化规避掉的风险），才是预期收益率的来源。
+因此有：
+\begin{equation*}
+    \frac{\E[R^e]}{\sigma(R^e)} = -\frac{\rho(m,R^e)\sigma(m)}{\E[m]}
+\end{equation*}
 
-系统风险（Systematic risk）的暴露程度，即对于市场风险暴露的大小。即资产的预期超额收益率，由市场组合（市场因子）的预期超额收益率与该资产对市场风险的暴露大小决定。或可以理解为，单项资产的$\beta$系数是指资产预期超额收益率与市场组合预期超额收益率之间变动关系的敏感程度。
+因为相关系数的取值为$0 \leq \rho \leq 1$，因此任意资产的超额收益与SDF应满足如下关系，其被称为Hansen-Jagannathan bound（详见Hansen and Jagannathan（1991））：
+\begin{equation*}
+    \frac{\abs{\E[R^e]}}{\sigma(R^e)} \leq \frac{\sigma(m)}{\E[m]}
+\end{equation*}
 
-系统性风险（Systematic risk），又称市场风险或不可分散风险，是影响所有资产的、不能通过资产组合而消除的风险。这部分风险是由那些影响整个市场的风险所引起的，无论怎样分散投资，也不可能消除系统性风险。避免集中投资于单一市场可减少系统性风险。单项资产、证券资产组合或不同公司受系统性风险影响不一样，系统性风险的大小通常用beta系数（$\beta$系数）来衡量。
+若只考虑$\E[R^e]>0$的资产，那么可以得到：
+\begin{equation*}
+    \frac{\E[R^e]}{\sigma(R^e)} \leq \frac{\sigma(m)}{\E[m]}
+\end{equation*}
 
-\subsection{股权风险溢价}
+等式左侧为夏普比率，那么意味着资产的夏普比率有上限。观察上式，当等号成立时，即$\rho(m,R^e)=-1$时，夏普比率最大。此时也意味着该资产在mean-variance frontier之上（由于这些资产夏普比率最大），且这些资产都与SDF完全负相关（$\rho=-1$），因此这些资产自身都是完全正相关（$\rho=1$）。
 
-股权风险溢价（Equity risk premium）为股票收益与债券收益之差（在CAPM中$R_i-R_f = \beta_i (R_m-R_f)$），大多数时间为正，意味着股票投资比债券投资带来更高的收益，在少数金融危机时可能为负，但投资股票的风险也远大于投资债券。股权溢价之谜（Equity premium puzzle）指在Mebra和Prescott（1985）的研究中，设立模型并最终得到股权溢价的表达式，使用美国实际数据拟合参数，发现需要大的风险厌恶的系数才能拟合实际的数据，而这么大的风险厌恶系数是不合理的。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig/mean-variance-frontier.jpg}
+    \caption{均值方差（有效）前沿}
+    \label{fig:mean-variance-frontier}
+\end{figure}
 
+那么这种相关性意味着SDF和位于Mean-variance frontier之上的任意资产收益率（记为$R^{mv}$）的等价关系：
+\begin{equation*}
+    m = a + bR^{mv}
+\end{equation*}
 
-\subsection{数据处理}
+在Cochrane（2005）中6.2节中：
+\begin{thm}
+    There is a discount factor of the form $m = a + bR^{mv}$ if and only if $R^{mv}$ is on the mean-variance frontier, and $R^{mv}$ is not the risk-free rate. (When there is no risk-free rate, if $R^{mv}$ is not the constant-mimicking portfolio return.)
+\end{thm}
 
-Fama and French (1993)五因子中使用百分比收益，因为设计横截面，投资组合。
+假设无风险资产存在，则mean-variance frontier是通过$R_f$和tangency portfolio的直线，其之上的任意非无风险资产都可以用来构建SDF，利用SDF和mean-variance frontier的等价关系，可以得到特殊的单因子模型：
+\begin{equation*}
+    \E[R^e] = \beta \lambda_{R^{mv}}
+\end{equation*}
+
+其中$\lambda_{R^{mv}}$为$R^{mv}$的风险溢酬，那么$\beta$为资产超额收益率对均值方差（有效）前沿上资产超额收益的回归系数。同时利用SDF与多因子模型的等价性，以及SDF与均值方差（有效）前沿的等价性，\uline{意味着均值-方差（有效）前沿上资产的收益率嫩能够表示为多因子模型中因子收益率的线性组合。}
 
 \section{投资组合排序法}
 

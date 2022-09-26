@@ -265,7 +265,7 @@
 \end{tabular}
 \end{table}
 
-\subsubsection*{原始矩（Raw/crude moment）}
+\subsubsection*{原始矩（Crude moment）}
 
 当$c=0$时，称为原始矩。此时则有\textbf{平均数（mean）}或\textbf{期望（expected value）}的连续形式为：
 \begin{equation*}
@@ -278,7 +278,7 @@
     \mu = \E(X) = \sum_i x_i p_i
 \end{equation*}
 
-\subsubsection*{中心矩（Central moment）}
+\subsubsection*{中心矩（Centered moment）}
 
 期望值可以成为随机变量的中心，即当$c=\E(X)$时
 \begin{equation*}
@@ -306,6 +306,25 @@
 \begin{equation*}
     \text{Var}(X) = \sigma^2 = \sum p_i (x_i - \E(X))^2 
 \end{equation*}
+
+对于方差，进行样本调整（Sampling adjustments），因此样本方差因有：
+\begin{equation*}
+    s^2 = \frac{\sum (X - \bar{X})^2}{n-1}
+\end{equation*}
+
+\begin{remark}
+    \begin{gather*}
+        \Var(X) = \E[(X-\mu)^2] = E(X^2) - [E(X)]^2 = \sigma^2 \\
+        E(X^2) = \sigma^2 + \mu^2
+    \end{gather*}
+
+    或：
+    \begin{align*}
+        \Var(X) &= \frac{1}{n} \left(\sum_{i=1}^{n} (X_i-\mu)^2 \right) \\
+        &= \frac{1}{n} \left( \sum_{i=1}^{n} X_i^2 - 2\mu \sum_{i=1}^{n} X_i + n \mu^2 \right) \\
+        &= \frac{1}{n} \sum_{i=1}^{n} X_i^2 + \mu^2
+    \end{align*}
+\end{remark}
 
 \subsubsection*{标准矩（Standardized moment）}
 
@@ -336,6 +355,11 @@
     \wt{\mu}_3 = \frac{\mu_3}{\sigma^3} = \frac{\E[(X-\mu)^3]}{\left(\E[(X-\mu)^2]\right)^{3/2}}
 \end{equation*}
 
+对于偏度，进行样本调整（Sampling adjustments）：
+\begin{equation*}
+    \text{sample skewness} = \frac{n}{(n-1)(n-2)}\frac{\sum (X - \bar{X})^3}{s^3}
+\end{equation*}
+
 偏度分为两种：
 \begin{itemize}
     \item 负偏态或左偏态：左侧的尾部更长，分布的主体集中在右侧
@@ -359,6 +383,12 @@
 \begin{equation*}
     \text{Excess kurtosis} = \wt{\mu}_4-3
 \end{equation*}
+
+对于峰度，进行样本调整（Sampling adjustments）：
+\begin{equation*}
+    \text{sample kurtosis} = \frac{n(n+1)}{(n-1)(n-2)(n-3)}\frac{\sum (X - \bar{X})^4}{s^4} - \frac{3(n-1^2)}{(n-2)(n-3)}
+\end{equation*}
+
 \begin{itemize}
     \item 若超额峰度为正，称为高狭峰（Leptokurtic），此时有尖峰厚尾。即相比正态分布，其“质量”更集中于中心
     \item 若超额峰度为负，称为低阔峰（Platykurtic），此时有低峰轻尾。相比于正态分布，其“质量”在中心位置更分散
@@ -1121,7 +1151,7 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
 \end{align*}
 
 \begin{law}
-    总期望定律（Law of total expectation）或称为双重期望定理（Double expectation theorem），或称全期望公式有：
+    总期望定律（Law of total expectation）或期望迭代定律（Law of interated expectation）或称为双重期望定理（Double expectation theorem），全期望公式有：
     \begin{equation*}
         \E(X) = \E\left[ \E(X\given Y) \right]
     \end{equation*}
@@ -1141,6 +1171,13 @@ F检验还可以用于检验变量被解释变量$y$与解释变量$x_1,x_2,\dot
 
     \label{law-total-expectation}
 \end{law}
+
+同理，对总期望定律进行延伸，还应有：
+\begin{equation*}
+    \E(X \given Y) = \E\left[ \E(X\given Y,Z)\given Y\right]
+\end{equation*}
+
+举一个简单的例子，若有5个数，分为两组：A组为1、3；B组为2、4、6，整体均值为$16/5$，A组均值为$4/2=2$，B组均值为$12/3=4$。显然有整体的均值应有，$\E[X] = P(A)\E[A] + P(B)\E[B] = 2\times 2/5 + 4\times 3/5 = 3.2$。
 
 \begin{remark}
     或可以先展开内层期望进行证明$\E\left[ \E(X\given Y) \right] = \E\left[ \sum_x x P(X=x\given Y) \right]$。由此可以发现内层条件期望求得的结果为关于Y的函数，因此外层的期望作用于随机变量Y，而内层的期望作用于随机变量X。积分先后顺序可以对调，可以理解为一个矩形面积，可以由积分底再积分高获得，或先积分高再积分底，两者结果相同。且倒数第二步，可以将与随机变量Y无关的，只关于随机变量X的部分提出至括弧外。
@@ -3392,11 +3429,141 @@ Bollerslev（1986）年提出了对于ARCH模型的推广形式，称之为\text
 
 \begin{appendices}
 
+\section{矩阵基础}
+
+\subsection{逆矩阵}
+
+逆矩阵（Inverse matrix），给定一个n阶方阵（Square matrix），若存在一个n阶方阵$\bm{B}$，使得：
+\begin{equation*}
+    \bm{AB} = \bm{BA} = \bm{I_n}
+\end{equation*}
+
+其中$\bm{I}_n$为n阶单位矩阵（Identity matrix，对角线为1，其他地方全为零），那么此时称$\bm{A}$是可逆的，且$\bm{B}$是$\bm{A}$的逆矩阵，记为$\bm{A^{-1}}$。若方阵$\bm{A}$可逆，那么应有$\det(\bm{A})\neq 0$（行列式不等于零），或称$\bm{A}$为非奇异方阵（Nonsingular matrix），反之若行列式为零，则称为奇异方阵（Singular matrix）。同时方阵$\bm{A}$非奇异与一下论述等价：
+\begin{enumerate}
+    \item $\bm{A}$是可逆的
+    \item $\bm{A}^{T} \bm{A}$是可逆的
+    \item $\bm{A}$的行列式不为零
+    \item $\bm{A}$的秩等于$n$（$\bm{A}$满秩）
+    \item $\bm{A}$的转置矩阵$\bm{A}^T$也是可逆的
+    \item $\bm{A}$的任意特征值非零
+    \item 存在一个n阶方阵$\bm{B}$使得$\bm{AB} = \bm{I}_n$
+    \item 存在一个n阶方阵$\bm{B}$使得$\bm{BA} = \bm{I}_n$
+\end{enumerate}
+
+\begin{property}
+    逆矩阵还有如下性质：
+    \begin{enumerate}
+        \item $\left( \bm{A}^{-1} \right)^{-1} = \bm{A}$
+        \item $\left( \lambda \bm{A} \right)^{-1} = \frac{1}{\lambda} \bm{A}^{-1}$
+        \item $(\bm{AB})^{-1} = \bm{B}^{-1} \bm{A}^{-1}$
+        \item $\left(\bm{A}^{T}\right)^{-1} = \left(\bm{A}^{-1}\right)^{T}$
+        \item $\det\left(\bm{A}^{-1}\right) = \frac{1}{\det\left(\bm{A}\right)}$
+    \end{enumerate}
+\end{property}
+
+广义逆（Generalized inverse），也称为伪逆（Pseudoinverse），有时特指摩尔-彭若斯广义逆（Moore–Penrose pseudoinverse），广义逆的目的是针对\uline{可逆矩阵以外的矩阵}（如非方阵矩阵），具备部分逆矩阵特征的矩阵。
+
+\section{奇异值分解}
+
+奇异值分解（Singular matrix decomposition，SVD），指对于任意矩阵$\bm{A}$都可以被分解成$\bm{A} = \bm{U\Sigma V}^{T}$的形式。
+\begin{equation*}
+    \bm{A} = \bm{U \Sigma V^{T}}
+\end{equation*}
+
+其中$\bm{U}$与$\bm{V}$均为正交矩阵（Orthogonal matrix），正交矩阵矩阵的转置矩阵等于其逆矩阵，即：
+\begin{equation*}
+    \bm{U^{T}} = \bm{U}^{-1} \Leftrightarrow \bm{U^{T}U} = \bm{UU^{T}} = \bm{I}
+\end{equation*}
+
+且有正交矩阵的行列式值$\det(\bm{U}) = \pm 1$。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig/svd.png}
+    \caption{SVG}
+    \label{fig:svg}
+\end{figure}
+
+对角矩阵$\Sigma$形状为$m\times n$，有以下三种形式（注意$\sigma$可能为0）：
+\begin{equation*}
+    \bm{\Sigma} = 
+    \begin{bmatrix}
+    \sigma_1 & \dots & 0 \\
+    \vdots & \ddots & \vdots \\
+    0 & \dots & \sigma_p
+    \end{bmatrix}
+    \qquad
+    \bm{\Sigma} = 
+    \begin{bmatrix}
+    \sigma_1 & \dots & 0 & 0 & \dots & 0 \\ 
+    \vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+    0 & \dots & \sigma_p & 0 & \dots & 0 
+    \end{bmatrix}
+    \qquad
+    \bm{\Sigma} = 
+    \begin{bmatrix}
+    \sigma_1 & \dots & 0 \\ 
+    \vdots & \ddots & \vdots \\
+    0 & \dots & \sigma_p \\
+    0 & \dots & 0 \\
+    \vdots & \ddots & \vdots \\
+    0 & \dots & 0
+    \end{bmatrix}
+\end{equation*}
+
+对于求解$A x = b$这个问题，已知$\bm{A}$可以被SVD分解为$A = U \Sigma V^T$，那么此时构建$\Sigma^+$（形状为$n \times m$），分别对应上面$\Sigma$的三种形式
+\begin{equation*}
+    \bm{\Sigma} = 
+    \begin{bmatrix}
+    \frac{1}{\sigma_1} & \dots & 0 \\
+    \vdots & \ddots & \vdots \\
+    0 & \dots & \frac{1}{\sigma_p}
+    \end{bmatrix}
+    \qquad
+    \bm{\Sigma} = 
+    \begin{bmatrix}
+    \frac{1}{\sigma_1} & \dots & 0 \\ 
+    \vdots & \ddots & \vdots \\
+    0 & \dots & \frac{1}{\sigma_p} \\
+    0 & \dots & 0 \\
+    \vdots & \ddots & \vdots \\
+    0 & \dots & 0
+    \end{bmatrix}
+    \qquad
+    \bm{\Sigma} = 
+    \begin{bmatrix}
+    \frac{1}{\sigma_1} & \dots & 0 & 0 & \dots & 0 \\ 
+    \vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+    0 & \dots & \frac{1}{\sigma_p} & 0 & \dots & 0 
+    \end{bmatrix}
+\end{equation*}
+
+那么对$y = Ax$等式两边分别同乘以$\bm{U}^T$、$\bm{\Sigma}^+$与$\bm{V}$，可以得到：
+\begin{align*}
+    \bm{y} &= \bm{A x} \\
+    \bm{V} \bm{\Sigma}^+ \bm{U}^T \bm{y} &= \bm{V} \bm{\Sigma}^+ \bm{U}^T \bm{U} \bm{\Sigma} \bm{V}^T \bm{x} \\
+    \bm{V} \bm{\Sigma}^+ \bm{U}^T \bm{y} &= \bm{x} \\
+    \bm{A}^{+} y = x
+\end{align*}
+
+其中$\bm{A+}$，即为伪逆：
+\begin{equation*}
+    \bm{A}^{+} = \bm{V} \bm{\Sigma}^+ \bm{U}^T
+\end{equation*}
+
+Reference:
+\begin{itemize}
+    \item \href{https://en.wikipedia.org/wiki/Singular_value_decomposition}{Wikipedia: Singular value decomposition}
+    \item \href{https://zhuanlan.zhihu.com/p/131097680}{知乎：SVD的应用：求解Ax=b}
+    \item \href{https://zhuanlan.zhihu.com/p/29846048}{奇异值分解（SVD）}
+    \item \href{https://zhuanlan.zhihu.com/p/476572707}{奇异值分解（SVD）的几何意义解释}
+\end{itemize}
+
 \section{黑塞矩阵}
 
 对于一元函数$f(x)$，其在$x=x_0$处的泰勒展开为如下，其中$\Delta x = x - x_0$：
 \begin{equation*}
-    f(x) = f(x_)) + f'(x_0) \Delta x + \frac{f''(x)}{2!}\Delta x^2 + \dots
+    f(x) = f(x_0) + f'(x_0) \Delta x + \frac{f''(x)}{2!}\Delta x^2 + \dots
 \end{equation*}
 
 对于二元函数$f(x_1,x_2)$在$x_0=(x_{10},x_{20})$处的泰勒展开为：

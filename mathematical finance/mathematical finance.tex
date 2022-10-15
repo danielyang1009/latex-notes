@@ -1044,7 +1044,7 @@ BSM定价公式的核心价值在于它构建了量化数学模型，以此可�
 \begin{table}[H]
 \centering
 \begin{tabular}{@{}cccccc@{}} \toprule
-           & Delta & Gamma & Vega & Theta & Rho \\ \midrule
+& Delta & Gamma & Vega & Theta & Rho \\ \midrule
 Long Call  & $+$ & $+$ & $+$ & $-$ & $+$ \\
 Long Put   & $-$ & $+$ & $+$ & $-$ & $-$ \\
 Short Call & $-$ & $-$ & $-$ & $+$ & $+$ \\
@@ -1054,7 +1054,12 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
 
 \subsubsection{Delta}
 
-如下图所示看涨期权的Delta值在$(0,1)$之间，看跌期权的Delta值在$(-1,0)$之间。对于BSM而言，看涨期权Delta与看跌期权Delta有如下关系$\text{Delta}_C - \text{Delta}_P = 1$。期权价格与标的资产价格的关系如下：
+如上公式所示：
+\begin{equation*}
+    \text{Delta} = \dfrac{\partial V}{\partial S}
+\end{equation*}
+
+Delta描述了标的价格变动，对期权价格的影响，当$\text{Delta}=0.5$时，假设标的资产变动1元，那么期权价格将变动$1\times 0.5 = 0.5$元。显然应有$\abs{\text{Delta}} \in (0,1)$。如下图所示看涨期权的Delta值在$(0,1)$之间，看跌期权的Delta值在$(-1,0)$之间。对于BSM而言，看涨期权Delta与看跌期权Delta有如下关系$\text{Delta}_C - \text{Delta}_P = 1$。期权价格与标的资产价格的关系如下：
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.68\textwidth]{fig/delta-stock.png}
@@ -1079,12 +1084,22 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
     \label{fig:delta-put-surf}
 \end{figure}
 
+\subsubsection*{Dollar Delta}
+
+Delta exposure或称为现Dollar Delta（现金Delta）或记为$\$\Delta$，当投资期权时，希望知道当前的期权投资，\uline{相当于投资了多少头寸的标的资产（金额计）}（cash equivalent exposure of the underlying）。由$\Delta$的定义可知，其为对于价格敏感程度的指标，同时也可以通过$\Delta$，将其换算为数量之比。假设当前看涨期权$\Delta=0.5$，标的资产价格为100元，那么标的资产每变动1元，期权价格变动0.5元。那么此时，对于持有的每份期权，相当于持有0.5份的标的资产，乘以标的资产的价格，即得到$\$\Delta = \Delta \times S = 0.5 \times 100 = 50$。即当前对于这一份期权，相当于投资50元于标的资产。
+
+使用Dollar Delta的好处是，方便不同标的资产价格的期权之间进行比较。假设股票A价格为100元，股票B价格为50元，此时两者期权的Delta都为0.5，对于一份期权而言，对于股票A期权，相当于投资了50元于股票A，而对于股票B，相当于投资了25元于股票B。在组合中，若直接将Delta相加，Delta为1。若一个看涨一个看跌，两者相加为0，并没有意义。
+
+备注：以50ETF期权为例，合约单位为10000份，当$\Delta=0.5$时，那么一手期权即对应了5000份个股。
+
 \subsubsection{Gamma}
 
-若以期权价格为纵轴，标的资产价格为横轴，得到期权收益，如图\ref{fig:call-vs-stock}。那么Delta为该曲线切线的斜率，为一阶导，衡量期权价格对标的资产变动的敏感程度。Gamma为该曲线的二阶导，为Delta的变化速度，或曲线弯曲程度或加速度，衡量Delta对标的资产价格变动的敏感程度。同时Gamma如图\ref{fig:delta-stock}中所示，为Delta与标的资产价格关系的一阶导：
+同时Gamma如图\ref{fig:delta-stock}中所示，为Delta与标的资产价格关系的一阶导（资产为线性，$\Gamma=0$）：
 \begin{equation*}
     \Gamma = \frac{\partial \Delta}{\partial S} = \frac{\partial^2 V}{\partial S^2}
 \end{equation*}
+
+若以期权价格为纵轴，标的资产价格为横轴，得到期权收益，如图\ref{fig:call-vs-stock}。那么Delta为该曲线切线的斜率，为一阶导，衡量期权价格对标的资产变动的敏感程度。Gamma为该曲线的二阶导，为Delta的变化速度，或曲线弯曲程度或加速度，衡量Delta对标的资产价格变动的敏感程度，或标的价格没变化1元，引起的Delta值的变动，假设标的资产价格为200，Delta为0.3，Gamma为0.02，那么当标的资产价格上升1元至201时，那么Delta上升至0.32。
 
 期权权利方（多方），有正的Gamma，标的资产价格的变化对投资者有利。具体而言，当价格上涨的时候，此时对投资者有利，随着标的资产价格的不断上涨，期权所带来的盈利越多。相反当价格下跌时，此时对投资者不利，但随着标的资产的不断下跌，损失越来越小。而作为做市商等，卖期权（期权空方），则有负的Gamma。此时与期权投资者相反，价格上涨时，盈利减慢，而价格下跌时，损失增大。正Gamma为凸函数（Convex，下凸），负Gamma为凹函数（Concave，上凸），另外可以看到在平值点的Gamma最大，看涨期权与看跌期权的Gamma相同。
 \begin{figure}[H]
@@ -1095,6 +1110,42 @@ Short Put  & $+$ & $-$ & $-$ & $+$ & $+$ \\ \bottomrule
 \end{figure}
 
 另外需要注意，\uline{只有期权有Gamma值}，因此为了达到投资组合$\Pi$的Gamma中性状态，只能通过期权头寸的调整获得。实现Gamma中性往往会带来Delta的非中性，还需要调整标的资产或者期货头寸才能使得投资组合同时达到Delta中性与Gamma中性。
+
+\subsubsection*{Dollar Gamma}
+
+Gamma exposure或称为Dollar Gamma（现金Gamma）或记为$\$\Gamma$。从下文对BSM模型Delta推导中可知，看涨看跌期权的Delta值分别为：$\Delta_C=N(d_1)$，$\Delta_P = N(d_1)-1$，Detla值并不与标的资产价格（水平）高低相关。而对于Gamma而言，对于看涨看跌期权其Gamma相同，即Detla对标的资产价格S球导：$\Gamma = N'(d_1)/(S \sigma \sqrt{\tau})$，可以发现Gamma与标的资产价格水平的倒数有关。因此，对于其他条件相同的两支期权，若A股价为B股票的2倍，那么A的Gamma为B的$\frac{1}{2}$，这样显然无法直接进行对比。
+
+由下文希腊值的分解可知，若期权价值为$V$，对标的资产价格$S$与时间$t$进行泰勒展开，并忽略高与$\Delta t$的项（保留前三项），若忽略Theta的影响可得：
+\begin{align*}
+    dV &= \frac{dV}{dS} dS + \frac{dV}{dt} dt + \frac{1}{2}\frac{d^2 V}{d S^2}(dS)^2 \\
+    &\approx \Delta dS + \frac{1}{2}\Gamma (dS)^2
+\end{align*}
+
+由上对Dollar Delta的分析可知：
+\begin{equation*}
+    \$\Delta = \Delta \times S = \frac{d V}{d S} \times S = \frac{dV}{(dS/S)}
+\end{equation*}
+
+通过变换，那么可以得到收益率的一阶展开，其意义也方便理解，即期权合约价值的变化，等于相当于投资了多少金额的标的资产，乘以标的资产价格的变动：
+\begin{equation*}
+    dV = (\$\Delta) \frac{dS}{S}
+\end{equation*}
+
+此时可以看到同时$\$\Delta$还衡量了，\uline{期权合约价值对标的资产每变动1\%的敏感程度}。同样以标的资产价格$S=100$，期权$\Delta=0.5$为例：若持有一份期权合约，此时$\$\Delta=50$，相当于买了半份标的资产（金额）；同时当标的资产价格变化每1\%，即标的资产变动1元，期权价格变化0.5元，此时$\$\Delta = 0.5/0.01 = 50$。
+
+若将如上概念自然扩展至二阶：
+\begin{equation*}
+    dV \approx (\$\Delta) \frac{dS}{S} + \frac{1}{2} (\$\Gamma) \left(\frac{dS}{S}\right)^2
+\end{equation*}
+
+此时定义Dollar Gamma（$\$\Gamma$）为：
+\begin{align*}
+    \$\Gamma &= \Gamma \times S^2 = \frac{d \Delta}{d S} \times S^2 \\
+    &= \frac{d \Delta \times S}{(dS/S)} = \frac{d \Delta \times S}{(dS/S)} \\
+    &= \frac{d \$\Delta}{dS/S}
+\end{align*}
+
+可以看到此时Dollar Gamma衡量了，\uline{Dollar Delta对标的资产价格每1\%变动的敏感程度}。
 
 \subsubsection{Vega}
 
@@ -1165,9 +1216,7 @@ Delta为衍生品价格变动与其标的资产价格变动的比率。如果假
     f(T,W_T) =f(t,W_t) = \int^T_t \frac{\partial f}{\partial u}du + \int^T_t \frac{\partial f}{\partial S} dW_t \frac{1}{2} + \int^T_t\frac{\partial ^2 f}{\partial S^2} 
 \end{equation*}
 
-【待整理】 在Bakshi and Kapadia 2003中，
-
-在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，净投资金额获得无风险收益）。
+【待整理】 在Bakshi and Kapadia 2003中，在一段时间内的使用看涨看跌期权进行Delta对冲（\textbf{注意：}由几何布朗运动与伊藤过程推到而来，因此看涨看跌期权形式相同，买入看涨看跌期权，并卖出股票，扣除净投资金额所应获得无风险收益，即计算超额收益）。
 \begin{equation*}
     \text{Call Gain} = C_{t+\tau} - C_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(C_{t+\tau} - \Delta_t S_t)
 \end{equation*}
@@ -1175,15 +1224,14 @@ Delta为衍生品价格变动与其标的资产价格变动的比率。如果假
     \text{Put Gain} = P_{t+\tau} - P_t - \Delta_t ( S_{t+\tau}-S_t) - \frac{r\tau}{365}(P_{t+\tau} - \Delta_t S_t)
 \end{equation*}
 
-Long call, short delta stock/ short call, long delta stock
-
-Long put, long delta stock/ short put, short delta stock
-
-此时需要注意，Put的Delta为负
-
-假设持有时间为t到t+1，具体操作为在t时刻时，买入Delta份看涨看跌期权（消耗现金$-C_{t}$），卖出一份股票（获得现金$+ \Delta S_{t}$）。而在t+1时刻进行平仓，那么需要卖出Delta份看涨看跌期权（获得现金$C_{t+1}$），买入一份股票（消耗现金$- \Delta S_{t+1}$）。因此整体投资组合的收益应为：
+假设持有时间为t到t+1，以看涨期权为例：具体操作为在t时刻时，买入1份看涨期权（消耗现金$-C_{t}$），卖出$\Delta_C$份股票（获得现金$+ \Delta_C S_{t}$）。而在t+1时刻进行平仓，即卖出1份看涨看跌期权（获得现金$C_{t+1}$），买入$\Delta_C$份股票（消耗现金$- \Delta_C S_{t+1}$）。因此整体投资组合的收益应为：
 \begin{equation*}
-    ( C_{t+1} -\Delta S_{t+1} ) + ( -C_{t} + \Delta S_{t} ) =  (C_{t+1} - C_{t}) - \Delta (S_{t+1} - S_{t})
+    ( C_{t+1} -\Delta_C S_{t+1} ) + ( -C_{t} + \Delta_C S_{t} ) = (C_{t+1} - C_{t}) - \Delta_C (S_{t+1} - S_{t})
+\end{equation*}
+
+对于看跌期权，同理与看涨期权公式相同，但此时需注意看跌期权$\Delta_P<0$为负：在t时刻，买入1份看跌期权（消耗现金$-P_{t}$），“卖出”$\Delta_P$份股票（注意看跌期权$\Delta$负，实则买入$\abs{\Delta_P}$份股票，“获得”（消耗）现金$+ \Delta_P S_{t}$）。在t+1时刻进行平仓，即卖出1份看跌期权（获得现金$P_{t+1}$），“买入”$\Delta$份股票（实则为卖出$\abs{\Delta_p}$份股票，“消耗”（获得）现金$- \Delta_p S_{t+1}$）。因此整体投资组合的收益应为：
+\begin{equation*}
+    ( P_{t+1} - \Delta_P S_{t+1} ) + ( -P_{t} + \Delta_P S_{t} ) = (P_{t+1} - P_{t}) - \Delta_P (S_{t+1} - S_{t})
 \end{equation*}
 
 vega-neutral delta-hedged P\&L
@@ -1948,7 +1996,7 @@ BSIV与MFIV为风险中性下的波动率
     }
 \end{equation*}
 
-VIX为未来30天（日历日或约22天交易日）的波动率（年化）$\text{VIX}=\sigma_{30D} \times 100$。因此需要将两个不同期限的方差进行线性插值即可得到：
+VIX为年化未来30天（日历日或约22天交易日）的波动率，将两个不同期限的方差进行线性插值即可得到：
 \begin{equation*}
     \text{VIX} = 100 \times \sqrt{ \left\{ T_1 \sigma^2_1 \left[ \frac{N_{T_2} - N_{30}}{N_{T_2}-N_{T_1}}\right] + T_2 \sigma^2_2 \left[ \frac{N_{30} - N_{T_1}}{N_{T_2}-N_{T_1}}\right] \right\}\times \frac{N_{365}}{N_{30}} }
 \end{equation*}

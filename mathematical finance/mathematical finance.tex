@@ -3593,8 +3593,8 @@ BS
 \begin{note}
     关于收益率的计算：
     \begin{itemize}
-        \item 收益率需要使用后复权价格进行计算，与真实收益率不不相等但近似
-        \item 使用不复权价格，使用当天的”PreClose“或“昨收”字段（为经过除权）与当天收盘价格计算的收益率
+        \item 收益率需要使用后复权价格进行计算，与真实收益率不相等但近似
+        \item 使用不复权价格，使用当天的”PreClose“或“昨收”字段（为经过除权）与当天收盘价格计算的收益率，即CSMAR数据库中"ChangeRatio"字段，计算方式为：今收/昨收-1
         \item 如上两种计算方式，结果与CSMAR数据库中“考虑现金红利再投资的日个股回报率”近似
         \item 若直接使用t-1日的收盘价，与当天收盘价所计算的收益率，与CSMAR数据库中“不考虑现金红利再投资的日个股回报率”近似或相等
     \end{itemize}
@@ -3627,9 +3627,11 @@ BS
 
 大致编制方法为，标普500对于每个公司都计算Investable Weight Factor或IWF，用于计算可供投资者交易的$Q$，即$Q=\text{IWF}_i * \text{Total shares}_i$，用于去除掉不流通股票，这样也称为float-adjusted，分母为该成分股编入股指时的价格。
 
-\section{汇率表示方法}
+\section{外汇}
 
-USD/CNY约为6.7，即美元兑人民币为6.7，从字面理解即1美金（每美金），兑换6.7人民币，也可称为CNY per USD。也经常表示为USDCNY或USD：CNY，称为USD to CNY或USD against CNY。在前的货币称为Base currency（每），在后的称为Quote currency或称为Local currency。
+\subsection{汇率表示方法}
+
+USD/CNY约为6.7，即美元兑人民币为6.7（￥6.7/\$，quoted as quote currency units per base currency）。从字面理解即1美金（每美金），兑换6.7人民币，也可称为CNY per USD。也经常表示为USDCNY或USD：CNY，称为USD to CNY或USD against CNY。在前的货币称为Base currency（每），在后的称为Quote currency或称为Local currency。
 
 以做多USD/CNY为例，假设当前为6.7，一个月后上涨至6.8，即每单位USD可兑换的CNY变多，即Base currency USD对CNY上涨，从而获利。若做空USD/CNY，那么希望USD跌。根据做多做空盈利的方向而言，此时Base currency为在外汇交易者买入的货币，而Quote currency为卖出的货币，所持有的希望卖出的货币，所以也称为Local currency。
 
@@ -3645,7 +3647,7 @@ USD/CNY约为6.7，即美元兑人民币为6.7，从字面理解即1美金（每
 
 即需要6.7元才能买入1美元，或卖出1美元能买入6.7元人民币，两种表述方式相同，但可见Base currency即为每单位或1单位该货币，为基准能兑换N单位其他国家货币。
 
-\section{利率平价}
+\subsection{利率平价}
 
 利率平价（Interest rate parity）可分为以下两种：
 \begin{itemize}
@@ -3658,7 +3660,14 @@ USD/CNY约为6.7，即美元兑人民币为6.7，从字面理解即1美金（每
     (1 + i_{L}) = \frac{F_{F/L}}{S_{F/L}} (1+ i_{F})
 \end{equation*}
 
-两国利差，如中国名义（Nominal）利率为3\%，而美国利率为1\%，那么应该卖出美金，买入人民币，投资中国债券，从而赚取利差。那么未来应该人民币贬值2\%，或美元兑人民币升值2\%，不然就存在套利机会。即投资高利率国所获得的额外收益，将由该国汇率贬值抵消。
+对上述公式，若取对数则有，并使用$x=\log(1+x)$进行近似：
+\begin{gather*}
+    \log(1+i_L) = \log(F_{F/L}) - \log(S_{F/L}) + \log(1+i_F) \\
+    i_L \approx \log(F_{F/L}) - \log(S_{F/L}) + i_F \\
+    \log(F_{F/L}) \approx \log(S_{F/L}) + i_L - i_F 
+\end{gather*}
+
+两国利差，如中国名义（Nominal）利率为3\%，而美国利率为1\%，那么应该卖出美金，买入人民币，投资中国债券，从而赚取利差。那么未来应该人民币贬值2\%（USDCNY上涨2\%），否则就存在套利机会。即投资高利率国所获得的额外收益，将由该国汇率贬值抵消。
 
 从上式变形，等式两边都减去1：
 \begin{equation*}

@@ -26,7 +26,7 @@
     \E[R_i^e] = \bm{\beta_{i}' \lambda}
 \end{equation*}
 
-同CAPM模型相类似，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），即因子的收益率变化对资产超额收益变化的影响程度（控制其他因子后），或简单理解为风险的大小。$\bm{\lambda}$为因子溢价（Factor risk premium）或因子风险溢酬，或称因子预期收益率（Factor expected return），或风险的价格。在多因子模型研究中，研究的是不同资产之间的预期超额收益率的差别，因此称为（横）截面（Cross-sectional，CS）差异，而非时间序列（Time-series，TS）或时序上的差异。对于某个资产$i$的预期超额收益率$\E[R_i^e]$，给定等式右侧一系列因子的预期收益率，由该资产在这些因子上的暴露$\beta_i$决定。那么不同资产预期超额收益率的差别，由其在这些因子上的暴露的差别决定。因此\uline{多因子模型研究的核心，是找到一组能够解释股票预期超额收益率截面差异的因子}。
+同CAPM模型相类似，$\bm{\beta}$为因子暴露（Factor exposure）或称为因子载荷（Factor loading），即因子的收益率变化对资产超额收益变化的影响程度（控制其他因子后），或简单理解为风险的大小（quantity of risk）。$\bm{\lambda}$为因子溢价（Factor risk premium）或因子风险溢酬，或称因子预期收益率（Factor expected return），或风险的价格（factor price of risk）。在多因子模型研究中，研究的是不同资产之间的预期超额收益率的差别，因此称为（横）截面（Cross-sectional，CS）差异，而非时间序列（Time-series，TS）或时序上的差异。对于某个资产$i$的预期超额收益率$\E[R_i^e]$，给定等式右侧一系列因子的预期收益率，由该资产在这些因子上的暴露$\beta_i$决定。那么不同资产预期超额收益率的差别，由其在这些因子上的暴露的差别决定。因此\uline{多因子模型研究的核心，是找到一组能够解释股票预期超额收益率截面差异的因子}。
 
 \begin{figure}[H]
     \centering
@@ -247,7 +247,7 @@ Fama and French (1993)五因子中使用百分比收益，因为设计横截面�
 
     one can find $\lambda$ such that
     \begin{equation}
-        \E(R^e) \beta' \lambda
+        \E(R^e) = \beta' \lambda
         \tag{6.8}
         \label{cochrane:eq6.8}
     \end{equation}
@@ -373,35 +373,44 @@ $\{\lambda_t\}$在时序上取平均值，就得到预期因子收益率的估�
 
 \subsection{多重排序法}
 
-上述使用单一变量对股票排序的方法，称之为单变量排序（Univariate sorting）。例如以账面市值比（book-to-market ratio，BM）为例，即为市净率的倒数，学术惯例称其为价值因子而非估值因子。显然BM越高的股票，估值越低，因此价值越高。虽然进行单变量排序，做多BM最高组，做空BM最低组，能极大消除除了BM之外的影响因素。但假如高BM的股票都是大市值、低BM的股票都是小市值，那么就造成了估计误差，使得难以准确估计BM因子。根据上述因子模拟投资组合的所需满足的条件，其应该仅在目标因子上有暴露，在非目标因子上没有暴露。因此为了排除其他因子的干扰，常见的做法时使用多个变量，进行双重排序（Double sorting或Bivariate sorting）或三重排序（Triple sorting），这些方法统称为多重排序法。
+上述使用单一变量对股票排序的方法，称之为单变量排序（Univariate sorting）。例如以账面市值比（book-to-market ratio，BM）为例，即为市净率的倒数，学术惯例称其为价值因子而非估值因子。显然BM越高的股票，估值越低，因此价值越高。虽然进行单变量排序，做多BM最高组，做空BM最低组，能极大消除除了BM之外的影响因素。但假如高BM的股票都是大市值、低BM的股票都是小市值，那么就造成了估计误差，使得难以准确估计BM因子。根据上述因子模拟投资组合的所需满足的条件，其应该仅在目标因子上有暴露，在非目标因子上没有暴露。因此为了排除其他因子的干扰，常见的做法时使用多个变量，进行双重排序（Double sorting或Bivariate sorting）或三重排序（Triple sorting），这些方法统称为多重排序法。而根据排序过程中先后或依存的关系，又可分为独立双重排序（Independent double sorting或Unconditional double sorting），或条件双重排序（Dependent double sorting或Conditional double sorting）。
 
-根据排序过程中先后或依存的关系，又可分为独立双重排序（Independent double sorting或Unconditional double sorting），或条件双重排序（Dependent double sorting或Conditional double sorting）。例如在Fama and French（1993）中就使用了BM和市值两个指标，进行$2 \times 3$的独立双重排序，其分组方法如下所示：
+\begin{example}
+    例如在Fama and French（1993）中就使用了市值与价值（BM）两个指标，进行$2 \times 3$的\uline{独立双重排序}，构建SMB与HML两个因子。具体而言，在每一期，使用NYSE中位数作为市值分组的依据，而对于价值（BM）分组，则采用30\%与70\%百分位作为依据，分别独立的将股票划分为$2 \times 3$组，一共得到如下所示六个投资组合：
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{@{}cccc@{}}
+    \toprule
+    & \textbf{High（高BM）} & \textbf{Middle（中间组）} & \textbf{Low（低BM）} \\ \midrule
+    \textbf{Small（小市值）} & S/H & S/M & S/L \\
+    \textbf{Big（大市值）}   & B/H & B/M & B/L \\ \bottomrule
+    \end{tabular}
+    \end{table}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{@{}cccc@{}}
-\toprule
-& \textbf{High（高BM）} & \textbf{Middle（中间组）} & \textbf{Low（低BM）} \\ \midrule
-\textbf{Small（小市值）} & S/H & S/M & S/L \\
-\textbf{Big（大市值）}   & B/H & B/M & B/L \\ \bottomrule
-\end{tabular}
-\end{table}
+    并对每组中的股票收益率（t+1）按市值加权，并通过如下方法构建规模（市值）和价值（BM）两个因子。与单变量排序相同，在每个变量维度，构建多空组合，一般使用高（收益组合）减低（收益组合）。对于规模因子（SMB）而言，为小市值组合（Small）减去（Minus）大市值（Big）：
+    \begin{align*}
+        SMB &= \frac{1}{3}(S/H + S/M + S/L) - \frac{1}{3}(B/H + B/M + B/L) \\
+        &= \frac{1}{3}(S/H-B/H) + \frac{1}{3}(S/M-B/M) + \frac{1}{3}(S/L-B/L)
+    \end{align*}
 
-在每一期，都分别独立的将股票划分为$2 \times 3$组，一共得到6个投资组合，常见做法是取这两个变量的各自分位数（Quantile）进行分组。在Fama and French（1993）中，其实用NYSE中位数作为市值分组的依据，而对于BM分组，则采用30\%与70\%的分位数作为依据。每组中的股票收益率按市值加权，得到六个投资组合，并通过如下方法构建规模（市值）和价值（BM）两个因子。与单变量排序相同，在每个变量维度，构建多空组合，即高（收益组合）减低（收益组合）。对于规模因子（SMB）而言，即利用分组，使用小市值组合（Small）减去（Minus）大市值（Big）：
-\begin{align*}
-    SMB &= \frac{1}{3}(S/H + S/M + S/L) - \frac{1}{3}(B/H + B/M + B/L) \\
-    &= \frac{1}{3}(S/H-B/H) + \frac{1}{3}(S/M-B/M) + \frac{1}{3}(S/L-B/L)
-\end{align*}
+    而对于估值因子（HML），同样利用分组，使用高BM组合（High）减去（Minus）低BM组合（Low）：
+    \begin{align*}
+        HML &=  \frac{1}{2}(S/H + B/H) - \frac{1}{2}(S/L + B/L) \\
+        &= \frac{1}{2}(S/H-S/L) + \frac{1}{2}(B/H-B/L)
+    \end{align*}
+\end{example}
 
-而对于估值因子（HML），同样利用分组，使用高BM组合（High）减去（Minus）低BM组合（Low）：
-\begin{align*}
-    HML &=  \frac{1}{2}(S/H + B/H) - \frac{1}{2}(S/L + B/L) \\
-    &= \frac{1}{2}(S/H-S/L) + \frac{1}{2}(B/H-B/L)
-\end{align*}
+但需要注意的是，使用独立双重排序，由于两个变量独立进行分组，可能存在着某些组包含股票过少的问题，而使用\uline{条件双重排序}可以解决这个问题。条件双重排序与独立双重排序最大的不同，是按照给定的先后顺序进行排序，即先使用$X_1$分位点进行分组，而后再在$X_1$每组之内，对$X_2$按分位点进行分组，这样保证了每组内有足够的股票。
 
-如上所述，多重排序法是为了排除非目标因子的干扰。使用双重排序（排序变量$X_1$与$X_2$），学者们也同时考察已有因子的每组内，异象因子是否能解释股票收益率的截面差异。如要检验$X_1$是否能构建异象，还应该考察在$X_2$每组内，根据$X_1$划分的多空组合收益率是否显著。另外独立双重排序可能还存在使得某些组包含股票过少的问题，而使用\uline{条件双重排序}可以解决这个问题。条件双重排序与独立双重排序最大的不同，是按照给定的先后顺序进行排序，如先将$X_1$划分为3组，而后再在$X_1$每组之内，对$X_2$进行划分，最终得到$3\times 2$组，这样保证了每组内有足够的股票。
+条件双重排序，核心为考察控制了$X_1$之后，变量$X_2$对股票收益率的影响。此时两个变量的重要性与排序的先后顺序有关，由于第一排序变量$X_1$仅为控制变量，而第二排序变量$X_2$与预期收益率之间的关系更为重要。因此也只需围绕第二排序变量，考察$X_2$的单调性，或构建因子多空模拟投资组合，并计算因子收益率。
 
-条件双重排序，核心为考察控制了$X_1$之后，变量$X_2$对股票收益率的影响。此时两个变量的重要性与排序的先后顺序有关，由于第一排序变量仅为控制变量，而第二排序变量与收益率之间的关系更为重要。因此也只需围绕第二排序变量，构建因子模拟投资组合，并计算因子收益率，方法与计算独立双重排序时相同。回到规模和价值的例子中，假设分为$10 \times 10$个投资组合，对于任意一组规模十分组中，在依然进行构建价值多空组合。
+【待整理】
+
+若X1分为10组，X2分为10组，那么控制X1，在每组X1中建立10组X2。而后，对每个X2组，如X2最低组，取所有10组X1组平均，观察单调性？这样做人为控制了X1，
+
+如先控制对MKT的暴露高低，分两组，在对MKT暴露高组中，对X2分组，分为三组；同样，在MKT暴露低组，对X2分为3组；将MKT暴露高，X2暴露最低组，与MKT暴露低，X2暴露最低组，并取平均，此时得到的X2最低组，即为控制MKT暴露的高低（平均），因此对MKT暴露中性。这样使得在X2暴露变化时。这样就控制住了MKT，使得之后X2分类的3组内，MKT暴露维持稳定（都是高低取平均，因此值相对稳定），因此不同X2组（MKT平均后）之间组的差异，来自于对于X2暴露的不同，而非MKT暴露不同。最后与单变量方法相同，使用X2高组，减X2低组，得到最终的多空投资组合。
+
+如上所述，多重排序法是为了排除非目标因子的干扰。使用双重排序（排序变量$X_1$与$X_2$），学者们也同时考察已有因子的每组内，异象因子是否能解释股票收益率的截面差异。如要检验$X_2$是否能构建异象，还应该考察在$X_1$每组内，根据$X_2$划分的多空组合收益率是否显著。
 
 \section{多因子模型回归检验}
 

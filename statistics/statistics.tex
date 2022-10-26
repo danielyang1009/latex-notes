@@ -46,7 +46,13 @@
     &= \E[X^2 - 2X\E[X] + \E[X]^2] \\
     &= \E[X^2] - 2\E[X]^2 + \E[X]^2 \\
     &= \E[X^2] - \E[X]^2 \\
-    &= \Cov(X,X)
+\end{align*}
+
+同时：
+\begin{align*}
+    \Var(X) &= \E[X(X-\E[X])] \\
+    &= \E[X^2 - X\E[X]] \\
+    &= \E[X^2] - \E[X]^2 \\
 \end{align*}
 
 同理，或其连续积分形式有：
@@ -2132,38 +2138,79 @@ $\hat{Y}_i$为自变量或解释变量通过回归模型所得到的拟合值，
     \item Kolmogorov–Smirnov test
 \end{itemize}
 
-在回归分析中，常见的拟合优度指标为判定系数（Coefficient of determination）或称可决系数，使用$R^2$表示。可决系数衡量可解释的波动与总波动之比，即被解释变量$Y$中有多少样本波动，能被解释变量$X$的波动解释。并且由于SSR的大小与样本容量n的大小，以及变量的多少有关，因此不应仅采用SSR这一绝对量来衡量样本观测值与估计值偏离的大小，检验统计量应选择相对量。具体而言：
+在回归分析中，常见的拟合优度指标为可决系数（Coefficient of determination，或R-squared），使用$R^2$（R-squared）表示。可决系数衡量可解释的波动与总波动之比，即被解释变量$Y$中有多少样本波动，能被解释变量$X$的波动解释。并且由于SSR的大小与样本容量n的大小，以及变量的多少有关，因此不应仅采用SSR这一绝对量来衡量样本观测值与估计值偏离的大小，检验统计量应选择相对量。具体而言：
 \begin{equation*}
-    R^2 = \frac{\text{SSR}}{\text{SST}} = \frac{\text{SST}-\text{SSE}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}}
+    R^2 = \frac{\text{ESS}}{\text{TSS}} = \frac{\text{TSS}-\text{SSR}}{\text{TSS}} = 1 - \frac{\text{SSR}}{\text{SST}}
 \end{equation*}
 
-另外，由于有：
+\begin{note}
+    若\code{statsmodels.regression.linear\_model.OLS}的回归结果为\code{res}，其可决系数为\code{res.rsquared}。根据回归中是否包含常数，计算方法不同：
+    
+    \begin{itemize}
+        \item 包含常数（$\sum(Y_i - \bar{Y})^2$）：\code{1- res.ssr/res.cetered\_tss}
+        \item 不包含常数（$\sum (Y_i)^2$）：\code{1-res.ssr/res.uncetered\_tss}
+    \end{itemize}
+\end{note}
+
+\begin{remark}
+    另外，由于有：
+    \begin{equation*}
+        \hat{Y}_i - \bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_i - \left[ \hat{\beta_0} + \hat{\beta}_1 \bar{X} \right] = \hat{\beta}_1 \left( X_i - \bar{X} \right)
+    \end{equation*}
+
+    因此可将可决系数改写为:
+    \begin{equation*}
+        R^2 = \frac{\text{ESS}}{\text{TSS}}
+        = \frac{\sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y}\right)^2}{\sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2}
+        = \hat{\beta}_1^2 \frac{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}{\sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2}
+        = \hat{\beta}_1^2 \frac{S_X^2}{S_Y^2}
+    \end{equation*}
+\end{remark}
+
+对于经调整的可决系数（Adj R-squared），由于自变量数目的增加，可能导致未经调整可决系数（$R^2$）被夸大，因此有（其中df为残差与总方差的自由度）：
 \begin{equation*}
-    \hat{Y}_i - \bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_i - \left[ \hat{\beta_0} + \hat{\beta}_1 \bar{X} \right] = \hat{\beta}_1 \left( X_i - \bar{X} \right)
+    \text{adj} \hyphen R^2 = 1 - \frac{\text{RSS}/\text{df}_{resid}}{\text{TSS}/\text{df}_{total}}
 \end{equation*}
 
-因此可将判定系数改写为:
-\begin{equation*}
-    R^2 = \frac{\text{SSR}}{\text{SST}}
-    = \frac{\sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y}\right)^2}{\sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2}
-    = \hat{\beta}_1^2 \frac{\sum_{i=1}^{n} \left( X_i - \bar{X} \right)^2}{\sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2}
-    = \hat{\beta}_1^2 \frac{S_X^2}{S_Y^2}
-\end{equation*}
+\begin{note}
+    若\code{statsmodels.regression.linear\_model.OLS}的回归结果为\code{res}，经调整的可决系数为\code{rsquared\_adj}，计算方法为\code{1-res.mse\_resid/res.mse\_total}。
+    
+    对于模型中是否有常数项，$\text{df}_{total}$与TSS的计算方式不同，具体如下：
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{@{}ccc@{}}
+    \toprule
+    &  有常数项 & 无常数项 \\ \midrule
+    TSS      & centered      & uncentered  \\
+    df total & n-1           & n           \\
+    df resid & (n-1)-k       & n-k         \\
+    df model & k             & k           \\ \bottomrule
+    \end{tabular}
+    \end{table}
+    
+    \code{mse}为（df需要自行计算）：
+    \begin{itemize}
+        \item \code{res.mse\_total=res.centered\_tss/df\_total}
+        \item \code{res.mse\_total=res.uncentered\_tss/df\_total}
+        \item \code{res.mse\_resid=res.ssr/ df\_resid}
+        \item \code{res.mse\_model=res.ess/ df\_model}
+    \end{itemize}
+\end{note}
 
-其中定义\textbf{总平方和}（Sum of squares total，SST）或总离差平方和，SST衡量被解释变量观测值$Y_i$总变差的大小，即在样本中的离散程度，同时可以看到将SST除以自由度$n-1$就得到了$Y_i$的样本方差：
+其中定义\textbf{总平方和}（Total sum of squares，TSS）或总离差平方和，SST衡量被解释变量观测值$Y_i$总变差的大小，即在样本中的离散程度，同时可以看到将SST除以自由度$n-1$就得到了$Y_i$的样本方差：
 \begin{equation*}
     \text{SST} = \sum_{i=1}^{n} \left( Y_i - \bar{Y} \right)^2
 \end{equation*}
 
-\textbf{总残差平方和}（Error sum of squares，SSE），SSE衡量被解释变量观测值与估计值之间的总变差大小，其自由度为$n-k$
+\textbf{总残差平方和}（Residual sum of squares，RSS），RSS衡量被解释变量观测值与估计值之间的总变差大小，或未能解释的总变差大小，其自由度为$\text{df}_{resid} = \text{df}_{total}-k$：
 \begin{equation*}
-    \text{SSE} = \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right)^2
+    \text{RSS} = \sum_{i=1}^{n} \left( Y_i - \hat{Y}_i \right)^2
     = \sum_{i=1}^{n} e_i^2
 \end{equation*}
 
-\textbf{总回归平方和}（Regression sum of squares，SSR），SSR衡量被解释变量回归估计值的总变差大小，其自由度为$k-1$：
+\textbf{总解释平方和}（Explained sum of squares，ESS），SSR衡量被解释变量回归估计值的总变差大小，其自由度为$\text{df}_{model}=k-1$：
 \begin{equation*}
-    \text{SSR} = \sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y} \right)^2
+    \text{ESS} = \sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y} \right)^2
 \end{equation*}
 
 \begin{property}
@@ -2189,7 +2236,7 @@ $\hat{Y}_i$为自变量或解释变量通过回归模型所得到的拟合值，
 \end{property}
 
 \begin{property}
-    根据如上对SST、SSR与SSE的定义，那么总平方和满足如下分解，即总平方能分解为两部分，一部分为能被回归解释的变差，另一部为不能被回归解释的变差：
+    根据如上对SST、SSR与SSE的定义，那么总平方和满足如下分解为两部分，一部分为能被回归解释的变差，另一部为不能被回归解释的变差：
     \begin{equation*}
         \text{SST} = \text{SSR} + \text{SSE}
     \end{equation*}
@@ -2210,6 +2257,22 @@ $\hat{Y}_i$为自变量或解释变量通过回归模型所得到的拟合值，
     \end{align*}
 \end{proof}
 
+\subsection{回归与投影}
+
+【TODO】是一种column view？
+
+回归的过程$y=\bm{X \beta}$，实质是检验向量y是否在由X列向量，所生成的超平面中，如果可以的话就能找到一组beta（列向量），使得$\beta_0 + \beta_1 x_1 + \dots + \beta_p x_p = y$。但实际中，大概率不可能找到，那么就希望，是否能找到一个$\hat{y}$在X的超平面中，其距离与$y$最短。
+
+显然，此时的$\hat{y}$即为$y$的估计，而$y$到X超平面的投影的距离即为$||y-\hat{y}||$，即为残差，残差与X超平面垂直。
+
+但我们知道OLS回归的方法，是使得每个$e_i = y_i - \hat{y}_i$（此时的yhat与上述不同）的距离最小，并非垂直（投影）于X平面。但由于平方的单调性，使得最小化OLS残差，与投影等价。或当我们把y投影到x超平面上时，实际就在进行OLS回归。
+
+
+\href{https://www.youtube.com/watch?v=zP2yvuwIQ9w}{Youtube}
+
+\href{https://bookdown.org/ts_robinson1994/10_fundamental_theorems_for_econometrics/linear-projection.html}{Ref1}
+
+\href{https://medium.com/@vladimirmikulik/why-linear-regression-is-a-projection-407d89fd9e3a}{Ref2}
 
 \subsection{多元线性回归}
 

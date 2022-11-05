@@ -2213,6 +2213,23 @@ $\hat{Y}_i$为自变量或解释变量通过回归模型所得到的拟合值，
     \text{ESS} = \sum_{i=1}^{n} \left( \hat{Y}_i - \bar{Y} \right)^2
 \end{equation*}
 
+其他回归中的常见指标：
+
+1. 平均绝对误差（Mean Absolute Error，MAE）：
+\begin{equation*}
+    MAE = \frac{1}{n} \sum_{i=1}^{n} \abs{(Y_i-\bar{Y})}
+\end{equation*}
+
+2. 均方误差（Mean Square Error，MSE），即上述\code{mse\_resid}：
+\begin{equation*}
+    MSE = \frac{1}{n} \sum_{i=1}^{n} (Y_i-\bar{Y})^2
+\end{equation*}
+
+3. 均方根误差（Root Mean Square Error，RMSE）：
+\begin{equation*}
+    RMSE = \sqrt{MSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (Y_i-\bar{Y})^2}
+\end{equation*}
+
 \begin{property}
     SSR与$\Var(\hat{Y}_i)$
 

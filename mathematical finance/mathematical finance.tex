@@ -1976,11 +1976,11 @@ BSIV与MFIV为风险中性下的波动率
 
 对于后两项积分项，将其离散化，其中$Q(K_i)$为行权价为$K_i$，\textbf{虚值}看涨和看跌期权的价格，注意在离散化的过程中会出现离散误差（Discretization error）的估计误差：
 \begin{align*}
-    \rnE \left[ \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right]
-    &= \int^{K_0}_{0} \frac{\rnE(K-S_T)^+ }{K^2} dK + \int^{\infty}_{K_0} \frac{\rnE(S_T-K)^+}{K^2} dK \\
-    &= \int^{K_0}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{K_0} \frac{e^{rT}C(K)}{K^2} dK \\
-    &\approx \sum_{K_i < K_0} \frac{\Delta K_i}{K_i^2} e^{rT} P(K_i) + \sum_{K_i \geq K_0} \frac{\Delta K_i}{K_i^2} e^{rT} C(K_i) \\
-    &= \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i)
+    &\rnE \left[ \int^{K_0}_{0} \frac{(K-S_T)^+}{K^2} dK + \int^{\infty}_{K_0} \frac{(S_T-K)^+}{K^2} dK \right] \\
+    =& \int^{K_0}_{0} \frac{\rnE(K-S_T)^+ }{K^2} dK + \int^{\infty}_{K_0} \frac{\rnE(S_T-K)^+}{K^2} dK \\
+    =& \int^{K_0}_{0} \frac{e^{rT}P(K)}{K^2} dK + \int^{\infty}_{K_0} \frac{e^{rT}C(K)}{K^2} dK \\
+    \approx& \sum_{K_i < K_0} \frac{\Delta K_i}{K_i^2} e^{rT} P(K_i) + \sum_{K_i \geq K_0} \frac{\Delta K_i}{K_i^2} e^{rT} C(K_i) \\
+    =& \sum_{i} \frac{\Delta K_i}{K_i^2} e^{rT} Q(K_i)
 \end{align*}
 
 将上述部分合并，可得：
